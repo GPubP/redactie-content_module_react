@@ -4,8 +4,6 @@ import { Redirect, useLocation } from 'react-router-dom';
 
 import { ContentOverview } from './lib/views';
 
-console.log('render content module');
-
 const ContentComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 	const location = useLocation();
 
