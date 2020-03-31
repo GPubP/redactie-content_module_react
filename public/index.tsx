@@ -1,18 +1,17 @@
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC } from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
+import { ContentRouteProps } from './lib/content.types';
 import { ContentOverview } from './lib/views';
 
-const ContentComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
-	const location = useLocation();
-
+const ContentComponent: FC<ContentRouteProps> = ({ route, location, match }) => {
 	// if path is /content, redirect to /content/overzicht
 	if (/\/content$/.test(location.pathname)) {
 		return <Redirect to={`${location.pathname}/overzicht`} />;
 	}
 
-	return <>{Core.routes.render(route.routes as ModuleRouteConfig[], { basePath: route.path })}</>;
+	return <>{Core.routes.render(route.routes as ModuleRouteConfig[], { basePath: match.url })}</>;
 };
 
 const sitesAPI = Core.modules.getModuleAPI('sites-module');

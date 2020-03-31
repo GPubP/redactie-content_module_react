@@ -1,8 +1,9 @@
-import { ModuleRouteConfig } from '@redactie/redactie-core';
+import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 
-export interface ContentRouteProps {
+export interface ContentRouteProps extends RouteConfigComponentProps {
 	basePath: string;
 	routes: ModuleRouteConfig[];
+	tenantId: string;
 }
 
 export enum LoadingState {
