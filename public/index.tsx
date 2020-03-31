@@ -4,6 +4,8 @@ import { Redirect, useLocation } from 'react-router-dom';
 
 import { ContentOverview } from './lib/views';
 
+console.log('render content module');
+
 const ContentComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 	const location = useLocation();
 
@@ -15,23 +17,19 @@ const ContentComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 	return <>{Core.routes.render(route.routes as ModuleRouteConfig[], { basePath: route.path })}</>;
 };
 
-// TODO: Find out why a timeout is needed
-// All dependencies are loaded before this one
-setTimeout(() => {
-	const sitesAPI = Core.modules.getModuleAPI('sites-module');
+const sitesAPI = Core.modules.getModuleAPI('sites-module');
 
-	if (sitesAPI) {
-		sitesAPI.routes.register({
-			path: '/:siteId/content',
-			component: ContentComponent,
-			exact: true,
-			routes: [
-				{
-					path: '/:siteId/content/overzicht',
-					label: 'content overzicht',
-					component: ContentOverview,
-				},
-			],
-		});
-	}
-}, 100);
+if (sitesAPI) {
+	sitesAPI.routes.register({
+		path: '/:siteId/content',
+		component: ContentComponent,
+		exact: true,
+		routes: [
+			{
+				path: '/:siteId/content/overzicht',
+				label: 'content overzicht',
+				component: ContentOverview,
+			},
+		],
+	});
+}
