@@ -7,7 +7,6 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DataLoader } from '../../components';
 import { BREADCRUMB_OPTIONS } from '../../content.const';
@@ -15,7 +14,14 @@ import { getContent } from '../../content.service';
 import { ContentRouteProps, ContentSchema, LoadingState } from '../../content.types';
 import { useRoutes } from '../../hooks';
 
-const ContentOverview: FC<ContentRouteProps> = ({ basePath }) => {
+const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
+	basePath,
+	tenantId,
+	match,
+	history,
+}) => {
+	const { siteId } = match.params;
+
 	/**
 	 * Hooks
 	 */
@@ -23,7 +29,6 @@ const ContentOverview: FC<ContentRouteProps> = ({ basePath }) => {
 	const [contents, setContent] = useState<ContentSchema[] | null>(null);
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
-	const history = useHistory();
 
 	useEffect(() => {
 		getContent()
@@ -110,7 +115,16 @@ const ContentOverview: FC<ContentRouteProps> = ({ basePath }) => {
 			<ContextHeader title="Content overzicht">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
-					<Button iconLeft="plus">Nieuwe maken</Button>
+					<Button
+						onClick={() =>
+							history.push(
+								`/${tenantId}/sites/${siteId}/content/content-type/123/aanmaken`
+							)
+						}
+						iconLeft="plus"
+					>
+						Nieuwe maken
+					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<DataLoader loadingState={loadingState} render={renderOverview} />
