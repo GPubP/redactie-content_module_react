@@ -14,6 +14,7 @@ import { BREADCRUMB_OPTIONS } from '../../content.const';
 import { getContent } from '../../content.service';
 import { ContentRouteProps, ContentSchema, LoadingState } from '../../content.types';
 import { useRoutes } from '../../hooks';
+import './ContentOverview.scss';
 
 const ContentOverview: FC<ContentRouteProps> = ({ basePath }) => {
 	/**
@@ -30,6 +31,7 @@ const ContentOverview: FC<ContentRouteProps> = ({ basePath }) => {
 			.then(data => {
 				if (data?.length) {
 					setContent(data);
+					console.log(data);
 				}
 				setLoadingState(LoadingState.Loaded);
 			})
@@ -47,8 +49,12 @@ const ContentOverview: FC<ContentRouteProps> = ({ basePath }) => {
 
 		const contentsRows = contents.map(content => ({
 			id: content.uuid,
-			title: content.meta.title,
-			description: content.meta.description,
+			title: content.meta.label,
+			type: content.meta.contentType.meta.label,
+			publication: content.meta.lastModified,
+			author: content.meta.lastEditor,
+			status: content.meta.status,
+			online: content.meta.published,
 		}));
 
 		const contentsColumns = [
@@ -59,22 +65,28 @@ const ContentOverview: FC<ContentRouteProps> = ({ basePath }) => {
 			{
 				label: 'Type',
 				value: 'type',
-				disableSorting: true,
 			},
 			{
 				label: 'Publicatiedatum',
-				value: 'publicationDate',
-				disableSorting: true,
+				value: 'publication',
 			},
 			{
 				label: 'Auteur',
 				value: 'author',
-				disableSorting: true,
 			},
 			{
 				label: 'Status',
 				value: 'status',
-				disableSorting: true,
+			},
+			{
+				label: 'Online',
+				component(value: 'online') {
+					return value ? (
+						<span className="a-dot__green"></span>
+					) : (
+						<span className="a-dot__red"></span>
+					);
+				},
 			},
 			{
 				label: '',

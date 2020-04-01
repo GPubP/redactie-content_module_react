@@ -14,14 +14,17 @@ export enum LoadingState {
 export interface ContentSchema {
 	uuid: string;
 	meta: {
-		title: string;
+		label: string;
 		description: string;
-		type: string;
+		contentType: {
+			meta: {
+				label: string;
+			};
+		};
 		theme: string;
-		publicationDate: Date;
-		author: string;
+		lastEditor: string;
 		status: string;
-		online: boolean;
+		published: boolean;
 		createdAt: string;
 		lastModified: string;
 	};
