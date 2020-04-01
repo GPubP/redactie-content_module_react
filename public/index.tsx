@@ -27,6 +27,7 @@ if (sitesAPI) {
 	sitesAPI.routes.register({
 		path: '/:siteId/content',
 		component: ContentComponent,
+		breadcrumb: 'Content',
 		exact: true,
 		routes: [
 			{

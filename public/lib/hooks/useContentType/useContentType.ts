@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { LoadingState } from '../../content.types';
 import { ContentTypeSchema, getContentType } from '../../services/contentTypes';
 
-const useContentType = (contentTypeId: string): any => {
+const useContentType = (contentTypeId: string): [LoadingState, ContentTypeSchema | null] => {
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
 	const [contenType, setContentType] = useState<ContentTypeSchema | null>(null);
 
