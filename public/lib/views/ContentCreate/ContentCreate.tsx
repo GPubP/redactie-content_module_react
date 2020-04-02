@@ -38,8 +38,8 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 		if (contentType) {
 			const request: ContentCreateSchema = {
 				meta: {
-					label: contentType?.meta.label,
-					contentType: contentType?._id,
+					label: 'Dit is een titel',
+					contentType: contentType._id,
 					status: ContentStatus.DRAF,
 				},
 				fields: values,

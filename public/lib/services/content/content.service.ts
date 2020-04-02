@@ -1,6 +1,6 @@
 import { api } from '../api';
 
-import { ContentSchema, ContentsSchema, ContentCreateSchema } from './content.service.types';
+import { ContentCreateSchema, ContentSchema, ContentsSchema } from './content.service.types';
 
 export const getContent = async (): Promise<ContentSchema[] | null> => {
 	try {

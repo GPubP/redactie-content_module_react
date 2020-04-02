@@ -15,22 +15,3 @@ export enum LoadingState {
 	Loaded = 'loaded',
 	Error = 'error',
 }
-export interface ContentSchema {
-	uuid: string;
-	meta: {
-		title: string;
-		description: string;
-		type: string;
-		theme: string;
-		publicationDate: Date;
-		author: string;
-		status: string;
-		online: boolean;
-		createdAt: string;
-		lastModified: string;
-	};
-}
-
-export interface ContentsSchema {
-	data: ContentSchema[];
-}
