@@ -6,7 +6,7 @@ export type KyInstance = typeof ky;
 
 // Create ky instance with defaults
 const api: KyInstance = ky.create({
-	prefixUrl: '/v1/proxy/sites-engine',
+	prefixUrl: '/v1/proxy/content',
 });
 
 export const parseSearchParams = (searchParams: SearchParams): URLSearchParams => {
