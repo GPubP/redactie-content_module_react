@@ -8,16 +8,22 @@ import {
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DataLoader } from '../../components';
 import { BREADCRUMB_OPTIONS } from '../../content.const';
-import { getContent } from '../../content.service';
-import { ContentRouteProps, ContentSchema, LoadingState } from '../../content.types';
+import { ContentRouteProps, LoadingState } from '../../content.types';
 import { useRoutes } from '../../hooks';
+import { ContentSchema, getContent } from '../../services/content';
 import './ContentOverview.scss';
 
-const ContentOverview: FC<ContentRouteProps> = ({ basePath }) => {
+const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
+	basePath,
+	tenantId,
+	match,
+	history,
+}) => {
+	const { siteId } = match.params;
+
 	/**
 	 * Hooks
 	 */
@@ -25,14 +31,12 @@ const ContentOverview: FC<ContentRouteProps> = ({ basePath }) => {
 	const [contents, setContent] = useState<ContentSchema[] | null>(null);
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
-	const history = useHistory();
 
 	useEffect(() => {
 		getContent()
 			.then(data => {
 				if (data?.length) {
 					setContent(data);
-					console.log(data);
 				}
 				setLoadingState(LoadingState.Loaded);
 			})
@@ -70,10 +74,7 @@ const ContentOverview: FC<ContentRouteProps> = ({ basePath }) => {
 			{
 				label: 'Publicatiedatum',
 				value: 'publication',
-				format(data: string) {
-					console.log(data);
-					return moment(data).format('DD/MM/YYYYY [-] hh[u]mm');
-				},
+				format: (data: string) => moment(data).format('DD/MM/YYYYY [-] hh[u]mm'),
 			},
 			{
 				label: 'Auteur',
@@ -127,7 +128,16 @@ const ContentOverview: FC<ContentRouteProps> = ({ basePath }) => {
 			<ContextHeader title="Content overzicht">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
-					<Button iconLeft="plus">Nieuwe maken</Button>
+					<Button
+						onClick={() =>
+							history.push(
+								`/${tenantId}/sites/${siteId}/content/content-type/46bf8fd1-895f-4d6e-84be-e26f8c5a6fcb/aanmaken`
+							)
+						}
+						iconLeft="plus"
+					>
+						Nieuwe maken
+					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<DataLoader loadingState={loadingState} render={renderOverview} />
