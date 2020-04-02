@@ -7,12 +7,17 @@ import { DataLoader } from '../../components';
 import { BREADCRUMB_OPTIONS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { useContentTypes, useRoutes } from '../../hooks';
+import { ContentCreateSchema, ContentStatus, createContent } from '../../services/content';
 import { getFormPropsByCT } from '../../services/helpers';
 
 import { ContentCreateMatchProps } from './ContentCreate.types';
 
-const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match }) => {
-	const { contentTypeId } = match.params;
+const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
+	match,
+	history,
+	tenantId,
+}) => {
+	const { contentTypeId, siteId } = match.params;
 	const formsAPI = Core.modules.getModuleAPI('forms-module') as FormsAPI;
 
 	/**
@@ -23,11 +28,26 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match }
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 
 	/**
-	 * Functions
+	 * Methods
 	 */
-	const onFormSubmit = (values: any) => {
-		console.log(values);
-		// save content
+	const navigateToOverview = (): void => {
+		history.push(`/${tenantId}/sites/${siteId}/content/overzicht`);
+	};
+
+	const onFormSubmit = (values: any): void => {
+		if (contentType) {
+			const request: ContentCreateSchema = {
+				meta: {
+					label: contentType?.meta.label,
+					contentType: contentType?._id,
+					status: ContentStatus.DRAF,
+				},
+				fields: values,
+			};
+			createContent(request).then(() => {
+				navigateToOverview();
+			});
+		}
 	};
 
 	/**

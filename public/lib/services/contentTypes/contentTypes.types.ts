@@ -16,6 +16,7 @@ export interface ContentTypeFieldSchema {
 }
 
 export interface ContentTypeSchema {
+	_id: string;
 	uuid: string;
 	meta: {
 		label: string;

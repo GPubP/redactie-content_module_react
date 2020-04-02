@@ -2,9 +2,9 @@ import apiService from '../api/api.service';
 
 import { ContentTypeSchema } from './contentTypes.types';
 
-export const getContentType = async (id: string): Promise<ContentTypeSchema | null> => {
+export const getContentType = async (uuid: string): Promise<ContentTypeSchema | null> => {
 	try {
-		const response: ContentTypeSchema = await apiService.get(`content-types/${id}`).json();
+		const response: ContentTypeSchema = await apiService.get(`content-types/${uuid}`).json();
 
 		if (!response.fields) {
 			throw new Error('Failed to get content type');
