@@ -36,5 +36,5 @@ export interface ContentCreateSchema {
 }
 
 export enum ContentStatus {
-	DRAF = 'DRAFT',
+	DRAFT = 'DRAFT',
 }

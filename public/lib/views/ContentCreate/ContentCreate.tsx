@@ -41,7 +41,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 					// TODO: Where does this string come from?
 					label: 'Dit is een titel',
 					contentType: contentType._id,
-					status: ContentStatus.DRAF,
+					status: ContentStatus.DRAFT,
 				},
 				fields: values,
 			};
