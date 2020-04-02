@@ -118,7 +118,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 					<Button
 						onClick={() =>
 							history.push(
-								`/${tenantId}/sites/${siteId}/content/content-type/123/aanmaken`
+								`/${tenantId}/sites/${siteId}/content/content-type/46bf8fd1-895f-4d6e-84be-e26f8c5a6fcb/aanmaken`
 							)
 						}
 						iconLeft="plus"

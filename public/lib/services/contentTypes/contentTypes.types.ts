@@ -2,6 +2,7 @@ export interface FieldType {
 	uuid: string;
 	data: {
 		componentName: string;
+		module: string;
 	};
 }
 
@@ -9,7 +10,6 @@ export interface ContentTypeFieldSchema {
 	name: string;
 	label: string;
 	fieldType: FieldType;
-	module: string;
 	config?: {
 		[key: string]: any;
 	};
@@ -22,12 +22,16 @@ export interface ContentTypeSchema {
 		description: string;
 	};
 	fields: ContentTypeFieldSchema[];
-	validationSchema: {
-		[key: string]: any;
-	};
-	errorMessages: {
-		[key: string]: {
-			[key: string]: string;
-		};
+	validateSchema: ValidateSchema;
+	errorMessages: ErrorMessagesSchema;
+}
+
+export interface ValidateSchema {
+	[key: string]: any;
+}
+
+export interface ErrorMessagesSchema {
+	[key: string]: {
+		[key: string]: string;
 	};
 }

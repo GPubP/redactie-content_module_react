@@ -1,16 +1,19 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
-import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
+import { FormsAPI } from '@redactie/form-renderer-module';
+import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement } from 'react';
 
 import { DataLoader } from '../../components';
 import { BREADCRUMB_OPTIONS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { useContentTypes, useRoutes } from '../../hooks';
+import { getFormPropsByCT } from '../../services/helpers';
 
 import { ContentCreateMatchProps } from './ContentCreate.types';
 
-const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, tenantId }) => {
+const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match }) => {
 	const { contentTypeId } = match.params;
+	const formsAPI = Core.modules.getModuleAPI('forms-module') as FormsAPI;
 
 	/**
 	 * Hooks
@@ -20,10 +23,33 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 
 	/**
+	 * Functions
+	 */
+	const onFormSubmit = (values: any) => {
+		console.log(values);
+		// save content
+	};
+
+	/**
 	 * Render
 	 */
+	const renderCreateContentForm = (): ReactElement | null => {
+		if (!contentType) {
+			return null;
+		}
+
+		const formProps = getFormPropsByCT(contentType);
+		return (
+			<div className="u-container u-wrapper">
+				<div className="u-margin-top">
+					<formsAPI.Form {...formProps} onSubmit={onFormSubmit} />
+				</div>
+			</div>
+		);
+	};
+
 	const contentTypeLabel = contentType?.meta.label;
-	const headerTitle = contentTypeLabel ? `${contentTypeLabel} bewerken` : '';
+	const headerTitle = contentTypeLabel ? `${contentTypeLabel} Aanmaken` : '';
 	const badges = contentTypeLabel
 		? [
 				{
@@ -32,10 +58,6 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 				},
 		  ]
 		: [];
-
-	const renderCreateContentForm = (): ReactElement => {
-		return <div>Render form</div>;
-	};
 
 	return (
 		<>
