@@ -1,2 +1,2 @@
-export * from './contentTypes';
-export * from './contentTypes.types';
+export * from './contentTypes.service';
+export * from './contentTypes.service.types';
