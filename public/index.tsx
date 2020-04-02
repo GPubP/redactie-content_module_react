@@ -1,9 +1,14 @@
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
+import * as moment from 'moment';
+import 'moment/locale/nl';
 import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { ContentRouteProps } from './lib/content.types';
 import { ContentOverview } from './lib/views';
+
+// eslint-disable-next-line import/namespace
+moment.locale('nl');
 
 const ContentComponent: FC<ContentRouteProps> = ({ route, location, match }) => {
 	// if path is /content, redirect to /content/overzicht

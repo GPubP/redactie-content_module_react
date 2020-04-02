@@ -6,6 +6,7 @@ import {
 	Table,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
+import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -49,12 +50,12 @@ const ContentOverview: FC<ContentRouteProps> = ({ basePath }) => {
 
 		const contentsRows = contents.map(content => ({
 			id: content.uuid,
-			title: content.meta.label,
-			type: content.meta.contentType.meta.label,
-			publication: content.meta.lastModified,
-			author: content.meta.lastEditor,
-			status: content.meta.status,
-			online: content.meta.published,
+			title: content.meta?.label,
+			type: content.meta?.contentType?.meta?.label,
+			publication: content.meta?.lastModified,
+			author: content.meta?.lastEditor,
+			status: content.meta?.status,
+			online: content.meta?.published,
 		}));
 
 		const contentsColumns = [
@@ -69,6 +70,10 @@ const ContentOverview: FC<ContentRouteProps> = ({ basePath }) => {
 			{
 				label: 'Publicatiedatum',
 				value: 'publication',
+				format(data: string) {
+					console.log(data);
+					return moment(data).format('DD/MM/YYYYY [-] hh[u]mm');
+				},
 			},
 			{
 				label: 'Auteur',
