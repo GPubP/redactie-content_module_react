@@ -86,8 +86,11 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 			},
 			{
 				label: 'Online',
-				component(value: 'online') {
-					return value ? (
+				value: 'online',
+				component(value: string, rowData: any) {
+					// TODO: fix any type
+					const isOnline = !!rowData['online'];
+					return isOnline ? (
 						<span className="a-dot__green"></span>
 					) : (
 						<span className="a-dot__red"></span>
