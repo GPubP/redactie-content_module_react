@@ -17,7 +17,6 @@ import { ContentSchema, getContent } from '../../services/content';
 import './ContentOverview.scss';
 
 const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
-	basePath,
 	tenantId,
 	match,
 	history,
