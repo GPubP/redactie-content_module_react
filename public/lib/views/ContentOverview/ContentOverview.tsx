@@ -109,7 +109,9 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 						<Button
 							ariaLabel="Edit"
 							icon="edit"
-							onClick={() => history.push(`${basePath}/${id}/bewerken`)}
+							onClick={() =>
+								history.push(`/${tenantId}/sites/${siteId}/content/${id}/bewerken`)
+							}
 							type="primary"
 							transparent
 						></Button>

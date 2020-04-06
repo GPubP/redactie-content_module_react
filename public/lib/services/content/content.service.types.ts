@@ -1,13 +1,11 @@
+import { ContentTypeSchema } from '../contentTypes';
+
 export interface ContentSchema {
 	uuid: string;
 	meta: {
 		label: string;
 		description: string;
-		contentType: {
-			meta: {
-				label: string;
-			};
-		};
+		contentType: ContentTypeSchema;
 		theme: string;
 		lastEditor: string;
 		status: string;

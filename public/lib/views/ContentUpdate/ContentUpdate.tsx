@@ -2,31 +2,44 @@ import { Button } from '@acpaas-ui/react-components';
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
 import { FormsAPI } from '@redactie/form-renderer-module';
 import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
 import { BREADCRUMB_OPTIONS } from '../../content.const';
-import { ContentRouteProps } from '../../content.types';
-import { useContentType, useRoutes } from '../../hooks';
-import { ContentCreateSchema, ContentStatus, createContent } from '../../services/content';
+import { ContentRouteProps, LoadingState } from '../../content.types';
+import { useContentItem, useContentType, useRoutes } from '../../hooks';
+import { ContentSchema, updateContent } from '../../services/content';
 import { getFormPropsByCT } from '../../services/helpers';
 
-import { ContentCreateMatchProps } from './ContentCreate.types';
+import { ContentUpdateMatchProps } from './ContentUpdate.types';
 
-const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
+const ContentCreate: FC<ContentRouteProps<ContentUpdateMatchProps>> = ({
 	match,
 	history,
 	tenantId,
 }) => {
-	const { contentTypeId, siteId } = match.params;
+	const { siteId, contentId } = match.params;
 	const formsAPI = Core.modules.getModuleAPI('forms-module') as FormsAPI;
 
 	/**
 	 * Hooks
 	 */
-	const [contentTypesLoading, contentType] = useContentType(contentTypeId);
+	const [contentItemLoading, contentItem] = useContentItem(contentId);
+	const [contentTypeLoading, contentType] = useContentType(contentItem?.meta.contentType.uuid);
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+
+	useEffect(() => {
+		if (
+			(contentTypeLoading === LoadingState.Loaded ||
+				contentTypeLoading === LoadingState.Error) &&
+			(contentItemLoading === LoadingState.Loaded ||
+				contentItemLoading === LoadingState.Error)
+		) {
+			setInitialLoading(LoadingState.Loaded);
+		}
+	}, [contentTypeLoading, contentItemLoading]);
 
 	/**
 	 * Methods
@@ -36,17 +49,12 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 	};
 
 	const onFormSubmit = (values: any): void => {
-		if (contentType) {
-			const request: ContentCreateSchema = {
-				meta: {
-					// TODO: Where does this string come from?
-					label: 'Dit is een titel',
-					contentType: contentType._id,
-					status: ContentStatus.DRAFT,
-				},
+		if (contentItem) {
+			const request: ContentSchema = {
+				...contentItem,
 				fields: values,
 			};
-			createContent(request).then(() => {
+			updateContent(contentId, request).then(() => {
 				navigateToOverview();
 			});
 		}
@@ -56,15 +64,20 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 	 * Render
 	 */
 	const renderCreateContentForm = (): ReactElement | null => {
-		if (!contentType) {
+		if (!contentItem || !contentType) {
 			return null;
 		}
 
 		const formProps = getFormPropsByCT(contentType);
+		const initialValues = contentItem.fields;
 		return (
 			<div className="u-container u-wrapper">
 				<div className="u-margin-top">
-					<formsAPI.Form {...formProps} onSubmit={onFormSubmit}>
+					<formsAPI.Form
+						{...formProps}
+						initialValues={initialValues}
+						onSubmit={onFormSubmit}
+					>
 						{({ submitForm }) => (
 							<div className="u-margin-top">
 								<Button
@@ -85,8 +98,8 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 		);
 	};
 
-	const contentTypeLabel = contentType?.meta.label;
-	const headerTitle = contentTypeLabel ? `${contentTypeLabel} Aanmaken` : '';
+	const contentTypeLabel = contentItem?.meta.label;
+	const headerTitle = contentTypeLabel ? `${contentTypeLabel} Bewerken` : '';
 	const badges = contentTypeLabel
 		? [
 				{
@@ -101,7 +114,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 			<ContextHeader title={headerTitle} badges={badges}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			<DataLoader loadingState={contentTypesLoading} render={renderCreateContentForm} />
+			<DataLoader loadingState={initialLoading} render={renderCreateContentForm} />
 		</>
 	);
 };
