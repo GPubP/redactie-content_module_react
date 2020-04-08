@@ -1,3 +1,4 @@
+import { Button } from '@acpaas-ui/react-components';
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
 import { FormsAPI } from '@redactie/form-renderer-module';
 import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
@@ -6,7 +7,7 @@ import React, { FC, ReactElement } from 'react';
 import { DataLoader } from '../../components';
 import { BREADCRUMB_OPTIONS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
-import { useContentTypes, useRoutes } from '../../hooks';
+import { useContentType, useRoutes } from '../../hooks';
 import { ContentCreateSchema, ContentStatus, createContent } from '../../services/content';
 import { getFormPropsByCT } from '../../services/helpers';
 
@@ -23,7 +24,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 	/**
 	 * Hooks
 	 */
-	const [contentTypesLoading, contentType] = useContentTypes(contentTypeId);
+	const [contentTypesLoading, contentType] = useContentType(contentTypeId);
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 
@@ -63,7 +64,22 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 		return (
 			<div className="u-container u-wrapper">
 				<div className="u-margin-top">
-					<formsAPI.Form {...formProps} onSubmit={onFormSubmit} />
+					<formsAPI.Form {...formProps} onSubmit={onFormSubmit}>
+						{({ submitForm }) => (
+							<div className="u-margin-top">
+								<Button
+									className="u-margin-right-xs"
+									onClick={() => submitForm()}
+									type="success"
+								>
+									Bewaar
+								</Button>
+								<Button onClick={navigateToOverview} outline>
+									Annuleer
+								</Button>
+							</div>
+						)}
+					</formsAPI.Form>
 				</div>
 			</div>
 		);

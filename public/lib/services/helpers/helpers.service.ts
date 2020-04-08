@@ -5,6 +5,11 @@ import { ContentTypeSchema, ErrorMessagesSchema, ValidateSchema } from '../conte
 export const getFormPropsByCT = (
 	contentType: ContentTypeSchema
 ): { schema: FormSchema; validationSchema: ValidateSchema; errorMessages: ErrorMessagesSchema } => {
+	const validateSchema = {
+		$schema: 'http://json-schema.org/draft-07/schema#',
+		type: 'object',
+		properties: contentType.validateSchema || {},
+	};
 	return {
 		schema: {
 			fields: contentType.fields.map(
@@ -20,7 +25,7 @@ export const getFormPropsByCT = (
 				}
 			),
 		},
-		validationSchema: contentType.validateSchema,
-		errorMessages: contentType.errorMessages,
+		validationSchema: validateSchema,
+		errorMessages: contentType.errorMessages || {},
 	};
 };

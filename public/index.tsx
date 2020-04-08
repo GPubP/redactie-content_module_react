@@ -5,7 +5,7 @@ import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { ContentRouteProps } from './lib/content.types';
-import { ContentCreate, ContentOverview } from './lib/views';
+import { ContentCreate, ContentOverview, ContentUpdate } from './lib/views';
 
 // eslint-disable-next-line import/namespace
 moment.locale('nl');
@@ -43,6 +43,10 @@ if (sitesAPI) {
 			{
 				path: '/:siteId/content/content-type/:contentTypeId/aanmaken',
 				component: ContentCreate,
+			},
+			{
+				path: '/:siteId/content/:contentId/bewerken',
+				component: ContentUpdate,
 			},
 		],
 	});

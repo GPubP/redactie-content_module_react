@@ -11,17 +11,7 @@ export const getContentType = async (uuid: string): Promise<ContentTypeSchema | 
 			throw new Error('Failed to get content type');
 		}
 
-		const validateSchema = {
-			$schema: 'http://json-schema.org/draft-07/schema#',
-			type: 'object',
-			properties: response.validateSchema || {},
-		};
-		const errorMessages = response.errorMessages || {};
-		return {
-			...response,
-			validateSchema,
-			errorMessages,
-		};
+		return response;
 	} catch (err) {
 		console.error(err);
 		return null;
