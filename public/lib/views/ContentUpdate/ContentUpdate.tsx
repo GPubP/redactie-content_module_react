@@ -71,29 +71,23 @@ const ContentCreate: FC<ContentRouteProps<ContentUpdateMatchProps>> = ({
 		const formProps = getFormPropsByCT(contentType);
 		const initialValues = contentItem.fields;
 		return (
-			<div className="u-container u-wrapper">
-				<div className="u-margin-top">
-					<formsAPI.Form
-						{...formProps}
-						initialValues={initialValues}
-						onSubmit={onFormSubmit}
-					>
-						{({ submitForm }) => (
-							<div className="u-margin-top">
-								<Button
-									className="u-margin-right-xs"
-									onClick={() => submitForm()}
-									type="success"
-								>
-									Bewaar
-								</Button>
-								<Button onClick={navigateToOverview} outline>
-									Annuleer
-								</Button>
-							</div>
-						)}
-					</formsAPI.Form>
-				</div>
+			<div className="u-margin-top">
+				<formsAPI.Form {...formProps} initialValues={initialValues} onSubmit={onFormSubmit}>
+					{({ submitForm }) => (
+						<div className="u-margin-top">
+							<Button
+								className="u-margin-right-xs"
+								onClick={() => submitForm()}
+								type="success"
+							>
+								Bewaar
+							</Button>
+							<Button onClick={navigateToOverview} outline>
+								Annuleer
+							</Button>
+						</div>
+					)}
+				</formsAPI.Form>
 			</div>
 		);
 	};
@@ -114,7 +108,9 @@ const ContentCreate: FC<ContentRouteProps<ContentUpdateMatchProps>> = ({
 			<ContextHeader title={headerTitle} badges={badges}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			<DataLoader loadingState={initialLoading} render={renderCreateContentForm} />
+			<div className="u-container u-wrapper">
+				<DataLoader loadingState={initialLoading} render={renderCreateContentForm} />
+			</div>
 		</>
 	);
 };
