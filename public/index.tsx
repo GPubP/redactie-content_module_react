@@ -34,11 +34,20 @@ if (sitesAPI) {
 		component: ContentComponent,
 		breadcrumb: 'Content',
 		exact: true,
+		navigation: {
+			renderContext: 'site',
+			context: 'site',
+			label: 'Content',
+		},
 		routes: [
 			{
 				path: '/:siteId/content/overzicht',
-				label: 'content overzicht',
 				component: ContentOverview,
+				navigation: {
+					context: 'site',
+					label: 'Content overzicht',
+					parentPath: '/:siteId/content',
+				},
 			},
 			{
 				path: '/:siteId/content/content-type/:contentTypeId/aanmaken',
