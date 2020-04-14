@@ -1,5 +1,6 @@
 import { Button } from '@acpaas-ui/react-components';
 import {
+	Container,
 	ContextHeader,
 	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
@@ -120,10 +121,10 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 		];
 
 		return (
-			<div className="u-container u-wrapper">
-				<h5 className="u-margin-top">Resultaat ({contentsRows.length})</h5>
-				<Table className="u-margin-top" rows={contentsRows} columns={contentsColumns} />
-			</div>
+			<>
+				<h5 className="u-margin-bottom">Resultaat ({contentsRows.length})</h5>
+				<Table rows={contentsRows} columns={contentsColumns} />
+			</>
 		);
 	};
 
@@ -144,7 +145,9 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
-			<DataLoader loadingState={loadingState} render={renderOverview} />
+			<Container>
+				<DataLoader loadingState={loadingState} render={renderOverview} />
+			</Container>
 		</>
 	);
 };

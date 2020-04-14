@@ -1,5 +1,9 @@
 import { Button } from '@acpaas-ui/react-components';
-import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
+import {
+	Container,
+	ContextHeader,
+	ContextHeaderTopSection,
+} from '@acpaas-ui/react-editorial-components';
 import { FormsAPI } from '@redactie/form-renderer-module';
 import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement } from 'react';
@@ -62,26 +66,22 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 
 		const formProps = getFormPropsByCT(contentType);
 		return (
-			<div className="u-container u-wrapper">
-				<div className="u-margin-top">
-					<formsAPI.Form {...formProps} onSubmit={onFormSubmit}>
-						{({ submitForm }) => (
-							<div className="u-margin-top">
-								<Button
-									className="u-margin-right-xs"
-									onClick={() => submitForm()}
-									type="success"
-								>
-									Bewaar
-								</Button>
-								<Button onClick={navigateToOverview} outline>
-									Annuleer
-								</Button>
-							</div>
-						)}
-					</formsAPI.Form>
-				</div>
-			</div>
+			<formsAPI.Form {...formProps} onSubmit={onFormSubmit}>
+				{({ submitForm }) => (
+					<div className="u-margin-top">
+						<Button
+							className="u-margin-right-xs"
+							onClick={() => submitForm()}
+							type="success"
+						>
+							Bewaar
+						</Button>
+						<Button onClick={navigateToOverview} outline>
+							Annuleer
+						</Button>
+					</div>
+				)}
+			</formsAPI.Form>
 		);
 	};
 
@@ -101,7 +101,9 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 			<ContextHeader title={headerTitle} badges={badges}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			<DataLoader loadingState={contentTypesLoading} render={renderCreateContentForm} />
+			<Container>
+				<DataLoader loadingState={contentTypesLoading} render={renderCreateContentForm} />
+			</Container>
 		</>
 	);
 };
