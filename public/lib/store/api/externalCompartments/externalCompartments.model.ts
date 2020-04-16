@@ -2,8 +2,8 @@ import { EntityState } from '@datorama/akita';
 import { FormikErrors } from 'formik';
 import { FC } from 'react';
 
-import { ContentsSchema } from '../../services/content';
-import { ContentTypeSchema } from '../../services/contentTypes';
+import { ContentsSchema } from '../../../services/content';
+import { ContentTypeSchema } from '../../../services/contentTypes';
 
 export type ModuleValue = any;
 

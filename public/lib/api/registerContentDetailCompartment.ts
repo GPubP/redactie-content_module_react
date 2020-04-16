@@ -1,7 +1,7 @@
 import {
 	ExternalCompartmentOptions,
 	externalCompartmentsService,
-} from '../store/externalCompartments';
+} from '../store/api/externalCompartments';
 
 export const registerContenDetailCompartment = (
 	name: string,

@@ -1,10 +1,10 @@
-import { ExternalCompartmentOptions } from '../store/externalCompartments';
+import { ExternalCompartmentOptions } from '../store/api/externalCompartments';
 
 export {
 	ExternalCompartmentProps,
 	ModuleSettings,
 	ModuleValue,
-} from '../store/externalCompartments/externalCompartments.model';
+} from '../store/api/externalCompartments/externalCompartments.model';
 export { ContentSchema } from '../services/content/content.service.types';
 export {
 	ContentTypeSchema,
