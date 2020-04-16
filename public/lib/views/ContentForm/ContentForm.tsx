@@ -97,6 +97,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							className="u-margin-right-xs"
 							onClick={() => submitForm()}
 							type="success"
+							htmlType="submit"
 						>
 							Bewaar
 						</Button>

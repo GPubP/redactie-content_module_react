@@ -4,7 +4,7 @@ import { ExternalCompartmentsStore, externalCompartmentsStore } from './external
 export class ExternalCompartmentsService {
 	constructor(private store: ExternalCompartmentsStore) {}
 
-	registerCompartment(name: string, options: ExternalCompartmentOptions): void {
+	public registerCompartment(name: string, options: ExternalCompartmentOptions): void {
 		const entity: ExternalCompartmentModel = {
 			name,
 			label: options.label,
