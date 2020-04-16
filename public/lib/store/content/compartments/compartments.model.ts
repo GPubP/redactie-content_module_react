@@ -1,4 +1,4 @@
-import { ActiveState, EntityState, MultiActiveState } from '@datorama/akita';
+import { ActiveState, EntityState } from '@datorama/akita';
 import { FC } from 'react';
 
 import { CompartmentProps } from '../../../views/ContentForm/ContentForm.types';

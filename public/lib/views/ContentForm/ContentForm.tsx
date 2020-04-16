@@ -1,9 +1,11 @@
 import { Button } from '@acpaas-ui/react-components';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import NavList from '../../components/NavList/NavList';
 import { NavListItem } from '../../components/NavList/NavList.types';
 import { getForm } from '../../connectors/formRenderer';
+import { MODULE_PATHS } from '../../content.const';
 import { getFormPropsByCT } from '../../services/helpers/helpers.service';
 import { useExternalCompartmentFacade } from '../../store/api/externalCompartments/externalCompartments.facade';
 import { CompartmentType } from '../../store/content/compartments';
@@ -16,6 +18,7 @@ import {
 } from './ContentForm.types';
 
 const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
+	history,
 	contentType,
 	onSubmit,
 	cancel,
@@ -104,13 +107,13 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	}, [contentType, externalCompartments]); // eslint-disable-line
 
 	useEffect(() => {
-		if (!compartment) {
-			// TODO: redirect here
+		if (compartments.length && (!compartment || compartment === 'default')) {
+			history.push(`./${compartments[0].name}`);
 			return;
 		}
 
 		activate(compartment);
-	}, [activate, compartment]);
+	}, [activate, compartment, compartments, history]);
 
 	useEffect(() => {
 		setNavlist(
