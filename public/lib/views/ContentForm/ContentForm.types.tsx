@@ -12,7 +12,7 @@ export interface ContentFormMatchProps {
 }
 
 export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
-	onSubmit: (values: FormikValues) => void;
+	onSubmit: (values: ContentSchema) => void;
 	cancel: () => void;
 	content?: ContentSchema;
 	contentType: ContentTypeSchema;
@@ -21,11 +21,11 @@ export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 
 export interface CompartmentProps {
 	contentType: ContentTypeSchema; // = deep clone
-	contentVaue: ContentsSchema; // = deep clone
-	settings: ModuleSettings; // = deep clone
+	contentValue: ContentSchema | undefined; // = deep clone
+	settings: ModuleSettings | ContentTypeSchema['fields'] | ContentTypeSchema | undefined; // = deep clone
 	value: ModuleValue; // module data section
 	isValid: boolean;
 
-	onChange: (e: ModuleValue) => FormikErrors<any>[] | null; // Boolean for validation result (maybe?)
-	updateContent: (e: ContentsSchema) => FormikErrors<any>[] | null; // For edge cases where content item must be changed. Boolean for validation
+	onChange: (e: ModuleValue) => void; // Boolean for validation result (maybe?)
+	updateContent: (e: ContentSchema) => void; // For edge cases where content item must be changed. Boolean for validation
 }

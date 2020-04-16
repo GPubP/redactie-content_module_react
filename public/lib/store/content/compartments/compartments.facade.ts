@@ -21,7 +21,7 @@ export const useCompartmentFacade = (): [
 		compartments: ContentCompartmentModel[] | ContentCompartmentModel,
 		options: { replace?: true }
 	): void => contentCompartmentsService.register(compartments, options);
-	const activate = (name: ID): void => contentCompartmentsService.setActive(name);
+	const activate = (name: ID): void => contentCompartmentsService.setActiveByNamOrSlug(name);
 	const [compartments, setCompartments] = useState<ContentCompartmentModel[]>([]);
 	const [active, setActive] = useState<ContentCompartmentModel>();
 

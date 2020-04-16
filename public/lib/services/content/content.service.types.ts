@@ -1,17 +1,25 @@
 import { ContentTypeSchema } from '../contentTypes';
 
+export type ModuleValue = {
+	[key: string]: any;
+};
+
 export interface ContentSchema {
-	uuid: string;
+	uuid?: string;
 	meta: {
 		label: string;
-		description: string;
+		slug: string;
+		description?: string;
 		contentType: ContentTypeSchema;
-		theme: string;
-		lastEditor: string;
-		status: string;
-		published: boolean;
-		createdAt: string;
-		lastModified: string;
+		theme?: string;
+		lastEditor?: string;
+		status?: string;
+		published?: boolean;
+		createdAt?: string;
+		lastModified?: string;
+	};
+	modulesData?: {
+		[key: string]: ModuleValue;
 	};
 	fields: {
 		[key: string]: any;
@@ -25,8 +33,12 @@ export interface ContentsSchema {
 export interface ContentCreateSchema {
 	meta: {
 		label: string;
+		slug: string;
 		contentType: string;
 		status: ContentStatus;
+	};
+	modulesData?: {
+		[key: string]: ModuleValue;
 	};
 	fields: {
 		[key: string]: any;

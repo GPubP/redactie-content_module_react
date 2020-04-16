@@ -5,6 +5,14 @@ export interface FieldType {
 		module: string;
 	};
 }
+interface ModuleSettings {
+	uuid: string;
+	label: string;
+	name: string;
+	module?: string;
+	config: any;
+	validationSchema?: any;
+}
 
 export interface ContentTypeFieldSchema {
 	name: string;
@@ -23,6 +31,7 @@ export interface ContentTypeSchema {
 		description: string;
 	};
 	fields: ContentTypeFieldSchema[];
+	modulesConfig?: ModuleSettings[];
 	validateSchema: ValidateSchema;
 	errorMessages: ErrorMessagesSchema;
 }
