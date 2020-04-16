@@ -12,8 +12,12 @@ export interface ModuleSettings {
 	label: string;
 	name: string;
 	module?: string;
-	config: any;
-	validationSchema?: any;
+	config: {
+		[key: string]: any;
+	};
+	validationSchema?: {
+		[key: string]: any;
+	};
 }
 
 export interface ExternalCompartmentProps {
