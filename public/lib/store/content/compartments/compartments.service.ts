@@ -6,7 +6,7 @@ import { contentCompartmentStore, ContentCompartmentStore } from './compartments
 export class ContentCompartmentsService {
 	constructor(private store: ContentCompartmentStore) {}
 
-	register(
+	public register(
 		data: ContentCompartmentModel | ContentCompartmentModel[],
 		options: ContentCompartmentRegisterOptions = {}
 	): void {
@@ -22,11 +22,11 @@ export class ContentCompartmentsService {
 		});
 	}
 
-	clearCompartments(): void {
-		this.store.remove();
+	public clearCompartments(): void {
+		this.store.reset();
 	}
 
-	setActive(name: ID): void {
+	public setActive(name: ID): void {
 		this.store.setActive(name);
 	}
 }

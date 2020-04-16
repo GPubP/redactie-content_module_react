@@ -1,10 +1,9 @@
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import * as moment from 'moment';
 import 'moment/locale/nl';
-import React, { FC, ReactElement } from 'react';
+import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { ContentAPI } from './lib/api/api.types';
 import { registerContentAPI } from './lib/api/index';
 import { registerRoutes } from './lib/connectors/sites';
 import { MODULE_PATHS } from './lib/content.const';
@@ -91,15 +90,3 @@ registerRoutes({
 registerContentAPI();
 
 export * from './lib/api/api.types';
-
-// TODO: remove test
-const component: FC<CompartmentProps> = (): ReactElement => <></>;
-
-const contentAPI: ContentAPI = Core.modules.getModuleAPI('content-module') as ContentAPI;
-
-contentAPI.registerContenDetailCompartment('taxonomy', {
-	label: 'Taxonomy',
-	component: component,
-	module: 'taxonomy-module',
-	replace: true,
-});

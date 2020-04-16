@@ -6,7 +6,7 @@ import {
 	createInitialContentCompartmentState,
 } from './compartments.model';
 
-@StoreConfig({ name: 'externalCompartments', idKey: 'name' })
+@StoreConfig({ name: 'contentCompartments', idKey: 'name', resettable: true })
 export class ContentCompartmentStore extends EntityStore<
 	ContentCompartmentState,
 	ContentCompartmentModel

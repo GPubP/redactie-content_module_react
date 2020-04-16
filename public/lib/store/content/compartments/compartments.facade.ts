@@ -1,6 +1,7 @@
 import { ID } from '@datorama/akita';
 import { useEffect, useState } from 'react';
-import { Observable } from 'rxjs';
+
+import { onEmit } from '../../../helpers/onEmit';
 
 import { ContentCompartmentModel, ContentCompartmentRegisterOptions } from './compartments.model';
 import { contentCompartmentsQuery } from './compartments.query';
@@ -9,10 +10,6 @@ import { contentCompartmentsService } from './compartments.service';
 interface CompartmentState {
 	compartments: ContentCompartmentModel[];
 	active: ContentCompartmentModel | undefined;
-}
-
-function onEmit<T>(source$: Observable<T>, nextFn: (value: T) => void): any {
-	return source$.subscribe(nextFn, console.error);
 }
 
 export const useCompartmentFacade = (): [

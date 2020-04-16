@@ -1,12 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Observable } from 'rxjs';
+
+import { onEmit } from '../../../helpers/onEmit';
 
 import { ExternalCompartmentModel } from './externalCompartments.model';
 import { externalCompartmentsQuery } from './externalCompartments.query';
-
-function onEmit<T>(source$: Observable<T>, nextFn: (value: T) => void): any {
-	return source$.subscribe(nextFn, console.error);
-}
 
 export const useExternalCompartmentFacade = (): [ExternalCompartmentModel[]] => {
 	const [externalCompartments, setCompartments] = useState<ExternalCompartmentModel[]>([]);
