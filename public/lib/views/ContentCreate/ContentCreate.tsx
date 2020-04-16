@@ -105,7 +105,6 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 					tenantId,
 					routes: activeRoute?.routes,
 					contentType: contentType,
-					content: { fields: {}, modulesData: {}, meta: { label: 'yolo' } },
 					onSubmit: (value: ContentSchema) => onFormSubmit(value),
 					cancel: () => navigateToOverview(),
 				})}

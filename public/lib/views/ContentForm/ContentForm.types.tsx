@@ -2,7 +2,7 @@ import { FormikErrors, FormikValues } from 'formik';
 
 import { ModuleSettings, ModuleValue } from '../../api/api.types';
 import { ContentRouteProps } from '../../content.types';
-import { ContentSchema, ContentsSchema } from '../../services/content/content.service.types';
+import { ContentSchema } from '../../services/content/content.service.types';
 import { ContentTypeSchema } from '../../services/contentTypes/contentTypes.service.types';
 
 export interface ContentFormMatchProps {
@@ -14,7 +14,6 @@ export interface ContentFormMatchProps {
 export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 	onSubmit: (values: ContentSchema) => void;
 	cancel: () => void;
-	content?: ContentSchema;
 	contentType: ContentTypeSchema;
 	activeCompartment: string;
 }
