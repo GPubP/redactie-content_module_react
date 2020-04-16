@@ -41,7 +41,9 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 			modulesData: {},
 			meta: {
 				label: '',
-				slug: '',
+				slug: {
+					nl: '',
+				},
 				contentType: contentType,
 				status: ContentStatus.DRAFT,
 			},

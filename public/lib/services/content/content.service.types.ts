@@ -8,7 +8,9 @@ export interface ContentSchema {
 	uuid?: string;
 	meta: {
 		label: string;
-		slug: string;
+		slug: {
+			[key: string]: string;
+		};
 		description?: string;
 		contentType: ContentTypeSchema;
 		theme?: string;
@@ -33,7 +35,9 @@ export interface ContentsSchema {
 export interface ContentCreateSchema {
 	meta: {
 		label: string;
-		slug: string;
+		slug: {
+			[key: string]: string;
+		};
 		contentType: string;
 		status: ContentStatus;
 	};

@@ -38,7 +38,7 @@ const MetaForm: FC<CompartmentProps> = ({ value, onChange }): ReactElement | nul
 						<Field
 							type="text"
 							label="Slug"
-							name="slug"
+							name="slug.nl"
 							placeholder="Typ een slug"
 							required
 							as={TextField}

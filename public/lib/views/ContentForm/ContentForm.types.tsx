@@ -1,5 +1,3 @@
-import { FormikErrors, FormikValues } from 'formik';
-
 import { ModuleSettings, ModuleValue } from '../../api/api.types';
 import { ContentRouteProps } from '../../content.types';
 import { ContentSchema } from '../../services/content/content.service.types';
