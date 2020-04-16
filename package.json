@@ -32,6 +32,7 @@
     "Module"
   ],
   "devDependencies": {
+    "@datorama/akita": "^4.22.1",
     "@acpaas-ui/react-components": "^4.0.0",
     "@acpaas-ui/react-editorial-components": "0.0.1-6",
     "@babel/core": "7.8.3",
@@ -88,7 +89,6 @@
     "webpack-cli": "3.3.10"
   },
   "dependencies": {
-    "@datorama/akita": "^4.22.1",
     "formik": "^2.1.4",
     "ky": "^0.17.0",
     "lodash.kebabcase": "^4.1.1",
