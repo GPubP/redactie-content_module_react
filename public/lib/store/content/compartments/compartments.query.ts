@@ -4,8 +4,8 @@ import { ContentCompartmentState } from './compartments.model';
 import { ContentCompartmentStore, contentCompartmentStore } from './compartments.store';
 
 export class ContentCompartmentsQuery extends QueryEntity<ContentCompartmentState> {
-	all$ = this.selectAll();
-	active$ = this.selectActive();
+	public all$ = this.selectAll();
+	public active$ = this.selectActive();
 
 	constructor(protected store: ContentCompartmentStore) {
 		super(store);
