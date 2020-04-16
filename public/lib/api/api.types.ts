@@ -1,7 +1,7 @@
 import { ExternalCompartmentOptions } from '../store/api/externalCompartments';
 
+export { CompartmentProps } from '../views/ContentForm/ContentForm.types';
 export {
-	ExternalCompartmentProps,
 	ModuleSettings,
 	ModuleValue,
 } from '../store/api/externalCompartments/externalCompartments.model';

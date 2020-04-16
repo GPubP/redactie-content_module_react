@@ -1,4 +1,7 @@
-import { EntityState, MultiActiveState } from '@datorama/akita';
+import { ActiveState, EntityState, MultiActiveState } from '@datorama/akita';
+import { FC } from 'react';
+
+import { CompartmentProps } from '../../../views/ContentForm/ContentForm.types';
 
 export type ModuleValue = any;
 export enum CompartmentType {
@@ -15,13 +18,14 @@ export interface ContentCompartmentModel {
 	name: string;
 	label: string;
 	slug?: string;
+	component: FC<CompartmentProps>;
 	type: CompartmentType;
 }
 
 export interface ContentCompartmentState
 	extends EntityState<ContentCompartmentModel, string>,
-		MultiActiveState {}
+		ActiveState {}
 
 export const createInitialContentCompartmentState = (): ContentCompartmentState => ({
-	active: [],
+	active: null,
 });

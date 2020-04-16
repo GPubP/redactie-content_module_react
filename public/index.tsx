@@ -9,9 +9,9 @@ import { registerContentAPI } from './lib/api/index';
 import { registerRoutes } from './lib/connectors/sites';
 import { MODULE_PATHS } from './lib/content.const';
 import { ContentRouteProps } from './lib/content.types';
-import { ExternalCompartmentProps } from './lib/store/api/externalCompartments/externalCompartments.model';
 import { ContentCreate, ContentOverview, ContentUpdate } from './lib/views';
 import ContentForm from './lib/views/ContentForm/ContentForm';
+import { CompartmentProps } from './lib/views/ContentForm/ContentForm.types';
 
 // eslint-disable-next-line import/namespace
 moment.locale('nl');
@@ -93,7 +93,7 @@ registerContentAPI();
 export * from './lib/api/api.types';
 
 // TODO: remove test
-const component: FC<ExternalCompartmentProps> = (): ReactElement => <></>;
+const component: FC<CompartmentProps> = (): ReactElement => <></>;
 
 const contentAPI: ContentAPI = Core.modules.getModuleAPI('content-module') as ContentAPI;
 
