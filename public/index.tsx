@@ -4,6 +4,8 @@ import 'moment/locale/nl';
 import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
+import { registerContentAPI } from './lib/api/index';
+import { registerRoutes } from './lib/connectors/sites';
 import { ContentRouteProps } from './lib/content.types';
 import { ContentCreate, ContentOverview, ContentUpdate } from './lib/views';
 
@@ -26,37 +28,37 @@ const ContentComponent: FC<ContentRouteProps> = ({ route, location, match, tenan
 	);
 };
 
-const sitesAPI = Core.modules.getModuleAPI('sites-module');
-
-if (sitesAPI) {
-	sitesAPI.routes.register({
-		path: '/:siteId/content',
-		component: ContentComponent,
-		breadcrumb: 'Content',
-		exact: true,
-		navigation: {
-			renderContext: 'site',
-			context: 'site',
-			label: 'Content',
+registerRoutes({
+	path: '/:siteId/content',
+	component: ContentComponent,
+	breadcrumb: 'Content',
+	exact: true,
+	navigation: {
+		renderContext: 'site',
+		context: 'site',
+		label: 'Content',
+	},
+	routes: [
+		{
+			path: '/:siteId/content/overzicht',
+			component: ContentOverview,
+			navigation: {
+				context: 'site',
+				label: 'Content overzicht',
+				parentPath: '/:siteId/content',
+			},
 		},
-		routes: [
-			{
-				path: '/:siteId/content/overzicht',
-				component: ContentOverview,
-				navigation: {
-					context: 'site',
-					label: 'Content overzicht',
-					parentPath: '/:siteId/content',
-				},
-			},
-			{
-				path: '/:siteId/content/content-type/:contentTypeId/aanmaken',
-				component: ContentCreate,
-			},
-			{
-				path: '/:siteId/content/:contentId/bewerken',
-				component: ContentUpdate,
-			},
-		],
-	});
-}
+		{
+			path: '/:siteId/content/content-type/:contentTypeId/aanmaken',
+			component: ContentCreate,
+		},
+		{
+			path: '/:siteId/content/:contentId/bewerken',
+			component: ContentUpdate,
+		},
+	],
+});
+
+registerContentAPI();
+
+export * from './lib/api/api.types';
