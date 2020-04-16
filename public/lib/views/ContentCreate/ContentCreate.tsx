@@ -1,14 +1,8 @@
-<<<<<<< Updated upstream
-import { Button } from '@acpaas-ui/react-components';
 import {
 	Container,
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { FormsAPI } from '@redactie/form-renderer-module';
-=======
-import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
->>>>>>> Stashed changes
 import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { FormikValues } from 'formik';
 import React, { FC } from 'react';
@@ -77,24 +71,6 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 			) || null;
 
 		return (
-<<<<<<< Updated upstream
-			<formsAPI.Form {...formProps} onSubmit={onFormSubmit}>
-				{({ submitForm }) => (
-					<div className="u-margin-top">
-						<Button
-							className="u-margin-right-xs"
-							onClick={() => submitForm()}
-							type="success"
-						>
-							Bewaar
-						</Button>
-						<Button onClick={navigateToOverview} outline>
-							Annuleer
-						</Button>
-					</div>
-				)}
-			</formsAPI.Form>
-=======
 			<div className="u-container u-wrapper">
 				<div className="u-margin-top">
 					{Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
@@ -107,7 +83,6 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 					})}
 				</div>
 			</div>
->>>>>>> Stashed changes
 		);
 	};
 
@@ -127,13 +102,9 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 			<ContextHeader title={headerTitle} badges={badges}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-<<<<<<< Updated upstream
 			<Container>
-				<DataLoader loadingState={contentTypesLoading} render={renderCreateContentForm} />
+				<DataLoader loadingState={contentTypesLoading} render={renderChildRoutes} />
 			</Container>
-=======
-			<DataLoader loadingState={contentTypesLoading} render={renderChildRoutes} />
->>>>>>> Stashed changes
 		</>
 	);
 };
