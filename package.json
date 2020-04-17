@@ -88,13 +88,13 @@
     "typescript-plugin-css-modules": "^2.1.2",
     "webpack": "4.41.5",
     "webpack-bundle-analyzer": "^3.6.1",
-    "webpack-cli": "3.3.10"
+    "webpack-cli": "3.3.10",
+    "moment": "^2.22.1"
   },
   "dependencies": {
     "formik": "^2.1.4",
     "ky": "^0.17.0",
     "lodash.kebabcase": "^4.1.1",
-    "moment": "^2.22.1",
     "yup": "^0.28.3"
   },
   "author": "Glenn Verschooren",

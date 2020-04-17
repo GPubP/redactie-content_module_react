@@ -1,16 +1,12 @@
 import { ContentTypeSchema } from '../contentTypes';
 
-export type ModuleValue = {
-	[key: string]: any;
-};
+export type ModuleValue = Record<string, any>;
 
 export interface ContentSchema {
 	uuid?: string;
 	meta: {
 		label: string;
-		slug: {
-			[key: string]: string;
-		};
+		slug: Record<string, string>;
 		description?: string;
 		contentType: ContentTypeSchema;
 		theme?: string;
@@ -20,12 +16,8 @@ export interface ContentSchema {
 		createdAt?: string;
 		lastModified?: string;
 	};
-	modulesData?: {
-		[key: string]: ModuleValue;
-	};
-	fields: {
-		[key: string]: any;
-	};
+	modulesData?: Record<string, ModuleValue>;
+	fields: Record<string, any>;
 }
 
 export interface ContentsSchema {
@@ -35,18 +27,12 @@ export interface ContentsSchema {
 export interface ContentCreateSchema {
 	meta: {
 		label: string;
-		slug: {
-			[key: string]: string;
-		};
+		slug: Record<string, string>;
 		contentType: string;
 		status: ContentStatus;
 	};
-	modulesData?: {
-		[key: string]: ModuleValue;
-	};
-	fields: {
-		[key: string]: any;
-	};
+	modulesData?: Record<string, ModuleValue>;
+	fields: Record<string, any>;
 }
 
 export enum ContentStatus {
