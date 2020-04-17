@@ -41,7 +41,7 @@
     "@commitlint/cli": "8.3.5",
     "@commitlint/config-conventional": "8.3.4",
     "@datorama/akita": "^4.22.1",
-    "@redactie/form-renderer-module": "file:../wcm-react-form-renderer",
+    "@redactie/form-renderer-module": "^0.3.0",
     "@redactie/module-webpack-plugin": "2.0.0",
     "@redactie/redactie-core": "^1.2.0",
     "@redactie/sites-module": "^0.10.0",
