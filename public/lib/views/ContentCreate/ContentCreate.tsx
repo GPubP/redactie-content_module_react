@@ -103,7 +103,6 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 		return (
 			<div className="u-margin-top">
 				{Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-					history,
 					tenantId,
 					routes: activeRoute?.routes,
 					contentType: contentType,
