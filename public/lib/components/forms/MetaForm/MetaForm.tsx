@@ -28,6 +28,7 @@ const MetaForm: FC<CompartmentProps> = ({ value, onChange }): ReactElement | nul
 							type="text"
 							label="Label"
 							name="label"
+							id="label"
 							placeholder="Typ een label"
 							required
 							as={TextField}
@@ -39,6 +40,7 @@ const MetaForm: FC<CompartmentProps> = ({ value, onChange }): ReactElement | nul
 							type="text"
 							label="Slug"
 							name="slug.nl"
+							id="slug"
 							placeholder="Typ een slug"
 							required
 							as={TextField}
