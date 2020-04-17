@@ -1,9 +1,7 @@
 import { FormikValues } from 'formik';
 
-export interface AutoSubmitProps {
-	delay?: number;
+export interface FormikOnChangeHandlerProps {
 	onChange: (values: FormikValues) => void;
 	initialValues?: { [key: string]: any };
-	submitForm?: () => void;
 	values?: { [key: string]: any };
 }

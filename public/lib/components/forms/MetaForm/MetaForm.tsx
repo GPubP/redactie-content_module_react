@@ -3,7 +3,7 @@ import { Field, Formik } from 'formik';
 import React, { FC, ReactElement } from 'react';
 
 import { CompartmentProps } from '../../../api/api.types';
-import AutoSubmit from '../AutoSubmit/AutoSubmit';
+import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandler';
 
 const MetaForm: FC<CompartmentProps> = ({ value, onChange }): ReactElement | null => {
 	/**
@@ -14,15 +14,10 @@ const MetaForm: FC<CompartmentProps> = ({ value, onChange }): ReactElement | nul
 	 * RENDER
 	 */
 	return (
-		<Formik
-			onSubmit={() => {
-				return;
-			}}
-			initialValues={value}
-		>
-			{() => (
+		<Formik onSubmit={onChange} initialValues={value}>
+			{({ submitForm }) => (
 				<>
-					<AutoSubmit onChange={onChange} />
+					<FormikOnChangeHandler onChange={submitForm} />
 					<div className="u-margin-bottom">
 						<Field
 							type="text"
