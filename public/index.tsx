@@ -10,7 +10,6 @@ import { MODULE_PATHS } from './lib/content.const';
 import { ContentRouteProps } from './lib/content.types';
 import { ContentCreate, ContentOverview, ContentUpdate } from './lib/views';
 import ContentForm from './lib/views/ContentForm/ContentForm';
-import { CompartmentProps } from './lib/views/ContentForm/ContentForm.types';
 
 // eslint-disable-next-line import/namespace
 moment.locale('nl');
@@ -47,7 +46,6 @@ const ContentComponent: FC<ContentRouteProps> = ({ route, location, match, tenan
 registerRoutes({
 	path: MODULE_PATHS.root,
 	component: ContentComponent,
-	breadcrumb: 'Content',
 	exact: true,
 	navigation: {
 		renderContext: 'site',
@@ -58,18 +56,15 @@ registerRoutes({
 		{
 			path: MODULE_PATHS.overview,
 			component: ContentOverview,
-			navigation: {
-				context: 'site',
-				label: 'Content overzicht',
-				parentPath: '/:siteId/content',
-			},
 		},
 		{
 			path: MODULE_PATHS.create,
 			component: ContentCreate,
+			breadcrumb: 'Content',
 			routes: [
 				{
 					path: MODULE_PATHS.createCompartment,
+					breadcrumb: 'Aanmaken',
 					component: ContentForm,
 				},
 			],
@@ -77,9 +72,11 @@ registerRoutes({
 		{
 			path: MODULE_PATHS.update,
 			component: ContentUpdate,
+			breadcrumb: 'Content',
 			routes: [
 				{
 					path: MODULE_PATHS.updateCompartment,
+					breadcrumb: 'Bewerken',
 					component: ContentForm,
 				},
 			],

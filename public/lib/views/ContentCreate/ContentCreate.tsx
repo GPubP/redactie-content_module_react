@@ -1,17 +1,18 @@
-import {
-	Container,
-	ContextHeader,
-	ContextHeaderTopSection,
-} from '@acpaas-ui/react-editorial-components';
+import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import { FormikValues } from 'formik';
 import React, { FC, useEffect } from 'react';
 
 import { DataLoader } from '../../components';
 import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { useContentType } from '../../hooks';
-import { ContentCreateSchema, ContentStatus, createContent } from '../../services/content';
+import {
+	ContentCreateSchema,
+	ContentSchema,
+	ContentStatus,
+	createContent,
+} from '../../services/content';
+import { useInternalFacade } from '../../store/content/internal/internal.facade';
 
 import { ContentCreateMatchProps } from './ContentCreate.types';
 
@@ -28,6 +29,29 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 	 */
 	const [contentTypesLoading, contentType] = useContentType(contentTypeId);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+	const [, registerContent, activateContent] = useInternalFacade();
+
+	useEffect(() => {
+		if (!contentType) {
+			return;
+		}
+
+		const defaultValue: ContentSchema = {
+			fields: {},
+			modulesData: {},
+			meta: {
+				label: '',
+				slug: {
+					nl: '',
+				},
+				contentType: contentType,
+				status: ContentStatus.DRAFT,
+			},
+		};
+
+		registerContent([defaultValue]);
+		activateContent('new');
+	}, [contentType]); // eslint-disable-line
 
 	/**
 	 * Methods
@@ -36,19 +60,21 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 		history.push(`/${tenantId}/sites/${siteId}/content/overzicht`);
 	};
 
-	const onFormSubmit = (values: any): void => {
-		if (!contentType) {
+	const onFormSubmit = (content: ContentSchema): void => {
+		if (!contentType || !content) {
 			return;
 		}
 
 		const request: ContentCreateSchema = {
 			meta: {
 				// TODO: Where does this string come from?
-				label: 'Dit is een titel',
+				label: content.meta?.label,
+				slug: content.meta?.slug,
 				contentType: contentType._id,
 				status: ContentStatus.DRAFT,
 			},
-			fields: values,
+			modulesData: content.modulesData,
+			fields: content.fields,
 		};
 
 		createContent(request).then(() => {
@@ -61,6 +87,10 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 	 */
 
 	const renderChildRoutes = (): any => {
+		if (!contentType) {
+			return;
+		}
+
 		const activeRoute =
 			routes?.find(
 				item =>
@@ -71,17 +101,14 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 			) || null;
 
 		return (
-			<div className="u-container u-wrapper">
-				<div className="u-margin-top">
-					{Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-						tenantId,
-						routes: activeRoute?.routes,
-						contentType: contentType,
-						content: {},
-						onSubmit: (value: FormikValues) => onFormSubmit(value),
-						cancel: () => navigateToOverview(),
-					})}
-				</div>
+			<div className="u-margin-top">
+				{Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
+					tenantId,
+					routes: activeRoute?.routes,
+					contentType: contentType,
+					onSubmit: (value: ContentSchema) => onFormSubmit(value),
+					cancel: () => navigateToOverview(),
+				})}
 			</div>
 		);
 	};
@@ -102,9 +129,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 			<ContextHeader title={headerTitle} badges={badges}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			<Container>
-				<DataLoader loadingState={contentTypesLoading} render={renderChildRoutes} />
-			</Container>
+			<DataLoader loadingState={contentTypesLoading} render={renderChildRoutes} />
 		</>
 	);
 };

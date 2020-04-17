@@ -32,7 +32,6 @@
     "Module"
   ],
   "devDependencies": {
-    "@datorama/akita": "^4.22.1",
     "@acpaas-ui/react-components": "^4.0.0",
     "@acpaas-ui/react-editorial-components": "0.0.1-8",
     "@babel/core": "7.8.3",
@@ -41,7 +40,8 @@
     "@babel/preset-typescript": "7.8.3",
     "@commitlint/cli": "8.3.5",
     "@commitlint/config-conventional": "8.3.4",
-    "@redactie/form-renderer-module": "^0.2.0",
+    "@datorama/akita": "^4.22.1",
+    "@redactie/form-renderer-module": "^0.3.0",
     "@redactie/module-webpack-plugin": "2.0.0",
     "@redactie/redactie-core": "^1.2.0",
     "@redactie/sites-module": "^0.10.0",
@@ -69,11 +69,13 @@
     "husky": "3.1.0",
     "install": "0.13.0",
     "jest": "25.1.0",
+    "lodash.debounce": "^4.0.8",
     "node-sass": "4.13.1",
     "npm": "6.13.7",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.7.0",
     "prettier": "1.19.1",
+    "ramda": "^0.27.0",
     "react": "16.12.0",
     "react-router-dom": "5.1.2",
     "sass-loader": "^8.0.2",
@@ -86,14 +88,13 @@
     "typescript-plugin-css-modules": "^2.1.2",
     "webpack": "4.41.5",
     "webpack-bundle-analyzer": "^3.6.1",
-    "webpack-cli": "3.3.10"
+    "webpack-cli": "3.3.10",
+    "moment": "^2.22.1"
   },
   "dependencies": {
     "formik": "^2.1.4",
     "ky": "^0.17.0",
     "lodash.kebabcase": "^4.1.1",
-    "moment": "^2.22.1",
-    "ramda": "^0.27.0",
     "yup": "^0.28.3"
   },
   "author": "Glenn Verschooren",

@@ -26,6 +26,20 @@ export class ContentCompartmentsService {
 		this.store.reset();
 	}
 
+	public setActiveByNamOrSlug(id: ID | string): void {
+		const state = this.store.getValue();
+		const compartment = Object.values(state?.entities || {}).find(
+			compartment => compartment.slug === id
+		);
+
+		if (compartment) {
+			this.setActive(compartment.name);
+			return;
+		}
+
+		return this.setActive(id);
+	}
+
 	public setActive(name: ID): void {
 		this.store.setActive(name);
 	}

@@ -1,15 +1,19 @@
 import { Button } from '@acpaas-ui/react-components';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import {
+	ActionBar,
+	ActionBarContentSection,
+	Container,
+} from '@acpaas-ui/react-editorial-components';
+import React, { FC, useEffect, useState } from 'react';
 
+import { ContentSchema, ModuleSettings } from '../../api/api.types';
+import { FieldsForm, MetaForm } from '../../components';
 import NavList from '../../components/NavList/NavList';
 import { NavListItem } from '../../components/NavList/NavList.types';
-import { getForm } from '../../connectors/formRenderer';
-import { MODULE_PATHS } from '../../content.const';
-import { getFormPropsByCT } from '../../services/helpers/helpers.service';
 import { useExternalCompartmentFacade } from '../../store/api/externalCompartments/externalCompartments.facade';
-import { CompartmentType } from '../../store/content/compartments';
+import { CompartmentType, ContentCompartmentModel } from '../../store/content/compartments';
 import { useCompartmentFacade } from '../../store/content/compartments/compartments.facade';
+import { useInternalFacade } from '../../store/content/internal/internal.facade';
 
 import {
 	CompartmentProps,
@@ -26,41 +30,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 }) => {
 	const { compartment } = match.params;
 
-	const renderMetaForm: FC<CompartmentProps> = (): ReactElement => <>meta hello!!!</>;
-	const renderForm: FC<CompartmentProps> = (): ReactElement | null => {
-		if (!contentType) {
-			return null;
-		}
-
-		const Form = getForm();
-
-		if (!Form) {
-			return null;
-		}
-
-		const formProps = getFormPropsByCT(contentType);
-
-		return (
-			<Form {...formProps} onSubmit={onSubmit}>
-				{({ submitForm }) => (
-					<div className="u-margin-top">
-						{compartment}
-						<Button
-							className="u-margin-right-xs"
-							onClick={() => submitForm()}
-							type="success"
-						>
-							Bewaar
-						</Button>
-						<Button onClick={cancel} outline>
-							Annuleer
-						</Button>
-					</div>
-				)}
-			</Form>
-		);
-	};
-
 	/**
 	 * Hooks
 	 */
@@ -71,6 +40,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	] = useCompartmentFacade();
 	const [externalCompartments] = useExternalCompartmentFacade();
 	const [navList, setNavlist] = useState<NavListItem[]>([]);
+	const [{ active: localContent }, registerContent] = useInternalFacade();
 
 	useEffect(() => {
 		// TODO: add compartments support later on
@@ -81,17 +51,17 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		register(
 			[
 				{
-					label: 'Content',
-					name: 'content',
-					slug: 'content',
-					component: renderForm,
+					label: 'Inhoud',
+					name: 'fields',
+					slug: 'inhoud',
+					component: FieldsForm,
 					type: CompartmentType.CT,
 				},
 				{
-					label: 'Meta informatie',
+					label: 'Informatie',
 					name: 'meta',
-					slug: 'meta',
-					component: renderMetaForm,
+					slug: 'informatie',
+					component: MetaForm,
 					type: CompartmentType.INTERNAL,
 				},
 				...externalCompartments.map(ec => ({
@@ -108,7 +78,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 	useEffect(() => {
 		if (compartments.length && (!compartment || compartment === 'default')) {
-			history.push(`./${compartments[0].name}`);
+			history.push(`./${compartments[0].slug || compartments[0].name}`);
 			return;
 		}
 
@@ -127,6 +97,70 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	/**
 	 * Methods
 	 */
+	const getSettings = (compartment: ContentCompartmentModel): CompartmentProps['settings'] => {
+		if (!contentType) {
+			return;
+		}
+
+		switch (compartment.type) {
+			case CompartmentType.CT:
+				return contentType?.fields;
+			case CompartmentType.INTERNAL:
+				return contentType;
+			case CompartmentType.MODULE:
+				return contentType.modulesConfig?.find(
+					(moduleConfig: ModuleSettings) => moduleConfig.name === compartment.name
+				);
+		}
+	};
+
+	const getCompartmentValue = (compartment: ContentCompartmentModel): unknown => {
+		if (!localContent) {
+			return;
+		}
+
+		switch (compartment.type) {
+			case CompartmentType.CT:
+				return localContent?.fields;
+			case CompartmentType.INTERNAL:
+				return localContent?.meta;
+			case CompartmentType.MODULE:
+				return localContent?.modulesData?.[compartment.name];
+		}
+	};
+
+	const handleChange = (compartment: ContentCompartmentModel, values: unknown): void => {
+		if (!localContent) {
+			return;
+		}
+
+		switch (compartment.type) {
+			case CompartmentType.CT:
+				registerContent([{ ...localContent, fields: values as ContentSchema['fields'] }]);
+				break;
+			case CompartmentType.INTERNAL:
+				registerContent([
+					{
+						...localContent,
+						meta: { ...localContent.meta, ...(values as ContentSchema['meta']) },
+					},
+				]);
+				break;
+			case CompartmentType.MODULE:
+				registerContent([
+					{
+						...localContent,
+						modulesData: {
+							...localContent.modulesData,
+							[compartment.name]: values as any,
+						},
+					},
+				]);
+				break;
+		}
+
+		return;
+	};
 
 	/**
 	 * RENDER
@@ -134,23 +168,44 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	const renderCompartment = (): any =>
 		activeCompartment?.component({
 			contentType,
-			contentVaue: {} as any,
-			isValid: true,
-			settings: {} as any,
-			onChange: () => console.log('changed') as any,
-			value: {},
-			updateContent: () => console.log('update content') as any,
+			contentValue: localContent,
+			isValid: true, // TODO: validation
+			settings: getSettings(activeCompartment),
+			onChange: values => handleChange(activeCompartment, values),
+			value: getCompartmentValue(activeCompartment),
+			updateContent: (content: ContentSchema) => registerContent([content]),
 		});
 
 	return (
 		<>
-			<div className="row between-xs top-xs u-margin-bottom-lg">
-				<div className="col-xs-3">
-					<NavList items={navList} />
-				</div>
+			<Container>
+				<div className="row between-xs top-xs u-margin-bottom-lg">
+					<div className="col-xs-3">
+						<NavList items={navList} />
+					</div>
 
-				<div className="m-card col-xs-9 u-padding">{renderCompartment()}</div>
-			</div>
+					<div className="m-card col-xs-9 u-padding">
+						<div className="u-margin">{renderCompartment()}</div>
+					</div>
+				</div>
+			</Container>
+			<ActionBar className="o-action-bar--fixed" isOpen>
+				<ActionBarContentSection>
+					<div className="u-wrapper row end-xs">
+						<Button
+							className="u-margin-right-xs"
+							onClick={() => (localContent ? onSubmit(localContent) : null)}
+							type="success"
+							htmlType="submit"
+						>
+							Bewaar
+						</Button>
+						<Button onClick={cancel} outline>
+							Annuleer
+						</Button>
+					</div>
+				</ActionBarContentSection>
+			</ActionBar>
 		</>
 	);
 };
