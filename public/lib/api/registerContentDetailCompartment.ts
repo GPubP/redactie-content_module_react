@@ -3,7 +3,7 @@ import {
 	externalCompartmentsService,
 } from '../store/api/externalCompartments';
 
-export const registerContenDetailCompartment = (
+export const registerContentDetailCompartment = (
 	name: string,
 	options: ExternalCompartmentOptions
 ): void => externalCompartmentsService.registerCompartment(name, options);

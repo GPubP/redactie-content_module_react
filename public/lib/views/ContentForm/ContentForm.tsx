@@ -4,7 +4,7 @@ import {
 	ActionBarContentSection,
 	Container,
 } from '@acpaas-ui/react-editorial-components';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { ContentSchema, ModuleSettings } from '../../api/api.types';
 import { FieldsForm, MetaForm } from '../../components';
@@ -165,17 +165,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	/**
 	 * RENDER
 	 */
-	const renderCompartment = (): any =>
-		activeCompartment?.component({
-			contentType,
-			contentValue: localContent,
-			isValid: true, // TODO: validation
-			settings: getSettings(activeCompartment),
-			onChange: values => handleChange(activeCompartment, values),
-			value: getCompartmentValue(activeCompartment),
-			updateContent: (content: ContentSchema) => registerContent([content]),
-		});
-
 	return (
 		<>
 			<Container>
@@ -185,7 +174,22 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 					</div>
 
 					<div className="m-card col-xs-9 u-padding">
-						<div className="u-margin">{renderCompartment()}</div>
+						<div className="u-margin">
+							{activeCompartment ? (
+								<activeCompartment.component
+									contentType={contentType}
+									contentValue={localContent}
+									isValid={true}
+									settings={getSettings(activeCompartment)}
+									onChange={values => handleChange(activeCompartment, values)}
+									value={getCompartmentValue(activeCompartment)}
+									updateContent={(content: ContentSchema) =>
+										registerContent([content])
+									}
+								></activeCompartment.component>
+							) : null}
+							;
+						</div>
 					</div>
 				</div>
 			</Container>

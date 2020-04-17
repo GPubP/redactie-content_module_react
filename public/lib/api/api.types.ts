@@ -12,5 +12,5 @@ export {
 } from '../services/contentTypes/contentTypes.service.types';
 
 export interface ContentAPI {
-	registerContenDetailCompartment: (name: string, options: ExternalCompartmentOptions) => void;
+	registerContentDetailCompartment: (name: string, options: ExternalCompartmentOptions) => void;
 }
