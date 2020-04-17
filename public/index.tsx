@@ -10,6 +10,7 @@ import { MODULE_PATHS } from './lib/content.const';
 import { ContentRouteProps } from './lib/content.types';
 import { ContentCreate, ContentOverview, ContentUpdate } from './lib/views';
 import ContentForm from './lib/views/ContentForm/ContentForm';
+import { CompartmentProps } from './lib/views/ContentForm/ContentForm.types';
 
 // eslint-disable-next-line import/namespace
 moment.locale('nl');

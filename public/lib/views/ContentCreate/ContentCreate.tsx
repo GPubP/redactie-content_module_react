@@ -5,7 +5,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { FormikValues } from 'formik';
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 
 import { DataLoader } from '../../components';
 import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../content.const';

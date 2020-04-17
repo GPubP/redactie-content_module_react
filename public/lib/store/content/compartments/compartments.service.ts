@@ -26,12 +26,8 @@ export class ContentCompartmentsService {
 		this.store.reset();
 	}
 
-	public setActive(names: ID[]): void {
-		this.store.setActive(names);
-	}
-
-	public addActive(names: ID | ID[]): void {
-		this.store.addActive(names);
+	public setActive(name: ID): void {
+		this.store.setActive(name);
 	}
 }
 
