@@ -4,7 +4,8 @@ import {
 	ActionBarContentSection,
 	Container,
 } from '@acpaas-ui/react-editorial-components';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import { clone } from 'ramda';
+import React, { FC, useEffect, useState } from 'react';
 
 import { ContentSchema, ModuleSettings } from '../../api/api.types';
 import { FieldsForm, MetaForm } from '../../components';
@@ -177,8 +178,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						<div className="u-margin">
 							{activeCompartment ? (
 								<activeCompartment.component
-									contentType={contentType}
-									contentValue={localContent}
+									contentType={clone(contentType)}
+									contentValue={clone(localContent)}
 									isValid={true}
 									settings={getSettings(activeCompartment)}
 									onChange={values => handleChange(activeCompartment, values)}
