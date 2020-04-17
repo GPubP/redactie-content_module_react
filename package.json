@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://ex02131@bitbucket.antwerpen.be/scm/wcm/redactie-sites_module.git"
+    "url": "https://ex02131@bitbucket.antwerpen.be/scm/reda/redactie-content_module_react.git"
   },
   "publishConfig": {
     "@redactie:registry": "https://nexusrepo.antwerpen.be/repository/npm-private"
@@ -34,7 +34,7 @@
   "devDependencies": {
     "@datorama/akita": "^4.22.1",
     "@acpaas-ui/react-components": "^4.0.0",
-    "@acpaas-ui/react-editorial-components": "0.0.1-6",
+    "@acpaas-ui/react-editorial-components": "0.0.1-8",
     "@babel/core": "7.8.3",
     "@babel/preset-env": "7.8.3",
     "@babel/preset-react": "7.8.3",

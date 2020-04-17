@@ -1,5 +1,9 @@
 import { Button } from '@acpaas-ui/react-components';
-import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
+import {
+	Container,
+	ContextHeader,
+	ContextHeaderTopSection,
+} from '@acpaas-ui/react-editorial-components';
 import { FormsAPI } from '@redactie/form-renderer-module';
 import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
@@ -71,24 +75,23 @@ const ContentCreate: FC<ContentRouteProps<ContentUpdateMatchProps>> = ({
 		const formProps = getFormPropsByCT(contentType);
 		const initialValues = contentItem.fields;
 		return (
-			<div className="u-margin-top">
-				<formsAPI.Form {...formProps} initialValues={initialValues} onSubmit={onFormSubmit}>
-					{({ submitForm }) => (
-						<div className="u-margin-top">
-							<Button
-								className="u-margin-right-xs"
-								onClick={() => submitForm()}
-								type="success"
-							>
-								Bewaar
-							</Button>
-							<Button onClick={navigateToOverview} outline>
-								Annuleer
-							</Button>
-						</div>
-					)}
-				</formsAPI.Form>
-			</div>
+			<formsAPI.Form {...formProps} initialValues={initialValues} onSubmit={onFormSubmit}>
+				{({ submitForm }) => (
+					<div className="u-margin-top">
+						<Button
+							className="u-margin-right-xs"
+							onClick={() => submitForm()}
+							type="success"
+							htmlType="submit"
+						>
+							Bewaar
+						</Button>
+						<Button onClick={navigateToOverview} outline>
+							Annuleer
+						</Button>
+					</div>
+				)}
+			</formsAPI.Form>
 		);
 	};
 
@@ -108,9 +111,9 @@ const ContentCreate: FC<ContentRouteProps<ContentUpdateMatchProps>> = ({
 			<ContextHeader title={headerTitle} badges={badges}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			<div className="u-container u-wrapper">
+			<Container>
 				<DataLoader loadingState={initialLoading} render={renderCreateContentForm} />
-			</div>
+			</Container>
 		</>
 	);
 };
