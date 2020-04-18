@@ -4,7 +4,7 @@ import {
 	ActionBarContentSection,
 	Container,
 } from '@acpaas-ui/react-editorial-components';
-import { clone } from 'ramda';
+import { clone, compose, find, pick } from 'ramda';
 import React, { FC, useEffect, useState } from 'react';
 
 import { ContentSchema, ModuleSettings } from '../../api/api.types';
@@ -109,9 +109,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			case CompartmentType.INTERNAL:
 				return contentType;
 			case CompartmentType.MODULE:
-				return contentType.modulesConfig?.find(
-					(moduleConfig: ModuleSettings) => moduleConfig.name === compartment.name
-				);
+				return compose(
+					clone,
+					pick(['config', 'validationSchema']) as any,
+					find((moduleConfig: ModuleSettings) => moduleConfig.name === compartment.name)
+				)(contentType.modulesConfig || []) as CompartmentProps['settings'];
 		}
 	};
 
