@@ -187,7 +187,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 									updateContent={(content: ContentSchema) =>
 										registerContent([content])
 									}
-								></activeCompartment.component>
+								/>
 							) : null}
 							;
 						</div>
