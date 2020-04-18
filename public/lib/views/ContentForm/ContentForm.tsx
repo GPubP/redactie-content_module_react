@@ -189,7 +189,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 									}
 								/>
 							) : null}
-							;
 						</div>
 					</div>
 				</div>
