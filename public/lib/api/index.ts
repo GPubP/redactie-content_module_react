@@ -1,8 +1,8 @@
 import Core from '@redactie/redactie-core';
 
-import { registerContenDetailCompartment } from './registerContentDetailCompartment';
+import { registerContentDetailCompartment } from './registerContentDetailCompartment';
 
 export const registerContentAPI = () =>
 	Core.modules.exposeModuleApi('content-module', {
-		registerContenDetailCompartment,
+		registerContentDetailCompartment,
 	});
