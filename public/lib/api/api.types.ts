@@ -11,6 +11,7 @@ export {
 	ContentTypeFieldSchema,
 } from '../services/contentTypes/contentTypes.service.types';
 
+export { ExternalCompartmentOptions };
 export interface ContentAPI {
 	registerContentDetailCompartment: (name: string, options: ExternalCompartmentOptions) => void;
 }
