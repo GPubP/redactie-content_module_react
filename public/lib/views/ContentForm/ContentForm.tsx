@@ -4,7 +4,7 @@ import {
 	ActionBarContentSection,
 	Container,
 } from '@acpaas-ui/react-editorial-components';
-import { clone, compose, find, pick } from 'ramda';
+import { clone } from 'ramda';
 import React, { FC, useEffect, useState } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
