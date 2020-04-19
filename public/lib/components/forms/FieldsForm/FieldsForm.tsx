@@ -21,7 +21,13 @@ const FieldsForm: FC<CompartmentProps> = ({
 
 	const formProps = getFormPropsByCT(contentType);
 
-	return <Form {...formProps} initialValues={value} onChange={onChange}></Form>;
+	return (
+		<>
+			<h5 className="u-margin-bottom">Inhoud</h5>
+			<p className="u-margin-bottom">Lorem Ipsum.</p>
+			<Form {...formProps} initialValues={value} onChange={onChange}></Form>
+		</>
+	);
 };
 
 export default FieldsForm;

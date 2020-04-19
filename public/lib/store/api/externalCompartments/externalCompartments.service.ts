@@ -9,6 +9,7 @@ export class ExternalCompartmentsService {
 			name,
 			label: options.label,
 			module: options.module,
+			show: options.show,
 			component: options.component,
 		};
 

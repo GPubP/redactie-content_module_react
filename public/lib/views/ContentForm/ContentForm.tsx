@@ -7,20 +7,21 @@ import {
 import { clone, compose, find, pick } from 'ramda';
 import React, { FC, useEffect, useState } from 'react';
 
-import { ContentSchema, ModuleSettings } from '../../api/api.types';
+import { ContentSchema } from '../../api/api.types';
 import { FieldsForm, MetaForm } from '../../components';
 import NavList from '../../components/NavList/NavList';
 import { NavListItem } from '../../components/NavList/NavList.types';
+import {
+	filterCompartments,
+	getCompartmentValue,
+	getSettings,
+} from '../../helpers/contentCompartments';
 import { useExternalCompartmentFacade } from '../../store/api/externalCompartments/externalCompartments.facade';
 import { CompartmentType, ContentCompartmentModel } from '../../store/content/compartments';
 import { useCompartmentFacade } from '../../store/content/compartments/compartments.facade';
 import { useInternalFacade } from '../../store/content/internal/internal.facade';
 
-import {
-	CompartmentProps,
-	ContentFormMatchProps,
-	ContentFormRouteProps,
-} from './ContentForm.types';
+import { ContentFormMatchProps, ContentFormRouteProps } from './ContentForm.types';
 
 const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	history,
@@ -65,12 +66,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 					component: MetaForm,
 					type: CompartmentType.INTERNAL,
 				},
-				...externalCompartments.map(ec => ({
-					label: ec.label,
-					name: ec.name,
-					component: ec.component,
-					type: CompartmentType.MODULE,
-				})),
+				...filterCompartments(localContent, contentType, externalCompartments),
 			],
 
 			{ replace: true }
@@ -98,40 +94,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	/**
 	 * Methods
 	 */
-	const getSettings = (compartment: ContentCompartmentModel): CompartmentProps['settings'] => {
-		if (!contentType) {
-			return;
-		}
-
-		switch (compartment.type) {
-			case CompartmentType.CT:
-				return contentType?.fields;
-			case CompartmentType.INTERNAL:
-				return contentType;
-			case CompartmentType.MODULE:
-				return compose(
-					clone,
-					pick(['config', 'validationSchema']) as any,
-					find((moduleConfig: ModuleSettings) => moduleConfig.name === compartment.name)
-				)(contentType.modulesConfig || []) as CompartmentProps['settings'];
-		}
-	};
-
-	const getCompartmentValue = (compartment: ContentCompartmentModel): unknown => {
-		if (!localContent) {
-			return;
-		}
-
-		switch (compartment.type) {
-			case CompartmentType.CT:
-				return localContent?.fields;
-			case CompartmentType.INTERNAL:
-				return localContent?.meta;
-			case CompartmentType.MODULE:
-				return localContent?.modulesData?.[compartment.name];
-		}
-	};
-
 	const handleChange = (compartment: ContentCompartmentModel, values: unknown): void => {
 		if (!localContent) {
 			return;
@@ -183,15 +145,14 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 									contentType={clone(contentType)}
 									contentValue={clone(localContent)}
 									isValid={true}
-									settings={getSettings(activeCompartment)}
+									settings={getSettings(contentType, activeCompartment)}
 									onChange={values => handleChange(activeCompartment, values)}
-									value={getCompartmentValue(activeCompartment)}
+									value={getCompartmentValue(localContent, activeCompartment)}
 									updateContent={(content: ContentSchema) =>
 										registerContent([content])
 									}
 								/>
 							) : null}
-							;
 						</div>
 					</div>
 				</div>
