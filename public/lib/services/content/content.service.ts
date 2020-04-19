@@ -1,11 +1,20 @@
-import { api } from '../api';
+import { api, parseSearchParams, SearchParams } from '../api';
 
 import { ContentCreateSchema, ContentSchema, ContentsSchema } from './content.service.types';
 
-export const getContent = async (): Promise<ContentSchema[] | null> => {
+export const getContent = async (
+	contentSearchParams: SearchParams
+): Promise<ContentsSchema | null> => {
 	try {
-		const response: ContentsSchema = await api.get('content').json();
-		return response.data;
+		const response: ContentsSchema = await api
+			.get(`content?${parseSearchParams(contentSearchParams)}`)
+			.json();
+
+		if (!response) {
+			throw new Error('Failed to get content-types');
+		}
+
+		return response;
 	} catch (err) {
 		console.error(err);
 		return null;
