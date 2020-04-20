@@ -11,11 +11,15 @@ import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
+import FilterForm from '../../components/FilterForm/FilterForm';
 import { BREADCRUMB_OPTIONS } from '../../content.const';
-import { ContentRouteProps, LoadingState } from '../../content.types';
+import { ContentRouteProps, FilterFormState, LoadingState } from '../../content.types';
 import { useRoutes } from '../../hooks';
-import { ContentSchema, getContent } from '../../services/content';
+import useContent from '../../hooks/useContent/useContent';
 import './ContentOverview.scss';
+import { DEFAULT_VIEWS_SEARCH_PARAMS } from '../../services/content/content.service.const';
+import { FilterItemSchema } from '../../services/filterItems/filterItems.service.types';
+import { generateFilterFormState } from '../../services/helpers';
 
 const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 	tenantId,
@@ -27,39 +31,80 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 	/**
 	 * Hooks
 	 */
-	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [contents, setContent] = useState<ContentSchema[] | null>(null);
+	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
+	const [contentSearchParams, setContentSearchParams] = useState(DEFAULT_VIEWS_SEARCH_PARAMS);
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+	const [loadingState, content] = useContent(contentSearchParams);
+	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 
 	useEffect(() => {
-		getContent()
-			.then(data => {
-				if (data?.length) {
-					setContent(data);
-				}
-				setLoadingState(LoadingState.Loaded);
-			})
-			.catch(() => {
-				setLoadingState(LoadingState.Error);
-			});
-	}, []);
+		if (loadingState === LoadingState.Loaded || loadingState === LoadingState.Error) {
+			setInitialLoading(LoadingState.Loaded);
+		}
+	}, [loadingState]);
+
+	/**
+	 * Functions
+	 */
+	const onSubmit = ({ name }: FilterFormState): void => {
+		//add item to filterItems for Taglist
+		const request = { label: name, value: name };
+		const setFilter = filterItems?.concat(request);
+		setFilterItems(setFilter);
+		//get value array from filterItems
+		const names = setFilter.map(item => {
+			return item['value'];
+		});
+		//add array to searchParams
+		setContentSearchParams({
+			...contentSearchParams,
+			search: names,
+		});
+	};
+
+	const deleteAllFilters = (): void => {
+		//set empty array as Taglist
+		const emptyFilter: [] = [];
+		setFilterItems(emptyFilter);
+		//delete search param from api call
+		setContentSearchParams({
+			page: 1,
+			pagesize: 10,
+		});
+	};
+
+	const deleteFilter = (item: any): void => {
+		//delete item from filterItems
+		const setFilter = filterItems?.filter(el => el.value !== item.value);
+		setFilterItems(setFilter);
+		//get value array from filterItems
+		const names = setFilter.map(item => {
+			return item['value'];
+		});
+		//add array to searchParams
+		setContentSearchParams({
+			...contentSearchParams,
+			search: names,
+		});
+	};
+
 	/**
 	 * Render
 	 */
 	const renderOverview = (): ReactElement | null => {
-		if (!contents) {
+		if (!content) {
 			return null;
 		}
 
-		const contentsRows = contents.map(content => ({
-			id: content.uuid,
-			title: content.meta?.label,
-			type: content.meta?.contentType?.meta?.label,
-			publication: content.meta?.lastModified,
-			author: content.meta?.lastEditor,
-			status: content.meta?.status,
-			online: content.meta?.published,
+		const contentsRows = content.data.map(contentItem => ({
+			id: contentItem.uuid,
+			title: contentItem.meta?.label,
+			type: contentItem.meta?.contentType?.meta?.label,
+			publication: contentItem.meta?.lastModified,
+			author: contentItem.meta?.lastEditor,
+			status: contentItem.meta?.status,
+			online: contentItem.meta?.published,
 		}));
 
 		const contentsColumns = [
@@ -122,6 +167,15 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 
 		return (
 			<div className="u-container u-wrapper">
+				<div className="u-margin-top">
+					<FilterForm
+						initialState={generateFilterFormState()}
+						onCancel={deleteAllFilters}
+						onSubmit={onSubmit}
+						deleteActiveFilter={deleteFilter}
+						activeFilters={filterItems}
+					/>
+				</div>
 				<h5 className="u-margin-bottom">Resultaat ({contentsRows.length})</h5>
 				<Table rows={contentsRows} columns={contentsColumns} />
 			</div>
@@ -146,7 +200,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<Container>
-				<DataLoader loadingState={loadingState} render={renderOverview} />
+				<DataLoader loadingState={initialLoading} render={renderOverview} />
 			</Container>
 		</>
 	);

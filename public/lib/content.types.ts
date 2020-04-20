@@ -19,4 +19,3 @@ export enum LoadingState {
 export interface FilterFormState {
 	name: string;
 }
-

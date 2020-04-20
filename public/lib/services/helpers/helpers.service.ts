@@ -1,5 +1,6 @@
 import { FieldSchema, FormSchema } from '@redactie/form-renderer-module';
 
+import { FilterFormState } from '../../content.types';
 import { ContentTypeSchema, ErrorMessagesSchema, ValidateSchema } from '../contentTypes';
 
 export const getFormPropsByCT = (
@@ -29,3 +30,7 @@ export const getFormPropsByCT = (
 		errorMessages: contentType.errorMessages || {},
 	};
 };
+
+export const generateFilterFormState = (): FilterFormState => ({
+	name: '',
+});
