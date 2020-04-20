@@ -1,4 +1,5 @@
 import ky from 'ky';
+import { stringify } from 'query-string';
 
 import { SearchParams } from './api.service.types';
 
@@ -9,12 +10,8 @@ const api: KyInstance = ky.create({
 	prefixUrl: '/v1/proxy/content',
 });
 
-export const parseSearchParams = (searchParams: SearchParams): URLSearchParams => {
-	return new URLSearchParams(
-		(Object.keys(searchParams) as Array<keyof typeof searchParams>).map(key => {
-			return [key, searchParams[key]?.toString() as string];
-		})
-	);
+export const parseSearchParams = (searchParams: SearchParams): string => {
+	return stringify(searchParams, { arrayFormat: 'comma' });
 };
 
 export default api;
