@@ -15,3 +15,8 @@ export enum LoadingState {
 	Loaded = 'loaded',
 	Error = 'error',
 }
+
+export interface FilterFormState {
+	name: string;
+}
+

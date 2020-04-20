@@ -121,10 +121,10 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 		];
 
 		return (
-			<>
+			<div className="u-container u-wrapper">
 				<h5 className="u-margin-bottom">Resultaat ({contentsRows.length})</h5>
 				<Table rows={contentsRows} columns={contentsColumns} />
-			</>
+			</div>
 		);
 	};
 
