@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { SearchParams } from '../../services/api';
-import { getContent, ContentsSchema } from '../../services/content';
+import { ContentsSchema, getContent } from '../../services/content';
 import { LoadingState } from '../../types';
 
 const useContent = (searchParams: SearchParams): [LoadingState, ContentsSchema | null] => {
