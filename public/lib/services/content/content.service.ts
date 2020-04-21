@@ -11,7 +11,7 @@ export const getContent = async (
 			.json();
 
 		if (!response) {
-			throw new Error('Failed to get content-types');
+			throw new Error('Failed to get content items');
 		}
 
 		return response;
