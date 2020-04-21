@@ -32,5 +32,8 @@ export const getFormPropsByCT = (
 };
 
 export const generateFilterFormState = (): FilterFormState => ({
-	name: '',
+	search: '',
+	contentType: '',
+	author: '',
+	theme: '',
 });

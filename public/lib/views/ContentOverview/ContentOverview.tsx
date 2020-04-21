@@ -47,20 +47,21 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 	/**
 	 * Functions
 	 */
-	const onSubmit = ({ name }: FilterFormState): void => {
+	const onSubmit = ({ search, contentType, author, theme }: FilterFormState): void => {
+		console.log(search, contentType, author, theme);
 		//add item to filterItems for Taglist
-		const request = { label: name, value: name };
-		const setFilter = filterItems?.concat(request);
-		setFilterItems(setFilter);
-		//get value array from filterItems
-		const names = setFilter.map(item => {
-			return item['value'];
-		});
-		//add array to searchParams
-		setContentSearchParams({
-			...contentSearchParams,
-			search: names,
-		});
+		// const request = { label: name, value: name };
+		// const setFilter = filterItems?.concat(request);
+		// setFilterItems(setFilter);
+		// //get value array from filterItems
+		// const names = setFilter.map(item => {
+		// 	return item['value'];
+		// });
+		// //add array to searchParams
+		// setContentSearchParams({
+		// 	...contentSearchParams,
+		// 	search: names,
+		// });
 	};
 
 	const deleteAllFilters = (): void => {
