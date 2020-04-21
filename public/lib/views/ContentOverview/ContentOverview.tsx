@@ -4,7 +4,7 @@ import {
 	ContextHeader,
 	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
-	Table,
+	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import moment from 'moment';
@@ -14,7 +14,10 @@ import { DataLoader } from '../../components';
 import { BREADCRUMB_OPTIONS } from '../../content.const';
 import { ContentRouteProps, LoadingState } from '../../content.types';
 import { useRoutes } from '../../hooks';
-import { ContentSchema, getContent } from '../../services/content';
+import { OrderBy, SearchParams } from '../../services/api';
+import { ContentsSchema, getContent } from '../../services/content';
+
+import { DEFAULT_CONTENT_SEARCH_PARAMS } from './ContentOverview.const';
 import './ContentOverview.scss';
 
 const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
@@ -28,57 +31,82 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 	 * Hooks
 	 */
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [contents, setContent] = useState<ContentSchema[] | null>(null);
+	const [contents, setContent] = useState<ContentsSchema | null>(null);
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+	const [contentSearchParams, setContentSearchParams] = useState<SearchParams>(
+		DEFAULT_CONTENT_SEARCH_PARAMS
+	);
+	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 
 	useEffect(() => {
-		getContent()
-			.then(data => {
-				if (data?.length) {
-					setContent(data);
+		getContent(contentSearchParams)
+			.then(response => {
+				if (response?.data?.length) {
+					setContent(response);
 				}
 				setLoadingState(LoadingState.Loaded);
 			})
 			.catch(() => {
 				setLoadingState(LoadingState.Error);
 			});
-	}, []);
+	}, [contentSearchParams]);
+
+	/**
+	 * METHODS
+	 */
+
+	const handlePageChange = (page: number): void => {
+		setContentSearchParams({
+			...contentSearchParams,
+			skip: (page - 1) * DEFAULT_CONTENT_SEARCH_PARAMS.limit,
+		});
+	};
+
+	const handleOrderBy = (orderBy: OrderBy): void => {
+		setContentSearchParams({
+			...contentSearchParams,
+			sort: `meta.${orderBy.key}`,
+			direction: orderBy.order === 'desc' ? 1 : -1,
+		});
+		setActiveSorting(orderBy);
+	};
+
 	/**
 	 * Render
 	 */
 	const renderOverview = (): ReactElement | null => {
-		if (!contents) {
+		if (!contents || !Array.isArray(contents?.data)) {
 			return null;
 		}
 
-		const contentsRows = contents.map(content => ({
+		const contentsRows = contents.data.map(content => ({
 			id: content.uuid,
-			title: content.meta?.label,
-			type: content.meta?.contentType?.meta?.label,
-			publication: content.meta?.lastModified,
-			author: content.meta?.lastEditor,
+			label: content.meta?.label,
+			contentType: content.meta?.contentType?.meta?.label,
+			lastModified: content.meta?.lastModified,
+			lastEditor: content.meta?.lastEditor,
 			status: content.meta?.status,
-			online: content.meta?.published,
+			published: content.meta?.published,
 		}));
 
 		const contentsColumns = [
 			{
 				label: 'Titel',
-				value: 'title',
+				value: 'label',
 			},
 			{
 				label: 'Type',
-				value: 'type',
+				value: 'contentType',
 			},
 			{
-				label: 'Publicatiedatum',
-				value: 'publication',
+				label: 'Laatst bijgewerkt',
+				value: 'lastModified',
 				format: (data: string) => moment(data).format('DD/MM/YYYYY [-] hh[u]mm'),
 			},
 			{
 				label: 'Auteur',
-				value: 'author',
+				value: 'lastEditor',
 			},
 			{
 				label: 'Status',
@@ -86,10 +114,10 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 			},
 			{
 				label: 'Online',
-				value: 'online',
+				value: 'published',
 				component(value: string, rowData: any) {
 					// TODO: fix any type
-					const isOnline = !!rowData['online'];
+					const isOnline = !!rowData['published'];
 					return isOnline ? (
 						<span className="a-dot__green"></span>
 					) : (
@@ -122,8 +150,19 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 
 		return (
 			<>
-				<h5 className="u-margin-bottom">Resultaat ({contentsRows.length})</h5>
-				<Table rows={contentsRows} columns={contentsColumns} />
+				<PaginatedTable
+					className="u-margin-top"
+					columns={contentsColumns}
+					rows={contentsRows}
+					currentPage={
+						Math.ceil(contents.paging.skip / DEFAULT_CONTENT_SEARCH_PARAMS.limit) + 1
+					}
+					itemsPerPage={DEFAULT_CONTENT_SEARCH_PARAMS.limit}
+					onPageChange={handlePageChange}
+					orderBy={handleOrderBy}
+					activeSorting={activeSorting}
+					totalValues={contents?.paging?.total || 0}
+				/>
 			</>
 		);
 	};

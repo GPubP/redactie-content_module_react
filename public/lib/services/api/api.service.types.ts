@@ -1,7 +1,9 @@
 export interface SearchParams {
-	page: number;
-	pagesize: number;
+	skip: number;
+	limit: number;
+	search?: string;
 	sort?: string;
+	direction?: number;
 }
 
 export interface OrderBy {
