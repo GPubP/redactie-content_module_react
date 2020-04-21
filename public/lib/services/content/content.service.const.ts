@@ -1,6 +1,6 @@
 import { SearchParams } from '../api/api.service.types';
 
 export const DEFAULT_VIEWS_SEARCH_PARAMS: SearchParams = {
-	page: 0,
+	page: 1,
 	pagesize: 10,
 };
