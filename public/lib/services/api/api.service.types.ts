@@ -2,7 +2,9 @@ export interface SearchParams {
 	page: number;
 	pagesize: number;
 	sort?: string;
-	search?: Array<string>;
+	search?: string;
+	contentTypes?: string;
+	creator?: string;
 }
 
 export interface OrderBy {

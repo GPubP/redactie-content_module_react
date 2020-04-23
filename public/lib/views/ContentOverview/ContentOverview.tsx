@@ -49,19 +49,26 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 	 */
 	const onSubmit = ({ search, contentType, author, theme }: FilterFormState): void => {
 		console.log(search, contentType, author, theme);
-		//add item to filterItems for Taglist
-		// const request = { label: name, value: name };
-		// const setFilter = filterItems?.concat(request);
-		// setFilterItems(setFilter);
+		//add values to filterItems for Taglist
+		const searchItem = { label: 'search', value: search };
+		const contentTypeItem = { label: 'content type', value: contentType };
+		const authorItem = { label: 'Persoon', value: author };
+		const themeItem = { label: 'Thema', value: theme };
+
+		const setFilter = filterItems?.concat(searchItem, contentTypeItem, authorItem, themeItem);
+		setFilterItems(setFilter);
+
 		// //get value array from filterItems
 		// const names = setFilter.map(item => {
 		// 	return item['value'];
 		// });
-		// //add array to searchParams
-		// setContentSearchParams({
-		// 	...contentSearchParams,
-		// 	search: names,
-		// });
+		//add array to searchParams
+		setContentSearchParams({
+			...contentSearchParams,
+			search: search,
+			contentTypes: contentType,
+			creator: author,
+		});
 	};
 
 	const deleteAllFilters = (): void => {
@@ -80,14 +87,14 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 		const setFilter = filterItems?.filter(el => el.value !== item.value);
 		setFilterItems(setFilter);
 		//get value array from filterItems
-		const names = setFilter.map(item => {
-			return item['value'];
-		});
+		// const names = setFilter.map(item => {
+		// 	return item['value'];
+		// });
 		//add array to searchParams
-		setContentSearchParams({
-			...contentSearchParams,
-			search: names,
-		});
+		// setContentSearchParams({
+		// 	...contentSearchParams,
+		// 	search: names,
+		// });
 	};
 
 	/**
