@@ -32,6 +32,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 	 * Hooks
 	 */
 	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
+	const [contentTypeList, setContentTypeList] = useState<FilterItemSchema[]>([]);
 	const [contentSearchParams, setContentSearchParams] = useState(DEFAULT_VIEWS_SEARCH_PARAMS);
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
@@ -47,16 +48,36 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 	/**
 	 * Functions
 	 */
-	const onSubmit = ({ search, contentType, author, theme }: FilterFormState): void => {
-		console.log(search, contentType, author, theme);
+	const onSubmit = ({
+		search,
+		contentType,
+		publishedFrom,
+		publishedTo,
+		status,
+		online,
+		author,
+		theme,
+	}: FilterFormState): void => {
 		//add values to filterItems for Taglist
 		const searchItem = { label: 'search', value: search };
 		const contentTypeItem = { label: 'content type', value: contentType };
+		const dateItem = { label: 'Gepubliceerd tussem:', value: '' };
+		const statusItem = { label: 'Status', value: status };
+		const onlineItem = { label: '', value: online };
 		const authorItem = { label: 'Persoon', value: author };
 		const themeItem = { label: 'Thema', value: theme };
-
-		const setFilter = filterItems?.concat(searchItem, contentTypeItem, authorItem, themeItem);
-		setFilterItems(setFilter);
+		//check if dates are picked
+		publishedFrom && publishedTo
+			? (dateItem.value = `${publishedFrom} - ${publishedTo}`)
+			: (dateItem.value = '');
+		//put content types in seperate array
+		const setContentTypes = contentTypeList?.concat(contentTypeItem);
+		setContentTypeList(setContentTypes);
+		console.log(contentTypeList);
+		//add items to Taglist
+		const newFilter = [searchItem, dateItem, statusItem, onlineItem, authorItem, themeItem];
+		const filteredFilter = newFilter.filter(item => !!item.value);
+		setFilterItems(filteredFilter);
 
 		// //get value array from filterItems
 		// const names = setFilter.map(item => {
@@ -184,7 +205,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 						activeFilters={filterItems}
 					/>
 				</div>
-				<h5 className="u-margin-bottom">Resultaat ({contentsRows.length})</h5>
+				<h5 className="u-margin-bottom u-margin-top">Resultaat ({contentsRows.length})</h5>
 				<Table rows={contentsRows} columns={contentsColumns} />
 			</div>
 		);

@@ -19,6 +19,10 @@ export enum LoadingState {
 export interface FilterFormState {
 	search: string;
 	contentType: string;
+	publishedFrom: string;
+	publishedTo: string;
+	status: string;
+	online: string;
 	author: string;
 	theme: string;
 }

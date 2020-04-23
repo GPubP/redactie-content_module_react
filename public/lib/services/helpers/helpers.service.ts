@@ -34,6 +34,10 @@ export const getFormPropsByCT = (
 export const generateFilterFormState = (): FilterFormState => ({
 	search: '',
 	contentType: '',
+	publishedFrom: '',
+	publishedTo: '',
+	status: '',
+	online: '',
 	author: '',
 	theme: '',
 });

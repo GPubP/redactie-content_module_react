@@ -1,10 +1,15 @@
-import { TextField } from '@acpaas-ui/react-components';
+import { Datepicker, Select, TextField } from '@acpaas-ui/react-components';
 import { Filter, FilterBody } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
-import React, { FC } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { FILTER_FORM_VALIDATION_SCHEMA } from './FilterForm.const';
+import { LoadingState } from '../../content.types';
+import useContentTypes from '../../hooks/useContentTypes/useContentTypes';
+
+import { CONTENT_TYPES_DEFAULT_OPTION } from './FilterForm.const';
 import { FilterFormProps } from './FilterForm.types';
+
+import { DataLoader } from '..';
 
 const FilterForm: FC<FilterFormProps> = ({
 	initialState,
@@ -13,10 +18,54 @@ const FilterForm: FC<FilterFormProps> = ({
 	activeFilters,
 	deleteActiveFilter,
 }) => {
-	return (
-		<>
+	const statusOptions = [
+		{
+			key: '0',
+			value: 'Gepubliceerd',
+			label: 'Gepubliceerd',
+		},
+		{
+			key: '1',
+			value: 'DRAFT',
+			label: 'DRAFT',
+		},
+	];
+	const onlineOptions = [
+		{
+			key: '0',
+			value: 'Online',
+			label: 'Online',
+		},
+		{
+			key: '1',
+			value: 'Offline',
+			label: 'Offline',
+		},
+	];
+
+	const [loadingState, contentTypes] = useContentTypes();
+	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+
+	useEffect(() => {
+		if (loadingState === LoadingState.Loaded || loadingState === LoadingState.Error) {
+			setInitialLoading(LoadingState.Loaded);
+		}
+	}, [loadingState]);
+
+	const contentTypeOptions = contentTypes?.map(contentType => ({
+		key: contentType.uuid,
+		value: contentType.uuid,
+		label: contentType?.meta.label,
+	}));
+
+	const renderFilter = (): ReactElement | null => {
+		if (!contentTypes) {
+			return null;
+		}
+
+		return (
 			<Formik initialValues={initialState} onSubmit={onSubmit}>
-				{({ submitForm }) => {
+				{({ submitForm, setFieldValue }) => {
 					return (
 						<Filter
 							title="Filter"
@@ -41,12 +90,60 @@ const FilterForm: FC<FilterFormProps> = ({
 								</div>
 								<div className="col-xs-12 col-sm-6 u-margin-top">
 									<Field
-										as={TextField}
+										as={Select}
 										label="Content type"
 										name="contentType"
 										id="Content type"
-										placeholder="Zoek een content type"
-										iconright="search"
+										options={[
+											CONTENT_TYPES_DEFAULT_OPTION,
+											...contentTypeOptions,
+										]}
+									/>
+								</div>
+								<div className="col-xs-6 col-sm-3 u-margin-top">
+									<Field
+										as={Datepicker}
+										label="Publicatiedatum"
+										name="publishedFrom"
+										id="Publicatiedatum"
+										format="DD/MM/YYYY"
+										mask="99/99/9999"
+										//onChange moet hier staan om value door te geven
+										onChange={(value: any) =>
+											setFieldValue('publishedFrom', value)
+										}
+									/>
+								</div>
+								<div className="col-xs-6 col-sm-3 u-margin-top">
+									<Field
+										as={Datepicker}
+										label="q"
+										name="publishedTo"
+										id="publishedTo"
+										format="DD/MM/YYYY"
+										mask="99/99/9999"
+										//onChange moet hier staan om value door te geven
+										onChange={(value: any) =>
+											setFieldValue('publishedTo', value)
+										}
+									/>
+								</div>
+								<div className="col-xs-6 col-sm-3 u-margin-top">
+									<Field
+										as={Select}
+										label="Status"
+										name="status"
+										id="Status"
+										options={statusOptions}
+									/>
+								</div>
+								<div className="col-xs-6 col-sm-3 u-margin-top">
+									<Field
+										as={Select}
+										label="s"
+										name="online"
+										id="online"
+										options={onlineOptions}
 									/>
 								</div>
 								<div className="col-xs-12 col-sm-6 u-margin-top">
@@ -74,8 +171,10 @@ const FilterForm: FC<FilterFormProps> = ({
 					);
 				}}
 			</Formik>
-		</>
-	);
+		);
+	};
+
+	return <DataLoader loadingState={initialLoading} render={renderFilter} />;
 };
 
 export default FilterForm;

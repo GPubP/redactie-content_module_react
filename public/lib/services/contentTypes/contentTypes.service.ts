@@ -17,3 +17,14 @@ export const getContentType = async (uuid: string): Promise<ContentTypeSchema | 
 		return null;
 	}
 };
+
+export const getContentTypes = async (): Promise<ContentTypeSchema[] | null> => {
+	try {
+		const response: any = await apiService.get('content/content-types').json();
+
+		return response.data;
+	} catch (err) {
+		console.error(err);
+		return null;
+	}
+};
