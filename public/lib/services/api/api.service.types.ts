@@ -3,7 +3,10 @@ export interface SearchParams {
 	pagesize: number;
 	sort?: string;
 	search?: string;
-	contentTypes?: string;
+	contentTypes?: Array<string>;
+	publishedFrom?: string;
+	publishedTo?: string;
+	status?: string;
 	creator?: string;
 }
 

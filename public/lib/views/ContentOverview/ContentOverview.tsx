@@ -60,7 +60,6 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 	}: FilterFormState): void => {
 		//add values to filterItems for Taglist
 		const searchItem = { label: 'search', value: search };
-		const contentTypeItem = { label: 'content type', value: contentType };
 		const dateItem = { label: 'Gepubliceerd tussem:', value: '' };
 		const statusItem = { label: 'Status', value: status };
 		const onlineItem = { label: '', value: online };
@@ -70,24 +69,29 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 		publishedFrom && publishedTo
 			? (dateItem.value = `${publishedFrom} - ${publishedTo}`)
 			: (dateItem.value = '');
-		//put content types in seperate array
+		//put content types in separate array
+		const contentTypeItem = { label: 'content type', value: contentType };
 		const setContentTypes = contentTypeList?.concat(contentTypeItem);
-		setContentTypeList(setContentTypes);
+		const filteredContentTypes = setContentTypes.filter(contentType => !!contentType);
+		setContentTypeList(filteredContentTypes);
 		console.log(contentTypeList);
-		//add items to Taglist
+		//get value array from filterItems
+		const contentTypesString = filteredContentTypes.map(item => {
+			return item['value'];
+		});
+		//add filterItems to Taglist
 		const newFilter = [searchItem, dateItem, statusItem, onlineItem, authorItem, themeItem];
 		const filteredFilter = newFilter.filter(item => !!item.value);
 		setFilterItems(filteredFilter);
 
-		// //get value array from filterItems
-		// const names = setFilter.map(item => {
-		// 	return item['value'];
-		// });
 		//add array to searchParams
 		setContentSearchParams({
 			...contentSearchParams,
 			search: search,
-			contentTypes: contentType,
+			contentTypes: contentTypesString,
+			publishedFrom: publishedFrom,
+			publishedTo: publishedTo,
+			status: status,
 			creator: author,
 		});
 	};
@@ -96,6 +100,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 		//set empty array as Taglist
 		const emptyFilter: [] = [];
 		setFilterItems(emptyFilter);
+		setContentTypeList(emptyFilter);
 		//delete search param from api call
 		setContentSearchParams({
 			page: 1,

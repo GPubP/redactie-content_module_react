@@ -26,7 +26,8 @@
     "resolveJsonModule": true,
     "declaration": true,
     "jsx": "react",
-    "outDir": "dist"
+    "outDir": "dist",
+    "downlevelIteration": true,
   },
   "include": [
     "public"
