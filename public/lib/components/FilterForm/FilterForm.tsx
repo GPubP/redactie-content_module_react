@@ -6,7 +6,11 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { LoadingState } from '../../content.types';
 import useContentTypes from '../../hooks/useContentTypes/useContentTypes';
 
-import { CONTENT_TYPES_DEFAULT_OPTION } from './FilterForm.const';
+import {
+	CONTENT_TYPES_DEFAULT_OPTION,
+	PUBLISHED_DEFAULT_OPTION,
+	STATUS_DEFAULT_OPTION,
+} from './FilterForm.const';
 import { FilterFormProps } from './FilterForm.types';
 
 import { DataLoader } from '..';
@@ -54,7 +58,7 @@ const FilterForm: FC<FilterFormProps> = ({
 
 	const contentTypeOptions = contentTypes?.map(contentType => ({
 		key: contentType.uuid,
-		value: contentType.uuid,
+		value: contentType?._id,
 		label: contentType?.meta.label,
 	}));
 
@@ -117,7 +121,7 @@ const FilterForm: FC<FilterFormProps> = ({
 								<div className="col-xs-6 col-sm-3 u-margin-top">
 									<Field
 										as={Datepicker}
-										label="q"
+										label="publishedTo"
 										name="publishedTo"
 										id="publishedTo"
 										format="DD/MM/YYYY"
@@ -134,16 +138,16 @@ const FilterForm: FC<FilterFormProps> = ({
 										label="Status"
 										name="status"
 										id="Status"
-										options={statusOptions}
+										options={[STATUS_DEFAULT_OPTION, ...statusOptions]}
 									/>
 								</div>
 								<div className="col-xs-6 col-sm-3 u-margin-top">
 									<Field
 										as={Select}
-										label="s"
+										label="Published"
 										name="online"
 										id="online"
-										options={onlineOptions}
+										options={[PUBLISHED_DEFAULT_OPTION, ...onlineOptions]}
 									/>
 								</div>
 								<div className="col-xs-12 col-sm-6 u-margin-top">

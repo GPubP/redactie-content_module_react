@@ -74,13 +74,20 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 		const setContentTypes = contentTypeList?.concat(contentTypeItem);
 		const filteredContentTypes = setContentTypes.filter(contentType => !!contentType);
 		setContentTypeList(filteredContentTypes);
-		console.log(contentTypeList);
 		//get value array from filterItems
 		const contentTypesString = filteredContentTypes.map(item => {
 			return item['value'];
 		});
 		//add filterItems to Taglist
-		const newFilter = [searchItem, dateItem, statusItem, onlineItem, authorItem, themeItem];
+		const newFilter = [
+			searchItem,
+			contentTypeItem,
+			dateItem,
+			statusItem,
+			onlineItem,
+			authorItem,
+			themeItem,
+		];
 		const filteredFilter = newFilter.filter(item => !!item.value);
 		setFilterItems(filteredFilter);
 
