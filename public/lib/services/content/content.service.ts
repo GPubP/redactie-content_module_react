@@ -4,20 +4,18 @@ import { DEFAULT_VIEWS_SEARCH_PARAMS } from './content.service.const';
 import { ContentCreateSchema, ContentSchema, ContentsSchema } from './content.service.types';
 
 export const getContent = async (
-	searchParams: SearchParams = DEFAULT_VIEWS_SEARCH_PARAMS
+	contentSearchParams: SearchParams
 ): Promise<ContentsSchema | null> => {
 	try {
 		const response: ContentsSchema = await api
-			.get(`content/content?${parseSearchParams(searchParams)}`)
+			.get(`content/content?${parseSearchParams(contentSearchParams)}`)
 			.json();
 
-		if (!response.data) {
-			throw new Error('Failed to get content');
+		if (!response) {
+			throw new Error('Failed to get content items');
 		}
 
-		return {
-			data: response.data,
-		};
+		return response;
 	} catch (err) {
 		console.error(err);
 		return null;

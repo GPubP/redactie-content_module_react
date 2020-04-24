@@ -1,6 +1,6 @@
 export interface SearchParams {
-	page: number;
-	pagesize: number;
+	skip: number;
+	limit: number;
 	sort?: string;
 	search?: string;
 	contentTypes?: Array<string>;
@@ -8,6 +8,7 @@ export interface SearchParams {
 	publishedTo?: string;
 	status?: string;
 	creator?: string;
+	direction?: number;
 }
 
 export interface OrderBy {

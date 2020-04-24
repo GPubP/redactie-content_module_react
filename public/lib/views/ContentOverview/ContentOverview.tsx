@@ -4,7 +4,7 @@ import {
 	ContextHeader,
 	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
-	Table,
+	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import moment from 'moment';
@@ -16,10 +16,12 @@ import { BREADCRUMB_OPTIONS } from '../../content.const';
 import { ContentRouteProps, FilterFormState, LoadingState } from '../../content.types';
 import { useRoutes } from '../../hooks';
 import useContent from '../../hooks/useContent/useContent';
+import { OrderBy, SearchParams } from '../../services/api';
 import './ContentOverview.scss';
-import { DEFAULT_VIEWS_SEARCH_PARAMS } from '../../services/content/content.service.const';
 import { FilterItemSchema } from '../../services/filterItems/filterItems.service.types';
 import { generateFilterFormState } from '../../services/helpers';
+
+import { DEFAULT_CONTENT_SEARCH_PARAMS } from './ContentOverview.const';
 
 const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 	tenantId,
@@ -33,11 +35,14 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 	 */
 	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
 	const [contentTypeList, setContentTypeList] = useState<FilterItemSchema[]>([]);
-	const [contentSearchParams, setContentSearchParams] = useState(DEFAULT_VIEWS_SEARCH_PARAMS);
+	const [contentSearchParams, setContentSearchParams] = useState<SearchParams>(
+		DEFAULT_CONTENT_SEARCH_PARAMS
+	);
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
-	const [loadingState, content] = useContent(contentSearchParams);
+	const [loadingState, contents] = useContent(contentSearchParams);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 
 	useEffect(() => {
 		if (loadingState === LoadingState.Loaded || loadingState === LoadingState.Error) {
@@ -46,7 +51,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 	}, [loadingState]);
 
 	/**
-	 * Functions
+	 * Methods
 	 */
 	const onSubmit = ({
 		search,
@@ -110,8 +115,8 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 		setContentTypeList(emptyFilter);
 		//delete search param from api call
 		setContentSearchParams({
-			page: 1,
-			pagesize: 10,
+			skip: 0,
+			limit: 10,
 		});
 	};
 
@@ -130,41 +135,57 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 		// });
 	};
 
+	const handlePageChange = (page: number): void => {
+		setContentSearchParams({
+			...contentSearchParams,
+			skip: (page - 1) * DEFAULT_CONTENT_SEARCH_PARAMS.limit,
+		});
+	};
+
+	const handleOrderBy = (orderBy: OrderBy): void => {
+		setContentSearchParams({
+			...contentSearchParams,
+			sort: `meta.${orderBy.key}`,
+			direction: orderBy.order === 'desc' ? 1 : -1,
+		});
+		setActiveSorting(orderBy);
+	};
+
 	/**
 	 * Render
 	 */
 	const renderOverview = (): ReactElement | null => {
-		if (!content) {
+		if (!contents || !Array.isArray(contents?.data)) {
 			return null;
 		}
 
-		const contentsRows = content.data.map(contentItem => ({
-			id: contentItem.uuid,
-			title: contentItem.meta?.label,
-			type: contentItem.meta?.contentType?.meta?.label,
-			publication: contentItem.meta?.lastModified,
-			author: contentItem.meta?.lastEditor,
-			status: contentItem.meta?.status,
-			online: contentItem.meta?.published,
+		const contentsRows = contents.data.map(content => ({
+			id: content.uuid,
+			label: content.meta?.label,
+			contentType: content.meta?.contentType?.meta?.label,
+			lastModified: content.meta?.lastModified,
+			lastEditor: content.meta?.lastEditor,
+			status: content.meta?.status,
+			published: content.meta?.published,
 		}));
 
 		const contentsColumns = [
 			{
 				label: 'Titel',
-				value: 'title',
+				value: 'label',
 			},
 			{
 				label: 'Type',
-				value: 'type',
+				value: 'contentType',
 			},
 			{
-				label: 'Publicatiedatum',
-				value: 'publication',
+				label: 'Laatst bijgewerkt',
+				value: 'lastModified',
 				format: (data: string) => moment(data).format('DD/MM/YYYYY [-] hh[u]mm'),
 			},
 			{
 				label: 'Auteur',
-				value: 'author',
+				value: 'lastEditor',
 			},
 			{
 				label: 'Status',
@@ -172,10 +193,10 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 			},
 			{
 				label: 'Online',
-				value: 'online',
+				value: 'published',
 				component(value: string, rowData: any) {
 					// TODO: fix any type
-					const isOnline = !!rowData['online'];
+					const isOnline = !!rowData['published'];
 					return isOnline ? (
 						<span className="a-dot__green"></span>
 					) : (
@@ -217,8 +238,19 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 						activeFilters={filterItems}
 					/>
 				</div>
-				<h5 className="u-margin-bottom u-margin-top">Resultaat ({contentsRows.length})</h5>
-				<Table rows={contentsRows} columns={contentsColumns} />
+				<PaginatedTable
+					className="u-margin-top"
+					columns={contentsColumns}
+					rows={contentsRows}
+					currentPage={
+						Math.ceil(contents.paging.skip / DEFAULT_CONTENT_SEARCH_PARAMS.limit) + 1
+					}
+					itemsPerPage={DEFAULT_CONTENT_SEARCH_PARAMS.limit}
+					onPageChange={handlePageChange}
+					orderBy={handleOrderBy}
+					activeSorting={activeSorting}
+					totalValues={contents?.paging?.total || 0}
+				/>
 			</div>
 		);
 	};

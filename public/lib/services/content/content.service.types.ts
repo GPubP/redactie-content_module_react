@@ -2,6 +2,13 @@ import { ContentTypeSchema } from '../contentTypes';
 
 export type ModuleValue = Record<string, any>;
 
+export interface PagingSchema {
+	total: number;
+	moreResults: boolean;
+	limit: number;
+	skip: number;
+}
+
 export interface ContentSchema {
 	uuid?: string;
 	meta: {
@@ -22,6 +29,7 @@ export interface ContentSchema {
 
 export interface ContentsSchema {
 	data: ContentSchema[];
+	paging: PagingSchema;
 }
 
 export interface ContentCreateSchema {
