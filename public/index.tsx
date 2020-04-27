@@ -8,7 +8,8 @@ import { registerContentAPI } from './lib/api/index';
 import { registerRoutes } from './lib/connectors/sites';
 import { MODULE_PATHS } from './lib/content.const';
 import { ContentRouteProps } from './lib/content.types';
-import { ContentCreate, ContentOverview, ContentUpdate } from './lib/views';
+import { TenantContext } from './lib/context';
+import { ContentCreate, ContentCreateOverview, ContentOverview, ContentUpdate } from './lib/views';
 import ContentForm from './lib/views/ContentForm/ContentForm';
 
 // eslint-disable-next-line import/namespace
@@ -33,13 +34,13 @@ const ContentComponent: FC<ContentRouteProps> = ({ route, location, match, tenan
 	}
 
 	return (
-		<>
+		<TenantContext.Provider value={{ tenantId }}>
 			{Core.routes.render(route.routes as ModuleRouteConfig[], {
 				routes: route.routes,
 				basePath: match.url,
 				tenantId,
 			})}
-		</>
+		</TenantContext.Provider>
 	);
 };
 
@@ -56,6 +57,11 @@ registerRoutes({
 		{
 			path: MODULE_PATHS.overview,
 			component: ContentOverview,
+		},
+		{
+			path: MODULE_PATHS.createOverview,
+			component: ContentCreateOverview,
+			breadcrumb: 'Content aanmaken',
 		},
 		{
 			path: MODULE_PATHS.create,

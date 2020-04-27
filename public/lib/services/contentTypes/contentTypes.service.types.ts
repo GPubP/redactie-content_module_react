@@ -36,6 +36,18 @@ export interface ContentTypeSchema {
 	errorMessages: ErrorMessagesSchema;
 }
 
+export interface ContentTypePaging {
+	total: number;
+	moreResults: boolean;
+	limit: number;
+	skip: number;
+}
+
+export interface ContentTypesSchema {
+	data: ContentTypeSchema[];
+	paging: ContentTypePaging;
+}
+
 export interface ValidateSchema {
 	[key: string]: any;
 }

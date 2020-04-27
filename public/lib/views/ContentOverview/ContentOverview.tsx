@@ -6,34 +6,28 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
-import { BREADCRUMB_OPTIONS } from '../../content.const';
+import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, LoadingState } from '../../content.types';
-import { useRoutes } from '../../hooks';
+import { useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { OrderBy, SearchParams } from '../../services/api';
 import { ContentsSchema, getContent } from '../../services/content';
 
 import { DEFAULT_CONTENT_SEARCH_PARAMS } from './ContentOverview.const';
 import './ContentOverview.scss';
 
-const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
-	tenantId,
-	match,
-	history,
-}) => {
+const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) => {
 	const { siteId } = match.params;
-
 	/**
 	 * Hooks
 	 */
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
 	const [contents, setContent] = useState<ContentsSchema | null>(null);
-	const routes = useRoutes();
-	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+	const { navigate } = useNavigate();
+	const breadcrumbs = useRoutesBreadcrumbs();
 	const [contentSearchParams, setContentSearchParams] = useState<SearchParams>(
 		DEFAULT_CONTENT_SEARCH_PARAMS
 	);
@@ -137,9 +131,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 						<Button
 							ariaLabel="Edit"
 							icon="edit"
-							onClick={() =>
-								history.push(`/${tenantId}/sites/${siteId}/content/${id}/bewerken`)
-							}
+							onClick={() => navigate(MODULE_PATHS.update, { contentId: id, siteId })}
 							type="primary"
 							transparent
 						></Button>
@@ -173,11 +165,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
 					<Button
-						onClick={() =>
-							history.push(
-								`/${tenantId}/sites/${siteId}/content/content-type/46bf8fd1-895f-4d6e-84be-e26f8c5a6fcb/aanmaken`
-							)
-						}
+						onClick={() => navigate(MODULE_PATHS.createOverview, { siteId })}
 						iconLeft="plus"
 					>
 						Nieuwe maken
