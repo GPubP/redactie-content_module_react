@@ -1,6 +1,6 @@
-import { DEFAULT_CONTENT_SEARCH_PARAMS } from '../../views/ContentOverview/ContentOverview.const';
 import { api, parseSearchParams, SearchParams } from '../api';
 
+import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from './contentTypes.service.const';
 import { ContentTypeSchema, ContentTypesSchema } from './contentTypes.service.types';
 
 // TODO: This data should come from the content type module API
@@ -21,7 +21,7 @@ export const getContentType = async (uuid: string): Promise<ContentTypeSchema | 
 
 // TODO: This data should come from the content type module API
 export const getContentTypes = async (
-	searchParams: SearchParams = DEFAULT_CONTENT_SEARCH_PARAMS
+	searchParams: SearchParams = DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
 ): Promise<ContentTypesSchema | null> => {
 	try {
 		const response: ContentTypesSchema = await api

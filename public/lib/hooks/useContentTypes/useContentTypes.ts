@@ -9,6 +9,7 @@ const useContentTypes = (searchParams: SearchParams): [LoadingState, ContentType
 	const [contentTypes, setContentTypes] = useState<ContentTypesSchema | null>(null);
 
 	useEffect(() => {
+		setLoadingState(LoadingState.Loading);
 		getContentTypes(searchParams)
 			.then(result => {
 				if (result) {

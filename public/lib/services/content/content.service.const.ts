@@ -1,4 +1,4 @@
-import { SearchParams } from '../../services/api';
+import { SearchParams } from '../api';
 
 export const DEFAULT_CONTENT_SEARCH_PARAMS: SearchParams = {
 	skip: 0,
