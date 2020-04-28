@@ -12,16 +12,18 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
 import FilterForm from '../../components/FilterForm/FilterForm';
+import { ONLINE_OPTIONS, STATUS_OPTIONS } from '../../components/FilterForm/FilterForm.const';
+import { FilterFormState, ResetForm } from '../../components/FilterForm/FilterForm.types';
 import { BREADCRUMB_OPTIONS } from '../../content.const';
-import { ContentRouteProps, FilterFormState, LoadingState } from '../../content.types';
-import { useRoutes } from '../../hooks';
+import { ContentRouteProps, FilterItemSchema, LoadingState } from '../../content.types';
+import { useContentTypes, useRoutes } from '../../hooks';
 import useContent from '../../hooks/useContent/useContent';
 import { OrderBy, SearchParams } from '../../services/api';
 import './ContentOverview.scss';
-import { FilterItemSchema } from '../../services/filterItems/filterItems.service.types';
 import { generateFilterFormState } from '../../services/helpers';
 
 import { DEFAULT_CONTENT_SEARCH_PARAMS } from './ContentOverview.const';
+import { FilterKeys } from './ContentOverview.types';
 
 const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 	tenantId,
@@ -33,6 +35,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 	/**
 	 * Hooks
 	 */
+	const [, contentTypes] = useContentTypes();
 	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
 	const [contentTypeList, setContentTypeList] = useState<FilterItemSchema[]>([]);
 	const [contentSearchParams, setContentSearchParams] = useState<SearchParams>(
@@ -53,7 +56,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 	/**
 	 * Methods
 	 */
-	const onSubmit = ({
+	const createFilterItems = ({
 		search,
 		contentType,
 		publishedFrom,
@@ -62,77 +65,133 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 		online,
 		author,
 		theme,
-	}: FilterFormState): void => {
-		//add values to filterItems for Taglist
-		const searchItem = { label: 'search', value: search };
-		const dateItem = { label: 'Gepubliceerd tussem:', value: '' };
-		const statusItem = { label: 'Status', value: status };
-		const onlineItem = { label: '', value: online };
-		const authorItem = { label: 'Persoon', value: author };
-		const themeItem = { label: 'Thema', value: theme };
-		//check if dates are picked
-		publishedFrom && publishedTo
-			? (dateItem.value = `${publishedFrom} - ${publishedTo}`)
-			: (dateItem.value = '');
-		//put content types in separate array
-		const contentTypeItem = { label: 'content type', value: contentType };
-		const setContentTypes = contentTypeList?.concat(contentTypeItem);
-		const filteredContentTypes = setContentTypes.filter(contentType => !!contentType);
-		setContentTypeList(filteredContentTypes);
-		//get value array from filterItems
-		const contentTypesString = filteredContentTypes.map(item => {
-			return item['value'];
-		});
-		//add filterItems to Taglist
-		const newFilter = [
-			searchItem,
-			contentTypeItem,
-			dateItem,
-			statusItem,
-			onlineItem,
-			authorItem,
-			themeItem,
+	}: FilterFormState): {
+		filters: FilterItemSchema[];
+		contentTypeFilters: FilterItemSchema[];
+	} => {
+		const filters = [
+			{
+				label: FilterKeys.SEARCH,
+				value: search,
+			},
+			{
+				label: FilterKeys.DATE,
+				value: publishedFrom && publishedTo ? `${publishedFrom} - ${publishedTo}` : '',
+			},
+			{
+				label: FilterKeys.STATUS,
+				value: STATUS_OPTIONS.find(option => option.value === status)?.label || '',
+			},
+			{
+				label: FilterKeys.ONLINE,
+				value: ONLINE_OPTIONS.find(option => option.value === online)?.label || '',
+			},
+			{
+				label: FilterKeys.AUTHOR,
+				value: author,
+			},
+			{
+				label: FilterKeys.THEME,
+				value: theme,
+			},
 		];
-		const filteredFilter = newFilter.filter(item => !!item.value);
-		setFilterItems(filteredFilter);
+
+		const newContentTypeList = [
+			...contentTypeList,
+			...(contentType && !contentTypeList.find(item => item.label === contentType)
+				? [
+						{
+							label: contentType,
+							value:
+								contentTypes?.find(ct => ct._id === contentType)?.meta.label ||
+								contentType,
+						},
+				  ]
+				: []),
+		];
+
+		setContentTypeList(newContentTypeList);
+
+		return {
+			filters: [
+				...filters,
+				...newContentTypeList.map((item, index) => ({
+					...item,
+					label: `${FilterKeys.CONTENT_TYPE}_${index}_${item.label}`,
+				})),
+			].filter(item => !!item.value),
+			contentTypeFilters: newContentTypeList,
+		};
+	};
+
+	const onSubmit = (filterFormState: FilterFormState): void => {
+		const filterItems = createFilterItems(filterFormState);
+
+		//get value array from filterItems
+		const contentTypesString = filterItems.contentTypeFilters.map(item => item.label);
+
+		setFilterItems(filterItems.filters);
 
 		//add array to searchParams
 		setContentSearchParams({
 			...contentSearchParams,
-			search: search,
+			search: filterFormState.search,
 			contentTypes: contentTypesString,
-			publishedFrom: publishedFrom,
-			publishedTo: publishedTo,
-			status: status,
-			creator: author,
+			publishedFrom:
+				filterFormState.publishedFrom && filterFormState.publishedTo
+					? moment(filterFormState.publishedFrom, 'DD/MM/YYYY').toISOString()
+					: '',
+			publishedTo:
+				filterFormState.publishedTo && filterFormState.publishedFrom
+					? moment(filterFormState.publishedTo, 'DD/MM/YYYY').toISOString()
+					: '',
+			status: filterFormState.status,
+			creator: filterFormState.author,
+			// TODO: what to do with the `online` and `offline` status??
 		});
 	};
 
-	const deleteAllFilters = (): void => {
-		//set empty array as Taglist
+	const deleteAllFilters = (resetForm: ResetForm): void => {
 		const emptyFilter: [] = [];
 		setFilterItems(emptyFilter);
 		setContentTypeList(emptyFilter);
-		//delete search param from api call
-		setContentSearchParams({
-			skip: 0,
-			limit: 10,
-		});
+		setContentSearchParams(DEFAULT_CONTENT_SEARCH_PARAMS);
+		resetForm();
 	};
 
-	const deleteFilter = (item: any): void => {
+	const deleteFilter = (item: FilterItemSchema): void => {
 		//delete item from filterItems
 		const setFilter = filterItems?.filter(el => el.value !== item.value);
 		setFilterItems(setFilter);
-		//get value array from filterItems
-		// const names = setFilter.map(item => {
-		// 	return item['value'];
-		// });
-		//add array to searchParams
-		// setContentSearchParams({
-		// 	...contentSearchParams,
-		// 	search: names,
-		// });
+
+		// Update contentSearchParams
+		const filterKey = item.label.split('_')[0];
+
+		switch (filterKey) {
+			case FilterKeys.DATE:
+				setContentSearchParams({
+					...contentSearchParams,
+					publishedFrom: '',
+					publishedTo: '',
+				});
+				break;
+			case FilterKeys.CONTENT_TYPE: {
+				const newContentTypeList = [
+					...contentTypeList.filter(ct => ct.value !== item.value),
+				];
+				setContentTypeList(newContentTypeList);
+				setContentSearchParams({
+					...contentSearchParams,
+					contentTypes: newContentTypeList.map(item => item.label),
+				});
+				break;
+			}
+			default:
+				setContentSearchParams({
+					...contentSearchParams,
+					[filterKey]: '',
+				});
+		}
 	};
 
 	const handlePageChange = (page: number): void => {
@@ -242,6 +301,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 					className="u-margin-top"
 					columns={contentsColumns}
 					rows={contentsRows}
+					loading={loadingState === LoadingState.Loading}
 					currentPage={
 						Math.ceil(contents.paging.skip / DEFAULT_CONTENT_SEARCH_PARAMS.limit) + 1
 					}

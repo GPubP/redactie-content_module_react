@@ -11,7 +11,7 @@ const api: KyInstance = ky.create({
 });
 
 export const parseSearchParams = (searchParams: SearchParams): string => {
-	return stringify(searchParams, { arrayFormat: 'comma' });
+	return stringify(searchParams, { arrayFormat: 'comma', skipNull: true, skipEmptyString: true });
 };
 
 export default api;

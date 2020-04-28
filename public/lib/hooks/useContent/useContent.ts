@@ -9,6 +9,7 @@ const useContent = (searchParams: SearchParams): [LoadingState, ContentsSchema |
 	const [content, setContent] = useState<ContentsSchema | null>(null);
 
 	useEffect(() => {
+		setLoadingState(LoadingState.Loading);
 		getContent(searchParams)
 			.then(result => {
 				if (result?.data) {

@@ -9,8 +9,10 @@ import DataLoader from '../DataLoader/DataLoader';
 
 import {
 	CONTENT_TYPES_DEFAULT_OPTION,
+	ONLINE_OPTIONS,
 	PUBLISHED_DEFAULT_OPTION,
 	STATUS_DEFAULT_OPTION,
+	STATUS_OPTIONS,
 } from './FilterForm.const';
 import { FilterFormProps } from './FilterForm.types';
 
@@ -21,31 +23,6 @@ const FilterForm: FC<FilterFormProps> = ({
 	activeFilters,
 	deleteActiveFilter,
 }) => {
-	const statusOptions = [
-		{
-			key: '0',
-			value: 'Gepubliceerd',
-			label: 'Gepubliceerd',
-		},
-		{
-			key: '1',
-			value: 'DRAFT',
-			label: 'DRAFT',
-		},
-	];
-	const onlineOptions = [
-		{
-			key: '0',
-			value: 'Online',
-			label: 'Online',
-		},
-		{
-			key: '1',
-			value: 'Offline',
-			label: 'Offline',
-		},
-	];
-
 	const [loadingState, contentTypes] = useContentTypes();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 
@@ -72,13 +49,13 @@ const FilterForm: FC<FilterFormProps> = ({
 
 		return (
 			<Formik initialValues={initialState} onSubmit={onSubmit}>
-				{({ submitForm, setFieldValue }) => {
+				{({ submitForm, setFieldValue, resetForm }) => {
 					return (
 						<Filter
 							title="Filter"
 							noFilterText="Geen filters beschikbaar"
 							onConfirm={submitForm}
-							onClean={onCancel}
+							onClean={() => onCancel(resetForm)}
 							confirmText="Toepassen"
 							cleanText="Alles leegmaken"
 							activeFilters={activeFilters}
@@ -141,7 +118,7 @@ const FilterForm: FC<FilterFormProps> = ({
 											label="Status"
 											name="status"
 											id="status"
-											options={[STATUS_DEFAULT_OPTION, ...statusOptions]}
+											options={[STATUS_DEFAULT_OPTION, ...STATUS_OPTIONS]}
 										/>
 									</div>
 									<div className="col-xs-6 col-sm-3 u-margin-top-lg">
@@ -151,7 +128,7 @@ const FilterForm: FC<FilterFormProps> = ({
 											label=""
 											name="online"
 											id="online"
-											options={[PUBLISHED_DEFAULT_OPTION, ...onlineOptions]}
+											options={[PUBLISHED_DEFAULT_OPTION, ...ONLINE_OPTIONS]}
 										/>
 									</div>
 									<div className="col-xs-12 col-sm-6 u-margin-top">

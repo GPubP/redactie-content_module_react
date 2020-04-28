@@ -24,3 +24,38 @@ export const PUBLISHED_DEFAULT_OPTION = {
 	value: '',
 	disabled: true,
 };
+
+export const STATUS_OPTIONS = [
+	{
+		key: '0',
+		value: 'published',
+		label: 'Gepubliceerd',
+	},
+	{
+		key: '1',
+		value: 'draft',
+		label: 'Concept',
+	},
+	{
+		key: '2',
+		value: 'scheduled',
+		label: 'Gepland',
+	},
+	{
+		key: '3',
+		value: 'pending',
+		label: 'In wacht',
+	},
+];
+export const ONLINE_OPTIONS = [
+	{
+		key: '0',
+		value: 'online',
+		label: 'Online',
+	},
+	{
+		key: '1',
+		value: 'offline',
+		label: 'Offline',
+	},
+];

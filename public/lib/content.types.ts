@@ -16,13 +16,11 @@ export enum LoadingState {
 	Error = 'error',
 }
 
-export interface FilterFormState {
-	search: string;
-	contentType: string;
-	publishedFrom: string;
-	publishedTo: string;
-	status: string;
-	online: string;
-	author: string;
-	theme: string;
+export interface FilterItemSchema {
+	label: string;
+	value: string;
+}
+
+export interface FilterItemsSchema {
+	data: FilterItemSchema[];
 }
