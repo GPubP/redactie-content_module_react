@@ -1,10 +1,11 @@
 import { Datepicker, Select, TextField } from '@acpaas-ui/react-components';
 import { Filter, FilterBody } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { LoadingState } from '../../content.types';
-import useContentTypes from '../../hooks/useContentTypes/useContentTypes';
+import { useContentTypes } from '../../hooks';
+import DataLoader from '../DataLoader/DataLoader';
 
 import {
 	CONTENT_TYPES_DEFAULT_OPTION,
@@ -12,8 +13,6 @@ import {
 	STATUS_DEFAULT_OPTION,
 } from './FilterForm.const';
 import { FilterFormProps } from './FilterForm.types';
-
-import { DataLoader } from '..';
 
 const FilterForm: FC<FilterFormProps> = ({
 	initialState,
@@ -56,11 +55,15 @@ const FilterForm: FC<FilterFormProps> = ({
 		}
 	}, [loadingState]);
 
-	const contentTypeOptions = contentTypes?.map(contentType => ({
-		key: contentType.uuid,
-		value: contentType?._id,
-		label: contentType?.meta.label,
-	}));
+	const contentTypeOptions = useMemo(
+		() =>
+			contentTypes?.map(contentType => ({
+				key: contentType.uuid,
+				value: contentType?._id,
+				label: contentType?.meta.label,
+			})),
+		[contentTypes]
+	);
 
 	const renderFilter = (): ReactElement | null => {
 		if (!contentTypes) {
@@ -82,93 +85,95 @@ const FilterForm: FC<FilterFormProps> = ({
 							onFilterRemove={deleteActiveFilter}
 						>
 							<FilterBody>
-								<div className="col-xs-12 col-sm-6 u-margin-top">
-									<Field
-										as={TextField}
-										label="Zoeken"
-										name="search"
-										id="Zoeken"
-										placeholder="Zoeken op woord, uuid, ..."
-										iconright="search"
-									/>
-								</div>
-								<div className="col-xs-12 col-sm-6 u-margin-top">
-									<Field
-										as={Select}
-										label="Content type"
-										name="contentType"
-										id="Content type"
-										options={[
-											CONTENT_TYPES_DEFAULT_OPTION,
-											...contentTypeOptions,
-										]}
-									/>
-								</div>
-								<div className="col-xs-6 col-sm-3 u-margin-top">
-									<Field
-										as={Datepicker}
-										label="Publicatiedatum"
-										name="publishedFrom"
-										id="Publicatiedatum"
-										format="DD/MM/YYYY"
-										mask="99/99/9999"
-										//onChange moet hier staan om value door te geven
-										onChange={(value: any) =>
-											setFieldValue('publishedFrom', value)
-										}
-									/>
-								</div>
-								<div className="col-xs-6 col-sm-3 u-margin-top">
-									<Field
-										as={Datepicker}
-										label="publishedTo"
-										name="publishedTo"
-										id="publishedTo"
-										format="DD/MM/YYYY"
-										mask="99/99/9999"
-										//onChange moet hier staan om value door te geven
-										onChange={(value: any) =>
-											setFieldValue('publishedTo', value)
-										}
-									/>
-								</div>
-								<div className="col-xs-6 col-sm-3 u-margin-top">
-									<Field
-										as={Select}
-										label="Status"
-										name="status"
-										id="Status"
-										options={[STATUS_DEFAULT_OPTION, ...statusOptions]}
-									/>
-								</div>
-								<div className="col-xs-6 col-sm-3 u-margin-top">
-									<Field
-										as={Select}
-										label="Published"
-										name="online"
-										id="online"
-										options={[PUBLISHED_DEFAULT_OPTION, ...onlineOptions]}
-									/>
-								</div>
-								<div className="col-xs-12 col-sm-6 u-margin-top">
-									<Field
-										as={TextField}
-										label="Aanmaker"
-										name="author"
-										id="Aanmaker"
-										placeholder="Zoek een persoon"
-										iconright="search"
-									/>
-								</div>
-								<div className="col-xs-12 col-sm-6 u-margin-top">
-									<Field
-										as={TextField}
-										label="Thema"
-										name="theme"
-										id="Thema"
-										placeholder="Zoek een thema"
-										iconright="search"
-									/>
+								<div className="u-margin-bottom row">
+									<div className="col-xs-12 col-sm-6 u-margin-top">
+										<Field
+											as={TextField}
+											label="Zoeken"
+											name="search"
+											id="search"
+											placeholder="Zoeken op woord, uuid, ..."
+											iconright="search"
+										/>
+									</div>
+									<div className="col-xs-12 col-sm-6 u-margin-top">
+										<Field
+											as={Select}
+											label="Content type"
+											name="contentType"
+											id="contentType"
+											options={[
+												CONTENT_TYPES_DEFAULT_OPTION,
+												...contentTypeOptions,
+											]}
+										/>
+									</div>
+									<div className="col-xs-6 col-sm-3 u-margin-top">
+										<Field
+											as={Datepicker}
+											label="Publicatiedatum"
+											name="publishedFrom"
+											id="publishedFrom"
+											format="DD/MM/YYYY"
+											mask="99/99/9999"
+											onChange={(value: any) =>
+												setFieldValue('publishedFrom', value)
+											}
+										/>
+									</div>
+									<div className="col-xs-6 col-sm-3 u-margin-top-lg">
+										<Field
+											as={Datepicker}
+											// NOTE: There is no visible label for this element
+											label=""
+											name="publishedTo"
+											id="publishedTo"
+											format="DD/MM/YYYY"
+											mask="99/99/9999"
+											onChange={(value: any) =>
+												setFieldValue('publishedTo', value)
+											}
+										/>
+									</div>
+									<div className="col-xs-6 col-sm-3 u-margin-top">
+										<Field
+											as={Select}
+											label="Status"
+											name="status"
+											id="status"
+											options={[STATUS_DEFAULT_OPTION, ...statusOptions]}
+										/>
+									</div>
+									<div className="col-xs-6 col-sm-3 u-margin-top-lg">
+										<Field
+											as={Select}
+											// NOTE: There is no visible label for this element
+											label=""
+											name="online"
+											id="online"
+											options={[PUBLISHED_DEFAULT_OPTION, ...onlineOptions]}
+										/>
+									</div>
+									<div className="col-xs-12 col-sm-6 u-margin-top">
+										<Field
+											as={TextField}
+											label="Aanmaker"
+											name="author"
+											id="author"
+											placeholder="Zoek een persoon"
+											iconright="search"
+										/>
+									</div>
+									<div className="col-xs-12 col-sm-6 u-margin-top">
+										<Field
+											as={TextField}
+											label="Thema"
+											name="theme"
+											id="theme"
+											placeholder="Zoek een thema"
+											iconright="search"
+										/>
+									</div>
 								</div>
 							</FilterBody>
 						</Filter>

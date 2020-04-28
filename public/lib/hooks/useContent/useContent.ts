@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
+import { LoadingState } from '../../content.types';
 import { SearchParams } from '../../services/api';
 import { ContentsSchema, getContent } from '../../services/content';
-import { LoadingState } from '../../types';
 
 const useContent = (searchParams: SearchParams): [LoadingState, ContentsSchema | null] => {
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);

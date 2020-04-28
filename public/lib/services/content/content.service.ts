@@ -1,6 +1,5 @@
 import { api, parseSearchParams, SearchParams } from '../api';
 
-import { DEFAULT_VIEWS_SEARCH_PARAMS } from './content.service.const';
 import { ContentCreateSchema, ContentSchema, ContentsSchema } from './content.service.types';
 
 export const getContent = async (

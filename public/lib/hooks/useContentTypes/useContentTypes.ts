@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
+import { LoadingState } from '../../content.types';
 import { ContentTypeSchema } from '../../services/contentTypes';
 import { getContentTypes } from '../../services/contentTypes/contentTypes.service';
-import { LoadingState } from '../../types';
 
 const useContentTypes = (): [LoadingState, ContentTypeSchema[] | null] => {
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);

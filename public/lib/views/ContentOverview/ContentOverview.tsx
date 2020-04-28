@@ -228,7 +228,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 		];
 
 		return (
-			<div className="u-container u-wrapper">
+			<>
 				<div className="u-margin-top">
 					<FilterForm
 						initialState={generateFilterFormState()}
@@ -251,7 +251,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 					activeSorting={activeSorting}
 					totalValues={contents?.paging?.total || 0}
 				/>
-			</div>
+			</>
 		);
 	};
 
