@@ -6,7 +6,6 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
@@ -14,35 +13,32 @@ import { DataLoader } from '../../components';
 import FilterForm from '../../components/FilterForm/FilterForm';
 import { ONLINE_OPTIONS, STATUS_OPTIONS } from '../../components/FilterForm/FilterForm.const';
 import { FilterFormState, ResetForm } from '../../components/FilterForm/FilterForm.types';
-import { BREADCRUMB_OPTIONS } from '../../content.const';
+import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, FilterItemSchema, LoadingState } from '../../content.types';
-import { useContentTypes, useRoutes } from '../../hooks';
+import { useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import useContent from '../../hooks/useContent/useContent';
 import { OrderBy, SearchParams } from '../../services/api';
-import './ContentOverview.scss';
+import { DEFAULT_CONTENT_SEARCH_PARAMS } from '../../services/content';
 import { generateFilterFormState } from '../../services/helpers';
 
-import { DEFAULT_CONTENT_SEARCH_PARAMS } from './ContentOverview.const';
-import { FilterKeys } from './ContentOverview.types';
+import { CONTENT_OVERVIEW_COLUMNS } from './ContentOverview.const';
+import { ContentOverviewTableRow, FilterKeys } from './ContentOverview.types';
 
-const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
-	tenantId,
-	match,
-	history,
-}) => {
+import './ContentOverview.scss';
+
+const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) => {
 	const { siteId } = match.params;
-
 	/**
 	 * Hooks
 	 */
 	const [, contentTypes] = useContentTypes();
 	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
 	const [contentTypeList, setContentTypeList] = useState<FilterItemSchema[]>([]);
+	const { navigate } = useNavigate();
+	const breadcrumbs = useRoutesBreadcrumbs();
 	const [contentSearchParams, setContentSearchParams] = useState<SearchParams>(
 		DEFAULT_CONTENT_SEARCH_PARAMS
 	);
-	const routes = useRoutes();
-	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const [loadingState, contents] = useContent(contentSearchParams);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
@@ -218,73 +214,16 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 			return null;
 		}
 
-		const contentsRows = contents.data.map(content => ({
-			id: content.uuid,
+		const contentsRows: ContentOverviewTableRow[] = contents.data.map(content => ({
+			id: content.uuid as string,
 			label: content.meta?.label,
 			contentType: content.meta?.contentType?.meta?.label,
 			lastModified: content.meta?.lastModified,
 			lastEditor: content.meta?.lastEditor,
 			status: content.meta?.status,
 			published: content.meta?.published,
+			navigate: contentId => navigate(MODULE_PATHS.update, { contentId, siteId }),
 		}));
-
-		const contentsColumns = [
-			{
-				label: 'Titel',
-				value: 'label',
-			},
-			{
-				label: 'Type',
-				value: 'contentType',
-			},
-			{
-				label: 'Laatst bijgewerkt',
-				value: 'lastModified',
-				format: (data: string) => moment(data).format('DD/MM/YYYYY [-] hh[u]mm'),
-			},
-			{
-				label: 'Auteur',
-				value: 'lastEditor',
-			},
-			{
-				label: 'Status',
-				value: 'status',
-			},
-			{
-				label: 'Online',
-				value: 'published',
-				component(value: string, rowData: any) {
-					// TODO: fix any type
-					const isOnline = !!rowData['published'];
-					return isOnline ? (
-						<span className="a-dot__green"></span>
-					) : (
-						<span className="a-dot__red"></span>
-					);
-				},
-			},
-			{
-				label: '',
-				classList: ['u-text-right'],
-				disableSorting: true,
-				component(value: unknown, rowData: unknown) {
-					// TODO: add types for rowData
-					const { id } = rowData as any;
-
-					return (
-						<Button
-							ariaLabel="Edit"
-							icon="edit"
-							onClick={() =>
-								history.push(`/${tenantId}/sites/${siteId}/content/${id}/bewerken`)
-							}
-							type="primary"
-							transparent
-						></Button>
-					);
-				},
-			},
-		];
 
 		return (
 			<>
@@ -299,7 +238,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 				</div>
 				<PaginatedTable
 					className="u-margin-top"
-					columns={contentsColumns}
+					columns={CONTENT_OVERVIEW_COLUMNS}
 					rows={contentsRows}
 					loading={loadingState === LoadingState.Loading}
 					currentPage={
@@ -321,11 +260,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
 					<Button
-						onClick={() =>
-							history.push(
-								`/${tenantId}/sites/${siteId}/content/content-type/46bf8fd1-895f-4d6e-84be-e26f8c5a6fcb/aanmaken`
-							)
-						}
+						onClick={() => navigate(MODULE_PATHS.createOverview, { siteId })}
 						iconLeft="plus"
 					>
 						Nieuwe maken

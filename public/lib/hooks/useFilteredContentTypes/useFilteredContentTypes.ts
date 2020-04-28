@@ -1,28 +1,30 @@
 import { useEffect, useState } from 'react';
 
 import { LoadingState } from '../../content.types';
-import { ContentTypeSchema, getContentTypes } from '../../services/contentTypes';
+import { SearchParams } from '../../services/api';
+import { ContentTypesSchema, getFilteredContentTypes } from '../../services/contentTypes';
 
-const useContentTypes = (): [LoadingState, ContentTypeSchema[] | null] => {
+const useFilteredContentTypes = (
+	searchParams: SearchParams
+): [LoadingState, ContentTypesSchema | null] => {
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [contentTypes, setContentTypes] = useState<ContentTypeSchema[] | null>(null);
+	const [contentTypes, setContentTypes] = useState<ContentTypesSchema | null>(null);
 
 	useEffect(() => {
 		setLoadingState(LoadingState.Loading);
-		getContentTypes()
+		getFilteredContentTypes(searchParams)
 			.then(result => {
-				if (Array.isArray(result) && result.length) {
+				if (result) {
 					setContentTypes(result);
 				}
-
 				setLoadingState(LoadingState.Loaded);
 			})
 			.catch(() => {
 				setLoadingState(LoadingState.Error);
 			});
-	}, []);
+	}, [searchParams]);
 
 	return [loadingState, contentTypes];
 };
 
-export default useContentTypes;
+export default useFilteredContentTypes;

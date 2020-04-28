@@ -13,6 +13,7 @@ export const BREADCRUMB_OPTIONS = {
 const siteRoot = '/content';
 const root = `/:siteId${siteRoot}`;
 const overview = `${root}/overzicht`;
+const createOverview = `${root}/aanmaak-overzicht`;
 const create = `${root}/content-type/:contentTypeId/aanmaken`;
 const createCompartment = `${create}/:compartment`;
 const update = `${root}/:contentId/bewerken`;
@@ -22,6 +23,7 @@ export const MODULE_PATHS = {
 	root,
 	siteRoot,
 	overview,
+	createOverview,
 	create,
 	createCompartment,
 	update,
