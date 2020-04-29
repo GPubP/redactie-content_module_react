@@ -7,10 +7,6 @@ import { LoadingState } from '../../content.types';
 import { useContentTypes } from '../../hooks';
 import DataLoader from '../DataLoader/DataLoader';
 
-/**
- * published: true / false === online vs offline
- */
-
 import {
 	CONTENT_TYPES_DEFAULT_OPTION,
 	CONTENT_TYPES_SEARCH_OPTIONS,
@@ -53,7 +49,7 @@ const FilterForm: FC<FilterFormProps> = ({
 		}
 
 		return (
-			<Formik initialValues={initialState} onSubmit={onSubmit}>
+			<Formik enableReinitialize={true} initialValues={initialState} onSubmit={onSubmit}>
 				{({ submitForm, setFieldValue, resetForm, values }) => {
 					return (
 						<Filter
@@ -145,8 +141,8 @@ const FilterForm: FC<FilterFormProps> = ({
 										<Field
 											as={TextField}
 											label="Aanmaker"
-											name="author"
-											id="author"
+											name="creator"
+											id="creator"
 											placeholder="Zoek een persoon"
 											iconright="search"
 										/>

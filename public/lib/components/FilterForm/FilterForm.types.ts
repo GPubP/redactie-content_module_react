@@ -17,7 +17,7 @@ export interface FilterFormState {
 	publishedTo: string;
 	status: string;
 	published: string;
-	author: string;
+	creator: string;
 }
 
 export enum PublishedStatuses {

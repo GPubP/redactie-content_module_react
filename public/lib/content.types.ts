@@ -17,8 +17,11 @@ export enum LoadingState {
 }
 
 export interface FilterItemSchema {
-	label: string;
+	key?: string;
 	value: string;
+	valuePrefix?: string;
+	filterKey: string;
+	formvalue?: any;
 }
 
 export interface FilterItemsSchema {

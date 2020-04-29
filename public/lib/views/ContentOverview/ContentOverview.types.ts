@@ -14,6 +14,6 @@ export enum FilterKeys {
 	DATE = 'date',
 	STATUS = 'status',
 	PUBLISHED = 'published',
-	AUTHOR = 'author',
+	CREATOR = 'creator',
 	CONTENT_TYPE = 'contentType',
 }

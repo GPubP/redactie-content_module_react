@@ -24,7 +24,7 @@ export const CONTENT_OVERVIEW_COLUMNS = [
 		format: (data: string) => moment(data).format('DD/MM/YYYYY [-] hh[u]mm'),
 	},
 	{
-		label: 'Auteur',
+		label: 'Aanmaker',
 		value: 'lastEditor',
 	},
 	{
