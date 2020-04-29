@@ -7,21 +7,27 @@ import {
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import moment from 'moment';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { DataLoader } from '../../components';
 import FilterForm from '../../components/FilterForm/FilterForm';
-import { ONLINE_OPTIONS, STATUS_OPTIONS } from '../../components/FilterForm/FilterForm.const';
-import { FilterFormState, ResetForm } from '../../components/FilterForm/FilterForm.types';
+import { PUBLISHED_OPTIONS, STATUS_OPTIONS } from '../../components/FilterForm/FilterForm.const';
+import {
+	FilterFormState,
+	PublishedStatuses,
+	ResetForm,
+} from '../../components/FilterForm/FilterForm.types';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, FilterItemSchema, LoadingState } from '../../content.types';
-import { useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
-import useContent from '../../hooks/useContent/useContent';
+import { useContent, useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { OrderBy, SearchParams } from '../../services/api';
-import { DEFAULT_CONTENT_SEARCH_PARAMS } from '../../services/content';
-import { generateFilterFormState } from '../../services/helpers';
+import {
+	CONTENT_STATUS_TRANSLATION_MAP,
+	ContentStatus,
+	DEFAULT_CONTENT_SEARCH_PARAMS,
+} from '../../services/content';
 
-import { CONTENT_OVERVIEW_COLUMNS } from './ContentOverview.const';
+import { CONTENT_OVERVIEW_COLUMNS, CONTENT_TYPES_SEARCH_OPTIONS } from './ContentOverview.const';
 import { ContentOverviewTableRow, FilterKeys } from './ContentOverview.types';
 
 import './ContentOverview.scss';
@@ -31,7 +37,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	/**
 	 * Hooks
 	 */
-	const [, contentTypes] = useContentTypes();
+	const [, contentTypes] = useContentTypes(CONTENT_TYPES_SEARCH_OPTIONS);
 	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
 	const [contentTypeList, setContentTypeList] = useState<FilterItemSchema[]>([]);
 	const { navigate } = useNavigate();
@@ -40,8 +46,20 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		DEFAULT_CONTENT_SEARCH_PARAMS
 	);
 	const [loadingState, contents] = useContent(contentSearchParams);
-	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [initialLoading, setInitialLoading] = useState<LoadingState>(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
+	const initialFilterFormState: FilterFormState = useMemo(
+		() => ({
+			search: '',
+			contentType: '',
+			publishedFrom: '',
+			publishedTo: '',
+			status: '',
+			published: '',
+			author: '',
+		}),
+		[]
+	);
 
 	useEffect(() => {
 		if (loadingState === LoadingState.Loaded || loadingState === LoadingState.Error) {
@@ -58,9 +76,8 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		publishedFrom,
 		publishedTo,
 		status,
-		online,
+		published,
 		author,
-		theme,
 	}: FilterFormState): {
 		filters: FilterItemSchema[];
 		contentTypeFilters: FilterItemSchema[];
@@ -79,16 +96,12 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				value: STATUS_OPTIONS.find(option => option.value === status)?.label || '',
 			},
 			{
-				label: FilterKeys.ONLINE,
-				value: ONLINE_OPTIONS.find(option => option.value === online)?.label || '',
+				label: FilterKeys.PUBLISHED,
+				value: PUBLISHED_OPTIONS.find(option => option.value === published)?.label || '',
 			},
 			{
 				label: FilterKeys.AUTHOR,
 				value: author,
-			},
-			{
-				label: FilterKeys.THEME,
-				value: theme,
 			},
 		];
 
@@ -99,7 +112,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 						{
 							label: contentType,
 							value:
-								contentTypes?.find(ct => ct._id === contentType)?.meta.label ||
+								contentTypes?.data.find(ct => ct._id === contentType)?.meta.label ||
 								contentType,
 						},
 				  ]
@@ -133,6 +146,9 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			...contentSearchParams,
 			search: filterFormState.search,
 			contentTypes: contentTypesString,
+			published: filterFormState.published
+				? filterFormState.published === PublishedStatuses.ONLINE
+				: undefined,
 			publishedFrom:
 				filterFormState.publishedFrom && filterFormState.publishedTo
 					? moment(filterFormState.publishedFrom, 'DD/MM/YYYY').toISOString()
@@ -185,7 +201,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			default:
 				setContentSearchParams({
 					...contentSearchParams,
-					[filterKey]: '',
+					[filterKey]: undefined,
 				});
 		}
 	};
@@ -220,7 +236,9 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			contentType: content.meta?.contentType?.meta?.label,
 			lastModified: content.meta?.lastModified,
 			lastEditor: content.meta?.lastEditor,
-			status: content.meta?.status,
+			status: content.meta?.status
+				? CONTENT_STATUS_TRANSLATION_MAP[content.meta?.status as ContentStatus]
+				: '',
 			published: content.meta?.published,
 			navigate: contentId => navigate(MODULE_PATHS.update, { contentId, siteId }),
 		}));
@@ -229,7 +247,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			<>
 				<div className="u-margin-top">
 					<FilterForm
-						initialState={generateFilterFormState()}
+						initialState={initialFilterFormState}
 						onCancel={deleteAllFilters}
 						onSubmit={onSubmit}
 						deleteActiveFilter={deleteFilter}

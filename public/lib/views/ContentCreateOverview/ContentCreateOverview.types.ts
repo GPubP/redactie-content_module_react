@@ -4,8 +4,3 @@ export interface ContentCreateOverviewTableRow {
 	description: string;
 	navigate: (contentTypeId: string) => void;
 }
-
-export interface OrderBy {
-	key: string;
-	order: string;
-}

@@ -4,6 +4,11 @@ import React from 'react';
 
 import { ContentOverviewTableRow } from './ContentOverview.types';
 
+export const CONTENT_TYPES_SEARCH_OPTIONS = {
+	skip: 0,
+	limit: -1,
+};
+
 export const CONTENT_OVERVIEW_COLUMNS = [
 	{
 		label: 'Titel',

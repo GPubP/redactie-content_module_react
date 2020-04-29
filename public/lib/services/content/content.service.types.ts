@@ -45,4 +45,8 @@ export interface ContentCreateSchema {
 
 export enum ContentStatus {
 	DRAFT = 'DRAFT',
+	PENDING = 'PENDING',
+	SCHEDULED = 'SCHEDULED',
+	PUBLISHED = 'PUBLISHED',
+	UNPUBLISHED = 'UNPUBLISHED',
 }

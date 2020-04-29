@@ -1,7 +1,6 @@
 import { FieldSchema, FormSchema } from '@redactie/form-renderer-module';
 
-import { FilterFormState } from '../../components/FilterForm/FilterForm.types';
-import { ContentTypeSchema, ErrorMessagesSchema, ValidateSchema } from '../contentTypes';
+import { ContentTypeSchema, ErrorMessagesSchema, ValidateSchema } from '../services/contentTypes';
 
 export const getFormPropsByCT = (
 	contentType: ContentTypeSchema
@@ -30,14 +29,3 @@ export const getFormPropsByCT = (
 		errorMessages: contentType.errorMessages || {},
 	};
 };
-
-export const generateFilterFormState = (): FilterFormState => ({
-	search: '',
-	contentType: '',
-	publishedFrom: '',
-	publishedTo: '',
-	status: '',
-	online: '',
-	author: '',
-	theme: '',
-});

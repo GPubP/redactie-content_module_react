@@ -9,6 +9,7 @@ export interface SearchParams {
 	status?: string;
 	creator?: string;
 	direction?: number;
+	published?: boolean;
 }
 
 export interface OrderBy {

@@ -1,7 +1,7 @@
 import { ID } from '@datorama/akita';
 import { useEffect, useState } from 'react';
 
-import { onEmit } from '../../../helpers/onEmit';
+import { onEmit } from '../../../helpers';
 
 import { ContentCompartmentModel, ContentCompartmentRegisterOptions } from './compartments.model';
 import { contentCompartmentsQuery } from './compartments.query';

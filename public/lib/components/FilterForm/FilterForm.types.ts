@@ -16,7 +16,11 @@ export interface FilterFormState {
 	publishedFrom: string;
 	publishedTo: string;
 	status: string;
-	online: string;
+	published: string;
 	author: string;
-	theme: string;
+}
+
+export enum PublishedStatuses {
+	ONLINE = 'online',
+	OFFLINE = 'offline',
 }

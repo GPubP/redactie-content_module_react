@@ -11,9 +11,9 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { DataLoader } from '../../components';
 import { BREADCRUMB_OPTIONS } from '../../content.const';
 import { ContentRouteProps, LoadingState } from '../../content.types';
+import { getFormPropsByCT } from '../../helpers';
 import { useContentItem, useContentType, useRoutes } from '../../hooks';
 import { ContentSchema, updateContent } from '../../services/content';
-import { getFormPropsByCT } from '../../services/helpers';
 
 import { ContentUpdateMatchProps } from './ContentUpdate.types';
 

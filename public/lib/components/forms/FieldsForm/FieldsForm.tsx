@@ -2,7 +2,7 @@ import React, { FC, ReactElement } from 'react';
 
 import { CompartmentProps } from '../../../api/api.types';
 import { getForm } from '../../../connectors/formRenderer';
-import { getFormPropsByCT } from '../../../services/helpers';
+import { getFormPropsByCT } from '../../../helpers';
 
 const FieldsForm: FC<CompartmentProps> = ({
 	contentType,

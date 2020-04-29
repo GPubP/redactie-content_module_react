@@ -9,17 +9,11 @@ export interface ContentOverviewTableRow {
 	navigate: (contentId: string) => void;
 }
 
-export interface OrderBy {
-	key: string;
-	order: string;
-}
-
 export enum FilterKeys {
 	SEARCH = 'search',
 	DATE = 'date',
 	STATUS = 'status',
-	ONLINE = 'online',
+	PUBLISHED = 'published',
 	AUTHOR = 'author',
-	THEME = 'theme',
 	CONTENT_TYPE = 'contentType',
 }

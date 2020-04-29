@@ -7,10 +7,15 @@ import { LoadingState } from '../../content.types';
 import { useContentTypes } from '../../hooks';
 import DataLoader from '../DataLoader/DataLoader';
 
+/**
+ * published: true / false === online vs offline
+ */
+
 import {
 	CONTENT_TYPES_DEFAULT_OPTION,
-	ONLINE_OPTIONS,
+	CONTENT_TYPES_SEARCH_OPTIONS,
 	PUBLISHED_DEFAULT_OPTION,
+	PUBLISHED_OPTIONS,
 	STATUS_DEFAULT_OPTION,
 	STATUS_OPTIONS,
 } from './FilterForm.const';
@@ -23,7 +28,7 @@ const FilterForm: FC<FilterFormProps> = ({
 	activeFilters,
 	deleteActiveFilter,
 }) => {
-	const [loadingState, contentTypes] = useContentTypes();
+	const [loadingState, contentTypes] = useContentTypes(CONTENT_TYPES_SEARCH_OPTIONS);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 
 	useEffect(() => {
@@ -34,7 +39,7 @@ const FilterForm: FC<FilterFormProps> = ({
 
 	const contentTypeOptions = useMemo(
 		() =>
-			contentTypes?.map(contentType => ({
+			contentTypes?.data.map(contentType => ({
 				key: contentType.uuid,
 				value: contentType?._id,
 				label: contentType?.meta.label,
@@ -49,7 +54,7 @@ const FilterForm: FC<FilterFormProps> = ({
 
 		return (
 			<Formik initialValues={initialState} onSubmit={onSubmit}>
-				{({ submitForm, setFieldValue, resetForm }) => {
+				{({ submitForm, setFieldValue, resetForm, values }) => {
 					return (
 						<Filter
 							title="Filter"
@@ -93,6 +98,7 @@ const FilterForm: FC<FilterFormProps> = ({
 											id="publishedFrom"
 											format="DD/MM/YYYY"
 											mask="99/99/9999"
+											activeDate={values.publishedFrom}
 											onChange={(value: any) =>
 												setFieldValue('publishedFrom', value)
 											}
@@ -107,6 +113,7 @@ const FilterForm: FC<FilterFormProps> = ({
 											id="publishedTo"
 											format="DD/MM/YYYY"
 											mask="99/99/9999"
+											activeDate={values.publishedTo}
 											onChange={(value: any) =>
 												setFieldValue('publishedTo', value)
 											}
@@ -126,9 +133,12 @@ const FilterForm: FC<FilterFormProps> = ({
 											as={Select}
 											// NOTE: There is no visible label for this element
 											label=""
-											name="online"
-											id="online"
-											options={[PUBLISHED_DEFAULT_OPTION, ...ONLINE_OPTIONS]}
+											name="published"
+											id="published"
+											options={[
+												PUBLISHED_DEFAULT_OPTION,
+												...PUBLISHED_OPTIONS,
+											]}
 										/>
 									</div>
 									<div className="col-xs-12 col-sm-6 u-margin-top">
@@ -138,16 +148,6 @@ const FilterForm: FC<FilterFormProps> = ({
 											name="author"
 											id="author"
 											placeholder="Zoek een persoon"
-											iconright="search"
-										/>
-									</div>
-									<div className="col-xs-12 col-sm-6 u-margin-top">
-										<Field
-											as={TextField}
-											label="Thema"
-											name="theme"
-											id="theme"
-											placeholder="Zoek een thema"
 											iconright="search"
 										/>
 									</div>

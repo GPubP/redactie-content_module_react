@@ -1,5 +1,14 @@
 import { object, string } from 'yup';
 
+import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
+
+import { PublishedStatuses } from './FilterForm.types';
+
+export const CONTENT_TYPES_SEARCH_OPTIONS = {
+	skip: 0,
+	limit: -1,
+};
+
 export const FILTER_FORM_VALIDATION_SCHEMA = object().shape({
 	name: string().required(),
 });
@@ -28,34 +37,40 @@ export const PUBLISHED_DEFAULT_OPTION = {
 export const STATUS_OPTIONS = [
 	{
 		key: '0',
-		value: 'published',
-		label: 'Gepubliceerd',
+		value: ContentStatus.PUBLISHED,
+		label: CONTENT_STATUS_TRANSLATION_MAP.PUBLISHED,
 	},
 	{
 		key: '1',
-		value: 'draft',
-		label: 'Concept',
+		value: ContentStatus.DRAFT,
+		label: CONTENT_STATUS_TRANSLATION_MAP.DRAFT,
 	},
 	{
 		key: '2',
-		value: 'scheduled',
-		label: 'Gepland',
+		value: ContentStatus.SCHEDULED,
+		label: CONTENT_STATUS_TRANSLATION_MAP.SCHEDULED,
 	},
 	{
 		key: '3',
-		value: 'pending',
-		label: 'In wacht',
+		value: ContentStatus.PENDING,
+		label: CONTENT_STATUS_TRANSLATION_MAP.PENDING,
+	},
+	{
+		key: '3',
+		value: ContentStatus.UNPUBLISHED,
+		label: CONTENT_STATUS_TRANSLATION_MAP.UNPUBLISHED,
 	},
 ];
-export const ONLINE_OPTIONS = [
+
+export const PUBLISHED_OPTIONS = [
 	{
 		key: '0',
-		value: 'online',
+		value: PublishedStatuses.ONLINE,
 		label: 'Online',
 	},
 	{
 		key: '1',
-		value: 'offline',
+		value: PublishedStatuses.OFFLINE,
 		label: 'Offline',
 	},
 ];
