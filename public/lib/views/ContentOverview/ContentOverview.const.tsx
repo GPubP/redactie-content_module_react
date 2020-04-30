@@ -1,20 +1,22 @@
 import { Button } from '@acpaas-ui/react-components';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import { TranslateFunc } from '@redactie/translations-module/public/lib/i18next/useTranslation';
 import moment from 'moment';
 import React from 'react';
 
 import { ContentOverviewTableRow } from './ContentOverview.types';
 
-export const CONTENT_OVERVIEW_COLUMNS = [
+export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
-		label: 'Titel',
+		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 	},
 	{
-		label: 'Type',
+		label: t(CORE_TRANSLATIONS.TABLE_TYPE),
 		value: 'contentType',
 	},
 	{
-		label: 'Laatst bijgewerkt',
+		label: t(CORE_TRANSLATIONS['TABLE_LAST-MODIFIED']),
 		value: 'lastModified',
 		format: (data: string) => moment(data).format('DD/MM/YYYYY [-] hh[u]mm'),
 	},
@@ -23,7 +25,7 @@ export const CONTENT_OVERVIEW_COLUMNS = [
 		value: 'lastEditor',
 	},
 	{
-		label: 'Status',
+		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 		value: 'status',
 	},
 	{

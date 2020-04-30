@@ -19,7 +19,7 @@ module.exports = env => {
 				{
 					test: /\.ts(x)?$/,
 					use: 'ts-loader',
-					exclude: /node_modules/,
+					include: [/public/, /node_modules\/@redactie\/translations-module/],
 				},
 				{
 					test: /\.s[ac]ss$/i,
@@ -51,6 +51,11 @@ module.exports = env => {
 		],
 		externals: {
 			react: 'react',
+			formik: 'formik',
+			ky: 'ky',
+			yup: 'yup',
+			ramda: 'ramda',
+			moment: 'moment',
 			'react-dom': 'react-dom',
 			'react-router-dom': 'react-router-dom',
 			'@redactie/redactie-core': '@redactie/redactie-core',
