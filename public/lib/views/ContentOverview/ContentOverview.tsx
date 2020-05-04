@@ -6,9 +6,11 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
+import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, LoadingState } from '../../content.types';
 import { useNavigate, useRoutesBreadcrumbs } from '../../hooks';
@@ -32,6 +34,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		DEFAULT_CONTENT_SEARCH_PARAMS
 	);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
+	const [t] = useCoreTranslation();
 
 	useEffect(() => {
 		getContent(contentSearchParams)
@@ -89,7 +92,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			<>
 				<PaginatedTable
 					className="u-margin-top"
-					columns={CONTENT_OVERVIEW_COLUMNS}
+					columns={CONTENT_OVERVIEW_COLUMNS(t)}
 					rows={contentsRows}
 					currentPage={
 						Math.ceil(contents.paging.skip / DEFAULT_CONTENT_SEARCH_PARAMS.limit) + 1
@@ -113,7 +116,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 						onClick={() => navigate(MODULE_PATHS.createOverview, { siteId })}
 						iconLeft="plus"
 					>
-						Nieuwe maken
+						{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
 					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
