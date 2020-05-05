@@ -1,4 +1,4 @@
-import { always, clone, compose, find, identity, ifElse, pick, tap } from 'ramda';
+import { always, clone, compose, find, identity, ifElse, pick } from 'ramda';
 
 import {
 	CompartmentProps,
