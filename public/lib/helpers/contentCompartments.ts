@@ -1,4 +1,4 @@
-import { clone, compose, find, pick } from 'ramda';
+import { always, clone, compose, find, identity, ifElse, pick, tap } from 'ramda';
 
 import {
 	CompartmentProps,
@@ -26,6 +26,7 @@ export const getSettings = (
 			return compose(
 				clone,
 				pick(['config', 'validationSchema']) as any,
+				ifElse(identity, identity, always({})),
 				find((moduleConfig: ModuleSettings) => moduleConfig.name === compartment.name)
 			)(contentType.modulesConfig || []) as CompartmentProps['settings'];
 	}
