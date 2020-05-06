@@ -13,11 +13,7 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { DataLoader } from '../../components';
 import FilterForm from '../../components/FilterForm/FilterForm';
 import { PUBLISHED_OPTIONS, STATUS_OPTIONS } from '../../components/FilterForm/FilterForm.const';
-import {
-	FilterFormState,
-	PublishedStatuses,
-	ResetForm,
-} from '../../components/FilterForm/FilterForm.types';
+import { FilterFormState, PublishedStatuses } from '../../components/FilterForm/FilterForm.types';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, FilterItemSchema, LoadingState } from '../../content.types';
@@ -30,9 +26,9 @@ import {
 } from '../../services/content';
 
 import {
+	CONTENT_INITIAL_FILTER_STATE,
 	CONTENT_OVERVIEW_COLUMNS,
 	CONTENT_TYPES_SEARCH_OPTIONS,
-	CONTENT_INITIAL_FILTER_STATE,
 } from './ContentOverview.const';
 import { ContentOverviewTableRow, FilterKeys } from './ContentOverview.types';
 
