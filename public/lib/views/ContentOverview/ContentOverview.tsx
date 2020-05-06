@@ -6,6 +6,7 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
@@ -17,6 +18,7 @@ import {
 	PublishedStatuses,
 	ResetForm,
 } from '../../components/FilterForm/FilterForm.types';
+import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, FilterItemSchema, LoadingState } from '../../content.types';
 import { useContent, useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
@@ -27,7 +29,11 @@ import {
 	DEFAULT_CONTENT_SEARCH_PARAMS,
 } from '../../services/content';
 
-import { CONTENT_OVERVIEW_COLUMNS, CONTENT_TYPES_SEARCH_OPTIONS } from './ContentOverview.const';
+import {
+	CONTENT_OVERVIEW_COLUMNS,
+	CONTENT_TYPES_SEARCH_OPTIONS,
+	CONTENT_INITIAL_FILTER_STATE,
+} from './ContentOverview.const';
 import { ContentOverviewTableRow, FilterKeys } from './ContentOverview.types';
 
 import './ContentOverview.scss';
@@ -40,15 +46,9 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	const [, contentTypes] = useContentTypes(CONTENT_TYPES_SEARCH_OPTIONS);
 	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
 	const [contentTypeList, setContentTypeList] = useState<FilterItemSchema[]>([]);
-	const [filterFormState, setFilterFormState] = useState<FilterFormState>({
-		search: '',
-		contentType: '',
-		publishedFrom: '',
-		publishedTo: '',
-		status: '',
-		published: '',
-		creator: '',
-	});
+	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
+		CONTENT_INITIAL_FILTER_STATE
+	);
 	const { navigate } = useNavigate();
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const [contentSearchParams, setContentSearchParams] = useState<SearchParams>(
@@ -57,6 +57,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	const [loadingState, contents] = useContent(contentSearchParams);
 	const [initialLoading, setInitialLoading] = useState<LoadingState>(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
+	const [t] = useCoreTranslation();
 
 	useEffect(() => {
 		if (loadingState === LoadingState.Loaded || loadingState === LoadingState.Error) {
@@ -161,12 +162,12 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		});
 	};
 
-	const deleteAllFilters = (resetForm: ResetForm): void => {
+	const deleteAllFilters = (): void => {
 		const emptyFilter: [] = [];
 		setFilterItems(emptyFilter);
 		setContentTypeList(emptyFilter);
 		setContentSearchParams(DEFAULT_CONTENT_SEARCH_PARAMS);
-		resetForm();
+		setFilterFormState(CONTENT_INITIAL_FILTER_STATE);
 	};
 
 	const deleteFilter = (item: FilterItemSchema): void => {
@@ -268,7 +269,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				</div>
 				<PaginatedTable
 					className="u-margin-top"
-					columns={CONTENT_OVERVIEW_COLUMNS}
+					columns={CONTENT_OVERVIEW_COLUMNS(t)}
 					rows={contentsRows}
 					loading={loadingState === LoadingState.Loading}
 					currentPage={
@@ -293,7 +294,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 						onClick={() => navigate(MODULE_PATHS.createOverview, { siteId })}
 						iconLeft="plus"
 					>
-						Nieuwe maken
+						{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
 					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>

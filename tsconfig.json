@@ -30,6 +30,7 @@
     "downlevelIteration": true,
   },
   "include": [
-    "public"
+    "public",
+    "node_modules/@redactie/translations-module"
   ]
 }

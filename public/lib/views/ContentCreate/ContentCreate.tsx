@@ -46,6 +46,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 				},
 				contentType: contentType,
 				status: ContentStatus.DRAFT,
+				site: siteId,
 			},
 		};
 
@@ -72,6 +73,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 				slug: content.meta?.slug,
 				contentType: contentType._id,
 				status: ContentStatus.DRAFT,
+				site: siteId,
 			},
 			modulesData: content.modulesData,
 			fields: content.fields,

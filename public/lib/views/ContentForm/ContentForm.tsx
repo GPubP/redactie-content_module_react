@@ -4,6 +4,7 @@ import {
 	ActionBarContentSection,
 	Container,
 } from '@acpaas-ui/react-editorial-components';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { clone } from 'ramda';
 import React, { FC, useEffect, useState } from 'react';
 
@@ -11,6 +12,7 @@ import { ContentSchema } from '../../api/api.types';
 import { FieldsForm, MetaForm } from '../../components';
 import NavList from '../../components/NavList/NavList';
 import { NavListItem } from '../../components/NavList/NavList.types';
+import { useCoreTranslation } from '../../connectors/translations';
 import {
 	filterCompartments,
 	getCompartmentValue,
@@ -43,6 +45,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	const [externalCompartments] = useExternalCompartmentFacade();
 	const [navList, setNavlist] = useState<NavListItem[]>([]);
 	const [{ active: localContent }, registerContent] = useInternalFacade();
+	const [t] = useCoreTranslation();
 
 	useEffect(() => {
 		// TODO: add compartments support later on
@@ -166,10 +169,10 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							type="success"
 							htmlType="submit"
 						>
-							Bewaar
+							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 						</Button>
 						<Button onClick={cancel} outline>
-							Annuleer
+							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
 					</div>
 				</ActionBarContentSection>

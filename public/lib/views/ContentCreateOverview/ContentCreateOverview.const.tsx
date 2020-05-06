@@ -1,11 +1,13 @@
 import { Button } from '@acpaas-ui/react-components';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import { TranslateFunc } from '@redactie/translations-module/public/lib/i18next/useTranslation';
 import React from 'react';
 
 import { ContentCreateOverviewTableRow } from './ContentCreateOverview.types';
 
-export const CONTENT_CREATE_OVERVIEW_COLUMNS = [
+export const CONTENT_CREATE_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
-		label: 'Naam',
+		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		component(value: unknown, rowData: ContentCreateOverviewTableRow) {
 			const { label, description } = rowData;
 
@@ -28,7 +30,7 @@ export const CONTENT_CREATE_OVERVIEW_COLUMNS = [
 
 			return (
 				<Button outline onClick={() => navigate(uuid)} type="primary">
-					Nieuw aanmaken
+					{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
 				</Button>
 			);
 		},

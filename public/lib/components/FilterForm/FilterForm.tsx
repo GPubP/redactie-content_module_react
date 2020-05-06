@@ -50,13 +50,13 @@ const FilterForm: FC<FilterFormProps> = ({
 
 		return (
 			<Formik enableReinitialize={true} initialValues={initialState} onSubmit={onSubmit}>
-				{({ submitForm, setFieldValue, resetForm, values }) => {
+				{({ submitForm, setFieldValue, values }) => {
 					return (
 						<Filter
 							title="Filter"
 							noFilterText="Geen filters beschikbaar"
 							onConfirm={submitForm}
-							onClean={() => onCancel(resetForm)}
+							onClean={onCancel}
 							confirmText="Toepassen"
 							cleanText="Alles leegmaken"
 							activeFilters={activeFilters}

@@ -6,9 +6,11 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { FormsAPI } from '@redactie/form-renderer-module';
 import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
+import { useCoreTranslation } from '../../connectors/translations';
 import { BREADCRUMB_OPTIONS } from '../../content.const';
 import { ContentRouteProps, LoadingState } from '../../content.types';
 import { getFormPropsByCT } from '../../helpers';
@@ -33,6 +35,7 @@ const ContentCreate: FC<ContentRouteProps<ContentUpdateMatchProps>> = ({
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [t] = useCoreTranslation();
 
 	useEffect(() => {
 		if (
@@ -57,6 +60,10 @@ const ContentCreate: FC<ContentRouteProps<ContentUpdateMatchProps>> = ({
 			const request: ContentSchema = {
 				...contentItem,
 				fields: values,
+				meta: {
+					...contentItem.meta,
+					site: siteId,
+				},
 			};
 			updateContent(contentId, request).then(() => {
 				navigateToOverview();
@@ -84,10 +91,10 @@ const ContentCreate: FC<ContentRouteProps<ContentUpdateMatchProps>> = ({
 							type="success"
 							htmlType="submit"
 						>
-							Bewaar
+							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 						</Button>
 						<Button onClick={navigateToOverview} outline>
-							Annuleer
+							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
 					</div>
 				)}

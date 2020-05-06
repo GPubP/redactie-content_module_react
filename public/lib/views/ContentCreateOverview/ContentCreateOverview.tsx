@@ -7,6 +7,7 @@ import {
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
+import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, LoadingState } from '../../content.types';
 import { useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
@@ -29,6 +30,7 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 	const [loadingState, contentTypes] = useContentTypes(contentTypesSearchParams);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
+	const [t] = useCoreTranslation();
 
 	useEffect(() => {
 		if (loadingState === LoadingState.Loaded || loadingState === LoadingState.Error) {
@@ -75,7 +77,7 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 		return (
 			<PaginatedTable
 				className="u-margin-top"
-				columns={CONTENT_CREATE_OVERVIEW_COLUMNS}
+				columns={CONTENT_CREATE_OVERVIEW_COLUMNS(t)}
 				rows={contentTypesRows}
 				currentPage={
 					Math.ceil(

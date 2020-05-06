@@ -4,7 +4,7 @@ export type ResetForm = (nextState?: Partial<FormikState<FilterFormState>> | und
 
 export interface FilterFormProps {
 	initialState: FilterFormState;
-	onCancel: (resetForm: ResetForm) => void;
+	onCancel: () => void;
 	onSubmit: (values: FilterFormState) => void;
 	deleteActiveFilter: (item: any) => void;
 	activeFilters: Array<object>;

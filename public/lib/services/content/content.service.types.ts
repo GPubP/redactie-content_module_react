@@ -14,6 +14,7 @@ export interface ContentSchema {
 	meta: {
 		label: string;
 		slug: Record<string, string>;
+		site: string;
 		description?: string;
 		contentType: ContentTypeSchema;
 		theme?: string;
@@ -38,6 +39,7 @@ export interface ContentCreateSchema {
 		slug: Record<string, string>;
 		contentType: string;
 		status: ContentStatus;
+		site: string;
 	};
 	modulesData?: Record<string, ModuleValue>;
 	fields: Record<string, any>;
