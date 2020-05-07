@@ -10,10 +10,15 @@ import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18n
 import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { DataLoader } from '../../components';
-import FilterForm from '../../components/FilterForm/FilterForm';
-import { PUBLISHED_OPTIONS, STATUS_OPTIONS } from '../../components/FilterForm/FilterForm.const';
-import { FilterFormState, PublishedStatuses } from '../../components/FilterForm/FilterForm.types';
+import { DataLoader, FilterForm } from '../../components';
+import {
+	PUBLISHED_OPTIONS,
+	STATUS_OPTIONS,
+} from '../../components/forms/FilterForm/FilterForm.const';
+import {
+	FilterFormState,
+	PublishedStatuses,
+} from '../../components/forms/FilterForm/FilterForm.types';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, FilterItemSchema, LoadingState } from '../../content.types';

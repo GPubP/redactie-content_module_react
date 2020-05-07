@@ -1,6 +1,6 @@
 import { object, string } from 'yup';
 
-import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
+import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../../services/content';
 
 import { PublishedStatuses } from './FilterForm.types';
 

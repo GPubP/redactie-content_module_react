@@ -3,9 +3,9 @@ import { Filter, FilterBody } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
-import { LoadingState } from '../../content.types';
-import { useContentTypes } from '../../hooks';
-import DataLoader from '../DataLoader/DataLoader';
+import { LoadingState } from '../../../content.types';
+import { useContentTypes } from '../../../hooks';
+import DataLoader from '../../DataLoader/DataLoader';
 
 import {
 	CONTENT_TYPES_DEFAULT_OPTION,
