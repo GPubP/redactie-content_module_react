@@ -6,6 +6,21 @@ import React from 'react';
 
 import { ContentOverviewTableRow } from './ContentOverview.types';
 
+export const CONTENT_TYPES_SEARCH_OPTIONS = {
+	skip: 0,
+	limit: -1,
+};
+
+export const CONTENT_INITIAL_FILTER_STATE = {
+	search: '',
+	contentType: '',
+	publishedFrom: '',
+	publishedTo: '',
+	status: '',
+	published: '',
+	creator: '',
+};
+
 export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
@@ -18,10 +33,10 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: t(CORE_TRANSLATIONS['TABLE_LAST-MODIFIED']),
 		value: 'lastModified',
-		format: (data: string) => moment(data).format('DD/MM/YYYYY [-] hh[u]mm'),
+		format: (data: string) => moment(data).format('DD/MM/YYYY [-] hh[u]mm'),
 	},
 	{
-		label: 'Auteur',
+		label: 'Aanmaker',
 		value: 'lastEditor',
 	},
 	{

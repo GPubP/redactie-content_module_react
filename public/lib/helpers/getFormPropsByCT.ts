@@ -1,6 +1,6 @@
 import { FieldSchema, FormSchema } from '@redactie/form-renderer-module';
 
-import { ContentTypeSchema, ErrorMessagesSchema, ValidateSchema } from '../contentTypes';
+import { ContentTypeSchema, ErrorMessagesSchema, ValidateSchema } from '../services/contentTypes';
 
 export const getFormPropsByCT = (
 	contentType: ContentTypeSchema

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { onEmit } from '../../../helpers/onEmit';
+import { onEmit } from '../../../helpers';
 
 import { ExternalCompartmentModel } from './externalCompartments.model';
 import { externalCompartmentsQuery } from './externalCompartments.query';

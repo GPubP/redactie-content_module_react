@@ -1,9 +1,15 @@
 export interface SearchParams {
 	skip: number;
 	limit: number;
-	search?: string;
 	sort?: string;
+	search?: string;
+	contentTypes?: Array<string>;
+	publishedFrom?: string;
+	publishedTo?: string;
+	status?: string;
+	creator?: string;
 	direction?: number;
+	published?: boolean;
 }
 
 export interface OrderBy {

@@ -15,3 +15,15 @@ export enum LoadingState {
 	Loaded = 'loaded',
 	Error = 'error',
 }
+
+export interface FilterItemSchema {
+	key?: string;
+	value: string;
+	valuePrefix?: string;
+	filterKey: string;
+	formvalue?: any;
+}
+
+export interface FilterItemsSchema {
+	data: FilterItemSchema[];
+}

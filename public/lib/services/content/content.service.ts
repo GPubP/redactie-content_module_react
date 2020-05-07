@@ -7,7 +7,7 @@ export const getContent = async (
 ): Promise<ContentsSchema | null> => {
 	try {
 		const response: ContentsSchema = await api
-			.get(`content?${parseSearchParams(contentSearchParams)}`)
+			.get(`content/content?${parseSearchParams(contentSearchParams)}`)
 			.json();
 
 		if (!response) {
@@ -23,7 +23,7 @@ export const getContent = async (
 
 export const createContent = async (data: ContentCreateSchema): Promise<ContentSchema | null> => {
 	try {
-		const response: any = await api.post('content', {
+		const response: any = await api.post('content/content', {
 			json: data,
 		});
 
@@ -38,7 +38,7 @@ export const updateContent = async (
 	data: ContentSchema
 ): Promise<ContentSchema | null> => {
 	try {
-		const response: any = await api.put(`content/${uuid}`, {
+		const response: any = await api.put(`content/content/${uuid}`, {
 			json: data,
 		});
 
