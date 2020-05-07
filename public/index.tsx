@@ -61,16 +61,13 @@ registerRoutes({
 		{
 			path: MODULE_PATHS.createOverview,
 			component: ContentCreateOverview,
-			breadcrumb: 'Content aanmaken',
 		},
 		{
 			path: MODULE_PATHS.create,
 			component: ContentCreate,
-			breadcrumb: 'Content',
 			routes: [
 				{
 					path: MODULE_PATHS.createCompartment,
-					breadcrumb: 'Aanmaken',
 					component: ContentForm,
 				},
 			],
@@ -78,11 +75,9 @@ registerRoutes({
 		{
 			path: MODULE_PATHS.update,
 			component: ContentUpdate,
-			breadcrumb: 'Content',
 			routes: [
 				{
 					path: MODULE_PATHS.updateCompartment,
-					breadcrumb: 'Bewerken',
 					component: ContentForm,
 				},
 			],

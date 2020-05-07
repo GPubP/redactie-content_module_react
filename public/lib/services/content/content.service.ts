@@ -50,7 +50,7 @@ export const updateContent = async (
 
 export const getContentItem = async (uuid: string): Promise<ContentSchema | null> => {
 	try {
-		const response: ContentSchema = await api.get(`content/${uuid}`).json();
+		const response: ContentSchema = await api.get(`content/content/${uuid}`).json();
 
 		return response;
 	} catch (err) {
