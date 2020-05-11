@@ -5,16 +5,15 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import { FormsAPI } from '@redactie/form-renderer-module';
-import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
+import Core from '@redactie/redactie-core';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
-import { BREADCRUMB_OPTIONS } from '../../content.const';
 import { ContentRouteProps, LoadingState } from '../../content.types';
 import { getFormPropsByCT } from '../../helpers';
-import { useContentItem, useContentType, useRoutes } from '../../hooks';
+import { useContentItem, useContentType, useRoutesBreadcrumbs } from '../../hooks';
 import { ContentSchema, updateContent } from '../../services/content';
 
 import { ContentUpdateMatchProps } from './ContentUpdate.types';
@@ -32,8 +31,12 @@ const ContentCreate: FC<ContentRouteProps<ContentUpdateMatchProps>> = ({
 	 */
 	const [contentItemLoading, contentItem] = useContentItem(contentId);
 	const [contentTypeLoading, contentType] = useContentType(contentItem?.meta.contentType.uuid);
-	const routes = useRoutes();
-	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+	const breadcrumbs = useRoutesBreadcrumbs([
+		{
+			name: 'Content',
+			target: '',
+		},
+	]);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [t] = useCoreTranslation();
 

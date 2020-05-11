@@ -1,5 +1,4 @@
-import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
-import { Routes } from '@redactie/redactie-core/dist/routes/routes.types';
+import Core, { ModuleRouteConfig, Routes } from '@redactie/redactie-core';
 
 // TODO export sites api typings
 const sitesAPI: { routes: Routes } = Core.modules.getModuleAPI('sites-module') as {

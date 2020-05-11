@@ -1,11 +1,11 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
-import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
+import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC, useEffect } from 'react';
 
 import { DataLoader } from '../../components';
-import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../content.const';
+import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
-import { useContentType } from '../../hooks';
+import { useContentType, useRoutesBreadcrumbs, useNavigate } from '../../hooks';
 import {
 	ContentCreateSchema,
 	ContentSchema,
@@ -27,8 +27,20 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 	/**
 	 * Hooks
 	 */
+	const { generatePath } = useNavigate();
 	const [contentTypesLoading, contentType] = useContentType(contentTypeId);
-	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+	const breadcrumbs = useRoutesBreadcrumbs([
+		{
+			name: 'Content',
+			target: '',
+		},
+		{
+			name: 'Content aanmaken',
+			target: generatePath(MODULE_PATHS.createOverview, {
+				siteId,
+			}),
+		},
+	]);
 	const [, registerContent, activateContent] = useInternalFacade();
 
 	useEffect(() => {

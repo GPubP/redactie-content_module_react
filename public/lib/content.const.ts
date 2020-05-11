@@ -4,9 +4,11 @@ export const BREADCRUMB_OPTIONS = {
 		'/:tenantId',
 		'/:tenantId/sites',
 		'/:tenantId/sites/:siteId/content',
+		'/:tenantId/sites/:siteId/content/:contentId',
+		'/:tenantId/sites/:siteId/content/:contentId/bewerken',
 		'/:tenantId/sites/:siteId/content/content-type',
 		'/:tenantId/sites/:siteId/content/content-type/:contentTypeId',
-		'/:tenantId/sites/:siteId/content/:contentId',
+		'/:tenantId/sites/:siteId/content/content-type/:contentTypeId/aanmaken',
 	],
 };
 

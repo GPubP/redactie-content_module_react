@@ -51,7 +51,16 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		CONTENT_INITIAL_FILTER_STATE
 	);
 	const { navigate } = useNavigate();
-	const breadcrumbs = useRoutesBreadcrumbs();
+	const breadcrumbs = useRoutesBreadcrumbs([
+		{
+			name: 'Content',
+			target: '',
+		},
+		{
+			name: 'Overview',
+			target: '',
+		},
+	]);
 	const [contentSearchParams, setContentSearchParams] = useState<SearchParams>(
 		DEFAULT_CONTENT_SEARCH_PARAMS
 	);
