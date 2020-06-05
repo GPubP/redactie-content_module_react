@@ -1,12 +1,13 @@
-import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import * as moment from 'moment';
 import 'moment/locale/nl';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { registerContentAPI } from './lib/api/index';
+import { RenderChildRoutes } from './lib/components';
+import rolesRightsConnector from './lib/connectors/rolesRights';
 import { registerRoutes } from './lib/connectors/sites';
-import { MODULE_PATHS } from './lib/content.const';
+import { MODULE_PATHS, urlSiteParam } from './lib/content.const';
 import { ContentRouteProps } from './lib/content.types';
 import { TenantContext } from './lib/context';
 import { ContentCreate, ContentCreateOverview, ContentOverview, ContentUpdate } from './lib/views';
@@ -15,7 +16,21 @@ import ContentForm from './lib/views/ContentForm/ContentForm';
 // eslint-disable-next-line import/namespace
 moment.locale('nl');
 
-const ContentComponent: FC<ContentRouteProps> = ({ route, location, match, tenantId }) => {
+const ContentComponent: FC<ContentRouteProps> = ({ route, location, tenantId }) => {
+	const guardsMeta = useMemo(
+		() => ({
+			tenantId,
+		}),
+		[tenantId]
+	);
+	const extraOptions = useMemo(
+		() => ({
+			routes: route.routes,
+			tenantId,
+		}),
+		[tenantId, route.routes]
+	);
+
 	// if path is /content, redirect to /content/overzicht
 	if (
 		/\/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b\/content$/.test(
@@ -35,55 +50,83 @@ const ContentComponent: FC<ContentRouteProps> = ({ route, location, match, tenan
 
 	return (
 		<TenantContext.Provider value={{ tenantId }}>
-			{Core.routes.render(route.routes as ModuleRouteConfig[], {
-				routes: route.routes,
-				basePath: match.url,
-				tenantId,
-			})}
+			<RenderChildRoutes
+				routes={route.routes}
+				guardsMeta={guardsMeta}
+				extraOptions={extraOptions}
+			/>
 		</TenantContext.Provider>
 	);
 };
 
-registerRoutes({
-	path: MODULE_PATHS.root,
-	component: ContentComponent,
-	exact: true,
-	navigation: {
-		renderContext: 'site',
-		context: 'site',
-		label: 'Content',
-	},
-	routes: [
-		{
-			path: MODULE_PATHS.overview,
-			component: ContentOverview,
-		},
-		{
-			path: MODULE_PATHS.createOverview,
-			component: ContentCreateOverview,
-		},
-		{
-			path: MODULE_PATHS.create,
-			component: ContentCreate,
-			routes: [
-				{
-					path: MODULE_PATHS.createCompartment,
-					component: ContentForm,
-				},
+if (rolesRightsConnector.api) {
+	registerRoutes({
+		path: MODULE_PATHS.root,
+		component: ContentComponent,
+		exact: true,
+		guardOptions: {
+			guards: [
+				rolesRightsConnector.api.guards.securityRightsSiteGuard(urlSiteParam, [
+					rolesRightsConnector.securityRights.read,
+				]),
 			],
 		},
-		{
-			path: MODULE_PATHS.update,
-			component: ContentUpdate,
-			routes: [
-				{
-					path: MODULE_PATHS.updateCompartment,
-					component: ContentForm,
-				},
+		navigation: {
+			renderContext: 'site',
+			context: 'site',
+			label: 'Content',
+			canShown: [
+				rolesRightsConnector.api.canShowns.securityRightsSiteCanShown(urlSiteParam, [
+					rolesRightsConnector.securityRights.read,
+				]),
 			],
 		},
-	],
-});
+		routes: [
+			{
+				path: MODULE_PATHS.overview,
+				component: ContentOverview,
+			},
+			{
+				path: MODULE_PATHS.createOverview,
+				component: ContentCreateOverview,
+				guardOptions: {
+					guards: [
+						rolesRightsConnector.api.guards.securityRightsSiteGuard(urlSiteParam, [
+							rolesRightsConnector.securityRights.create,
+						]),
+					],
+				},
+			},
+			{
+				path: MODULE_PATHS.create,
+				component: ContentCreate,
+				guardOptions: {
+					guards: [
+						rolesRightsConnector.api.guards.securityRightsSiteGuard(urlSiteParam, [
+							rolesRightsConnector.securityRights.create,
+						]),
+					],
+				},
+				routes: [
+					{
+						path: MODULE_PATHS.createCompartment,
+						component: ContentForm,
+					},
+				],
+			},
+			{
+				path: MODULE_PATHS.update,
+				component: ContentUpdate,
+				routes: [
+					{
+						path: MODULE_PATHS.updateCompartment,
+						component: ContentForm,
+					},
+				],
+			},
+		],
+	});
+}
 
 registerContentAPI();
 

@@ -19,6 +19,7 @@ import {
 	FilterFormState,
 	PublishedStatuses,
 } from '../../components/forms/FilterForm/FilterForm.types';
+import rolesRightsConnector from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, FilterItemSchema, LoadingState } from '../../content.types';
@@ -50,6 +51,12 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
 		CONTENT_INITIAL_FILTER_STATE
 	);
+	const [
+		mySecurityRightsLoadingState,
+		mySecurityrights,
+	] = rolesRightsConnector.api.hooks.useMySecurityRightsForSite({
+		onlyKeys: true,
+	});
 	const { navigate } = useNavigate();
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
@@ -70,10 +77,13 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	const [t] = useCoreTranslation();
 
 	useEffect(() => {
-		if (loadingState === LoadingState.Loaded || loadingState === LoadingState.Error) {
+		if (
+			loadingState !== LoadingState.Loading &&
+			mySecurityRightsLoadingState !== LoadingState.Loading
+		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [loadingState]);
+	}, [loadingState, mySecurityRightsLoadingState]);
 
 	/**
 	 * Methods
@@ -300,12 +310,17 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			<ContextHeader title="Content overzicht">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
-					<Button
-						onClick={() => navigate(MODULE_PATHS.createOverview, { siteId })}
-						iconLeft="plus"
+					<rolesRightsConnector.api.components.SecurableRender
+						userSecurityRights={mySecurityrights}
+						requiredSecurityRights={[rolesRightsConnector.securityRights.create]}
 					>
-						{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
-					</Button>
+						<Button
+							onClick={() => navigate(MODULE_PATHS.createOverview, { siteId })}
+							iconLeft="plus"
+						>
+							{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
+						</Button>
+					</rolesRightsConnector.api.components.SecurableRender>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<Container>

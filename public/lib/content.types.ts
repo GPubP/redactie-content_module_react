@@ -5,7 +5,6 @@ export interface ContentRouteProps<
 		[K in keyof Params]?: string;
 	} = {}
 > extends RouteConfigComponentProps<Params> {
-	basePath: string;
 	routes: ModuleRouteConfig[];
 	tenantId: string;
 }

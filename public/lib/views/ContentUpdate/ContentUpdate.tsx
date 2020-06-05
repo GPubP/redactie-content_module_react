@@ -11,24 +11,22 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
+import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, LoadingState } from '../../content.types';
 import { getFormPropsByCT } from '../../helpers';
-import { useContentItem, useContentType, useRoutesBreadcrumbs } from '../../hooks';
+import { useContentItem, useContentType, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { ContentSchema, updateContent } from '../../services/content';
 
 import { ContentUpdateMatchProps } from './ContentUpdate.types';
 
-const ContentCreate: FC<ContentRouteProps<ContentUpdateMatchProps>> = ({
-	match,
-	history,
-	tenantId,
-}) => {
+const ContentCreate: FC<ContentRouteProps<ContentUpdateMatchProps>> = ({ match }) => {
 	const { siteId, contentId } = match.params;
 	const formsAPI = Core.modules.getModuleAPI('forms-module') as FormsAPI;
 
 	/**
 	 * Hooks
 	 */
+	const { navigate } = useNavigate();
 	const [contentItemLoading, contentItem] = useContentItem(contentId);
 	const [contentTypeLoading, contentType] = useContentType(contentItem?.meta.contentType.uuid);
 	const breadcrumbs = useRoutesBreadcrumbs([
@@ -55,7 +53,7 @@ const ContentCreate: FC<ContentRouteProps<ContentUpdateMatchProps>> = ({
 	 * Methods
 	 */
 	const navigateToOverview = (): void => {
-		history.push(`/${tenantId}/sites/${siteId}/content/overzicht`);
+		navigate(MODULE_PATHS.overview, { siteId });
 	};
 
 	const onFormSubmit = (values: any): void => {
