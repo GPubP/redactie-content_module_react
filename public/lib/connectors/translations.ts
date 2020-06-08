@@ -1,6 +1,6 @@
-import Core from '@redactie/redactie-core';
+import Core, { ModuleAPI } from '@redactie/redactie-core';
 
-const translationsAPI = Core.modules.getModuleAPI('translations-module');
+const translationsAPI = Core.modules.getModuleAPI<ModuleAPI>('translations-module');
 
 /**
  * Translations - useCoreTranslation
