@@ -5,7 +5,7 @@ import React, { FC, useEffect } from 'react';
 import { DataLoader } from '../../components';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
-import { useContentType, useRoutesBreadcrumbs, useNavigate } from '../../hooks';
+import { useContentType, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import {
 	ContentCreateSchema,
 	ContentSchema,
