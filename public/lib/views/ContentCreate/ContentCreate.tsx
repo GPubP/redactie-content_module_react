@@ -1,10 +1,10 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
-import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
-import React, { FC, useEffect } from 'react';
+import React, { FC, useContext, useEffect, useMemo } from 'react';
 
-import { DataLoader } from '../../components';
+import { DataLoader, RenderChildRoutes } from '../../components';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
+import { TenantContext } from '../../context';
 import { useContentType, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import {
 	ContentCreateSchema,
@@ -16,19 +16,15 @@ import { useInternalFacade } from '../../store/content/internal/internal.facade'
 
 import { ContentCreateMatchProps } from './ContentCreate.types';
 
-const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
-	match,
-	history,
-	tenantId,
-	routes,
-}) => {
+const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, routes }) => {
 	const { contentTypeId, siteId } = match.params;
 
 	/**
 	 * Hooks
 	 */
-	const { generatePath } = useNavigate();
+	const { generatePath, navigate } = useNavigate();
 	const [contentTypesLoading, contentType] = useContentType(contentTypeId);
+	const { tenantId } = useContext(TenantContext);
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
 			name: 'Content',
@@ -42,6 +38,12 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 		},
 	]);
 	const [, registerContent, activateContent] = useInternalFacade();
+	const guardsMeta = useMemo(
+		() => ({
+			tenantId,
+		}),
+		[tenantId]
+	);
 
 	useEffect(() => {
 		if (!contentType) {
@@ -70,7 +72,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 	 * Methods
 	 */
 	const navigateToOverview = (): void => {
-		history.push(`/${tenantId}/sites/${siteId}/content/overzicht`);
+		navigate(MODULE_PATHS.overview, { siteId });
 	};
 
 	const onFormSubmit = (content: ContentSchema): void => {
@@ -114,15 +116,19 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({
 					) === MODULE_PATHS.create
 			) || null;
 
+		const extraOptions = {
+			contentType: contentType,
+			onSubmit: (value: ContentSchema) => onFormSubmit(value),
+			cancel: () => navigateToOverview(),
+		};
+
 		return (
 			<div className="u-margin-top">
-				{Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-					tenantId,
-					routes: activeRoute?.routes,
-					contentType: contentType,
-					onSubmit: (value: ContentSchema) => onFormSubmit(value),
-					cancel: () => navigateToOverview(),
-				})}
+				<RenderChildRoutes
+					routes={activeRoute?.routes}
+					guardsMeta={guardsMeta}
+					extraOptions={extraOptions}
+				/>
 			</div>
 		);
 	};

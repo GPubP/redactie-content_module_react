@@ -13,7 +13,6 @@ export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 	onSubmit: (values: ContentSchema) => void;
 	cancel: () => void;
 	contentType: ContentTypeSchema;
-	activeCompartment: string;
 }
 
 export interface CompartmentProps {

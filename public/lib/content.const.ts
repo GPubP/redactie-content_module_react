@@ -12,8 +12,9 @@ export const BREADCRUMB_OPTIONS = {
 	],
 };
 
+export const urlSiteParam = 'siteId';
 const siteRoot = '/content';
-const root = `/:siteId${siteRoot}`;
+const root = `/:${urlSiteParam}${siteRoot}`;
 const overview = `${root}/overzicht`;
 const createOverview = `${root}/aanmaak-overzicht`;
 const create = `${root}/content-type/:contentTypeId/aanmaken`;
