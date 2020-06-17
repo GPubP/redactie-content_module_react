@@ -1,12 +1,17 @@
 import { api, parseSearchParams, SearchParams } from '../api';
 
-import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from './contentTypes.service.const';
+import {
+	CONTENT_TYPES_PREFIX_URL,
+	DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
+} from './contentTypes.service.const';
 import { ContentTypeSchema, ContentTypesSchema } from './contentTypes.service.types';
 
 // TODO: This data should come from the content type module API
 export const getContentType = async (uuid: string): Promise<ContentTypeSchema | null> => {
 	try {
-		const response: ContentTypeSchema = await api.get(`content/content-types/${uuid}`).json();
+		const response: ContentTypeSchema = await api
+			.get(`${CONTENT_TYPES_PREFIX_URL}/${uuid}`)
+			.json();
 
 		if (!response.fields) {
 			throw new Error('Failed to get content type');
@@ -21,7 +26,7 @@ export const getContentType = async (uuid: string): Promise<ContentTypeSchema | 
 
 export const getContentTypes = async (): Promise<ContentTypeSchema[] | null> => {
 	try {
-		const response: any = await api.get('content/content-types').json();
+		const response: any = await api.get(CONTENT_TYPES_PREFIX_URL).json();
 
 		return response.data;
 	} catch (err) {
@@ -35,7 +40,7 @@ export const getFilteredContentTypes = async (
 ): Promise<ContentTypesSchema | null> => {
 	try {
 		const response: ContentTypesSchema = await api
-			.get(`content/content-types?${parseSearchParams(searchParams)}`)
+			.get(`${CONTENT_TYPES_PREFIX_URL}?${parseSearchParams(searchParams)}`)
 			.json();
 
 		if (!response) {

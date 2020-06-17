@@ -43,7 +43,7 @@
     "@datorama/akita": "^4.22.1",
     "@redactie/form-renderer-module": "^0.3.0",
     "@redactie/module-webpack-plugin": "2.0.0",
-    "@redactie/redactie-core": "^1.9.0",
+    "@redactie/redactie-core": "^1.9.1",
     "@redactie/roles-rights-module": "^0.3.0-7",
     "@redactie/sites-module": "^0.10.0",
     "@redactie/translations-module": "^0.2.0",

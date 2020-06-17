@@ -1,5 +1,6 @@
 import { api, parseSearchParams, SearchParams } from '../api';
 
+import { CONTENT_PREFIX_URL } from './content.service.const';
 import { ContentCreateSchema, ContentSchema, ContentsSchema } from './content.service.types';
 
 export const getContent = async (
@@ -7,7 +8,7 @@ export const getContent = async (
 ): Promise<ContentsSchema | null> => {
 	try {
 		const response: ContentsSchema = await api
-			.get(`content/content?${parseSearchParams(contentSearchParams)}`)
+			.get(`${CONTENT_PREFIX_URL}?${parseSearchParams(contentSearchParams)}`)
 			.json();
 
 		if (!response) {
@@ -23,7 +24,7 @@ export const getContent = async (
 
 export const createContent = async (data: ContentCreateSchema): Promise<ContentSchema | null> => {
 	try {
-		const response: any = await api.post('content/content', {
+		const response: any = await api.post(CONTENT_PREFIX_URL, {
 			json: data,
 		});
 
@@ -38,7 +39,7 @@ export const updateContent = async (
 	data: ContentSchema
 ): Promise<ContentSchema | null> => {
 	try {
-		const response: any = await api.put(`content/content/${uuid}`, {
+		const response: any = await api.put(`${CONTENT_PREFIX_URL}/${uuid}`, {
 			json: data,
 		});
 
@@ -50,7 +51,7 @@ export const updateContent = async (
 
 export const getContentItem = async (uuid: string): Promise<ContentSchema | null> => {
 	try {
-		const response: ContentSchema = await api.get(`content/content/${uuid}`).json();
+		const response: ContentSchema = await api.get(`${CONTENT_PREFIX_URL}/${uuid}`).json();
 
 		return response;
 	} catch (err) {
