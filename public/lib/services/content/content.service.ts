@@ -1,14 +1,19 @@
 import { api, parseSearchParams, SearchParams } from '../api';
+import { SITE_REQUEST_PREFIX_URL } from '../api/api.service.const';
 
-import { CONTENT_PREFIX_URL } from './content.service.const';
 import { ContentCreateSchema, ContentSchema, ContentsSchema } from './content.service.types';
 
 export const getContent = async (
+	siteId: string,
 	contentSearchParams: SearchParams
 ): Promise<ContentsSchema | null> => {
 	try {
 		const response: ContentsSchema = await api
-			.get(`${CONTENT_PREFIX_URL}?${parseSearchParams(contentSearchParams)}`)
+			.get(
+				`${SITE_REQUEST_PREFIX_URL}/${siteId}/content?${parseSearchParams(
+					contentSearchParams
+				)}`
+			)
 			.json();
 
 		if (!response) {
@@ -22,9 +27,12 @@ export const getContent = async (
 	}
 };
 
-export const createContent = async (data: ContentCreateSchema): Promise<ContentSchema | null> => {
+export const createContent = async (
+	siteId: string,
+	data: ContentCreateSchema
+): Promise<ContentSchema | null> => {
 	try {
-		const response: any = await api.post(CONTENT_PREFIX_URL, {
+		const response: any = await api.post(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content`, {
 			json: data,
 		});
 
@@ -35,13 +43,17 @@ export const createContent = async (data: ContentCreateSchema): Promise<ContentS
 };
 
 export const updateContent = async (
+	siteId: string,
 	uuid: string,
 	data: ContentSchema
 ): Promise<ContentSchema | null> => {
 	try {
-		const response: any = await api.put(`${CONTENT_PREFIX_URL}/${uuid}`, {
-			json: data,
-		});
+		const response: any = await api.put(
+			`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}`,
+			{
+				json: data,
+			}
+		);
 
 		return response;
 	} catch (err) {
@@ -49,9 +61,15 @@ export const updateContent = async (
 	}
 };
 
-export const getContentItem = async (uuid: string): Promise<ContentSchema | null> => {
+export const getContentItem = async (
+	siteId: string,
+	uuid: string
+): Promise<ContentSchema | null> => {
+	console.log(SITE_REQUEST_PREFIX_URL);
 	try {
-		const response: ContentSchema = await api.get(`${CONTENT_PREFIX_URL}/${uuid}`).json();
+		const response: ContentSchema = await api
+			.get(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}`)
+			.json();
 
 		return response;
 	} catch (err) {

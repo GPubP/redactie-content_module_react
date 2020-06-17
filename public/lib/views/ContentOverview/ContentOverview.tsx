@@ -45,7 +45,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	/**
 	 * Hooks
 	 */
-	const [, contentTypes] = useContentTypes(CONTENT_TYPES_SEARCH_OPTIONS);
+	const [, contentTypes] = useContentTypes(siteId, CONTENT_TYPES_SEARCH_OPTIONS);
 	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
 	const [contentTypeList, setContentTypeList] = useState<FilterItemSchema[]>([]);
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
@@ -71,7 +71,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	const [contentSearchParams, setContentSearchParams] = useState<SearchParams>(
 		DEFAULT_CONTENT_SEARCH_PARAMS
 	);
-	const [loadingState, contents] = useContent(contentSearchParams);
+	const [loadingState, contents] = useContent(siteId, contentSearchParams);
 	const [initialLoading, setInitialLoading] = useState<LoadingState>(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 	const [t] = useCoreTranslation();
@@ -280,6 +280,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			<>
 				<div className="u-margin-top">
 					<FilterForm
+						siteId={siteId}
 						initialState={filterFormState}
 						onCancel={deleteAllFilters}
 						onSubmit={onSubmit}
