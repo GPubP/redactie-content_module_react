@@ -36,7 +36,7 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 	const [contentTypesSearchParams, setContentTypesSearchParams] = useState(
 		DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
 	);
-	const [loadingState, contentTypes] = useContentTypes(contentTypesSearchParams);
+	const [loadingState, contentTypes] = useContentTypes(siteId, contentTypesSearchParams);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 	const [t] = useCoreTranslation();

@@ -3,6 +3,7 @@ import { FormikState } from 'formik';
 export type ResetForm = (nextState?: Partial<FormikState<FilterFormState>> | undefined) => void;
 
 export interface FilterFormProps {
+	siteId: string;
 	initialState: FilterFormState;
 	onCancel: () => void;
 	onSubmit: (values: FilterFormState) => void;

@@ -3,7 +3,10 @@ import { useEffect, useState } from 'react';
 import { LoadingState } from '../../content.types';
 import { ContentTypeSchema, getContentType } from '../../services/contentTypes';
 
-const useContentType = (contentTypeId?: string): [LoadingState, ContentTypeSchema | null] => {
+const useContentType = (
+	siteId: string,
+	contentTypeId?: string
+): [LoadingState, ContentTypeSchema | null] => {
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
 	const [contenType, setContentType] = useState<ContentTypeSchema | null>(null);
 
@@ -13,7 +16,7 @@ const useContentType = (contentTypeId?: string): [LoadingState, ContentTypeSchem
 		}
 
 		setLoadingState(LoadingState.Loading);
-		getContentType(contentTypeId)
+		getContentType(siteId, contentTypeId)
 			.then(result => {
 				if (result) {
 					setContentType(result);
@@ -23,7 +26,7 @@ const useContentType = (contentTypeId?: string): [LoadingState, ContentTypeSchem
 			.catch(() => {
 				setLoadingState(LoadingState.Error);
 			});
-	}, [contentTypeId]);
+	}, [contentTypeId, siteId]);
 
 	return [loadingState, contenType];
 };

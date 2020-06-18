@@ -18,13 +18,14 @@ import {
 import { FilterFormProps } from './FilterForm.types';
 
 const FilterForm: FC<FilterFormProps> = ({
+	siteId,
 	initialState,
 	onCancel,
 	onSubmit,
 	activeFilters,
 	deleteActiveFilter,
 }) => {
-	const [loadingState, contentTypes] = useContentTypes(CONTENT_TYPES_SEARCH_OPTIONS);
+	const [loadingState, contentTypes] = useContentTypes(siteId, CONTENT_TYPES_SEARCH_OPTIONS);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 
 	useEffect(() => {

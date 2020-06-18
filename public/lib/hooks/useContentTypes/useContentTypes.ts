@@ -9,6 +9,7 @@ import {
 } from '../../services/contentTypes';
 
 const useContentTypes = (
+	siteId: string,
 	searchParams: SearchParams = DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
 ): [LoadingState, ContentTypesSchema | null] => {
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
@@ -16,7 +17,7 @@ const useContentTypes = (
 
 	useEffect(() => {
 		setLoadingState(LoadingState.Loading);
-		getFilteredContentTypes(searchParams)
+		getFilteredContentTypes(siteId, searchParams)
 			.then(result => {
 				if (result) {
 					setContentTypes(result);
@@ -26,7 +27,7 @@ const useContentTypes = (
 			.catch(() => {
 				setLoadingState(LoadingState.Error);
 			});
-	}, [searchParams]);
+	}, [searchParams, siteId]);
 
 	return [loadingState, contentTypes];
 };

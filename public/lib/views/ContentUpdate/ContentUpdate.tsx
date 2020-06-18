@@ -27,8 +27,11 @@ const ContentCreate: FC<ContentRouteProps<ContentUpdateMatchProps>> = ({ match }
 	 * Hooks
 	 */
 	const { navigate } = useNavigate();
-	const [contentItemLoading, contentItem] = useContentItem(contentId);
-	const [contentTypeLoading, contentType] = useContentType(contentItem?.meta.contentType.uuid);
+	const [contentItemLoading, contentItem] = useContentItem(siteId, contentId);
+	const [contentTypeLoading, contentType] = useContentType(
+		siteId,
+		contentItem?.meta.contentType.uuid
+	);
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
 			name: 'Content',
@@ -66,7 +69,7 @@ const ContentCreate: FC<ContentRouteProps<ContentUpdateMatchProps>> = ({ match }
 					site: siteId,
 				},
 			};
-			updateContent(contentId, request).then(() => {
+			updateContent(siteId, contentId, request).then(() => {
 				navigateToOverview();
 			});
 		}

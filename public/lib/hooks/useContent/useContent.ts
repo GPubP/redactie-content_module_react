@@ -4,13 +4,16 @@ import { LoadingState } from '../../content.types';
 import { SearchParams } from '../../services/api';
 import { ContentsSchema, getContent } from '../../services/content';
 
-const useContent = (searchParams: SearchParams): [LoadingState, ContentsSchema | null] => {
+const useContent = (
+	siteId: string,
+	searchParams: SearchParams
+): [LoadingState, ContentsSchema | null] => {
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
 	const [content, setContent] = useState<ContentsSchema | null>(null);
 
 	useEffect(() => {
 		setLoadingState(LoadingState.Loading);
-		getContent(searchParams)
+		getContent(siteId, searchParams)
 			.then(result => {
 				if (result?.data) {
 					setContent(result);
@@ -20,7 +23,7 @@ const useContent = (searchParams: SearchParams): [LoadingState, ContentsSchema |
 			.catch(() => {
 				setLoadingState(LoadingState.Error);
 			});
-	}, [searchParams]);
+	}, [searchParams, siteId]);
 
 	return [loadingState, content];
 };

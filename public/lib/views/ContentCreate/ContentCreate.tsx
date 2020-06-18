@@ -93,7 +93,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			fields: content.fields,
 		};
 
-		createContent(request).then(() => {
+		createContent(siteId, request).then(() => {
 			navigateToOverview();
 		});
 	};
