@@ -23,7 +23,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 	 * Hooks
 	 */
 	const { generatePath, navigate } = useNavigate();
-	const [contentTypesLoading, contentType] = useContentType(contentTypeId);
+	const [contentTypesLoading, contentType] = useContentType(siteId, contentTypeId);
 	const { tenantId } = useContext(TenantContext);
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
