@@ -1,7 +1,6 @@
 import * as moment from 'moment';
 import 'moment/locale/nl';
 import React, { FC, useMemo } from 'react';
-import { Redirect } from 'react-router-dom';
 
 import { registerContentAPI } from './lib/api/index';
 import { RenderChildRoutes } from './lib/components';
@@ -16,7 +15,7 @@ import ContentForm from './lib/views/ContentForm/ContentForm';
 // eslint-disable-next-line import/namespace
 moment.locale('nl');
 
-const ContentComponent: FC<ContentRouteProps> = ({ route, location, tenantId }) => {
+const ContentComponent: FC<ContentRouteProps> = ({ route, tenantId }) => {
 	const guardsMeta = useMemo(
 		() => ({
 			tenantId,
@@ -30,23 +29,6 @@ const ContentComponent: FC<ContentRouteProps> = ({ route, location, tenantId }) 
 		}),
 		[tenantId, route.routes]
 	);
-
-	// if path is /content, redirect to /content/overzicht
-	if (
-		/\/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b\/content$/.test(
-			location.pathname
-		)
-	) {
-		return <Redirect to={`${location.pathname}/overzicht`} />;
-	}
-
-	if (/\/aanmaken$/.test(location.pathname)) {
-		return <Redirect to={`${location.pathname}/default`} />;
-	}
-
-	if (/\/bewerken$/.test(location.pathname)) {
-		return <Redirect to={`${location.pathname}/default`} />;
-	}
 
 	return (
 		<TenantContext.Provider value={{ tenantId }}>
@@ -63,7 +45,6 @@ if (rolesRightsConnector.api) {
 	registerRoutes({
 		path: MODULE_PATHS.root,
 		component: ContentComponent,
-		exact: true,
 		guardOptions: {
 			guards: [
 				rolesRightsConnector.api.guards.securityRightsSiteGuard(urlSiteParam, [
@@ -81,6 +62,7 @@ if (rolesRightsConnector.api) {
 				]),
 			],
 		},
+		redirect: MODULE_PATHS.overview,
 		routes: [
 			{
 				path: MODULE_PATHS.overview,
@@ -100,6 +82,7 @@ if (rolesRightsConnector.api) {
 			{
 				path: MODULE_PATHS.create,
 				component: ContentCreate,
+				redirect: `${MODULE_PATHS.create}/default`,
 				guardOptions: {
 					guards: [
 						rolesRightsConnector.api.guards.securityRightsSiteGuard(urlSiteParam, [
@@ -117,6 +100,7 @@ if (rolesRightsConnector.api) {
 			{
 				path: MODULE_PATHS.update,
 				component: ContentUpdate,
+				redirect: `${MODULE_PATHS.update}/default`,
 				routes: [
 					{
 						path: MODULE_PATHS.updateCompartment,
@@ -126,6 +110,10 @@ if (rolesRightsConnector.api) {
 			},
 		],
 	});
+} else {
+	throw new Error(
+		`Content Module can't resolve the following dependency: ${rolesRightsConnector.apiName}, please add the module to the dependency list.`
+	);
 }
 
 registerContentAPI();
