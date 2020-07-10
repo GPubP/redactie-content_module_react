@@ -1,6 +1,61 @@
 import { FieldSchema, FormSchema } from '@redactie/form-renderer-module';
 
-import { ContentTypeSchema, ErrorMessagesSchema, ValidateSchema } from '../services/contentTypes';
+import {
+	ContentTypeFieldSchema,
+	ContentTypeSchema,
+	ErrorMessagesSchema,
+	ValidateSchema,
+} from '../services/contentTypes';
+
+const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[] => {
+	return fields.map(
+		(field): FieldSchema => {
+			const {
+				generalConfig = {
+					min: 0,
+					max: 1,
+				},
+				config = {
+					fields: [],
+				},
+				name,
+				fieldType,
+				label,
+			} = field;
+			const isMultiple = generalConfig.max > 1;
+
+			const formField = {
+				name: name,
+				module: fieldType?.data?.module,
+				label: !isMultiple ? label : null,
+				type: fieldType?.data?.componentName,
+				config: {
+					...config,
+					...generalConfig,
+				},
+				fields: parseFields(config.fields),
+				dataType: 'string',
+			};
+
+			if (isMultiple) {
+				return {
+					name: name,
+					module: 'core',
+					label: label,
+					type: 'repeater',
+					dataType: 'array',
+					config: {
+						...config,
+						...generalConfig,
+					},
+					fields: [formField as FieldSchema],
+				};
+			}
+
+			return formField as FieldSchema;
+		}
+	);
+};
 
 export const getFormPropsByCT = (
 	contentType: ContentTypeSchema
@@ -10,20 +65,10 @@ export const getFormPropsByCT = (
 		type: 'object',
 		properties: contentType.validateSchema || {},
 	};
+
 	return {
 		schema: {
-			fields: contentType.fields.map(
-				(field): FieldSchema => {
-					return {
-						name: field.name,
-						module: field.fieldType?.data?.module,
-						label: field.label,
-						type: field.fieldType?.data?.componentName,
-						config: field.config,
-						dataType: 'string',
-					};
-				}
-			),
+			fields: parseFields(contentType.fields),
 		},
 		validationSchema: validateSchema,
 		errorMessages: contentType.errorMessages || {},

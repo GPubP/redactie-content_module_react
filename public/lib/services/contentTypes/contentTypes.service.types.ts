@@ -1,3 +1,11 @@
+export interface GeneralConfig {
+	hidden: boolean;
+	max: number;
+	min: number;
+	multilanguage: boolean;
+	required: boolean;
+}
+
 export interface FieldType {
 	uuid: string;
 	data: {
@@ -5,6 +13,7 @@ export interface FieldType {
 		module: string;
 	};
 }
+
 interface ModuleSettings {
 	uuid: string;
 	label: string;
@@ -19,8 +28,11 @@ export interface ContentTypeFieldSchema {
 	label: string;
 	fieldType: FieldType;
 	config?: {
+		required: boolean;
 		[key: string]: any;
 	};
+	generalConfig: GeneralConfig;
+	defaultValue: string;
 }
 
 export interface ContentTypeSchema {
