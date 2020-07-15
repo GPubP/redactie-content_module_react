@@ -65,7 +65,6 @@ export const getContentItem = async (
 	siteId: string,
 	uuid: string
 ): Promise<ContentSchema | null> => {
-	console.log(SITE_REQUEST_PREFIX_URL);
 	try {
 		const response: ContentSchema = await api
 			.get(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}`)

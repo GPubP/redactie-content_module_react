@@ -17,9 +17,11 @@ const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[] => {
 				},
 				config = {
 					fields: [],
+					guideline: null,
 				},
 				name,
 				fieldType,
+				dataType,
 				label,
 			} = field;
 			const isMultiple = generalConfig.max > 1;
@@ -32,9 +34,10 @@ const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[] => {
 				config: {
 					...config,
 					...generalConfig,
+					description: config.guideline,
 				},
 				fields: parseFields(config.fields),
-				dataType: 'string',
+				dataType: dataType.data.type,
 			};
 
 			if (isMultiple) {
@@ -47,8 +50,14 @@ const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[] => {
 					config: {
 						...config,
 						...generalConfig,
+						description: config.guideline,
 					},
-					fields: [formField as FieldSchema],
+					fields: [
+						{
+							...formField,
+							name: 'value',
+						} as FieldSchema,
+					],
 				};
 			}
 
