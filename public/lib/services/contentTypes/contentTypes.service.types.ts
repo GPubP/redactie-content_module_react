@@ -14,6 +14,22 @@ export interface FieldType {
 	};
 }
 
+export interface DataType {
+	_id: string;
+	meta: {
+		createdAt: string;
+		deleted: boolean;
+		lastModified: string;
+		created: string;
+	};
+	data: {
+		label: string;
+		type: string;
+		semanticType: string;
+	};
+	uuid: string;
+}
+
 interface ModuleSettings {
 	uuid: string;
 	label: string;
@@ -27,6 +43,7 @@ export interface ContentTypeFieldSchema {
 	name: string;
 	label: string;
 	fieldType: FieldType;
+	dataType: DataType;
 	config?: {
 		required: boolean;
 		[key: string]: any;
