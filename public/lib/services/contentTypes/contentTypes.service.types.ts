@@ -1,4 +1,5 @@
 export interface GeneralConfig {
+	guideline: string;
 	hidden: boolean;
 	max: number;
 	min: number;
