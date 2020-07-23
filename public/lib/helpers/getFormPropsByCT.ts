@@ -27,8 +27,6 @@ const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[] => {
 			} = field;
 			const isMultiple = generalConfig.max > 1;
 
-			console.log(generalConfig);
-
 			const formField = {
 				name: name,
 				module: fieldType?.data?.module,
