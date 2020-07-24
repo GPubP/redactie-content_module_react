@@ -14,6 +14,7 @@ const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[] => {
 				generalConfig = {
 					min: 0,
 					max: 1,
+					guideline: '',
 				},
 				config = {
 					fields: [],
@@ -34,7 +35,7 @@ const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[] => {
 				config: {
 					...config,
 					...generalConfig,
-					description: config.guideline,
+					description: generalConfig.guideline,
 				},
 				fields: parseFields(config.fields),
 				dataType: dataType.data.type,
