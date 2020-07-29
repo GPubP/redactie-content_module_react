@@ -1,3 +1,5 @@
+import { Preset } from '@redactie/form-renderer-module';
+
 export interface GeneralConfig {
 	guideline: string;
 	hidden: boolean;
@@ -51,6 +53,7 @@ export interface ContentTypeFieldSchema {
 	};
 	generalConfig: GeneralConfig;
 	defaultValue: string;
+	preset?: Preset;
 }
 
 export interface ContentTypeSchema {

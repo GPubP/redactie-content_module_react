@@ -24,6 +24,7 @@ const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[] => {
 				fieldType,
 				dataType,
 				label,
+				preset,
 			} = field;
 			const isMultiple = generalConfig.max > 1;
 
@@ -36,6 +37,7 @@ const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[] => {
 					...config,
 					...generalConfig,
 					description: generalConfig.guideline,
+					preset,
 				},
 				fields: parseFields(config.fields),
 				dataType: dataType.data.type,
