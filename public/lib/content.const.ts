@@ -19,8 +19,9 @@ const overview = `${root}/overzicht`;
 const createOverview = `${root}/aanmaak-overzicht`;
 const create = `${root}/content-type/:contentTypeId/aanmaken`;
 const createCompartment = `${create}/:compartment`;
-const update = `${root}/:contentId/bewerken`;
-const updateCompartment = `${update}/:compartment`;
+const detail = `${root}/:contentId/detail`;
+const detailView = `${detail}/bekijk`;
+const detailEdit = `${detail}/bewerk`;
 
 export const MODULE_PATHS = {
 	root,
@@ -29,6 +30,7 @@ export const MODULE_PATHS = {
 	createOverview,
 	create,
 	createCompartment,
-	update,
-	updateCompartment,
+	detail,
+	detailView,
+	detailEdit,
 };

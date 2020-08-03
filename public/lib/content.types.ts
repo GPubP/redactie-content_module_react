@@ -23,6 +23,14 @@ export interface FilterItemSchema {
 	formvalue?: any;
 }
 
+export interface Tab {
+	id?: string;
+	name: string;
+	target: string;
+	active: boolean;
+	disabled?: boolean;
+}
+
 export interface FilterItemsSchema {
 	data: FilterItemSchema[];
 }

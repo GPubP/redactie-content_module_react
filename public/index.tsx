@@ -9,7 +9,14 @@ import { registerRoutes } from './lib/connectors/sites';
 import { MODULE_PATHS, urlSiteParam } from './lib/content.const';
 import { ContentRouteProps } from './lib/content.types';
 import { TenantContext } from './lib/context';
-import { ContentCreate, ContentCreateOverview, ContentOverview, ContentUpdate } from './lib/views';
+import {
+	ContentCreate,
+	ContentCreateOverview,
+	ContentOverview,
+	ContentDetail,
+	ContentDetailView,
+	ContentDetailEdit,
+} from './lib/views';
 import ContentForm from './lib/views/ContentForm/ContentForm';
 
 // eslint-disable-next-line import/namespace
@@ -98,13 +105,17 @@ if (rolesRightsConnector.api) {
 				],
 			},
 			{
-				path: MODULE_PATHS.update,
-				component: ContentUpdate,
-				redirect: `${MODULE_PATHS.update}/default`,
+				path: MODULE_PATHS.detail,
+				component: ContentDetail,
+				redirect: MODULE_PATHS.detailView,
 				routes: [
 					{
-						path: MODULE_PATHS.updateCompartment,
-						component: ContentForm,
+						path: MODULE_PATHS.detailView,
+						component: ContentDetailView,
+					},
+					{
+						path: MODULE_PATHS.detailEdit,
+						component: ContentDetailEdit,
 					},
 				],
 			},
