@@ -1,3 +1,4 @@
+// import { akitaDevtools } from '@datorama/akita';
 import * as moment from 'moment';
 import 'moment/locale/nl';
 import React, { FC, useMemo } from 'react';
@@ -12,15 +13,17 @@ import { TenantContext } from './lib/context';
 import {
 	ContentCreate,
 	ContentCreateOverview,
-	ContentOverview,
 	ContentDetail,
-	ContentDetailView,
 	ContentDetailEdit,
+	ContentDetailView,
+	ContentOverview,
 } from './lib/views';
 import ContentForm from './lib/views/ContentForm/ContentForm';
 
 // eslint-disable-next-line import/namespace
 moment.locale('nl');
+
+// akitaDevtools();
 
 const ContentComponent: FC<ContentRouteProps> = ({ route, tenantId }) => {
 	const guardsMeta = useMemo(
@@ -116,6 +119,13 @@ if (rolesRightsConnector.api) {
 					{
 						path: MODULE_PATHS.detailEdit,
 						component: ContentDetailEdit,
+						redirect: `${MODULE_PATHS.detailEdit}/default`,
+						routes: [
+							{
+								path: MODULE_PATHS.detailEditCompartment,
+								component: ContentForm,
+							},
+						],
 					},
 				],
 			},

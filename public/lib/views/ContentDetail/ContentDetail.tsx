@@ -7,7 +7,6 @@ import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
-import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, LoadingState } from '../../content.types';
 import {
@@ -17,6 +16,8 @@ import {
 	useNavigate,
 	useRoutesBreadcrumbs,
 } from '../../hooks';
+import { contentFacade } from '../../store/content';
+import { contentTypesFacade } from '../../store/contentTypes';
 
 import { CONTENT_UPDATE_TABS } from './ContentDetail.const';
 import { ContentDetailMatchProps } from './ContentDetail.types';
@@ -34,11 +35,8 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	 */
 	const { generatePath } = useNavigate();
 	const activeTabs = useActiveTabs(CONTENT_UPDATE_TABS, location.pathname);
-	const [contentItemLoading, contentItem] = useContentItem(siteId, contentId);
-	const [contentTypeLoading, contentType] = useContentType(
-		siteId,
-		contentItem?.meta.contentType.uuid
-	);
+	const [contentItemLoading, contentItem, contentItemDraft] = useContentItem();
+	const [contentTypeLoading, contentType] = useContentType();
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
 			name: 'Content',
@@ -55,6 +53,11 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	);
 
 	useEffect(() => {
+		contentFacade.clearContentItemDraft();
+		contentFacade.clearContentItem();
+	}, []);
+
+	useEffect(() => {
 		if (
 			contentTypeLoading !== LoadingState.Loading &&
 			contentItemLoading !== LoadingState.Loading
@@ -63,62 +66,32 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		}
 	}, [contentTypeLoading, contentItemLoading]);
 
-	/**
-	 * Methods
-	 */
-	// const navigateToOverview = (): void => {
-	// 	navigate(MODULE_PATHS.overview, { siteId });
-	// };
+	useEffect(() => {
+		if (contentItem?.meta.contentType.uuid && siteId) {
+			contentTypesFacade.getContentType(siteId, contentItem?.meta.contentType.uuid);
+		}
+	}, [siteId, contentItem]);
 
-	// const onFormSubmit = (values: any): void => {
-	// 	if (contentItem) {
-	// 		const request: ContentSchema = {
-	// 			...contentItem,
-	// 			fields: values,
-	// 			meta: {
-	// 				...contentItem.meta,
-	// 				site: siteId,
-	// 			},
-	// 		};
-	// 		updateContent(siteId, contentId, request).then(() => {
-	// 			navigateToOverview();
-	// 		});
-	// 	}
-	// };
+	useEffect(() => {
+		if (siteId && contentId) {
+			contentFacade.getContentItem(siteId, contentId);
+		}
+	}, [siteId, contentId]);
+
+	useEffect(() => {
+		if (contentItem) {
+			contentFacade.setContentItemDraft(contentItem);
+		}
+	}, [contentItem]);
 
 	/**
 	 * Render
 	 */
-	// const renderCreateContentForm = (): ReactElement | null => {
-	// 	if (!contentItem || !contentType) {
-	// 		return null;
-	// 	}
-
-	// 	const formProps = getFormPropsByCT(contentType);
-	// 	const initialValues = contentItem.fields;
-	// 	return (
-	// 		<formsAPI.Form {...formProps} initialValues={initialValues} onSubmit={onFormSubmit}>
-	// 			{({ submitForm }) => (
-	// 				<div className="u-margin-top">
-	// 					<Button
-	// 						className="u-margin-right-xs"
-	// 						onClick={() => submitForm()}
-	// 						type="success"
-	// 						htmlType="submit"
-	// 					>
-	// 						{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
-	// 					</Button>
-	// 					<Button onClick={navigateToOverview} outline>
-	// 						{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
-	// 					</Button>
-	// 				</div>
-	// 			)}
-	// 		</formsAPI.Form>
-	// 	);
-	// };
-
 	const renderChildRoutes = (): ReactElement | null => {
-		const extraOptions = {};
+		const extraOptions = {
+			contentType,
+			contentItemDraft,
+		};
 
 		return (
 			<RenderChildRoutes

@@ -1,30 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useObservable } from '@mindspace-io/react';
 
 import { LoadingState } from '../../content.types';
-import { ContentSchema, getContentItem } from '../../services/content';
+import { contentFacade, ContentModel } from '../../store/content';
 
-const useContentItem = (
-	siteId: string,
-	contentItemId: string
-): [LoadingState, ContentSchema | null] => {
-	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [contenItem, setContentItem] = useState<ContentSchema | null>(null);
+const useContentItem = (): [LoadingState, ContentModel | undefined, ContentModel | undefined] => {
+	const [isFetching] = useObservable(contentFacade.isFetchingOne$, LoadingState.Loading);
+	const [contentItem] = useObservable(contentFacade.contentItem$);
+	const [contentItemDraft] = useObservable(contentFacade.contentItemDraft$);
+	const [error] = useObservable(contentFacade.error$, null);
 
-	useEffect(() => {
-		setLoadingState(LoadingState.Loading);
-		getContentItem(siteId, contentItemId)
-			.then(result => {
-				if (result) {
-					setContentItem(result);
-				}
-				setLoadingState(LoadingState.Loaded);
-			})
-			.catch(() => {
-				setLoadingState(LoadingState.Error);
-			});
-	}, [contentItemId, siteId]);
+	const fetchingState = error ? LoadingState.Error : isFetching;
 
-	return [loadingState, contenItem];
+	return [fetchingState, contentItem, contentItemDraft];
 };
 
 export default useContentItem;

@@ -7,7 +7,7 @@ import {
 	ModuleSettings,
 } from '../api/api.types';
 import { ExternalCompartmentModel } from '../store/api/externalCompartments';
-import { CompartmentType, ContentCompartmentModel } from '../store/content/compartments';
+import { CompartmentType, ContentCompartmentModel } from '../store/ui/contentCompartments';
 
 export const getSettings = (
 	contentType: ContentTypeSchema,

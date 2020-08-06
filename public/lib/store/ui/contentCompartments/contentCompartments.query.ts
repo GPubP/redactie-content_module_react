@@ -1,7 +1,7 @@
 import { QueryEntity } from '@datorama/akita';
 
-import { ContentCompartmentState } from './compartments.model';
-import { ContentCompartmentStore, contentCompartmentStore } from './compartments.store';
+import { ContentCompartmentState } from './contentCompartments.model';
+import { ContentCompartmentStore, contentCompartmentStore } from './contentCompartments.store';
 
 export class ContentCompartmentsQuery extends QueryEntity<ContentCompartmentState> {
 	public all$ = this.selectAll();
