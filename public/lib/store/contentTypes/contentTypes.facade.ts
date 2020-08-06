@@ -10,14 +10,6 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	ContentTypesApiService,
 	ContentTypesQuery
 > {
-	constructor(
-		store: ContentTypesStore,
-		service: ContentTypesApiService,
-		query: ContentTypesQuery
-	) {
-		super(store, service, query);
-	}
-
 	public readonly meta$ = this.query.meta$;
 	public readonly contentTypes$ = this.query.contentTypes$;
 	public readonly contentType$ = this.query.contentType$;

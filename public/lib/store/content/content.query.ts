@@ -4,13 +4,9 @@ import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { BaseEntityQuery } from '../shared';
 
 import { ContentState } from './content.model';
-import { ContentStore, contentStore } from './content.store';
+import { contentStore } from './content.store';
 
 export class ContentQuery extends BaseEntityQuery<ContentState> {
-	constructor(protected store: ContentStore) {
-		super(store);
-	}
-
 	public meta$ = this.select(state => state.meta).pipe(
 		filter(meta => !isNil(meta), distinctUntilChanged())
 	);

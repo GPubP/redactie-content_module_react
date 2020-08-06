@@ -4,7 +4,6 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import React, { FC, useContext, useEffect, useMemo } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
 import { MODULE_PATHS } from '../../content.const';
@@ -57,7 +56,6 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		}
 
 		const defaultValue: ContentSchema = {
-			uuid: uuidv4(),
 			fields: {},
 			modulesData: {},
 			meta: {

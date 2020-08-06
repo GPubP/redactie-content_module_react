@@ -12,10 +12,6 @@ import { contentQuery, ContentQuery } from './content.query';
 import { contentStore, ContentStore } from './content.store';
 
 export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiService, ContentQuery> {
-	constructor(store: ContentStore, service: ContentApiService, query: ContentQuery) {
-		super(store, service, query);
-	}
-
 	public readonly meta$ = this.query.meta$;
 	public readonly content$ = this.query.content$;
 	public readonly contentItem$ = this.query.contentItem$;
