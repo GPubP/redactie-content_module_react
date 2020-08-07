@@ -6,7 +6,7 @@ import { clone, equals } from 'ramda';
 import React, { FC, useEffect, useRef, useState } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
-import { FieldsForm, MetaForm, PlanningForm, StatusForm } from '../../components';
+import { FieldsForm, MetaForm, StatusForm } from '../../components';
 import NavList from '../../components/NavList/NavList';
 import { NavListItem } from '../../components/NavList/NavList.types';
 import { useCoreTranslation } from '../../connectors/translations';
@@ -73,13 +73,14 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 					component: StatusForm,
 					type: CompartmentType.INTERNAL,
 				},
-				{
-					label: 'planning',
-					name: 'planning',
-					slug: 'planning',
-					component: PlanningForm,
-					type: CompartmentType.INTERNAL,
-				},
+				// TODO: Implement planning when the workflow engine is implemented
+				// {
+				// 	label: 'planning',
+				// 	name: 'planning',
+				// 	slug: 'planning',
+				// 	component: PlanningForm,
+				// 	type: CompartmentType.INTERNAL,
+				// },
 				...filterCompartments(contentItemDraft, contentType, externalCompartments),
 			],
 

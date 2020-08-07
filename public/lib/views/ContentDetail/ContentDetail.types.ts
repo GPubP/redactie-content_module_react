@@ -6,7 +6,8 @@ export interface ContentDetailMatchProps {
 	contentId: string;
 }
 
-export interface ContentDetailChildRouteProps<T> extends ContentRouteProps<T> {
+export interface ContentDetailChildRouteProps<T = ContentDetailMatchProps>
+	extends ContentRouteProps<T> {
 	contentType: ContentTypeSchema;
 	contentItemDraft: ContentSchema;
 }

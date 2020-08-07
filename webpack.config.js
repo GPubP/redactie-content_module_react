@@ -30,7 +30,6 @@ module.exports = env => {
 						{
 							loader: 'css-loader',
 							options: {
-								modules: true,
 								importLoaders: 1,
 							},
 						},

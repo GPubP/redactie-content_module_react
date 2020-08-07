@@ -2,15 +2,7 @@ import React, { FC, ReactElement } from 'react';
 
 import { CompartmentProps } from '../../../api/api.types';
 
-const PlanningForm: FC<CompartmentProps> = ({
-	contentValue,
-	value,
-	onChange,
-}): ReactElement | null => {
-	/**
-	 * METHODS
-	 */
-
+const PlanningForm: FC<CompartmentProps> = (): ReactElement | null => {
 	/**
 	 * RENDER
 	 */

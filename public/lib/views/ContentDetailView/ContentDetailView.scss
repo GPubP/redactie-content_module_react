@@ -1,0 +1,12 @@
+@import '~@a-ui/core/dist/assets/styles/quarks';
+
+.empty-state {
+	border: 1px dashed $grey;
+
+	&__content {
+		margin: auto;
+		width: 50%;
+		padding: $spacer;
+		text-align: center;
+	}
+}
