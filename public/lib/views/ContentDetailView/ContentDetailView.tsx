@@ -1,8 +1,10 @@
-import { Link as AuiLink, Card, CardBody, CardTitle } from '@acpaas-ui/react-components';
+import { Link as AuiLink, Button, Card, CardBody, CardTitle } from '@acpaas-ui/react-components';
+import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import moment from 'moment';
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 
+import { PublishedStatus } from '../../components';
 import { MODULE_PATHS } from '../../content.const';
 import { useNavigate } from '../../hooks';
 import { ContentDetailChildRouteProps } from '../ContentDetail/ContentDetail.types';
@@ -16,7 +18,17 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({ contentItemDraft,
 	/**
 	 * Hooks
 	 */
-	const { generatePath } = useNavigate();
+	const { navigate, generatePath } = useNavigate();
+
+	/**
+	 * Methods
+	 */
+	const goToDetailEdit = (): void => {
+		navigate(`${MODULE_PATHS.detailEdit}/default`, {
+			siteId,
+			contentId,
+		});
+	};
 
 	return (
 		<>
@@ -66,6 +78,18 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({ contentItemDraft,
 					</div>
 				</div>
 			</div>
+			<ActionBar className="o-action-bar--fixed" isOpen>
+				<ActionBarContentSection>
+					<div className="u-wrapper row end-xs">
+						<div className="button-group">
+							<Button onClick={goToDetailEdit}>Bewerken</Button>
+						</div>
+						<PublishedStatus
+							published={!!contentItemDraft.meta.historySummary?.published}
+						/>
+					</div>
+				</ActionBarContentSection>
+			</ActionBar>
 		</>
 	);
 };
