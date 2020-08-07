@@ -1,0 +1,14 @@
+@import '~@a-ui/core/dist/assets/styles/quarks';
+
+:global {
+	.m-nav-list {
+		.m-nav-list__item--error {
+			> a,
+			> a.is-active,
+			> a:hover,
+			> a.is-active:hover, {
+				color: $state-danger;
+			}
+		}
+	}
+}
