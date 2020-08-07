@@ -5,3 +5,6 @@ export { default as useContentItem } from './useContentItem/useContentItem';
 export { default as useContent } from './useContent/useContent';
 export { default as useRoutesBreadcrumbs } from './useRoutesBreadcrumbs/useRoutesBreadcrumbs';
 export { default as useNavigate } from './useNavigate/useNavigate';
+export { default as useActiveTabs } from './useActiveTabs/useActiveTabs';
+export { default as useContentCompartment } from './useContentCompartment/useContentCompartment';
+export { default as useExternalCompartment } from './useExternalCompartment/useExternalCompartment';

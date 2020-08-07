@@ -1,29 +1,35 @@
-import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
+import {
+	Container,
+	ContextHeader,
+	ContextHeaderTopSection,
+} from '@acpaas-ui/react-editorial-components';
 import React, { FC, useContext, useEffect, useMemo } from 'react';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { TenantContext } from '../../context';
-import { useContentType, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
+import { useContentItem, useContentType, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import {
+	contentApiService,
 	ContentCreateSchema,
 	ContentSchema,
 	ContentStatus,
-	createContent,
 } from '../../services/content';
-import { useInternalFacade } from '../../store/content/internal/internal.facade';
+import { contentFacade } from '../../store/content/content.facade';
+import { contentTypesFacade } from '../../store/contentTypes';
 
 import { ContentCreateMatchProps } from './ContentCreate.types';
 
-const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, routes }) => {
+const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, route }) => {
 	const { contentTypeId, siteId } = match.params;
 
 	/**
 	 * Hooks
 	 */
 	const { generatePath, navigate } = useNavigate();
-	const [contentTypesLoading, contentType] = useContentType(siteId, contentTypeId);
+	const [contentTypesLoading, contentType] = useContentType();
+	const [, , contentItemDraft] = useContentItem();
 	const { tenantId } = useContext(TenantContext);
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
@@ -37,7 +43,6 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			}),
 		},
 	]);
-	const [, registerContent, activateContent] = useInternalFacade();
 	const guardsMeta = useMemo(
 		() => ({
 			tenantId,
@@ -64,9 +69,14 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			},
 		};
 
-		registerContent([defaultValue]);
-		activateContent('new');
+		contentFacade.setContentItemDraft(defaultValue);
 	}, [contentType]); // eslint-disable-line
+
+	useEffect(() => {
+		if (siteId && contentTypeId) {
+			contentTypesFacade.getContentType(siteId, contentTypeId);
+		}
+	}, [siteId, contentTypeId]);
 
 	/**
 	 * Methods
@@ -75,7 +85,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		navigate(MODULE_PATHS.overview, { siteId });
 	};
 
-	const onFormSubmit = (content: ContentSchema): void => {
+	const onSubmit = (content: ContentSchema): void => {
 		if (!contentType || !content) {
 			return;
 		}
@@ -93,9 +103,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			fields: content.fields,
 		};
 
-		createContent(siteId, request).then(() => {
-			navigateToOverview();
-		});
+		contentApiService.createContentItem(siteId, request);
 	};
 
 	/**
@@ -107,25 +115,17 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			return;
 		}
 
-		const activeRoute =
-			routes?.find(
-				item =>
-					item.path.replace(
-						/\/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b\/sites/,
-						''
-					) === MODULE_PATHS.create
-			) || null;
-
 		const extraOptions = {
 			contentType: contentType,
-			onSubmit: (value: ContentSchema) => onFormSubmit(value),
-			cancel: () => navigateToOverview(),
+			contentItemDraft,
+			onCancle: navigateToOverview,
+			onSubmit,
 		};
 
 		return (
 			<div className="u-margin-top">
 				<RenderChildRoutes
-					routes={activeRoute?.routes}
+					routes={route.routes}
 					guardsMeta={guardsMeta}
 					extraOptions={extraOptions}
 				/>
@@ -149,7 +149,9 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			<ContextHeader title={headerTitle} badges={badges}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			<DataLoader loadingState={contentTypesLoading} render={renderChildRoutes} />
+			<Container>
+				<DataLoader loadingState={contentTypesLoading} render={renderChildRoutes} />
+			</Container>
 		</>
 	);
 };

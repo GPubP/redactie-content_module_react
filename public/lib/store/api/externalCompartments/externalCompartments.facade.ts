@@ -1,24 +1,34 @@
-import { useEffect, useState } from 'react';
+import { ExternalCompartmentModel, ExternalCompartmentOptions } from './externalCompartments.model';
+import { ExternalCompartmentsQuery, externalCompartmentsQuery } from './externalCompartments.query';
+import { ExternalCompartmentsStore, externalCompartmentsStore } from './externalCompartments.store';
 
-import { onEmit } from '../../../helpers';
+export class ExternalCompartmentsFacade {
+	constructor(
+		private store: ExternalCompartmentsStore,
+		private query: ExternalCompartmentsQuery
+	) {}
 
-import { ExternalCompartmentModel } from './externalCompartments.model';
-import { externalCompartmentsQuery } from './externalCompartments.query';
+	public readonly all$ = this.query.all$;
 
-export const useExternalCompartmentFacade = (): [ExternalCompartmentModel[]] => {
-	const [externalCompartments, setCompartments] = useState<ExternalCompartmentModel[]>([]);
-
-	useEffect(() => {
-		const subscriptions: any[] = [
-			onEmit<ExternalCompartmentModel[]>(externalCompartmentsQuery.all$, all =>
-				setCompartments(all)
-			),
-		];
-
-		return () => {
-			subscriptions.map(it => it.unsubscribe());
+	public registerCompartment(name: string, options: ExternalCompartmentOptions): void {
+		const entity: ExternalCompartmentModel = {
+			name,
+			label: options.label,
+			module: options.module,
+			show: options.show,
+			component: options.component,
 		};
-	}, []);
 
-	return [externalCompartments];
-};
+		if (options.replace) {
+			this.store.upsert(name, entity);
+			return;
+		}
+
+		this.store.add(entity);
+	}
+}
+
+export const externalCompartmentsFacade = new ExternalCompartmentsFacade(
+	externalCompartmentsStore,
+	externalCompartmentsQuery
+);

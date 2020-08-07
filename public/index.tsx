@@ -1,3 +1,4 @@
+// import { akitaDevtools } from '@datorama/akita';
 import * as moment from 'moment';
 import 'moment/locale/nl';
 import React, { FC, useMemo } from 'react';
@@ -9,11 +10,20 @@ import { registerRoutes } from './lib/connectors/sites';
 import { MODULE_PATHS, urlSiteParam } from './lib/content.const';
 import { ContentRouteProps } from './lib/content.types';
 import { TenantContext } from './lib/context';
-import { ContentCreate, ContentCreateOverview, ContentOverview, ContentUpdate } from './lib/views';
+import {
+	ContentCreate,
+	ContentCreateOverview,
+	ContentDetail,
+	ContentDetailEdit,
+	ContentDetailView,
+	ContentOverview,
+} from './lib/views';
 import ContentForm from './lib/views/ContentForm/ContentForm';
 
 // eslint-disable-next-line import/namespace
 moment.locale('nl');
+
+// akitaDevtools();
 
 const ContentComponent: FC<ContentRouteProps> = ({ route, tenantId }) => {
 	const guardsMeta = useMemo(
@@ -98,13 +108,24 @@ if (rolesRightsConnector.api) {
 				],
 			},
 			{
-				path: MODULE_PATHS.update,
-				component: ContentUpdate,
-				redirect: `${MODULE_PATHS.update}/default`,
+				path: MODULE_PATHS.detail,
+				component: ContentDetail,
+				redirect: MODULE_PATHS.detailView,
 				routes: [
 					{
-						path: MODULE_PATHS.updateCompartment,
-						component: ContentForm,
+						path: MODULE_PATHS.detailView,
+						component: ContentDetailView,
+					},
+					{
+						path: MODULE_PATHS.detailEdit,
+						component: ContentDetailEdit,
+						redirect: `${MODULE_PATHS.detailEdit}/default`,
+						routes: [
+							{
+								path: MODULE_PATHS.detailEditCompartment,
+								component: ContentForm,
+							},
+						],
 					},
 				],
 			},

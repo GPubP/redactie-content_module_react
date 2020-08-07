@@ -6,7 +6,12 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { CompartmentProps } from '../../../api/api.types';
 import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandler';
 
-const MetaForm: FC<CompartmentProps> = ({ contentValue, value, onChange }): ReactElement | null => {
+const MetaForm: FC<CompartmentProps> = ({
+	contentValue,
+	value,
+	onChange,
+	formikRef,
+}): ReactElement | null => {
 	/**
 	 * METHODS
 	 */
@@ -15,7 +20,11 @@ const MetaForm: FC<CompartmentProps> = ({ contentValue, value, onChange }): Reac
 	 * RENDER
 	 */
 	return (
-		<Formik onSubmit={onChange} initialValues={value}>
+		<Formik
+			innerRef={instance => formikRef && formikRef(instance)}
+			onSubmit={onChange}
+			initialValues={value}
+		>
 			{({ submitForm }) => (
 				<>
 					<FormikOnChangeHandler onChange={submitForm} />

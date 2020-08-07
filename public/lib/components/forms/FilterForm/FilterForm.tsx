@@ -9,7 +9,6 @@ import DataLoader from '../../DataLoader/DataLoader';
 
 import {
 	CONTENT_TYPES_DEFAULT_OPTION,
-	CONTENT_TYPES_SEARCH_OPTIONS,
 	PUBLISHED_DEFAULT_OPTION,
 	PUBLISHED_OPTIONS,
 	STATUS_DEFAULT_OPTION,
@@ -18,14 +17,13 @@ import {
 import { FilterFormProps } from './FilterForm.types';
 
 const FilterForm: FC<FilterFormProps> = ({
-	siteId,
 	initialState,
 	onCancel,
 	onSubmit,
 	activeFilters,
 	deleteActiveFilter,
 }) => {
-	const [loadingState, contentTypes] = useContentTypes(siteId, CONTENT_TYPES_SEARCH_OPTIONS);
+	const [loadingState, contentTypes] = useContentTypes();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 
 	useEffect(() => {
@@ -36,7 +34,7 @@ const FilterForm: FC<FilterFormProps> = ({
 
 	const contentTypeOptions = useMemo(
 		() =>
-			contentTypes?.data.map(contentType => ({
+			contentTypes?.map(contentType => ({
 				key: contentType.uuid,
 				value: contentType?._id,
 				label: contentType?.meta.label,

@@ -1,15 +1,12 @@
 import { Button } from '@acpaas-ui/react-components';
-import {
-	ActionBar,
-	ActionBarContentSection,
-	Container,
-} from '@acpaas-ui/react-editorial-components';
+import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { clone } from 'ramda';
+import { FormikProps, FormikValues } from 'formik';
+import { clone, equals } from 'ramda';
 import React, { FC, useEffect, useState } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
-import { FieldsForm, MetaForm } from '../../components';
+import { FieldsForm, MetaForm, PlanningForm, StatusForm } from '../../components';
 import NavList from '../../components/NavList/NavList';
 import { NavListItem } from '../../components/NavList/NavList.types';
 import { useCoreTranslation } from '../../connectors/translations';
@@ -18,19 +15,19 @@ import {
 	getCompartmentValue,
 	getSettings,
 } from '../../helpers/contentCompartments';
-import { useExternalCompartmentFacade } from '../../store/api/externalCompartments/externalCompartments.facade';
-import { CompartmentType, ContentCompartmentModel } from '../../store/content/compartments';
-import { useCompartmentFacade } from '../../store/content/compartments/compartments.facade';
-import { useInternalFacade } from '../../store/content/internal/internal.facade';
+import { useContentCompartment, useExternalCompartment } from '../../hooks';
+import { contentFacade } from '../../store/content';
+import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
 import { ContentFormMatchProps, ContentFormRouteProps } from './ContentForm.types';
 
 const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	history,
 	contentType,
-	onSubmit,
-	cancel,
+	contentItemDraft,
 	match,
+	onSubmit,
+	onCancle,
 }) => {
 	const { compartment } = match.params;
 
@@ -41,11 +38,13 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		{ compartments, active: activeCompartment },
 		register,
 		activate,
-	] = useCompartmentFacade();
-	const [externalCompartments] = useExternalCompartmentFacade();
+	] = useContentCompartment();
+	const [externalCompartments] = useExternalCompartment();
 	const [navList, setNavlist] = useState<NavListItem[]>([]);
-	const [{ active: localContent }, registerContent] = useInternalFacade();
 	const [t] = useCoreTranslation();
+	const [activeCompartmentFormikRef, setActiveCompartmentFormikRef] = useState<
+		FormikProps<FormikValues>
+	>();
 
 	useEffect(() => {
 		// TODO: add compartments support later on
@@ -63,13 +62,27 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 					type: CompartmentType.CT,
 				},
 				{
-					label: 'Informatie',
+					label: 'Info',
 					name: 'meta',
 					slug: 'informatie',
 					component: MetaForm,
 					type: CompartmentType.INTERNAL,
 				},
-				...filterCompartments(localContent, contentType, externalCompartments),
+				{
+					label: 'Status',
+					name: 'status',
+					slug: 'status',
+					component: StatusForm,
+					type: CompartmentType.INTERNAL,
+				},
+				{
+					label: 'planning',
+					name: 'planning',
+					slug: 'planning',
+					component: PlanningForm,
+					type: CompartmentType.INTERNAL,
+				},
+				...filterCompartments(contentItemDraft, contentType, externalCompartments),
 			],
 
 			{ replace: true }
@@ -98,36 +111,50 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	 * Methods
 	 */
 	const handleChange = (compartment: ContentCompartmentModel, values: unknown): void => {
-		if (!localContent) {
+		if (!contentItemDraft) {
 			return;
 		}
 
 		switch (compartment.type) {
 			case CompartmentType.CT:
-				registerContent([{ ...localContent, fields: values as ContentSchema['fields'] }]);
+				contentFacade.updateContentItemDraft({
+					...contentItemDraft,
+					fields: values as ContentSchema['fields'],
+				});
 				break;
 			case CompartmentType.INTERNAL:
-				registerContent([
-					{
-						...localContent,
-						meta: { ...localContent.meta, ...(values as ContentSchema['meta']) },
-					},
-				]);
+				contentFacade.updateContentItemDraft({
+					...contentItemDraft,
+					meta: { ...contentItemDraft.meta, ...(values as ContentSchema['meta']) },
+				});
 				break;
 			case CompartmentType.MODULE:
-				registerContent([
-					{
-						...localContent,
-						modulesData: {
-							...localContent.modulesData,
-							[compartment.name]: values as any,
-						},
+				contentFacade.updateContentItemDraft({
+					...contentItemDraft,
+					modulesData: {
+						...contentItemDraft.modulesData,
+						[compartment.name]: values as any,
 					},
-				]);
+				});
 				break;
 		}
 
 		return;
+	};
+
+	const onFormSubmit = (content: ContentSchema): void => {
+		if (activeCompartmentFormikRef) {
+			// validate current form
+			activeCompartmentFormikRef.validateForm().then(() => {
+				if (activeCompartmentFormikRef.isValid) {
+					// TODO: check if all forms are valid before calling onSubmit
+					onSubmit(content);
+				}
+			});
+		} else {
+			// TODO: only validate the invisible forms by using the yup schema
+			// call the onSubmit method when everything is valid
+		}
 	};
 
 	/**
@@ -135,43 +162,48 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	 */
 	return (
 		<>
-			<Container>
-				<div className="row between-xs top-xs u-margin-bottom-lg">
-					<div className="col-xs-3">
-						<NavList items={navList} />
-					</div>
+			<div className="row between-xs top-xs u-margin-bottom-lg">
+				<div className="col-xs-3">
+					<NavList items={navList} />
+				</div>
 
-					<div className="m-card col-xs-9 u-padding">
-						<div className="u-margin">
-							{activeCompartment ? (
-								<activeCompartment.component
-									contentType={clone(contentType)}
-									contentValue={clone(localContent)}
-									isValid={true}
-									settings={getSettings(contentType, activeCompartment)}
-									onChange={values => handleChange(activeCompartment, values)}
-									value={getCompartmentValue(localContent, activeCompartment)}
-									updateContent={(content: ContentSchema) =>
-										registerContent([content])
+				<div className="m-card col-xs-9 u-padding">
+					<div className="u-margin">
+						{activeCompartment ? (
+							<activeCompartment.component
+								formikRef={instance => {
+									if (!equals(instance, activeCompartmentFormikRef)) {
+										setActiveCompartmentFormikRef(instance);
 									}
-								/>
-							) : null}
-						</div>
+								}}
+								contentType={clone(contentType)}
+								contentValue={clone(contentItemDraft)}
+								isValid={true}
+								settings={getSettings(contentType, activeCompartment)}
+								onChange={values => handleChange(activeCompartment, values)}
+								value={getCompartmentValue(contentItemDraft, activeCompartment)}
+								updateContent={(content: ContentSchema) =>
+									contentFacade.updateContentItemDraft(content)
+								}
+							/>
+						) : null}
 					</div>
 				</div>
-			</Container>
+			</div>
 			<ActionBar className="o-action-bar--fixed" isOpen>
 				<ActionBarContentSection>
 					<div className="u-wrapper row end-xs">
 						<Button
 							className="u-margin-right-xs"
-							onClick={() => (localContent ? onSubmit(localContent) : null)}
+							onClick={() =>
+								contentItemDraft ? onFormSubmit(contentItemDraft) : null
+							}
 							type="success"
 							htmlType="submit"
 						>
 							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 						</Button>
-						<Button onClick={cancel} outline>
+						<Button onClick={onCancle} outline>
 							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
 					</div>

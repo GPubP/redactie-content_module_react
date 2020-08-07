@@ -1,10 +1,17 @@
 import { ID } from '@datorama/akita';
 
-import { ContentCompartmentModel, ContentCompartmentRegisterOptions } from './compartments.model';
-import { contentCompartmentStore, ContentCompartmentStore } from './compartments.store';
+import {
+	ContentCompartmentModel,
+	ContentCompartmentRegisterOptions,
+} from './contentCompartments.model';
+import { ContentCompartmentsQuery, contentCompartmentsQuery } from './contentCompartments.query';
+import { contentCompartmentStore, ContentCompartmentStore } from './contentCompartments.store';
 
-export class ContentCompartmentsService {
-	constructor(private store: ContentCompartmentStore) {}
+export class ContentCompartmentsFacade {
+	constructor(private store: ContentCompartmentStore, private query: ContentCompartmentsQuery) {}
+
+	public readonly all$ = this.query.all$;
+	public readonly active$ = this.query.active$;
 
 	public register(
 		data: ContentCompartmentModel | ContentCompartmentModel[],
@@ -45,4 +52,7 @@ export class ContentCompartmentsService {
 	}
 }
 
-export const contentCompartmentsService = new ContentCompartmentsService(contentCompartmentStore);
+export const contentCompartmentsFacade = new ContentCompartmentsFacade(
+	contentCompartmentStore,
+	contentCompartmentsQuery
+);
