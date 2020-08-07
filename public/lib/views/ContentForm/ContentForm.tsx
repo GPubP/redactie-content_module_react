@@ -6,7 +6,6 @@ import { clone, equals } from 'ramda';
 import React, { FC, useEffect, useState } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
-import { FieldsForm, MetaForm, PlanningForm, StatusForm } from '../../components';
 import NavList from '../../components/NavList/NavList';
 import { NavListItem } from '../../components/NavList/NavList.types';
 import { useCoreTranslation } from '../../connectors/translations';
@@ -19,6 +18,7 @@ import { useContentCompartment, useExternalCompartment } from '../../hooks';
 import { contentFacade } from '../../store/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
+import { INTERNAL_COMPARTMENTS } from './ContentForm.const';
 import { ContentFormMatchProps, ContentFormRouteProps } from './ContentForm.types';
 
 const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
@@ -54,34 +54,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		register(
 			[
-				{
-					label: 'Inhoud',
-					name: 'fields',
-					slug: 'inhoud',
-					component: FieldsForm,
-					type: CompartmentType.CT,
-				},
-				{
-					label: 'Info',
-					name: 'meta',
-					slug: 'informatie',
-					component: MetaForm,
-					type: CompartmentType.INTERNAL,
-				},
-				{
-					label: 'Status',
-					name: 'status',
-					slug: 'status',
-					component: StatusForm,
-					type: CompartmentType.INTERNAL,
-				},
-				{
-					label: 'planning',
-					name: 'planning',
-					slug: 'planning',
-					component: PlanningForm,
-					type: CompartmentType.INTERNAL,
-				},
+				...INTERNAL_COMPARTMENTS,
 				...filterCompartments(contentItemDraft, contentType, externalCompartments),
 			],
 
