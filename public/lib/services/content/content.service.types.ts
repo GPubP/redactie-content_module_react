@@ -17,11 +17,14 @@ export interface ContentSchema {
 		site: string;
 		description?: string;
 		contentType: ContentTypeSchema;
+		historySummary?: {
+			published: boolean;
+		};
 		theme?: string;
 		lastEditor?: string;
 		status?: string;
 		published?: boolean;
-		createdAt?: string;
+		created?: string;
 		lastModified?: string;
 	};
 	modulesData?: Record<string, ModuleValue>;

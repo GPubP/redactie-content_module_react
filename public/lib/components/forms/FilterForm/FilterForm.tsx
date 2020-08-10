@@ -9,10 +9,10 @@ import DataLoader from '../../DataLoader/DataLoader';
 
 import {
 	CONTENT_TYPES_DEFAULT_OPTION,
+	FILTER_STATUS_OPTIONS,
 	PUBLISHED_DEFAULT_OPTION,
 	PUBLISHED_OPTIONS,
 	STATUS_DEFAULT_OPTION,
-	STATUS_OPTIONS,
 } from './FilterForm.const';
 import { FilterFormProps } from './FilterForm.types';
 
@@ -120,7 +120,10 @@ const FilterForm: FC<FilterFormProps> = ({
 											label="Status"
 											name="status"
 											id="status"
-											options={[STATUS_DEFAULT_OPTION, ...STATUS_OPTIONS]}
+											options={[
+												STATUS_DEFAULT_OPTION,
+												...FILTER_STATUS_OPTIONS,
+											]}
 										/>
 									</div>
 									<div className="col-xs-6 col-sm-3 u-margin-top-lg">

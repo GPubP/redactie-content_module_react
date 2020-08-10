@@ -3,10 +3,9 @@ import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-c
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { FormikProps, FormikValues } from 'formik';
 import { clone, equals } from 'ramda';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
-import { FieldsForm, MetaForm, PlanningForm, StatusForm } from '../../components';
 import NavList from '../../components/NavList/NavList';
 import { NavListItem } from '../../components/NavList/NavList.types';
 import { useCoreTranslation } from '../../connectors/translations';
@@ -14,11 +13,13 @@ import {
 	filterCompartments,
 	getCompartmentValue,
 	getSettings,
+	validateCompartments,
 } from '../../helpers/contentCompartments';
 import { useContentCompartment, useExternalCompartment } from '../../hooks';
 import { contentFacade } from '../../store/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
+import { INTERNAL_COMPARTMENTS } from './ContentForm.const';
 import { ContentFormMatchProps, ContentFormRouteProps } from './ContentForm.types';
 
 const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
@@ -38,13 +39,13 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		{ compartments, active: activeCompartment },
 		register,
 		activate,
+		validate,
 	] = useContentCompartment();
 	const [externalCompartments] = useExternalCompartment();
+	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const [navList, setNavlist] = useState<NavListItem[]>([]);
+	const [hasSubmit, setHasSubmit] = useState(false);
 	const [t] = useCoreTranslation();
-	const [activeCompartmentFormikRef, setActiveCompartmentFormikRef] = useState<
-		FormikProps<FormikValues>
-	>();
 
 	useEffect(() => {
 		// TODO: add compartments support later on
@@ -54,34 +55,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		register(
 			[
-				{
-					label: 'Inhoud',
-					name: 'fields',
-					slug: 'inhoud',
-					component: FieldsForm,
-					type: CompartmentType.CT,
-				},
-				{
-					label: 'Info',
-					name: 'meta',
-					slug: 'informatie',
-					component: MetaForm,
-					type: CompartmentType.INTERNAL,
-				},
-				{
-					label: 'Status',
-					name: 'status',
-					slug: 'status',
-					component: StatusForm,
-					type: CompartmentType.INTERNAL,
-				},
-				{
-					label: 'planning',
-					name: 'planning',
-					slug: 'planning',
-					component: PlanningForm,
-					type: CompartmentType.INTERNAL,
-				},
+				...INTERNAL_COMPARTMENTS,
 				...filterCompartments(contentItemDraft, contentType, externalCompartments),
 			],
 
@@ -103,9 +77,17 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			compartments.map(compartment => ({
 				label: compartment.label,
 				to: compartment.slug || compartment.name,
+				hasError: hasSubmit && compartment.isValid === false,
 			}))
 		);
-	}, [compartments]);
+	}, [compartments, hasSubmit]);
+
+	// Trigger errors on form when switching from compartments
+	useEffect(() => {
+		if (hasSubmit && !activeCompartment?.isValid && activeCompartmentFormikRef.current) {
+			activeCompartmentFormikRef.current.validateForm();
+		}
+	}, [activeCompartment, activeCompartmentFormikRef, hasSubmit]);
 
 	/**
 	 * Methods
@@ -143,18 +125,19 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	};
 
 	const onFormSubmit = (content: ContentSchema): void => {
-		if (activeCompartmentFormikRef) {
-			// validate current form
-			activeCompartmentFormikRef.validateForm().then(() => {
-				if (activeCompartmentFormikRef.isValid) {
-					// TODO: check if all forms are valid before calling onSubmit
-					onSubmit(content);
-				}
-			});
-		} else {
-			// TODO: only validate the invisible forms by using the yup schema
-			// call the onSubmit method when everything is valid
+		const { current: formikRef } = activeCompartmentFormikRef;
+		const compartmentsAreValid = validateCompartments(compartments, content, validate);
+
+		// Validate current form to trigger fields error states
+		if (formikRef) {
+			formikRef.validateForm();
 		}
+		// Only submit the form if all compartments are valid
+		if (compartmentsAreValid) {
+			onSubmit(content);
+		}
+
+		setHasSubmit(true);
 	};
 
 	/**
@@ -172,8 +155,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						{activeCompartment ? (
 							<activeCompartment.component
 								formikRef={instance => {
-									if (!equals(instance, activeCompartmentFormikRef)) {
-										setActiveCompartmentFormikRef(instance);
+									if (!equals(instance, activeCompartmentFormikRef.current)) {
+										activeCompartmentFormikRef.current = instance;
 									}
 								}}
 								contentType={clone(contentType)}

@@ -8,12 +8,16 @@ const FieldsForm: FC<CompartmentProps> = ({
 	contentType,
 	value,
 	onChange,
+	formikRef,
 }): ReactElement | null => {
+	const Form = getForm();
+
+	/**
+	 * Render
+	 */
 	if (!contentType) {
 		return null;
 	}
-
-	const Form = getForm();
 
 	if (!Form) {
 		return null;
@@ -25,7 +29,16 @@ const FieldsForm: FC<CompartmentProps> = ({
 		<>
 			<h5 className="u-margin-bottom">Inhoud</h5>
 			<p className="u-margin-bottom">Lorem Ipsum.</p>
-			<Form {...formProps} initialValues={value} onChange={onChange}></Form>
+			<Form
+				{...formProps}
+				formikRef={instance => {
+					if (instance) {
+						formikRef && formikRef(instance);
+					}
+				}}
+				initialValues={value}
+				onChange={onChange}
+			/>
 		</>
 	);
 };

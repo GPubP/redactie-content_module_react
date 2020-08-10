@@ -34,7 +34,7 @@ export const PUBLISHED_DEFAULT_OPTION = {
 	disabled: true,
 };
 
-export const STATUS_OPTIONS = [
+export const FILTER_STATUS_OPTIONS = [
 	{
 		key: '0',
 		value: ContentStatus.PUBLISHED,

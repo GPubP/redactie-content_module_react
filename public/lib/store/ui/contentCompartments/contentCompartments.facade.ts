@@ -50,6 +50,10 @@ export class ContentCompartmentsFacade {
 	public setActive(name: ID): void {
 		this.store.setActive(name);
 	}
+
+	public setValid(name: string, isValid: boolean): void {
+		this.store.update(name, { isValid });
+	}
 }
 
 export const contentCompartmentsFacade = new ContentCompartmentsFacade(

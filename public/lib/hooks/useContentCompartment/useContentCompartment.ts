@@ -15,18 +15,21 @@ interface CompartmentState {
 const useContentCompartmentFacade = (): [
 	CompartmentState,
 	(compartments: ContentCompartmentModel[], options: ContentCompartmentRegisterOptions) => void,
-	(names: ID) => void
+	(names: ID) => void,
+	(name: string, isValid: boolean) => void
 ] => {
 	const register = (
 		compartments: ContentCompartmentModel[] | ContentCompartmentModel,
 		options: { replace?: true }
 	): void => contentCompartmentsFacade.register(compartments, options);
 	const activate = (name: ID): void => contentCompartmentsFacade.setActiveByNamOrSlug(name);
+	const validate = (name: string, isValid: boolean): void =>
+		contentCompartmentsFacade.setValid(name, isValid);
 
 	const [compartments] = useObservable(contentCompartmentsFacade.all$, []);
 	const [active] = useObservable(contentCompartmentsFacade.active$);
 
-	return [{ compartments, active }, register, activate];
+	return [{ compartments, active }, register, activate, validate];
 };
 
 export default useContentCompartmentFacade;
