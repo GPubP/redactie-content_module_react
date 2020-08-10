@@ -7,7 +7,7 @@ import { CompartmentProps } from '../../../api/api.types';
 import { ErrorMessage } from '../../../connectors/formRenderer';
 import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandler';
 
-import { MetaFormValidationSchema } from './MetaForm.const';
+import { META_VALIDATION_SCHEMA } from './MetaForm.const';
 
 const MetaForm: FC<CompartmentProps> = ({
 	contentValue,
@@ -21,7 +21,7 @@ const MetaForm: FC<CompartmentProps> = ({
 	return (
 		<Formik
 			innerRef={instance => formikRef && formikRef(instance)}
-			validationSchema={MetaFormValidationSchema}
+			validationSchema={META_VALIDATION_SCHEMA}
 			onSubmit={onChange}
 			initialValues={value}
 		>

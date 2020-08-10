@@ -1,8 +1,8 @@
-import * as Yup from 'yup';
+import { object, string } from 'yup';
 
-export const MetaFormValidationSchema = Yup.object().shape({
-	label: Yup.string().required('Gelieve een werktitel in te vullen'),
-	slug: Yup.object({
-		nl: Yup.string().required('Gelieve een slug in te vullen'),
+export const META_VALIDATION_SCHEMA = object().shape({
+	label: string().required('Gelieve een werktitel in te vullen'),
+	slug: object({
+		nl: string().required('Gelieve een slug in te vullen'),
 	}),
 });

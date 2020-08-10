@@ -6,7 +6,6 @@ import { clone, equals } from 'ramda';
 import React, { FC, useEffect, useRef, useState } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
-import { FieldsForm, MetaForm, StatusForm } from '../../components';
 import NavList from '../../components/NavList/NavList';
 import { NavListItem } from '../../components/NavList/NavList.types';
 import { useCoreTranslation } from '../../connectors/translations';
@@ -14,11 +13,13 @@ import {
 	filterCompartments,
 	getCompartmentValue,
 	getSettings,
+	validateCompartments,
 } from '../../helpers/contentCompartments';
 import { useContentCompartment, useExternalCompartment } from '../../hooks';
 import { contentFacade } from '../../store/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
+import { INTERNAL_COMPARTMENTS } from './ContentForm.const';
 import { ContentFormMatchProps, ContentFormRouteProps } from './ContentForm.types';
 
 const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
@@ -38,11 +39,13 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		{ compartments, active: activeCompartment },
 		register,
 		activate,
+		validate,
 	] = useContentCompartment();
 	const [externalCompartments] = useExternalCompartment();
-	const [navList, setNavlist] = useState<NavListItem[]>([]);
-	const [t] = useCoreTranslation();
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
+	const [navList, setNavlist] = useState<NavListItem[]>([]);
+	const [hasSubmit, setHasSubmit] = useState(false);
+	const [t] = useCoreTranslation();
 
 	useEffect(() => {
 		// TODO: add compartments support later on
@@ -52,35 +55,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		register(
 			[
-				{
-					label: 'Inhoud',
-					name: 'fields',
-					slug: 'inhoud',
-					component: FieldsForm,
-					type: CompartmentType.CT,
-				},
-				{
-					label: 'Info',
-					name: 'meta',
-					slug: 'informatie',
-					component: MetaForm,
-					type: CompartmentType.INTERNAL,
-				},
-				{
-					label: 'Status',
-					name: 'status',
-					slug: 'status',
-					component: StatusForm,
-					type: CompartmentType.INTERNAL,
-				},
-				// TODO: Implement planning when the workflow engine is implemented
-				// {
-				// 	label: 'planning',
-				// 	name: 'planning',
-				// 	slug: 'planning',
-				// 	component: PlanningForm,
-				// 	type: CompartmentType.INTERNAL,
-				// },
+				...INTERNAL_COMPARTMENTS,
 				...filterCompartments(contentItemDraft, contentType, externalCompartments),
 			],
 
@@ -102,9 +77,17 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			compartments.map(compartment => ({
 				label: compartment.label,
 				to: compartment.slug || compartment.name,
+				hasError: hasSubmit && compartment.isValid === false,
 			}))
 		);
-	}, [compartments]);
+	}, [compartments, hasSubmit]);
+
+	// Trigger errors on form when switching from compartments
+	useEffect(() => {
+		if (hasSubmit && !activeCompartment?.isValid && activeCompartmentFormikRef.current) {
+			activeCompartmentFormikRef.current.validateForm();
+		}
+	}, [activeCompartment, activeCompartmentFormikRef, hasSubmit]);
 
 	/**
 	 * Methods
@@ -143,18 +126,18 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 	const onFormSubmit = (content: ContentSchema): void => {
 		const { current: formikRef } = activeCompartmentFormikRef;
+		const compartmentsAreValid = validateCompartments(compartments, content, validate);
+
+		// Validate current form to trigger fields error states
 		if (formikRef) {
-			// validate current form
-			formikRef.validateForm().then(() => {
-				if (formikRef.isValid) {
-					// TODO: check if all forms are valid before calling onSubmit
-					onSubmit(content);
-				}
-			});
-		} else {
-			// TODO: only validate the invisible forms by using the yup schema
-			// call the onSubmit method when everything is valid
+			formikRef.validateForm();
 		}
+		// Only submit the form if all compartments are valid
+		if (compartmentsAreValid) {
+			onSubmit(content);
+		}
+
+		setHasSubmit(true);
 	};
 
 	/**
