@@ -1,6 +1,7 @@
 import { ActiveState, EntityState } from '@datorama/akita';
 import { FC } from 'react';
 
+import { ContentSchema } from '../../../api/api.types';
 import { CompartmentProps } from '../../../views/ContentForm/ContentForm.types';
 
 export type ModuleValue = any;
@@ -20,6 +21,8 @@ export interface ContentCompartmentModel {
 	slug?: string;
 	component: FC<CompartmentProps>;
 	type: CompartmentType;
+	isValid?: boolean;
+	validate?: (values: ContentSchema) => boolean;
 }
 
 export interface ContentCompartmentState
