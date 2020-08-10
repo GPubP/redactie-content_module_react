@@ -10,11 +10,7 @@ import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18n
 import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { DataLoader, FilterForm } from '../../components';
-import {
-	PUBLISHED_OPTIONS,
-	STATUS_OPTIONS,
-} from '../../components/forms/FilterForm/FilterForm.const';
+import { DataLoader, FILTER_STATUS_OPTIONS, FilterForm, PUBLISHED_OPTIONS } from '../../components';
 import {
 	FilterFormState,
 	PublishedStatuses,
@@ -126,7 +122,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			{
 				filterKey: FilterKeys.STATUS,
 				valuePrefix: 'Status',
-				value: STATUS_OPTIONS.find(option => option.value === status)?.label || '',
+				value: FILTER_STATUS_OPTIONS.find(option => option.value === status)?.label || '',
 			},
 			{
 				filterKey: FilterKeys.PUBLISHED,

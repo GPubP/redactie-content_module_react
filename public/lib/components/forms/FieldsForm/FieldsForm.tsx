@@ -11,6 +11,7 @@ const FieldsForm: FC<CompartmentProps> = ({
 	formikRef,
 }): ReactElement | null => {
 	const Form = getForm();
+
 	/**
 	 * Render
 	 */
@@ -37,7 +38,7 @@ const FieldsForm: FC<CompartmentProps> = ({
 				}}
 				initialValues={value}
 				onChange={onChange}
-			></Form>
+			/>
 		</>
 	);
 };
