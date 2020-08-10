@@ -1,4 +1,4 @@
-import { FieldsForm, MetaForm, PlanningForm, StatusForm } from '../../components';
+import { FieldsForm, MetaForm, StatusForm } from '../../components';
 import { CompartmentType } from '../../store/ui/contentCompartments';
 
 export const INTERNAL_COMPARTMENTS = [
@@ -23,11 +23,12 @@ export const INTERNAL_COMPARTMENTS = [
 		component: StatusForm,
 		type: CompartmentType.INTERNAL,
 	},
-	{
-		label: 'Planning',
-		name: 'planning',
-		slug: 'planning',
-		component: PlanningForm,
-		type: CompartmentType.INTERNAL,
-	},
+	// TODO: Implement planning when the workflow engine is implemented
+	// {
+	// 	label: 'planning',
+	// 	name: 'planning',
+	// 	slug: 'planning',
+	// 	component: PlanningForm,
+	// 	type: CompartmentType.INTERNAL,
+	// },
 ];

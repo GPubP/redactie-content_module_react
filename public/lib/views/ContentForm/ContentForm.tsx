@@ -3,7 +3,7 @@ import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-c
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { FormikProps, FormikValues } from 'formik';
 import { clone, equals } from 'ramda';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
 import NavList from '../../components/NavList/NavList';
@@ -42,9 +42,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	const [externalCompartments] = useExternalCompartment();
 	const [navList, setNavlist] = useState<NavListItem[]>([]);
 	const [t] = useCoreTranslation();
-	const [activeCompartmentFormikRef, setActiveCompartmentFormikRef] = useState<
-		FormikProps<FormikValues>
-	>();
+	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 
 	useEffect(() => {
 		// TODO: add compartments support later on
@@ -116,10 +114,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	};
 
 	const onFormSubmit = (content: ContentSchema): void => {
-		if (activeCompartmentFormikRef) {
+		const { current: formikRef } = activeCompartmentFormikRef;
+		if (formikRef) {
 			// validate current form
-			activeCompartmentFormikRef.validateForm().then(() => {
-				if (activeCompartmentFormikRef.isValid) {
+			formikRef.validateForm().then(() => {
+				if (formikRef.isValid) {
 					// TODO: check if all forms are valid before calling onSubmit
 					onSubmit(content);
 				}
@@ -145,8 +144,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						{activeCompartment ? (
 							<activeCompartment.component
 								formikRef={instance => {
-									if (!equals(instance, activeCompartmentFormikRef)) {
-										setActiveCompartmentFormikRef(instance);
+									if (!equals(instance, activeCompartmentFormikRef.current)) {
+										activeCompartmentFormikRef.current = instance;
 									}
 								}}
 								contentType={clone(contentType)}

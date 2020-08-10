@@ -4,7 +4,10 @@ import React, { FC, ReactElement } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 import { CompartmentProps } from '../../../api/api.types';
+import { ErrorMessage } from '../../../connectors/formRenderer';
 import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandler';
+
+import { MetaFormValidationSchema } from './MetaForm.const';
 
 const MetaForm: FC<CompartmentProps> = ({
 	contentValue,
@@ -13,15 +16,12 @@ const MetaForm: FC<CompartmentProps> = ({
 	formikRef,
 }): ReactElement | null => {
 	/**
-	 * METHODS
-	 */
-
-	/**
 	 * RENDER
 	 */
 	return (
 		<Formik
 			innerRef={instance => formikRef && formikRef(instance)}
+			validationSchema={MetaFormValidationSchema}
 			onSubmit={onChange}
 			initialValues={value}
 		>
@@ -41,6 +41,7 @@ const MetaForm: FC<CompartmentProps> = ({
 								required
 								as={TextField}
 							/>
+							<ErrorMessage name="label" />
 							<div className="u-text-light u-margin-top-xs">
 								Geef een werktitel op voor dit item.
 							</div>
@@ -70,6 +71,7 @@ const MetaForm: FC<CompartmentProps> = ({
 								required
 								as={TextField}
 							/>
+							<ErrorMessage name="slug.nl" />
 							<div className="u-text-light u-margin-top-xs">
 								Bepaal de &apos;slug&apos; voor dit content item. Deze wordt
 								ondererandere gebruikt in de URL.
