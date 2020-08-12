@@ -1,14 +1,12 @@
-import { Button } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { FormikProps, FormikValues } from 'formik';
 import { clone, equals } from 'ramda';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
+import { ContentFormActions } from '../../components';
 import NavList from '../../components/NavList/NavList';
 import { NavListItem } from '../../components/NavList/NavList.types';
-import { useCoreTranslation } from '../../connectors/translations';
 import {
 	filterCompartments,
 	getCompartmentValue,
@@ -25,10 +23,13 @@ import { ContentFormMatchProps, ContentFormRouteProps } from './ContentForm.type
 const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	history,
 	contentType,
+	contentItem,
 	contentItemDraft,
 	match,
-	onSubmit,
-	onCancle,
+	onSubmit = () => null,
+	onCancle = () => null,
+	onStatusClick = () => null,
+	onUpdatePublication = () => null,
 }) => {
 	const { compartment } = match.params;
 
@@ -45,7 +46,10 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const [navList, setNavlist] = useState<NavListItem[]>([]);
 	const [hasSubmit, setHasSubmit] = useState(false);
-	const [t] = useCoreTranslation();
+	const ContentItemUnTouched = useMemo(() => equals(contentItem, contentItemDraft), [
+		contentItem,
+		contentItemDraft,
+	]);
 
 	useEffect(() => {
 		// TODO: add compartments support later on
@@ -175,21 +179,15 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			</div>
 			<ActionBar className="o-action-bar--fixed" isOpen>
 				<ActionBarContentSection>
-					<div className="u-wrapper row end-xs">
-						<Button
-							className="u-margin-right-xs"
-							onClick={() =>
-								contentItemDraft ? onFormSubmit(contentItemDraft) : null
-							}
-							type="success"
-							htmlType="submit"
-						>
-							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
-						</Button>
-						<Button onClick={onCancle} outline>
-							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
-						</Button>
-					</div>
+					<ContentFormActions
+						isPublished={contentItem.meta.published}
+						isSaved={ContentItemUnTouched}
+						status={contentItem.meta.status}
+						onStatusClick={onStatusClick}
+						onSave={() => onFormSubmit(contentItemDraft)}
+						onUpdatePublication={() => onUpdatePublication(contentItemDraft)}
+						onCancel={onCancle}
+					/>
 				</ActionBarContentSection>
 			</ActionBar>
 		</>

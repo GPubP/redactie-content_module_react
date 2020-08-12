@@ -10,4 +10,5 @@ export interface ContentDetailChildRouteProps<T = ContentDetailMatchProps>
 	extends ContentRouteProps<T> {
 	contentType: ContentTypeSchema;
 	contentItemDraft: ContentSchema;
+	contentItem: ContentSchema;
 }

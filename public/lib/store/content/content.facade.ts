@@ -74,11 +74,16 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 			.finally(() => this.store.setIsCreating(false));
 	}
 
-	public updateContentItem(siteId: string, uuid: string, data: ContentSchema): void {
+	public updateContentItem(
+		siteId: string,
+		uuid: string,
+		data: ContentSchema,
+		publish = false
+	): void {
 		this.store.setIsUpdating(true);
 
 		this.service
-			.updateContentItem(siteId, uuid, data)
+			.updateContentItem(siteId, uuid, data, publish)
 			.then(response => {
 				if (response) {
 					this.store.update({
