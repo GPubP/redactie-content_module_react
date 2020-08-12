@@ -23,6 +23,8 @@ export interface ExternalCompartmentOptions {
 	label: string;
 	module: string;
 	component: FC<CompartmentProps>;
+	isValid?: boolean;
+	validate?: (values: ContentSchema) => boolean;
 	show?: (
 		settings: ModuleSettings,
 		value: ModuleValue,
