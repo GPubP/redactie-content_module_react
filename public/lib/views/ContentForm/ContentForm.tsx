@@ -33,7 +33,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	match,
 	showPublishedStatus,
 	onSubmit = () => null,
-	onCancle = () => null,
+	onCancel = () => null,
 	onStatusClick = () => null,
 	onUpdatePublication = () => null,
 }) => {
@@ -204,7 +204,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						}
 						isPublishing={publishContentItemLoadingState === LoadingState.Loading}
 						onUpdatePublication={() => onUpdatePublication(contentItemDraft)}
-						onCancel={onCancle}
+						onCancel={onCancel}
 					/>
 				</ActionBarContentSection>
 			</ActionBar>

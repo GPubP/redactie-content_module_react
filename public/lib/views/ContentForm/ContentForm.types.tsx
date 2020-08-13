@@ -16,7 +16,7 @@ export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 	contentItemDraft: ContentSchema;
 	contentItem: ContentSchema;
 	showPublishedStatus?: boolean;
-	onCancle: () => void;
+	onCancel: () => void;
 	onSubmit: (content: ContentSchema) => void;
 	onStatusClick: () => void;
 	onUpdatePublication: (content: ContentSchema) => void;

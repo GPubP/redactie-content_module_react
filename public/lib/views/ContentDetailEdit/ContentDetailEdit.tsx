@@ -27,7 +27,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	/**
 	 * Methods
 	 */
-	const onCancle = (): void => {
+	const onCancel = (): void => {
 		contentFacade.setContentItemDraft(contentItem);
 	};
 
@@ -81,7 +81,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 			contentItemDraft,
 			contentItem,
 			onSubmit,
-			onCancle,
+			onCancel,
 			onStatusClick,
 			onUpdatePublication,
 			showPublishedStatus: true,
