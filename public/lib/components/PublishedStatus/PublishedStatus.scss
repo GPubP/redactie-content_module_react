@@ -1,7 +1,8 @@
 @import '~@a-ui/core/dist/assets/styles/quarks';
 
 .published-status {
-	margin: 0;
+	border-left: 1px solid $grey-light;
+	margin: -12px 0 -12px $spacer;
 
 	&__dot {
 		height: $spacer / 2;

@@ -10,12 +10,7 @@ import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { TenantContext } from '../../context';
 import { useContentItem, useContentType, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
-import {
-	contentApiService,
-	ContentCreateSchema,
-	ContentSchema,
-	ContentStatus,
-} from '../../services/content';
+import { ContentCreateSchema, ContentSchema, ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content/content.facade';
 import { contentTypesFacade } from '../../store/contentTypes';
 
@@ -103,7 +98,14 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			fields: content.fields,
 		};
 
-		contentApiService.createContentItem(siteId, request);
+		contentFacade.createContentItem(siteId, request).then(response => {
+			if (response) {
+				navigate(`${MODULE_PATHS.detailEdit}/default`, {
+					siteId,
+					contentId: response.uuid,
+				});
+			}
+		});
 	};
 
 	/**

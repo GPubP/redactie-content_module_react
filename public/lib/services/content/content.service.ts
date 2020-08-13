@@ -1,7 +1,13 @@
 import { api, parseSearchParams, SearchParams } from '../api';
 import { SITE_REQUEST_PREFIX_URL } from '../api/api.service.const';
 
-import { ContentCreateSchema, ContentSchema, ContentsSchema } from './content.service.types';
+import { CONTENT_STATUS_API_MAP } from './content.service.const';
+import {
+	ContentCreateSchema,
+	ContentSchema,
+	ContentsSchema,
+	ContentStatus,
+} from './content.service.types';
 
 export class ContentApiService {
 	public async getContent(
@@ -33,9 +39,11 @@ export class ContentApiService {
 		data: ContentCreateSchema
 	): Promise<ContentSchema | null> {
 		try {
-			const response: any = await api.post(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content`, {
-				json: data,
-			});
+			const response: any = await api
+				.post(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content`, {
+					json: data,
+				})
+				.json();
 
 			return response;
 		} catch (err) {
@@ -46,17 +54,18 @@ export class ContentApiService {
 	public async updateContentItem(
 		siteId: string,
 		uuid: string,
-		data: ContentSchema,
-		publish = false
+		data: ContentSchema
 	): Promise<ContentSchema | null> {
-		const url = publish
-			? `${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}/publish`
-			: `${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}`;
+		const type =
+			CONTENT_STATUS_API_MAP[data.meta.status as ContentStatus] ||
+			CONTENT_STATUS_API_MAP[ContentStatus.DRAFT];
 
 		try {
-			const response: any = await api.put(url, {
-				json: data,
-			});
+			const response: any = await api
+				.put(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}/${type}`, {
+					json: data,
+				})
+				.json();
 
 			return response;
 		} catch (err) {
@@ -67,7 +76,7 @@ export class ContentApiService {
 	public async getContentItem(siteId: string, uuid: string): Promise<ContentSchema | null> {
 		try {
 			const response: ContentSchema = await api
-				.get(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}`)
+				.get(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}/history/latest`)
 				.json();
 
 			return response;

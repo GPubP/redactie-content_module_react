@@ -93,5 +93,27 @@ describe('<ContentFormActions/>', () => {
 				fireEvent.click(updatePublicationButton);
 			});
 		});
+
+		describe('showPublishedStatus prop', () => {
+			it('should show a published status when the showPublishedStatus porp is set to true', () => {
+				const { container } = render(
+					<ContentFormActions showPublishedStatus={true} isPublished={true} />
+				);
+
+				const publishedStatusElement = container.getElementsByClassName('published-status');
+
+				expect(publishedStatusElement[0]).toBeDefined();
+			});
+
+			it('should nont show a published status when the showPublishedStatus porp is set to false', () => {
+				const { container } = render(
+					<ContentFormActions showPublishedStatus={false} isPublished={true} />
+				);
+
+				const publishedStatusElement = container.getElementsByClassName('published-status');
+
+				expect(publishedStatusElement[0]).not.toBeDefined();
+			});
+		});
 	});
 });

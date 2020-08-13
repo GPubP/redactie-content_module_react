@@ -7,13 +7,18 @@ import { ContentSchema } from '../../api/api.types';
 import { ContentFormActions } from '../../components';
 import NavList from '../../components/NavList/NavList';
 import { NavListItem } from '../../components/NavList/NavList.types';
+import { LoadingState } from '../../content.types';
 import {
 	filterCompartments,
 	getCompartmentValue,
 	getSettings,
 	validateCompartments,
 } from '../../helpers/contentCompartments';
-import { useContentCompartment, useExternalCompartment } from '../../hooks';
+import {
+	useContentCompartment,
+	useContentLoadingStates,
+	useExternalCompartment,
+} from '../../hooks';
 import { contentFacade } from '../../store/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
@@ -26,6 +31,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	contentItem,
 	contentItemDraft,
 	match,
+	showPublishedStatus,
 	onSubmit = () => null,
 	onCancle = () => null,
 	onStatusClick = () => null,
@@ -46,6 +52,12 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const [navList, setNavlist] = useState<NavListItem[]>([]);
 	const [hasSubmit, setHasSubmit] = useState(false);
+	const [
+		,
+		createContentItemLoadingState,
+		updateContentItemLoadingState,
+		publishContentItemLoadingState,
+	] = useContentLoadingStates();
 	const ContentItemUnTouched = useMemo(() => equals(contentItem, contentItemDraft), [
 		contentItem,
 		contentItemDraft,
@@ -128,9 +140,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		return;
 	};
 
-	const onFormSubmit = (content: ContentSchema): void => {
+	const onFormSubmit = (contentItemDraft: ContentSchema): void => {
 		const { current: formikRef } = activeCompartmentFormikRef;
-		const compartmentsAreValid = validateCompartments(compartments, content, validate);
+		const compartmentsAreValid = validateCompartments(compartments, contentItemDraft, validate);
 
 		// Validate current form to trigger fields error states
 		if (formikRef) {
@@ -138,7 +150,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		}
 		// Only submit the form if all compartments are valid
 		if (compartmentsAreValid) {
-			onSubmit(content);
+			onSubmit(contentItemDraft);
 		}
 
 		setHasSubmit(true);
@@ -180,11 +192,17 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			<ActionBar className="o-action-bar--fixed" isOpen>
 				<ActionBarContentSection>
 					<ContentFormActions
-						isPublished={contentItem.meta.published}
+						isPublished={!!contentItem?.meta?.historySummary?.published}
 						isSaved={ContentItemUnTouched}
-						status={contentItem.meta.status}
+						status={contentItem?.meta?.status}
 						onStatusClick={onStatusClick}
 						onSave={() => onFormSubmit(contentItemDraft)}
+						showPublishedStatus={showPublishedStatus}
+						isSaving={
+							updateContentItemLoadingState === LoadingState.Loading ||
+							createContentItemLoadingState === LoadingState.Loading
+						}
+						isPublishing={publishContentItemLoadingState === LoadingState.Loading}
 						onUpdatePublication={() => onUpdatePublication(contentItemDraft)}
 						onCancel={onCancle}
 					/>

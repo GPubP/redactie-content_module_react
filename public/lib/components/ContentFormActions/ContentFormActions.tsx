@@ -4,6 +4,7 @@ import React, { FC, useMemo } from 'react';
 
 import { useCoreTranslation } from '../../connectors/translations';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
+import { PublishedStatus } from '../PublishedStatus';
 
 import { ContentFormActionsProps } from './ContenFormActions.types';
 
@@ -11,6 +12,9 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 	status = ContentStatus.DRAFT,
 	isSaved = false,
 	isPublished = false,
+	isSaving = false,
+	isPublishing = false,
+	showPublishedStatus = false,
 	onCancel = () => null,
 	onSave = () => null,
 	onUpdatePublication = () => null,
@@ -46,6 +50,8 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 						{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 					</Button>
 					<Button
+						iconLeft={isSaving ? 'circle-o-notch fa-spin' : null}
+						disabled={isSaving}
 						className="u-margin-right-xs"
 						onClick={onSave}
 						htmlType="submit"
@@ -67,11 +73,18 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 				</Button>
 			)}
 			{showUpdatePublicationButton && (
-				<Button onClick={onUpdatePublication} htmlType="submit" type="success">
+				<Button
+					iconLeft={isPublishing ? 'circle-o-notch fa-spin' : null}
+					disabled={isPublishing}
+					onClick={onUpdatePublication}
+					htmlType="submit"
+					type="success"
+				>
 					{/* TODO: Add to translations */}
 					Publicatie bijwerken
 				</Button>
 			)}
+			{showPublishedStatus && <PublishedStatus published={isPublished} />}
 		</div>
 	);
 };

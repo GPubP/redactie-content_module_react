@@ -22,7 +22,7 @@ export interface ContentSchema {
 		};
 		theme?: string;
 		lastEditor?: string;
-		status?: string;
+		status: string;
 		published?: boolean;
 		created?: string;
 		lastModified?: string;

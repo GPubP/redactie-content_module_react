@@ -1,9 +1,11 @@
+import { equals } from 'ramda';
 import React, { FC, ReactElement } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
 import { RenderChildRoutes } from '../../components';
 import { MODULE_PATHS } from '../../content.const';
 import { useNavigate } from '../../hooks';
+import { ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content';
 import { ContentDetailChildRouteProps } from '../ContentDetail/ContentDetail.types';
 
@@ -29,8 +31,23 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		contentFacade.setContentItemDraft(contentItem);
 	};
 
-	const onSubmit = (content: ContentSchema): void => {
-		contentFacade.updateContentItem(siteId, contentId, content);
+	const onSubmit = (contentItemDraft: ContentSchema): void => {
+		// Every change with current status published should be saved as a draft version unless the status has changed
+		if (
+			contentItem.meta.status === ContentStatus.PUBLISHED &&
+			equals(contentItemDraft.meta.status, contentItem.meta.status)
+		) {
+			contentFacade.updateContentItem(siteId, contentId, {
+				...contentItemDraft,
+				meta: {
+					...contentItemDraft.meta,
+					status: ContentStatus.DRAFT,
+				},
+			});
+			return;
+		}
+
+		contentFacade.updateContentItem(siteId, contentId, contentItemDraft);
 	};
 
 	const onStatusClick = (): void => {
@@ -41,8 +58,18 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	};
 
 	const onUpdatePublication = (content: ContentSchema): void => {
-		const publishContent = true;
-		contentFacade.updateContentItem(siteId, contentId, content, publishContent);
+		contentFacade.updateContentItem(
+			siteId,
+			contentId,
+			{
+				...content,
+				meta: {
+					...content.meta,
+					status: ContentStatus.PUBLISHED,
+				},
+			},
+			true
+		);
 	};
 
 	/**
@@ -57,6 +84,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 			onCancle,
 			onStatusClick,
 			onUpdatePublication,
+			showPublishedStatus: true,
 		};
 
 		return (
