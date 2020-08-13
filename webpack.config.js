@@ -1,6 +1,7 @@
 const path = require('path');
 
 const RedactionWebpackPlugin = require('@redactie/module-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const cssnano = require('cssnano');
 const kebabCase = require('lodash.kebabcase');
 const postcssPresetEnv = require('postcss-preset-env');
@@ -50,6 +51,7 @@ module.exports = env => {
 		},
 		plugins: [
 			// add default plugins here
+			new CleanWebpackPlugin(),
 		],
 		externals: {
 			react: 'react',
