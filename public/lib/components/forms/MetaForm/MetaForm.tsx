@@ -23,6 +23,7 @@ const MetaForm: FC<CompartmentProps> = ({
 			innerRef={instance => formikRef && formikRef(instance)}
 			validationSchema={META_VALIDATION_SCHEMA}
 			onSubmit={onChange}
+			enableReinitialize={true}
 			initialValues={value}
 		>
 			{({ submitForm }) => (
