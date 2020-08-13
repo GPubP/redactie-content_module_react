@@ -23,6 +23,10 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 	const showUpdatePublicationButton = useMemo(() => {
 		return status === ContentStatus.DRAFT && isPublished;
 	}, [isPublished, status]);
+	const statusButtonType = useMemo(
+		() => (status === ContentStatus.PUBLISHED ? 'success' : 'primary'),
+		[status]
+	);
 
 	return (
 		<div className="u-wrapper row end-xs">
@@ -56,7 +60,7 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 				<Button
 					className="u-margin-right-xs"
 					onClick={onStatusClick}
-					type="primary"
+					type={statusButtonType}
 					outline
 				>
 					{CONTENT_STATUS_TRANSLATION_MAP[status as ContentStatus]}

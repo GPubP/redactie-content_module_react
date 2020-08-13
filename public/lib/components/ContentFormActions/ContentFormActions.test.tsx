@@ -64,6 +64,16 @@ describe('<ContentFormActions/>', () => {
 				expect(statusButton).toBeDefined();
 				fireEvent.click(statusButton);
 			});
+
+			it('should show a green status button when the status prop has the value `published`', () => {
+				const status = ContentStatus.PUBLISHED;
+				const { getByText } = render(<ContentFormActions status={status} />);
+
+				const statusButton = getByText(CONTENT_STATUS_TRANSLATION_MAP.PUBLISHED);
+
+				expect(statusButton).toBeDefined();
+				expect(statusButton).toHaveClass('a-button--success');
+			});
 		});
 
 		describe('isPublished prop', () => {
