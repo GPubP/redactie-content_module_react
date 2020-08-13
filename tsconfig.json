@@ -24,9 +24,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "declaration": true,
     "jsx": "react",
-    "outDir": "dist",
     "downlevelIteration": true,
   },
   "include": [
