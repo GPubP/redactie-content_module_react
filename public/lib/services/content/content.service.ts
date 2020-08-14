@@ -28,9 +28,8 @@ export class ContentApiService {
 			}
 
 			return response;
-		} catch (err) {
-			console.error(err);
-			return null;
+		} catch (error) {
+			return error;
 		}
 	}
 
@@ -68,8 +67,8 @@ export class ContentApiService {
 				.json();
 
 			return response;
-		} catch (err) {
-			return null;
+		} catch (error) {
+			return error;
 		}
 	}
 
@@ -80,9 +79,8 @@ export class ContentApiService {
 				.json();
 
 			return response;
-		} catch (err) {
-			console.error(err);
-			return null;
+		} catch (error) {
+			return error;
 		}
 	}
 }

@@ -1,9 +1,10 @@
+import { AlertContainer } from '@redactie/utils';
 import { equals } from 'ramda';
 import React, { FC, ReactElement } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
 import { RenderChildRoutes } from '../../components';
-import { MODULE_PATHS } from '../../content.const';
+import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
 import { useNavigate } from '../../hooks';
 import { ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content';
@@ -88,7 +89,16 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		};
 
 		return (
-			<RenderChildRoutes routes={route.routes} guardsMeta={{}} extraOptions={extraOptions} />
+			<>
+				<div className="u-margin-bottom">
+					<AlertContainer containerId={ALERT_CONTAINER_IDS.contentEdit} />
+				</div>
+				<RenderChildRoutes
+					routes={route.routes}
+					guardsMeta={{}}
+					extraOptions={extraOptions}
+				/>
+			</>
 		);
 	};
 
