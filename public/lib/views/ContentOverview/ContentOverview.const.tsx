@@ -23,29 +23,34 @@ export const CONTENT_INITIAL_FILTER_STATE = {
 
 export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
-		label: t(CORE_TRANSLATIONS.TABLE_NAME),
+		label: 'Titel',
 		value: 'label',
 	},
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_TYPE),
 		value: 'contentType',
+		disableSorting: true,
 	},
 	{
 		label: t(CORE_TRANSLATIONS['TABLE_LAST-MODIFIED']),
 		value: 'lastModified',
+		disableSorting: true,
 		format: (data: string) => moment(data).format('DD/MM/YYYY [-] hh[u]mm'),
 	},
 	{
 		label: 'Aanmaker',
 		value: 'lastEditor',
+		disableSorting: true,
 	},
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 		value: 'status',
+		disableSorting: true,
 	},
 	{
 		label: 'Online',
 		value: 'published',
+		disableSorting: true,
 		component(value: unknown, rowData: ContentOverviewTableRow) {
 			const isOnline = !!rowData['published'];
 			return isOnline ? (
