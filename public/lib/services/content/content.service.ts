@@ -39,7 +39,7 @@ export class ContentApiService {
 		data: ContentCreateSchema
 	): Promise<ContentSchema | null> {
 		try {
-			const response: any = await api
+			const response: ContentSchema = await api
 				.post(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content`, {
 					json: data,
 				})
@@ -61,7 +61,7 @@ export class ContentApiService {
 			CONTENT_STATUS_API_MAP[ContentStatus.DRAFT];
 
 		try {
-			const response: any = await api
+			const response: ContentSchema = await api
 				.put(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}/${type}`, {
 					json: data,
 				})

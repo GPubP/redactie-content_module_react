@@ -14,7 +14,7 @@ const StatusForm: FC<CompartmentProps> = ({ value, onChange, formikRef }) => {
 	return (
 		<Formik
 			innerRef={instance => formikRef && formikRef(instance)}
-			enableReinitialize={true}
+			enableReinitialize
 			initialValues={value}
 			onSubmit={onChange}
 			validationSchema={STATUS_VALIDATION_SCHEMA}
