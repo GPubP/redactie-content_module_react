@@ -29,11 +29,16 @@ export class ContentTypesFacade extends BaseEntityFacade<
 					this.store.set(response.data);
 					this.store.update({
 						meta: response.paging,
+						isFetching: false,
 					});
 				}
 			})
-			.catch(error => this.store.setError(error))
-			.finally(() => this.store.setIsFetching(false));
+			.catch(error => {
+				this.store.update({
+					error,
+					isFetching: false,
+				});
+			});
 	}
 
 	public getContentType(siteId: string, uuid: string): void {
@@ -49,11 +54,16 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				if (response) {
 					this.store.update({
 						contentType: response,
+						isFetchingOne: false,
 					});
 				}
 			})
-			.catch(error => this.store.setError(error))
-			.finally(() => this.store.setIsFetchingOne(false));
+			.catch(error => {
+				this.store.update({
+					error,
+					isFetchingOne: false,
+				});
+			});
 	}
 }
 

@@ -2,22 +2,30 @@ import { EntityStore, getEntityType, getIDType, StoreConfigOptions } from '@dato
 
 import { BaseEntityState } from './baseEntity.state';
 
+const DEFAULT_INITIAL_STATE = {
+	loading: false,
+	isFetchingOne: false,
+	isFetching: false,
+	isUpdating: false,
+	isCreating: false,
+};
+
 export class BaseEntityStore<
 	S extends BaseEntityState<any, any>,
 	EntityType = getEntityType<S>,
 	IDType = getIDType<S>
 > extends EntityStore<S, EntityType, IDType> {
 	constructor(
-		initialState: Partial<S> = {
-			loading: false,
-			isFetchingOne: false,
-			isFetching: false,
-			isUpdating: false,
-			isCreating: false,
-		} as Partial<S>,
+		initialState: Partial<S> = DEFAULT_INITIAL_STATE as Partial<S>,
 		options?: Partial<StoreConfigOptions>
 	) {
-		super(initialState, options);
+		super(
+			{
+				...DEFAULT_INITIAL_STATE,
+				...initialState,
+			},
+			options
+		);
 	}
 
 	public setIsFetching(isFetching = false): void {

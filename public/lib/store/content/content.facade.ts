@@ -16,6 +16,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 	public readonly content$ = this.query.content$;
 	public readonly contentItem$ = this.query.contentItem$;
 	public readonly contentItemDraft$ = this.query.contentItemDraft$;
+	public readonly isPublishing$ = this.query.isPublishing$;
 
 	/**
 	 * API integration
@@ -30,19 +31,19 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 					this.store.set(response.data);
 					this.store.update({
 						meta: response.paging,
+						isFetching: false,
 					});
 				}
 			})
-			.catch(error => this.store.setError(error))
-			.finally(() => this.store.setIsFetching(false));
+			.catch(error => {
+				this.store.update({
+					error,
+					isFetching: false,
+				});
+			});
 	}
 
 	public getContentItem(siteId: string, uuid: string): void {
-		const { isFetchingOne, contentItem } = this.query.getValue();
-		if (isFetchingOne || contentItem?.uuid === uuid) {
-			return;
-		}
-
 		this.store.setIsFetchingOne(true);
 
 		this.service
@@ -51,43 +52,86 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 				if (response) {
 					this.store.update({
 						contentItem: response,
+						isFetchingOne: false,
 					});
 				}
 			})
-			.catch(error => this.store.setError(error))
-			.finally(() => this.store.setIsFetchingOne(false));
+			.catch(error => {
+				this.store.update({
+					error,
+					isFetchingOne: false,
+				});
+			});
 	}
 
-	public createContentItem(siteId: string, data: ContentCreateSchema): void {
+	public createContentItem(
+		siteId: string,
+		data: ContentCreateSchema
+	): Promise<void | ContentSchema | null> {
 		this.store.setIsCreating(true);
 
-		this.service
+		return this.service
 			.createContentItem(siteId, data)
 			.then(response => {
 				if (response) {
 					this.store.update({
 						contentItem: response,
+						isCreating: false,
 					});
 				}
+				return response;
 			})
-			.catch(error => this.store.setError(error))
-			.finally(() => this.store.setIsCreating(false));
+			.catch(error => {
+				this.store.update({
+					error,
+					isCreating: false,
+				});
+			});
 	}
 
-	public updateContentItem(siteId: string, uuid: string, data: ContentSchema): void {
-		this.store.setIsUpdating(true);
+	public updateContentItem(
+		siteId: string,
+		uuid: string,
+		data: ContentSchema,
+		publish = false
+	): void {
+		if (publish) {
+			this.store.setIsPublishing(true);
+		} else {
+			this.store.setIsUpdating(true);
+		}
 
 		this.service
 			.updateContentItem(siteId, uuid, data)
 			.then(response => {
 				if (response) {
-					this.store.update({
-						contentItem: response,
-					});
+					// Since the response data is not always right we need to fetch the latest content item
+					// after each update
+					// We can not call the getContentItem function because the loading states
+					// will cause our components to destroy, this is not something that we want
+					// TODO: Delete this code and update the contentItem directly from the response data
+					// when the API is fixed
+					this.service
+						.getContentItem(siteId, uuid)
+						.then(response => {
+							if (response) {
+								this.store.update({
+									contentItem: response,
+									isUpdating: false,
+									isPublishing: false,
+								});
+							}
+						})
+						.catch(error => this.store.setError(error));
 				}
 			})
-			.catch(error => this.store.setError(error))
-			.finally(() => this.store.setIsUpdating(false));
+			.catch(error => {
+				this.store.update({
+					error,
+					isUpdating: false,
+					isPublishing: false,
+				});
+			});
 	}
 
 	/**

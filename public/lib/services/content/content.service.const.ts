@@ -14,3 +14,11 @@ export const CONTENT_STATUS_TRANSLATION_MAP = {
 	[ContentStatus.PENDING]: 'In wacht',
 	[ContentStatus.UNPUBLISHED]: 'Niet Gepubliceerd',
 };
+
+export const CONTENT_STATUS_API_MAP = {
+	[ContentStatus.DRAFT]: 'draft',
+	[ContentStatus.PENDING]: 'pending',
+	[ContentStatus.SCHEDULED]: 'scheduled',
+	[ContentStatus.PUBLISHED]: 'published',
+	[ContentStatus.UNPUBLISHED]: 'unpublished',
+};

@@ -7,4 +7,5 @@ export interface ContentState extends BaseEntityState<ContentModel, string> {
 	meta?: PagingSchema;
 	contentItem?: ContentModel;
 	contentItemDraft?: ContentModel;
+	isPublishing: boolean;
 }

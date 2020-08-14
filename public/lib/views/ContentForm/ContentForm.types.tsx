@@ -14,8 +14,12 @@ export interface ContentFormMatchProps {
 export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 	contentType: ContentTypeSchema;
 	contentItemDraft: ContentSchema;
-	onCancle: () => void;
+	contentItem: ContentSchema;
+	showPublishedStatus?: boolean;
+	onCancel: () => void;
 	onSubmit: (content: ContentSchema) => void;
+	onStatusClick: () => void;
+	onUpdatePublication: (content: ContentSchema) => void;
 }
 
 export interface CompartmentProps {

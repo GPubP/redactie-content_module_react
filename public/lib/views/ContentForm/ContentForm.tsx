@@ -1,21 +1,24 @@
-import { Button } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { FormikProps, FormikValues } from 'formik';
 import { clone, equals } from 'ramda';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
+import { ContentFormActions } from '../../components';
 import NavList from '../../components/NavList/NavList';
 import { NavListItem } from '../../components/NavList/NavList.types';
-import { useCoreTranslation } from '../../connectors/translations';
+import { LoadingState } from '../../content.types';
 import {
 	filterCompartments,
 	getCompartmentValue,
 	getSettings,
 	validateCompartments,
 } from '../../helpers/contentCompartments';
-import { useContentCompartment, useExternalCompartment } from '../../hooks';
+import {
+	useContentCompartment,
+	useContentLoadingStates,
+	useExternalCompartment,
+} from '../../hooks';
 import { contentFacade } from '../../store/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
@@ -25,10 +28,14 @@ import { ContentFormMatchProps, ContentFormRouteProps } from './ContentForm.type
 const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	history,
 	contentType,
+	contentItem,
 	contentItemDraft,
 	match,
-	onSubmit,
-	onCancle,
+	showPublishedStatus,
+	onSubmit = () => null,
+	onCancel = () => null,
+	onStatusClick = () => null,
+	onUpdatePublication = () => null,
 }) => {
 	const { compartment } = match.params;
 
@@ -45,7 +52,16 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const [navList, setNavlist] = useState<NavListItem[]>([]);
 	const [hasSubmit, setHasSubmit] = useState(false);
-	const [t] = useCoreTranslation();
+	const [
+		,
+		createContentItemLoadingState,
+		updateContentItemLoadingState,
+		publishContentItemLoadingState,
+	] = useContentLoadingStates();
+	const ContentItemUnTouched = useMemo(() => equals(contentItem, contentItemDraft), [
+		contentItem,
+		contentItemDraft,
+	]);
 
 	useEffect(() => {
 		// TODO: add compartments support later on
@@ -124,9 +140,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		return;
 	};
 
-	const onFormSubmit = (content: ContentSchema): void => {
+	const onFormSubmit = (contentItemDraft: ContentSchema): void => {
 		const { current: formikRef } = activeCompartmentFormikRef;
-		const compartmentsAreValid = validateCompartments(compartments, content, validate);
+		const compartmentsAreValid = validateCompartments(compartments, contentItemDraft, validate);
 
 		// Validate current form to trigger fields error states
 		if (formikRef) {
@@ -134,7 +150,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		}
 		// Only submit the form if all compartments are valid
 		if (compartmentsAreValid) {
-			onSubmit(content);
+			onSubmit(contentItemDraft);
 		}
 
 		setHasSubmit(true);
@@ -175,21 +191,21 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			</div>
 			<ActionBar className="o-action-bar--fixed" isOpen>
 				<ActionBarContentSection>
-					<div className="u-wrapper row end-xs">
-						<Button
-							className="u-margin-right-xs"
-							onClick={() =>
-								contentItemDraft ? onFormSubmit(contentItemDraft) : null
-							}
-							type="success"
-							htmlType="submit"
-						>
-							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
-						</Button>
-						<Button onClick={onCancle} outline>
-							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
-						</Button>
-					</div>
+					<ContentFormActions
+						isPublished={!!contentItem?.meta?.historySummary?.published}
+						isSaved={ContentItemUnTouched}
+						status={contentItem?.meta?.status}
+						onStatusClick={onStatusClick}
+						onSave={() => onFormSubmit(contentItemDraft)}
+						showPublishedStatus={showPublishedStatus}
+						isSaving={
+							updateContentItemLoadingState === LoadingState.Loading ||
+							createContentItemLoadingState === LoadingState.Loading
+						}
+						isPublishing={publishContentItemLoadingState === LoadingState.Loading}
+						onUpdatePublication={() => onUpdatePublication(contentItemDraft)}
+						onCancel={onCancel}
+					/>
 				</ActionBarContentSection>
 			</ActionBar>
 		</>

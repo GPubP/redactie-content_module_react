@@ -1,5 +1,5 @@
 import { isNil } from '@datorama/akita';
-import { distinctUntilChanged, filter } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 import { BaseEntityQuery } from '../shared';
 
@@ -16,6 +16,9 @@ export class ContentQuery extends BaseEntityQuery<ContentState> {
 	);
 	public contentItemDraft$ = this.select(state => state.contentItemDraft).pipe(
 		filter(contentItemDraft => !isNil(contentItemDraft), distinctUntilChanged())
+	);
+	public isPublishing$ = this.select(state => state.isPublishing).pipe(
+		map(this.convertBoolToLoadingState)
 	);
 }
 
