@@ -1,8 +1,10 @@
-import { Button } from '@acpaas-ui/react-components';
+import { Link as AUILink, Button } from '@acpaas-ui/react-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { TranslateFunc } from '@redactie/translations-module/public/lib/i18next/useTranslation';
 import moment from 'moment';
+import { propOr } from 'ramda';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { ContentOverviewTableRow } from './ContentOverview.types';
 
@@ -25,6 +27,18 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: 'Titel',
 		value: 'label',
+		component(value: any, rowData: ContentOverviewTableRow) {
+			return (
+				<>
+					<AUILink to={'#'} component={Link}>
+						{rowData['label']}
+					</AUILink>
+					<p className="u-text-light u-margin-top-xs">
+						{propOr('Geen beschrijving.', 'description')(rowData)}
+					</p>
+				</>
+			);
+		},
 	},
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_TYPE),
@@ -41,6 +55,9 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		label: 'Aanmaker',
 		value: 'lastEditor',
 		disableSorting: true,
+		component(value: any, rowData: ContentOverviewTableRow) {
+			return <p>{propOr('Onbekend', 'lastEditor')(rowData)}</p>;
+		},
 	},
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
@@ -52,11 +69,11 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'published',
 		disableSorting: true,
 		component(value: unknown, rowData: ContentOverviewTableRow) {
-			const isOnline = !!rowData['published'];
+			const isOnline = rowData['published'];
 			return isOnline ? (
-				<span className="a-dot__green"></span>
+				<span className="u-text-success fa fa-circle"></span>
 			) : (
-				<span className="a-dot__red"></span>
+				<span className="u-text-danger fa fa-circle"></span>
 			);
 		},
 	},

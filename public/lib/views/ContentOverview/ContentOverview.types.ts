@@ -1,6 +1,7 @@
 export interface ContentOverviewTableRow {
 	id: string;
 	label?: string;
+	description?: string;
 	contentType?: string;
 	lastModified?: string;
 	lastEditor?: string;
