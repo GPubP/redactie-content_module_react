@@ -1,3 +1,6 @@
+import { alertService } from '@redactie/utils';
+
+import { ALERT_CONTAINER_IDS } from '../../content.const';
 import { SearchParams } from '../../services/api';
 import {
 	contentApiService,
@@ -7,11 +10,16 @@ import {
 } from '../../services/content';
 import { BaseEntityFacade } from '../shared';
 
+import { getAlertMessages } from './content.messages';
 import { ContentModel } from './content.model';
 import { contentQuery, ContentQuery } from './content.query';
 import { contentStore, ContentStore } from './content.store';
 
 export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiService, ContentQuery> {
+	private readonly alertContainerProps = {
+		containerId: ALERT_CONTAINER_IDS.contentEdit,
+	};
+
 	public readonly meta$ = this.query.meta$;
 	public readonly content$ = this.query.content$;
 	public readonly contentItem$ = this.query.contentItem$;
@@ -68,6 +76,8 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		siteId: string,
 		data: ContentCreateSchema
 	): Promise<void | ContentSchema | null> {
+		const alertProps = getAlertMessages((data as unknown) as ContentSchema);
+		alertService.dismiss();
 		this.store.setIsCreating(true);
 
 		return this.service
@@ -78,6 +88,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 						contentItem: response,
 						isCreating: false,
 					});
+					alertService.success(alertProps.create.success, this.alertContainerProps);
 				}
 				return response;
 			})
@@ -86,6 +97,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 					error,
 					isCreating: false,
 				});
+				alertService.danger(alertProps.create.error, this.alertContainerProps);
 			});
 	}
 
@@ -100,6 +112,8 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		} else {
 			this.store.setIsUpdating(true);
 		}
+		const alertProps = publish ? getAlertMessages(data).publish : getAlertMessages(data).update;
+		alertService.dismiss();
 
 		this.service
 			.updateContentItem(siteId, uuid, data)
@@ -123,6 +137,8 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 							}
 						})
 						.catch(error => this.store.setError(error));
+
+					alertService.success(alertProps.success, this.alertContainerProps);
 				}
 			})
 			.catch(error => {
@@ -131,6 +147,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 					isUpdating: false,
 					isPublishing: false,
 				});
+				alertService.danger(alertProps.error, this.alertContainerProps);
 			});
 	}
 

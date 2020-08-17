@@ -37,3 +37,7 @@ export const MODULE_PATHS = {
 	detailEdit,
 	detailEditCompartment,
 };
+
+export const ALERT_CONTAINER_IDS = {
+	contentEdit: 'content-edit',
+};
