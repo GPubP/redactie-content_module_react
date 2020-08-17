@@ -31,7 +31,7 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 			return (
 				<>
 					<AUILink to={'#'} component={Link}>
-						{rowData['label']}
+						{rowData.label}
 					</AUILink>
 					<p className="u-text-light u-margin-top-xs">
 						{propOr('Geen beschrijving.', 'description')(rowData)}
@@ -69,7 +69,7 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'published',
 		disableSorting: true,
 		component(value: unknown, rowData: ContentOverviewTableRow) {
-			const isOnline = rowData['published'];
+			const isOnline = rowData.published;
 			return isOnline ? (
 				<span className="u-text-success fa fa-circle"></span>
 			) : (
