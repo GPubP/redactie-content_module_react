@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { DataLoader, RenderChildRoutes } from '../../components';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, LoadingState } from '../../content.types';
+import { generateDetailBadges } from '../../helpers';
 import {
 	useActiveTabs,
 	useContentItem,
@@ -21,6 +22,7 @@ import { contentTypesFacade } from '../../store/contentTypes';
 
 import { CONTENT_UPDATE_TABS } from './ContentDetail.const';
 import { ContentDetailMatchProps } from './ContentDetail.types';
+import './ContentDetail.scss';
 
 const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	match,
@@ -103,20 +105,14 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		);
 	};
 
-	const contentTypeLabel = contentItem?.meta.label;
-	const headerTitle = contentTypeLabel ? `${contentTypeLabel} Bewerken` : '';
-	const badges = contentTypeLabel
-		? [
-				{
-					name: contentTypeLabel,
-					type: 'primary',
-				},
-		  ]
-		: [];
+	const contentItemLabel = contentItem?.meta.label;
+	const headerTitle = contentItemLabel ? `${contentItemLabel} Bewerken` : '';
+	const badges = generateDetailBadges(contentItem);
 
 	return (
 		<>
 			<ContextHeader
+				className="v-content-detail__header"
 				title={headerTitle}
 				tabs={activeTabs}
 				linkProps={(props: any) => ({
