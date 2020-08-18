@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 import { ContentSchema } from '../../api/api.types';
 import {
 	FieldsForm,
@@ -6,6 +8,8 @@ import {
 	STATUS_VALIDATION_SCHEMA,
 	StatusForm,
 } from '../../components';
+import { STATUS_LABEL_MAP } from '../../content.const';
+import { ContentStatus } from '../../services/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
 export const INTERNAL_COMPARTMENTS: ContentCompartmentModel[] = [
@@ -18,15 +22,26 @@ export const INTERNAL_COMPARTMENTS: ContentCompartmentModel[] = [
 	},
 	{
 		label: 'Info',
+		getDescription: contentItem => {
+			if (!contentItem?.meta.lastModified) {
+				return;
+			}
+			const formattedDate = moment(contentItem?.meta.lastModified).format(
+				'DD/MM/YYYY [-] HH[u]mm'
+			);
+			return `Laatst bewerkt op ${formattedDate}`;
+		},
 		name: 'meta',
 		slug: 'informatie',
 		component: MetaForm,
 		type: CompartmentType.INTERNAL,
 		isValid: false,
-		validate: (values: ContentSchema) => META_VALIDATION_SCHEMA.isValidSync(values.meta),
+		validate: values => META_VALIDATION_SCHEMA.isValidSync(values.meta),
 	},
 	{
 		label: 'Status',
+		getDescription: contentItem =>
+			contentItem?.meta.status && STATUS_LABEL_MAP[contentItem.meta.status as ContentStatus],
 		name: 'status',
 		slug: 'status',
 		component: StatusForm,

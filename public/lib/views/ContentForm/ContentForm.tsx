@@ -1,13 +1,12 @@
-import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
+import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import { FormikProps, FormikValues } from 'formik';
 import { clone, equals } from 'ramda';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
 import { ContentSchema } from '../../api/api.types';
 import { ContentFormActions } from '../../components';
-import NavList from '../../components/NavList/NavList';
-import { NavListItem } from '../../components/NavList/NavList.types';
-import { LoadingState } from '../../content.types';
+import { LoadingState, NavListItem } from '../../content.types';
 import {
 	filterCompartments,
 	getCompartmentValue,
@@ -91,12 +90,16 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	useEffect(() => {
 		setNavlist(
 			compartments.map(compartment => ({
+				activeClassName: 'is-active',
 				label: compartment.label,
+				description: compartment.getDescription
+					? compartment.getDescription(contentItem)
+					: '',
 				to: compartment.slug || compartment.name,
 				hasError: hasSubmit && compartment.isValid === false,
 			}))
 		);
-	}, [compartments, hasSubmit]);
+	}, [compartments, contentItem, hasSubmit]);
 
 	// Trigger errors on form when switching from compartments
 	useEffect(() => {
@@ -163,7 +166,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		<>
 			<div className="row between-xs top-xs u-margin-bottom-lg">
 				<div className="col-xs-3">
-					<NavList items={navList} />
+					<NavList linkComponent={NavLink} items={navList} />
 				</div>
 
 				<div className="m-card col-xs-9 u-padding">
@@ -177,7 +180,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 								}}
 								contentType={clone(contentType)}
 								contentValue={clone(contentItemDraft)}
-								isValid={true}
+								isValid
 								settings={getSettings(contentType, activeCompartment)}
 								onChange={values => handleChange(activeCompartment, values)}
 								value={getCompartmentValue(contentItemDraft, activeCompartment)}

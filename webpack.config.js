@@ -68,6 +68,7 @@ module.exports = env => {
 			'@redactie/react-router-guards': '@redactie/react-router-guards',
 			'@redactie/redactie-core': '@redactie/redactie-core',
 			'@redactie/roles-rights-module': '@redactie/roles-rights-module',
+			'@redactie/utils': '@redactie/utils',
 			'@acpaas-ui/react-components': '@acpaas-ui/react-components',
 			'@acpaas-ui/react-editorial-components': '@acpaas-ui/react-editorial-components',
 		},

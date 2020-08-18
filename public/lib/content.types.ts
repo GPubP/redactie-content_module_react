@@ -1,4 +1,5 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
+import { NavLinkProps } from 'react-router-dom';
 
 export interface ContentRouteProps<
 	Params extends {
@@ -38,4 +39,10 @@ export interface FilterItemsSchema {
 export interface ContextHeaderBadge {
 	name: string;
 	type: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
+}
+
+export interface NavListItem extends NavLinkProps {
+	description?: string;
+	label: string;
+	hasError?: boolean;
 }

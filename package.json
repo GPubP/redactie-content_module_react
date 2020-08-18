@@ -33,7 +33,7 @@
   ],
   "devDependencies": {
     "@acpaas-ui/react-components": "^4.0.0",
-    "@acpaas-ui/react-editorial-components": "0.0.1-9",
+    "@acpaas-ui/react-editorial-components": "0.0.2-0",
     "@babel/core": "7.8.3",
     "@babel/preset-env": "7.8.3",
     "@babel/preset-react": "7.8.3",
@@ -48,7 +48,7 @@
     "@redactie/roles-rights-module": "^0.3.0-7",
     "@redactie/sites-module": "^0.10.0",
     "@redactie/translations-module": "^0.2.0",
-    "@redactie/utils": "^0.4.0",
+    "@redactie/utils": "^0.4.1",
     "@testing-library/jest-dom": "5.0.2",
     "@testing-library/react": "9.4.0",
     "@types/jest": "24.9.1",
