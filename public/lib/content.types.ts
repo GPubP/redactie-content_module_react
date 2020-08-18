@@ -34,3 +34,8 @@ export interface Tab {
 export interface FilterItemsSchema {
 	data: FilterItemSchema[];
 }
+
+export interface ContextHeaderBadge {
+	name: string;
+	type: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
+}
