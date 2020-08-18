@@ -90,12 +90,16 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	useEffect(() => {
 		setNavlist(
 			compartments.map(compartment => ({
+				activeClassName: 'is-active',
 				label: compartment.label,
+				description: compartment.getDescription
+					? compartment.getDescription(contentItem)
+					: '',
 				to: compartment.slug || compartment.name,
 				hasError: hasSubmit && compartment.isValid === false,
 			}))
 		);
-	}, [compartments, hasSubmit]);
+	}, [compartments, contentItem, hasSubmit]);
 
 	// Trigger errors on form when switching from compartments
 	useEffect(() => {

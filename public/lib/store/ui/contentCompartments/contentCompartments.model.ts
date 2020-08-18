@@ -18,6 +18,7 @@ export interface ContentCompartmentRegisterOptions {
 export interface ContentCompartmentModel {
 	name: string;
 	label: string;
+	getDescription?: (contentItem: ContentSchema | undefined) => string;
 	slug?: string;
 	component: FC<CompartmentProps>;
 	type: CompartmentType;
