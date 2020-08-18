@@ -1,4 +1,5 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
+import { NavLinkProps } from 'react-router-dom';
 
 export interface ContentRouteProps<
 	Params extends {
@@ -33,4 +34,10 @@ export interface Tab {
 
 export interface FilterItemsSchema {
 	data: FilterItemSchema[];
+}
+
+export interface NavListItem extends NavLinkProps {
+	description?: string;
+	label: string;
+	hasError?: boolean;
 }
