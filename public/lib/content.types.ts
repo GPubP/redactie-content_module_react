@@ -36,6 +36,11 @@ export interface FilterItemsSchema {
 	data: FilterItemSchema[];
 }
 
+export interface ContextHeaderBadge {
+	name: string;
+	type: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
+}
+
 export interface NavListItem extends NavLinkProps {
 	description?: string;
 	label: string;
