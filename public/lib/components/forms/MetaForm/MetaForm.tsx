@@ -1,5 +1,5 @@
 import { Link, Textarea, TextField } from '@acpaas-ui/react-components';
-import { Field, Formik } from 'formik';
+import { Field, Formik, FormikValues } from 'formik';
 import React, { FC, ReactElement } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
@@ -12,9 +12,14 @@ import { META_VALIDATION_SCHEMA } from './MetaForm.const';
 const MetaForm: FC<CompartmentProps> = ({
 	contentValue,
 	value,
-	onChange,
+	onChange = () => undefined,
 	formikRef,
 }): ReactElement | null => {
+	const onFormChange = (values: FormikValues, submitForm: () => Promise<void>): void => {
+		submitForm();
+		onChange(values);
+	};
+
 	/**
 	 * RENDER
 	 */
@@ -28,7 +33,7 @@ const MetaForm: FC<CompartmentProps> = ({
 		>
 			{({ submitForm }) => (
 				<>
-					<FormikOnChangeHandler onChange={submitForm} />
+					<FormikOnChangeHandler onChange={values => onFormChange(values, submitForm)} />
 					<h5 className="u-margin-bottom">Informatie</h5>
 					<p className="u-margin-bottom">Lorem Ipsum.</p>
 					<div className="row">
