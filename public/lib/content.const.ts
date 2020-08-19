@@ -42,3 +42,4 @@ export const ALERT_CONTAINER_IDS = {
 	contentEdit: 'content-edit',
 };
 
+export const WORKING_TITLE_KEY = 'working-title';

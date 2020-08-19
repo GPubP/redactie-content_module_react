@@ -1,6 +1,7 @@
 import { alertService } from '@redactie/utils';
+import { omit } from 'ramda';
 
-import { ALERT_CONTAINER_IDS } from '../../content.const';
+import { ALERT_CONTAINER_IDS, WORKING_TITLE_KEY } from '../../content.const';
 import { SearchParams } from '../../services/api';
 import {
 	contentApiService,
@@ -176,6 +177,43 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		this.store.update({
 			contentItemDraft: data,
 		});
+	}
+
+	public updateContentFieldsDraft(data: ContentSchema['fields']): void {
+		const updatedFields = omit([WORKING_TITLE_KEY], data);
+		const label = data[WORKING_TITLE_KEY];
+
+		this.store.update(state => ({
+			contentItemDraft: {
+				...state.contentItemDraft,
+				fields: updatedFields,
+				meta: {
+					...state.contentItemDraft?.meta,
+					label,
+				},
+			},
+		}));
+	}
+
+	public updateContentMetaDraft(data: ContentSchema['meta']): void {
+		this.store.update(state => ({
+			contentItemDraft: {
+				...state.contentItemDraft,
+				meta: { ...state.contentItemDraft?.meta, ...data },
+			},
+		}));
+	}
+
+	public updateContentModuleDraft(compartmentName: string, data: any): void {
+		this.store.update(state => ({
+			contentItemDraft: {
+				...state.contentItemDraft,
+				modulesData: {
+					...state.contentItemDraft?.modulesData,
+					[compartmentName]: data,
+				},
+			},
+		}));
 	}
 }
 

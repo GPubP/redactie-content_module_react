@@ -6,6 +6,7 @@ import {
 	ContentTypeSchema,
 	ModuleSettings,
 } from '../api/api.types';
+import { WORKING_TITLE_KEY } from '../content.const';
 import { ExternalCompartmentModel } from '../store/api/externalCompartments';
 import { CompartmentType, ContentCompartmentModel } from '../store/ui/contentCompartments';
 
@@ -42,7 +43,10 @@ export const getCompartmentValue = (
 
 	switch (compartment.type) {
 		case CompartmentType.CT:
-			return content?.fields;
+			return {
+				[WORKING_TITLE_KEY]: content.meta.label,
+				...content?.fields,
+			};
 		case CompartmentType.INTERNAL:
 			return content?.meta;
 		case CompartmentType.MODULE:
