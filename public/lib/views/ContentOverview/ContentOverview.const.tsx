@@ -47,12 +47,8 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		label: 'Online',
 		value: 'published',
 		component(value: unknown, rowData: ContentOverviewTableRow) {
-			const isOnline = !!rowData['published'];
-			return isOnline ? (
-				<span className="a-dot__green"></span>
-			) : (
-				<span className="a-dot__red"></span>
-			);
+			const isOnline = !!rowData.published;
+			return <span className={isOnline ? 'a-dot__green' : 'a-dot__red'} />;
 		},
 	},
 	{
@@ -69,7 +65,7 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 					onClick={() => navigate(id)}
 					type="primary"
 					transparent
-				></Button>
+				/>
 			);
 		},
 	},
