@@ -67,6 +67,11 @@ if (rolesRightsConnector.api) {
 			{
 				path: MODULE_PATHS.overview,
 				component: ContentOverview,
+				navigation: {
+					context: 'site',
+					label: 'Content overzicht',
+					parentPath: MODULE_PATHS.root,
+				},
 			},
 			{
 				path: MODULE_PATHS.createOverview,
@@ -76,6 +81,17 @@ if (rolesRightsConnector.api) {
 						rolesRightsConnector.api.guards.securityRightsSiteGuard(urlSiteParam, [
 							rolesRightsConnector.securityRights.create,
 						]),
+					],
+				},
+				navigation: {
+					context: 'site',
+					label: 'Content aanmaken',
+					parentPath: MODULE_PATHS.root,
+					canShown: [
+						rolesRightsConnector.api.canShowns.securityRightsSiteCanShown(
+							urlSiteParam,
+							[rolesRightsConnector.securityRights.create]
+						),
 					],
 				},
 			},
