@@ -1,3 +1,5 @@
+import { omit } from 'ramda';
+
 import { ExternalCompartmentModel, ExternalCompartmentOptions } from './externalCompartments.model';
 import { ExternalCompartmentsQuery, externalCompartmentsQuery } from './externalCompartments.query';
 import { ExternalCompartmentsStore, externalCompartmentsStore } from './externalCompartments.store';
@@ -13,10 +15,7 @@ export class ExternalCompartmentsFacade {
 	public registerCompartment(name: string, options: ExternalCompartmentOptions): void {
 		const entity: ExternalCompartmentModel = {
 			name,
-			label: options.label,
-			module: options.module,
-			show: options.show,
-			component: options.component,
+			...omit(['replace'], options),
 		};
 
 		if (options.replace) {
