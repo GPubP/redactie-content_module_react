@@ -1,9 +1,9 @@
 import { ViewFieldProps } from '@redactie/form-renderer-module';
 import React, { FC } from 'react';
 
-import { TEXT_HTML_TYPES } from './TextLine.const';
+import { TEXT_HTML_TYPES } from './TextBox.const';
 
-const CCTextLineView: FC<ViewFieldProps> = ({ value = {} }) => {
+const CCTextBoxView: FC<ViewFieldProps> = ({ value = {} }) => {
 	const { text, textHTMLType: TextComponent } = value;
 
 	if (!text || !TextComponent) {
@@ -21,4 +21,4 @@ const CCTextLineView: FC<ViewFieldProps> = ({ value = {} }) => {
 	);
 };
 
-export default CCTextLineView;
+export default CCTextBoxView;
