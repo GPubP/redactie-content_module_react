@@ -62,11 +62,13 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	useEffect(() => {
 		if (
 			contentTypeLoading !== LoadingState.Loading &&
-			contentItemLoading !== LoadingState.Loading
+			contentItemLoading !== LoadingState.Loading &&
+			contentType &&
+			contentItem
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [contentTypeLoading, contentItemLoading]);
+	}, [contentTypeLoading, contentItemLoading, contentType, contentItem]);
 
 	useEffect(() => {
 		if (contentItem?.meta.contentType.uuid && siteId) {
