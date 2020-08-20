@@ -14,7 +14,7 @@ const CCTextLineView: FC<ViewFieldProps> = ({ value = {} }) => {
 		return null;
 	}
 
-	return <TextComponent>{text}</TextComponent>;
+	return <TextComponent className="u-margin-bottom">{text}</TextComponent>;
 };
 
 export default CCTextLineView;
