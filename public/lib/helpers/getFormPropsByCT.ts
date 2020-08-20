@@ -99,13 +99,7 @@ export const addWorkingTitleField = (formProps: FormRendererProps): FormRenderer
 		fields: [
 			{
 				config: {
-					description: '',
-					fields: [],
 					guideline: 'Geef een werktitel op voor dit item.',
-					hidden: false,
-					max: 1,
-					min: 0,
-					multiLanguage: false,
 					placeholder: 'Typ een label',
 					required: true,
 				},
