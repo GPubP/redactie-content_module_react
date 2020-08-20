@@ -20,9 +20,6 @@ const FormikOnChangeHandler: FC<FormikOnChangeHandlerProps> = ({
 			oldValues.current = values;
 			debouncedOnChange(values as FormikValues);
 		}
-		// return () => {
-		// 	debouncedOnChange.cancel();
-		// };
 	}, [values, debouncedOnChange]);
 
 	return null;
