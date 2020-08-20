@@ -73,7 +73,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				...INTERNAL_COMPARTMENTS,
 				...filterCompartments(contentItemDraft, contentType, externalCompartments),
 			],
-
 			{ replace: true }
 		);
 	}, [contentType, externalCompartments]); // eslint-disable-line
@@ -117,26 +116,15 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		}
 
 		switch (compartment.type) {
-			case CompartmentType.CT:
-				contentFacade.updateContentItemDraft({
-					...contentItemDraft,
-					fields: values as ContentSchema['fields'],
-				});
+			case CompartmentType.CT: {
+				contentFacade.updateContentFieldsDraft(values as ContentSchema['fields']);
 				break;
+			}
 			case CompartmentType.INTERNAL:
-				contentFacade.updateContentItemDraft({
-					...contentItemDraft,
-					meta: { ...contentItemDraft.meta, ...(values as ContentSchema['meta']) },
-				});
+				contentFacade.updateContentMetaDraft(values as ContentSchema['meta']);
 				break;
 			case CompartmentType.MODULE:
-				contentFacade.updateContentItemDraft({
-					...contentItemDraft,
-					modulesData: {
-						...contentItemDraft.modulesData,
-						[compartment.name]: values as any,
-					},
-				});
+				contentFacade.updateContentModuleDraft(compartment.name, values);
 				break;
 		}
 

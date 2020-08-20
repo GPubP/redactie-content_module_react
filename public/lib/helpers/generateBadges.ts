@@ -1,7 +1,6 @@
 import { ContentSchema } from '../api/api.types';
-import { STATUS_LABEL_MAP } from '../content.const';
 import { ContextHeaderBadge } from '../content.types';
-import { ContentStatus } from '../services/content';
+import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../services/content';
 
 export const generateDetailBadges = (
 	contentItem: ContentSchema | undefined
@@ -14,12 +13,12 @@ export const generateDetailBadges = (
 	const status = contentItem.meta.status as ContentStatus;
 
 	const contentTypeLabel = contentType.meta.label;
-	const statusLabel = status ? STATUS_LABEL_MAP[status] : '';
+	const statusLabel = status ? CONTENT_STATUS_TRANSLATION_MAP[status] : '';
 
 	const contentTypeBadge: ContextHeaderBadge = { name: contentTypeLabel, type: 'primary' };
 	const statusBadge: ContextHeaderBadge = { name: statusLabel, type: 'primary' };
 	const publishedBadge: ContextHeaderBadge = {
-		name: published ? STATUS_LABEL_MAP.PUBLISHED : STATUS_LABEL_MAP.UNPUBLISHED,
+		name: published ? 'Online' : 'Offline',
 		type: published ? 'success' : 'danger',
 	};
 

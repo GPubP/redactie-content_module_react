@@ -8,8 +8,7 @@ import {
 	STATUS_VALIDATION_SCHEMA,
 	StatusForm,
 } from '../../components';
-import { STATUS_LABEL_MAP } from '../../content.const';
-import { ContentStatus } from '../../services/content';
+import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
 export const INTERNAL_COMPARTMENTS: ContentCompartmentModel[] = [
@@ -41,7 +40,8 @@ export const INTERNAL_COMPARTMENTS: ContentCompartmentModel[] = [
 	{
 		label: 'Status',
 		getDescription: contentItem =>
-			contentItem?.meta.status && STATUS_LABEL_MAP[contentItem.meta.status as ContentStatus],
+			contentItem?.meta.status &&
+			CONTENT_STATUS_TRANSLATION_MAP[contentItem.meta.status as ContentStatus],
 		name: 'status',
 		slug: 'status',
 		component: StatusForm,

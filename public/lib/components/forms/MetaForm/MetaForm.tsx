@@ -37,21 +37,6 @@ const MetaForm: FC<CompartmentProps> = ({
 					<h5 className="u-margin-bottom">Informatie</h5>
 					<p className="u-margin-bottom">Lorem Ipsum.</p>
 					<div className="row">
-						<div className="col-xs-12 col-md-6 u-margin-bottom">
-							<Field
-								type="text"
-								label="Werktitel"
-								name="label"
-								id="label"
-								placeholder="Typ een label"
-								required
-								as={TextField}
-							/>
-							<ErrorMessage name="label" />
-							<div className="u-text-light u-margin-top-xs">
-								Geef een werktitel op voor dit item.
-							</div>
-						</div>
 						{contentValue?.uuid && contentValue.uuid !== 'new' ? (
 							<div className="col-xs-12 col-md-6 u-margin-bottom">
 								<label className="a-input__label">UID</label>

@@ -2,7 +2,7 @@ import React, { FC, ReactElement } from 'react';
 
 import { CompartmentProps } from '../../../api/api.types';
 import { getForm } from '../../../connectors/formRenderer';
-import { getFormPropsByCT } from '../../../helpers';
+import { addWorkingTitleField, getFormPropsByCT } from '../../../helpers';
 
 const FieldsForm: FC<CompartmentProps> = ({
 	contentType,
@@ -24,12 +24,13 @@ const FieldsForm: FC<CompartmentProps> = ({
 	}
 
 	const formProps = getFormPropsByCT(contentType);
+	const formPropsWithWorkingTitle = addWorkingTitleField(formProps);
 
 	return (
 		<>
 			<h5 className="u-margin-bottom">Inhoud</h5>
 			<Form
-				{...formProps}
+				{...formPropsWithWorkingTitle}
 				formikRef={instance => {
 					if (instance) {
 						formikRef && formikRef(instance);

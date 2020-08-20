@@ -1,5 +1,3 @@
-import { ContentStatus } from './services/content';
-
 export const BREADCRUMB_OPTIONS = {
 	excludePaths: [
 		'/',
@@ -44,10 +42,4 @@ export const ALERT_CONTAINER_IDS = {
 	contentEdit: 'content-edit',
 };
 
-export const STATUS_LABEL_MAP = {
-	[ContentStatus.DRAFT]: 'Werkversie',
-	[ContentStatus.PENDING]: 'In afwachting',
-	[ContentStatus.SCHEDULED]: 'Gepland',
-	[ContentStatus.PUBLISHED]: 'Online',
-	[ContentStatus.UNPUBLISHED]: 'Offline',
-};
+export const WORKING_TITLE_KEY = 'working-title';
