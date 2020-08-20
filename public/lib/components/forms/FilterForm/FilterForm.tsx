@@ -9,23 +9,21 @@ import DataLoader from '../../DataLoader/DataLoader';
 
 import {
 	CONTENT_TYPES_DEFAULT_OPTION,
-	CONTENT_TYPES_SEARCH_OPTIONS,
+	FILTER_STATUS_OPTIONS,
 	PUBLISHED_DEFAULT_OPTION,
 	PUBLISHED_OPTIONS,
 	STATUS_DEFAULT_OPTION,
-	STATUS_OPTIONS,
 } from './FilterForm.const';
 import { FilterFormProps } from './FilterForm.types';
 
 const FilterForm: FC<FilterFormProps> = ({
-	siteId,
 	initialState,
 	onCancel,
 	onSubmit,
 	activeFilters,
 	deleteActiveFilter,
 }) => {
-	const [loadingState, contentTypes] = useContentTypes(siteId, CONTENT_TYPES_SEARCH_OPTIONS);
+	const [loadingState, contentTypes] = useContentTypes();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 
 	useEffect(() => {
@@ -36,7 +34,7 @@ const FilterForm: FC<FilterFormProps> = ({
 
 	const contentTypeOptions = useMemo(
 		() =>
-			contentTypes?.data.map(contentType => ({
+			contentTypes?.map(contentType => ({
 				key: contentType.uuid,
 				value: contentType?._id,
 				label: contentType?.meta.label,
@@ -122,7 +120,10 @@ const FilterForm: FC<FilterFormProps> = ({
 											label="Status"
 											name="status"
 											id="status"
-											options={[STATUS_DEFAULT_OPTION, ...STATUS_OPTIONS]}
+											options={[
+												STATUS_DEFAULT_OPTION,
+												...FILTER_STATUS_OPTIONS,
+											]}
 										/>
 									</div>
 									<div className="col-xs-6 col-sm-3 u-margin-top-lg">

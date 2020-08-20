@@ -1,6 +1,7 @@
 const path = require('path');
 
 const RedactionWebpackPlugin = require('@redactie/module-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const cssnano = require('cssnano');
 const kebabCase = require('lodash.kebabcase');
 const postcssPresetEnv = require('postcss-preset-env');
@@ -30,7 +31,6 @@ module.exports = env => {
 						{
 							loader: 'css-loader',
 							options: {
-								modules: true,
 								importLoaders: 1,
 							},
 						},
@@ -51,6 +51,7 @@ module.exports = env => {
 		},
 		plugins: [
 			// add default plugins here
+			new CleanWebpackPlugin(),
 		],
 		externals: {
 			react: 'react',
@@ -67,6 +68,7 @@ module.exports = env => {
 			'@redactie/react-router-guards': '@redactie/react-router-guards',
 			'@redactie/redactie-core': '@redactie/redactie-core',
 			'@redactie/roles-rights-module': '@redactie/roles-rights-module',
+			'@redactie/utils': '@redactie/utils',
 			'@acpaas-ui/react-components': '@acpaas-ui/react-components',
 			'@acpaas-ui/react-editorial-components': '@acpaas-ui/react-editorial-components',
 		},

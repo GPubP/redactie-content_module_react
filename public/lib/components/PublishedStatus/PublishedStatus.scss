@@ -1,0 +1,30 @@
+@import '~@a-ui/core/dist/assets/styles/quarks';
+
+.published-status {
+	border-left: 1px solid $grey-light;
+	margin: -12px 0 -12px $spacer;
+	padding-left: $spacer;
+
+	&__dot {
+		height: $spacer / 2;
+		width: $spacer / 2;
+		border-radius: 50%;
+		display: inline-block;
+	}
+
+	&__online {
+		color: $state-success;
+
+		.published-status__dot {
+			background-color: $state-success;
+		}
+	}
+
+	&__offline {
+		color: $grey-dark;
+
+		.published-status__dot {
+			background-color: $grey-dark;
+		}
+	}
+}

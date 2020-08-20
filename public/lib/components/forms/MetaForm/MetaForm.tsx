@@ -1,41 +1,42 @@
 import { Link, Textarea, TextField } from '@acpaas-ui/react-components';
-import { Field, Formik } from 'formik';
+import { Field, Formik, FormikValues } from 'formik';
 import React, { FC, ReactElement } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 import { CompartmentProps } from '../../../api/api.types';
+import { ErrorMessage } from '../../../connectors/formRenderer';
 import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandler';
 
-const MetaForm: FC<CompartmentProps> = ({ contentValue, value, onChange }): ReactElement | null => {
-	/**
-	 * METHODS
-	 */
+import { META_VALIDATION_SCHEMA } from './MetaForm.const';
+
+const MetaForm: FC<CompartmentProps> = ({
+	contentValue,
+	value,
+	onChange = () => undefined,
+	formikRef,
+}): ReactElement | null => {
+	const onFormChange = (values: FormikValues, submitForm: () => Promise<void>): void => {
+		submitForm();
+		onChange(values);
+	};
 
 	/**
 	 * RENDER
 	 */
 	return (
-		<Formik onSubmit={onChange} initialValues={value}>
+		<Formik
+			innerRef={instance => formikRef && formikRef(instance)}
+			validationSchema={META_VALIDATION_SCHEMA}
+			onSubmit={onChange}
+			enableReinitialize
+			initialValues={value}
+		>
 			{({ submitForm }) => (
 				<>
-					<FormikOnChangeHandler onChange={submitForm} />
+					<FormikOnChangeHandler onChange={values => onFormChange(values, submitForm)} />
 					<h5 className="u-margin-bottom">Informatie</h5>
 					<p className="u-margin-bottom">Lorem Ipsum.</p>
 					<div className="row">
-						<div className="col-xs-12 col-md-6 u-margin-bottom">
-							<Field
-								type="text"
-								label="Werktitel"
-								name="label"
-								id="label"
-								placeholder="Typ een label"
-								required
-								as={TextField}
-							/>
-							<div className="u-text-light u-margin-top-xs">
-								Geef een werktitel op voor dit item.
-							</div>
-						</div>
 						{contentValue?.uuid && contentValue.uuid !== 'new' ? (
 							<div className="col-xs-12 col-md-6 u-margin-bottom">
 								<label className="a-input__label">UID</label>
@@ -61,6 +62,7 @@ const MetaForm: FC<CompartmentProps> = ({ contentValue, value, onChange }): Reac
 								required
 								as={TextField}
 							/>
+							<ErrorMessage name="slug.nl" />
 							<div className="u-text-light u-margin-top-xs">
 								Bepaal de &apos;slug&apos; voor dit content item. Deze wordt
 								ondererandere gebruikt in de URL.

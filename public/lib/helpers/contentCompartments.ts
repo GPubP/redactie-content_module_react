@@ -6,8 +6,9 @@ import {
 	ContentTypeSchema,
 	ModuleSettings,
 } from '../api/api.types';
+import { WORKING_TITLE_KEY } from '../content.const';
 import { ExternalCompartmentModel } from '../store/api/externalCompartments';
-import { CompartmentType, ContentCompartmentModel } from '../store/content/compartments';
+import { CompartmentType, ContentCompartmentModel } from '../store/ui/contentCompartments';
 
 export const getSettings = (
 	contentType: ContentTypeSchema,
@@ -42,7 +43,10 @@ export const getCompartmentValue = (
 
 	switch (compartment.type) {
 		case CompartmentType.CT:
-			return content?.fields;
+			return {
+				[WORKING_TITLE_KEY]: content.meta.label,
+				...content?.fields,
+			};
 		case CompartmentType.INTERNAL:
 			return content?.meta;
 		case CompartmentType.MODULE:
@@ -89,4 +93,26 @@ export const filterCompartments = (
 		},
 		[] as ContentCompartmentModel[]
 	);
+};
+
+export const validateCompartments = (
+	compartments: ContentCompartmentModel[],
+	values: ContentSchema,
+	setValidity: (id: string, isValid: boolean) => void
+): boolean => {
+	// Create array of booleans from compartment validation
+	const validatedCompartments: boolean[] = compartments.map(compartment => {
+		if (compartment.validate) {
+			const isValid = compartment.validate(values);
+			setValidity(compartment.name, isValid);
+
+			return isValid;
+		}
+
+		// Compartment is valid if no validate function is given
+		return true;
+	});
+
+	// Return false if one of the compartments is invalid
+	return !validatedCompartments.includes(false);
 };

@@ -10,11 +10,7 @@ import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18n
 import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { DataLoader, FilterForm } from '../../components';
-import {
-	PUBLISHED_OPTIONS,
-	STATUS_OPTIONS,
-} from '../../components/forms/FilterForm/FilterForm.const';
+import { DataLoader, FILTER_STATUS_OPTIONS, FilterForm, PUBLISHED_OPTIONS } from '../../components';
 import {
 	FilterFormState,
 	PublishedStatuses,
@@ -30,6 +26,8 @@ import {
 	ContentStatus,
 	DEFAULT_CONTENT_SEARCH_PARAMS,
 } from '../../services/content';
+import { contentFacade } from '../../store/content';
+import { contentTypesFacade } from '../../store/contentTypes';
 
 import {
 	CONTENT_INITIAL_FILTER_STATE,
@@ -45,7 +43,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	/**
 	 * Hooks
 	 */
-	const [, contentTypes] = useContentTypes(siteId, CONTENT_TYPES_SEARCH_OPTIONS);
+	const [, contentTypes] = useContentTypes();
 	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
 	const [contentTypeList, setContentTypeList] = useState<FilterItemSchema[]>([]);
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
@@ -71,7 +69,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	const [contentSearchParams, setContentSearchParams] = useState<SearchParams>(
 		DEFAULT_CONTENT_SEARCH_PARAMS
 	);
-	const [loadingState, contents] = useContent(siteId, contentSearchParams);
+	const [loadingState, contents, contentsPaging] = useContent();
 	const [initialLoading, setInitialLoading] = useState<LoadingState>(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 	const [t] = useCoreTranslation();
@@ -84,6 +82,16 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			setInitialLoading(LoadingState.Loaded);
 		}
 	}, [loadingState, mySecurityRightsLoadingState]);
+
+	useEffect(() => {
+		if (siteId) {
+			contentTypesFacade.getContentTypes(siteId, CONTENT_TYPES_SEARCH_OPTIONS);
+		}
+	}, [siteId]);
+
+	useEffect(() => {
+		contentFacade.getContent(siteId, contentSearchParams);
+	}, [siteId, contentSearchParams]);
 
 	/**
 	 * Methods
@@ -114,7 +122,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			{
 				filterKey: FilterKeys.STATUS,
 				valuePrefix: 'Status',
-				value: STATUS_OPTIONS.find(option => option.value === status)?.label || '',
+				value: FILTER_STATUS_OPTIONS.find(option => option.value === status)?.label || '',
 			},
 			{
 				filterKey: FilterKeys.PUBLISHED,
@@ -137,7 +145,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 							formvalue: contentType,
 							filterKey: FilterKeys.CONTENT_TYPE,
 							value:
-								contentTypes?.data.find(ct => ct._id === contentType)?.meta.label ||
+								contentTypes?.find(ct => ct._id === contentType)?.meta.label ||
 								contentType,
 						},
 				  ]
@@ -259,11 +267,11 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	 * Render
 	 */
 	const renderOverview = (): ReactElement | null => {
-		if (!contents || !Array.isArray(contents?.data)) {
+		if (!contents || !Array.isArray(contents) || !contentsPaging) {
 			return null;
 		}
 
-		const contentsRows: ContentOverviewTableRow[] = contents.data.map(content => ({
+		const contentsRows: ContentOverviewTableRow[] = contents.map(content => ({
 			id: content.uuid as string,
 			label: content.meta?.label,
 			contentType: content.meta?.contentType?.meta?.label,
@@ -273,7 +281,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				? CONTENT_STATUS_TRANSLATION_MAP[content.meta?.status as ContentStatus]
 				: '',
 			published: content.meta?.published,
-			navigate: contentId => navigate(MODULE_PATHS.update, { contentId, siteId }),
+			navigate: contentId => navigate(MODULE_PATHS.detail, { contentId, siteId }),
 		}));
 
 		return (
@@ -294,13 +302,13 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 					rows={contentsRows}
 					loading={loadingState === LoadingState.Loading}
 					currentPage={
-						Math.ceil(contents.paging.skip / DEFAULT_CONTENT_SEARCH_PARAMS.limit) + 1
+						Math.ceil(contentsPaging.skip / DEFAULT_CONTENT_SEARCH_PARAMS.limit) + 1
 					}
 					itemsPerPage={DEFAULT_CONTENT_SEARCH_PARAMS.limit}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
 					activeSorting={activeSorting}
-					totalValues={contents?.paging?.total || 0}
+					totalValues={contentsPaging.total || 0}
 				/>
 			</>
 		);

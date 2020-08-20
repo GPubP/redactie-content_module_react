@@ -1,31 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useObservable } from '@mindspace-io/react';
 
 import { LoadingState } from '../../content.types';
-import { SearchParams } from '../../services/api';
-import { ContentsSchema, getContent } from '../../services/content';
+import { PagingSchema } from '../../services/content';
+import { contentFacade, ContentModel } from '../../store/content';
 
-const useContent = (
-	siteId: string,
-	searchParams: SearchParams
-): [LoadingState, ContentsSchema | null] => {
-	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [content, setContent] = useState<ContentsSchema | null>(null);
+const useContent = (): [LoadingState, ContentModel[], PagingSchema | null | undefined] => {
+	const [loading] = useObservable(contentFacade.isFetching$, LoadingState.Loading);
+	const [content] = useObservable(contentFacade.content$, []);
+	const [meta] = useObservable(contentFacade.meta$, null);
+	const [error] = useObservable(contentFacade.error$, null);
 
-	useEffect(() => {
-		setLoadingState(LoadingState.Loading);
-		getContent(siteId, searchParams)
-			.then(result => {
-				if (result?.data) {
-					setContent(result);
-				}
-				setLoadingState(LoadingState.Loaded);
-			})
-			.catch(() => {
-				setLoadingState(LoadingState.Error);
-			});
-	}, [searchParams, siteId]);
+	const loadingState = error ? LoadingState.Error : loading;
 
-	return [loadingState, content];
+	return [loadingState, content, meta];
 };
 
 export default useContent;

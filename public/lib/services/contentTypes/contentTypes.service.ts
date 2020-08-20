@@ -5,59 +5,47 @@ import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from './contentTypes.service.cons
 import { ContentTypeSchema, ContentTypesSchema } from './contentTypes.service.types';
 
 // TODO: This data should come from the content type module API
-export const getContentType = async (
-	siteId: string,
-	uuid: string
-): Promise<ContentTypeSchema | null> => {
-	try {
-		const response: ContentTypeSchema = await api
-			.get(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content-types/${uuid}`)
-			.json();
+export class ContentTypesApiService {
+	public async getContentTypes(
+		siteId: string,
+		searchParams: SearchParams = DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
+	): Promise<ContentTypesSchema | null> {
+		try {
+			const response: ContentTypesSchema = await api
+				.get(
+					`${SITE_REQUEST_PREFIX_URL}/${siteId}/content-types?${parseSearchParams(
+						searchParams
+					)}`
+				)
+				.json();
 
-		if (!response.fields) {
-			throw new Error('Failed to get content type');
+			if (!response) {
+				throw new Error('Failed to get content-types');
+			}
+
+			return response;
+		} catch (err) {
+			console.error(err);
+			return null;
 		}
-
-		return response;
-	} catch (err) {
-		console.error(err);
-		return null;
 	}
-};
 
-export const getContentTypes = async (siteId: string): Promise<ContentTypeSchema[] | null> => {
-	try {
-		const response: any = await api
-			.get(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content-types`)
-			.json();
+	public async getContentType(siteId: string, uuid: string): Promise<ContentTypeSchema | null> {
+		try {
+			const response: ContentTypeSchema = await api
+				.get(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content-types/${uuid}`)
+				.json();
 
-		return response.data;
-	} catch (err) {
-		console.error(err);
-		return null;
-	}
-};
+			if (!response.fields) {
+				throw new Error('Failed to get content type');
+			}
 
-export const getFilteredContentTypes = async (
-	siteId: string,
-	searchParams: SearchParams = DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
-): Promise<ContentTypesSchema | null> => {
-	try {
-		const response: ContentTypesSchema = await api
-			.get(
-				`${SITE_REQUEST_PREFIX_URL}/${siteId}/content-types?${parseSearchParams(
-					searchParams
-				)}`
-			)
-			.json();
-
-		if (!response) {
-			throw new Error('Failed to get content-types');
+			return response;
+		} catch (err) {
+			console.error(err);
+			return null;
 		}
-
-		return response;
-	} catch (err) {
-		console.error(err);
-		return null;
 	}
-};
+}
+
+export const contentTypesApiService = new ContentTypesApiService();

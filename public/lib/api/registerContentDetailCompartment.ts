@@ -1,9 +1,9 @@
 import {
 	ExternalCompartmentOptions,
-	externalCompartmentsService,
+	externalCompartmentsFacade,
 } from '../store/api/externalCompartments';
 
 export const registerContentDetailCompartment = (
 	name: string,
 	options: ExternalCompartmentOptions
-): void => externalCompartmentsService.registerCompartment(name, options);
+): void => externalCompartmentsFacade.registerCompartment(name, options);

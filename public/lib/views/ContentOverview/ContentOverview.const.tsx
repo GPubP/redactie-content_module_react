@@ -91,7 +91,7 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 					onClick={() => navigate(id)}
 					type="primary"
 					transparent
-				></Button>
+				/>
 			);
 		},
 	},

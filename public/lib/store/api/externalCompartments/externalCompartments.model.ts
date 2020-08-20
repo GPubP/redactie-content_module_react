@@ -21,8 +21,11 @@ export interface ModuleSettings {
 
 export interface ExternalCompartmentOptions {
 	label: string;
+	getDescription: (contentItem: ContentSchema | undefined) => string;
 	module: string;
 	component: FC<CompartmentProps>;
+	isValid?: boolean;
+	validate?: (values: ContentSchema) => boolean;
 	show?: (
 		settings: ModuleSettings,
 		value: ModuleValue,
@@ -36,6 +39,8 @@ export interface ExternalCompartmentModel {
 	label: string;
 	name: string;
 	component: FC<CompartmentProps>;
+	isValid?: boolean;
+	validate?: (values: ContentSchema) => boolean;
 	show?: (
 		settings: ModuleSettings,
 		value: ModuleValue,
