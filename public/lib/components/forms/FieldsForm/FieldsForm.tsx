@@ -29,7 +29,6 @@ const FieldsForm: FC<CompartmentProps> = ({
 	return (
 		<>
 			<h5 className="u-margin-bottom">Inhoud</h5>
-			<p className="u-margin-bottom">Lorem Ipsum.</p>
 			<Form
 				{...formPropsWithWorkingTitle}
 				formikRef={instance => {

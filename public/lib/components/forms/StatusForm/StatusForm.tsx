@@ -1,5 +1,5 @@
 import { RadioGroup } from '@acpaas-ui/react-components';
-import { Field, Formik } from 'formik';
+import { Field, Formik, FormikValues } from 'formik';
 import React, { FC } from 'react';
 
 import { CompartmentProps } from '../../../api/api.types';
@@ -7,7 +7,11 @@ import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandle
 
 import { STATUS_OPTIONS, STATUS_VALIDATION_SCHEMA } from './StatusForm.const';
 
-const StatusForm: FC<CompartmentProps> = ({ value, onChange, formikRef }) => {
+const StatusForm: FC<CompartmentProps> = ({ value, onChange = () => undefined, formikRef }) => {
+	const onFormChange = (values: FormikValues, submitForm: () => Promise<void>): void => {
+		submitForm();
+		onChange(values);
+	};
 	/**
 	 * RENDER
 	 */
@@ -21,7 +25,7 @@ const StatusForm: FC<CompartmentProps> = ({ value, onChange, formikRef }) => {
 		>
 			{({ submitForm }) => (
 				<>
-					<FormikOnChangeHandler onChange={submitForm} />
+					<FormikOnChangeHandler onChange={values => onFormChange(values, submitForm)} />
 					<h5 className="u-margin-bottom">Status</h5>
 					<div className="row">
 						<div className="col-xs-12 col-md-6 u-margin-bottom">
