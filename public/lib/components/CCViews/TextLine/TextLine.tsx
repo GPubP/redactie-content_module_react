@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 
 import { TEXT_HTML_TYPES } from './TextLine.const';
 
-const CCTextLineView: FC<ViewFieldProps> = ({ value }) => {
+const CCTextLineView: FC<ViewFieldProps> = ({ value = {} }) => {
 	const { text, textHTMLType: TextComponent } = value;
 
 	if (!text || !TextComponent) {
