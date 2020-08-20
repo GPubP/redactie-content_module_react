@@ -5,6 +5,7 @@ import React, { FC, useMemo } from 'react';
 
 import { registerContentAPI } from './lib/api/index';
 import { RenderChildRoutes } from './lib/components';
+import { registerCCViews } from './lib/components/CCViews';
 import rolesRightsConnector from './lib/connectors/rolesRights';
 import { registerRoutes } from './lib/connectors/sites';
 import { MODULE_PATHS, urlSiteParam } from './lib/content.const';
@@ -137,6 +138,7 @@ if (rolesRightsConnector.api) {
 	);
 }
 
+registerCCViews();
 registerContentAPI();
 
 export * from './lib/api/api.types';
