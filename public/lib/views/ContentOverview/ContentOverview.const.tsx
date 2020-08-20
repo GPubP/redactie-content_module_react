@@ -1,8 +1,10 @@
-import { Button } from '@acpaas-ui/react-components';
+import { Link as AUILink, Button } from '@acpaas-ui/react-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { TranslateFunc } from '@redactie/translations-module/public/lib/i18next/useTranslation';
 import moment from 'moment';
+import { propOr } from 'ramda';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { ContentOverviewTableRow } from './ContentOverview.types';
 
@@ -23,32 +25,56 @@ export const CONTENT_INITIAL_FILTER_STATE = {
 
 export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
-		label: t(CORE_TRANSLATIONS.TABLE_NAME),
+		label: 'Titel',
 		value: 'label',
+		component(value: any, rowData: ContentOverviewTableRow) {
+			return (
+				<>
+					<AUILink to={'#'} component={Link}>
+						{rowData.label}
+					</AUILink>
+					<p className="u-text-light u-margin-top-xs">
+						{propOr('Geen beschrijving.', 'description')(rowData)}
+					</p>
+				</>
+			);
+		},
 	},
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_TYPE),
 		value: 'contentType',
+		disableSorting: true,
 	},
 	{
 		label: t(CORE_TRANSLATIONS['TABLE_LAST-MODIFIED']),
 		value: 'lastModified',
+		disableSorting: true,
 		format: (data: string) => moment(data).format('DD/MM/YYYY [-] hh[u]mm'),
 	},
 	{
 		label: 'Aanmaker',
 		value: 'lastEditor',
+		disableSorting: true,
+		component(value: any, rowData: ContentOverviewTableRow) {
+			return <p>{propOr('Onbekend', 'lastEditor')(rowData)}</p>;
+		},
 	},
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 		value: 'status',
+		disableSorting: true,
 	},
 	{
 		label: 'Online',
 		value: 'published',
+		disableSorting: true,
 		component(value: unknown, rowData: ContentOverviewTableRow) {
-			const isOnline = !!rowData.published;
-			return <span className={isOnline ? 'a-dot__green' : 'a-dot__red'} />;
+			const isOnline = rowData.published;
+			return isOnline ? (
+				<span className="u-text-success fa fa-circle"></span>
+			) : (
+				<span className="u-text-danger fa fa-circle"></span>
+			);
 		},
 	},
 	{
