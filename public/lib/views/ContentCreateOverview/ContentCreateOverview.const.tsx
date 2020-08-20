@@ -29,7 +29,7 @@ export const CONTENT_CREATE_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 			const { navigate, uuid } = rowData;
 
 			return (
-				<Button outline onClick={() => navigate(uuid)} type="primary">
+				<Button outline onClick={() => navigate(uuid)} type="primary" size="small">
 					{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
 				</Button>
 			);
