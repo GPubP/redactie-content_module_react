@@ -1,5 +1,6 @@
 import { getViewRegistry } from '../../connectors/formRenderer';
 
+import { CCTextBoxView } from './TextBox';
 import { CCTextLineView } from './TextLine';
 
 export const registerCCViews = (): void => {
@@ -11,6 +12,11 @@ export const registerCCViews = (): void => {
 				name: 'textline',
 				module: 'core',
 				component: CCTextLineView,
+			},
+			{
+				name: 'textbox',
+				module: 'core',
+				component: CCTextBoxView,
 			},
 		]);
 	}
