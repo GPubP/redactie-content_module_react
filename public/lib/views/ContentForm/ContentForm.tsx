@@ -114,7 +114,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				}
 			});
 		}
-	}, [activeCompartment, activeCompartmentFormikRef, contentItemDraft, hasSubmit]);
+	}, [activeCompartment, activeCompartmentFormikRef, hasSubmit]);
 
 	/**
 	 * Methods
