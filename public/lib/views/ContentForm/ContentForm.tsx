@@ -1,6 +1,6 @@
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
-import { FormikProps, FormikValues } from 'formik';
-import { clone, equals } from 'ramda';
+import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
+import { clone, equals, isEmpty } from 'ramda';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -63,7 +63,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	]);
 
 	useEffect(() => {
-		// TODO: add compartments support later on
 		if (!contentType) {
 			return;
 		}
@@ -102,10 +101,18 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 	// Trigger errors on form when switching from compartments
 	useEffect(() => {
-		if (hasSubmit && !activeCompartment?.isValid && activeCompartmentFormikRef.current) {
-			activeCompartmentFormikRef.current.validateForm();
+		const { current: formikRef } = activeCompartmentFormikRef;
+
+		if (hasSubmit && !activeCompartment?.isValid && formikRef) {
+			formikRef.validateForm().then(errors => {
+				if (!isEmpty(errors)) {
+					// Set all fields with errors as touched
+					formikRef.setTouched(setNestedObjectValues(errors, true));
+					formikRef.setErrors(errors);
+				}
+			});
 		}
-	}, [activeCompartment, activeCompartmentFormikRef, hasSubmit]);
+	}, [activeCompartment, activeCompartmentFormikRef, contentItemDraft, hasSubmit]);
 
 	/**
 	 * Methods
@@ -137,7 +144,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		// Validate current form to trigger fields error states
 		if (formikRef) {
-			formikRef.validateForm();
+			formikRef.validateForm().then(errors => {
+				if (!isEmpty(errors)) {
+					formikRef.setErrors(errors);
+				}
+			});
 		}
 		// Only submit the form if all compartments are valid
 		if (compartmentsAreValid) {
