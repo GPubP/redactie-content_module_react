@@ -58,6 +58,9 @@ export const mapExternalCompartmentToContentCompartment = (
 	ec: ExternalCompartmentModel
 ): ContentCompartmentModel => ({
 	label: ec.label,
+	getDescription: ec.getDescription,
+	isValid: ec.isValid,
+	validate: ec.validate,
 	name: ec.name,
 	component: ec.component,
 	type: CompartmentType.MODULE,
