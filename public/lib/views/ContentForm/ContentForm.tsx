@@ -1,4 +1,5 @@
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
+import { alertService } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import { clone, equals, isEmpty } from 'ramda';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
@@ -6,6 +7,7 @@ import { NavLink } from 'react-router-dom';
 
 import { ContentSchema } from '../../api/api.types';
 import { ContentFormActions } from '../../components';
+import { ALERT_CONTAINER_IDS } from '../../content.const';
 import { LoadingState, NavListItem } from '../../content.types';
 import {
 	filterCompartments,
@@ -153,6 +155,14 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		// Only submit the form if all compartments are valid
 		if (compartmentsAreValid) {
 			onSubmit(contentItemDraft);
+		} else {
+			alertService.danger(
+				{
+					title: 'Er zijn nog fouten',
+					message: 'Lorem ipsum',
+				},
+				{ containerId: ALERT_CONTAINER_IDS.contentEdit }
+			);
 		}
 
 		setHasSubmit(true);
