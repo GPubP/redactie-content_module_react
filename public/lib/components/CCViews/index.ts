@@ -1,5 +1,6 @@
 import { getViewRegistry } from '../../connectors/formRenderer';
 
+import { CCLinkView } from './Link';
 import { CCTextBoxView } from './TextBox';
 import { CCTextLineView } from './TextLine';
 
@@ -17,6 +18,11 @@ export const registerCCViews = (): void => {
 				name: 'textbox',
 				module: 'core',
 				component: CCTextBoxView,
+			},
+			{
+				name: 'link',
+				module: 'core',
+				component: CCLinkView,
 			},
 		]);
 	}
