@@ -101,7 +101,8 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 				responsive={false}
 				totalValues={meta.total || 0}
 				loading={loadingState === LoadingState.Loading}
-			></PaginatedTable>
+				hideResultsMessage
+			/>
 		);
 	};
 
