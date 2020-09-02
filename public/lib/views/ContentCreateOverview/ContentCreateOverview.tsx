@@ -28,10 +28,6 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 			name: 'Content',
 			target: '',
 		},
-		{
-			name: 'Create overview',
-			target: '',
-		},
 	]);
 	const { navigate } = useNavigate();
 	const [contentTypesSearchParams, setContentTypesSearchParams] = useState(

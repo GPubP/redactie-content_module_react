@@ -61,10 +61,6 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			name: 'Content',
 			target: '',
 		},
-		{
-			name: 'Overview',
-			target: '',
-		},
 	]);
 	const [contentSearchParams, setContentSearchParams] = useState<SearchParams>(
 		DEFAULT_CONTENT_SEARCH_PARAMS
