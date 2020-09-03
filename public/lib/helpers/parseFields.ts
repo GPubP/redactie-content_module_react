@@ -30,18 +30,20 @@ export const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[
 
 		const formField = {
 			name: name,
-			module: fieldType?.data?.module,
 			label: !isMultiple ? label : null,
+			module: fieldType?.data?.module,
 			type: fieldType?.data?.componentName,
 			view: preset ? preset.data.name : '',
+			dataType: dataType.data.type,
+			fields: parseFields(config.fields),
 			config: {
 				...config,
 				...generalConfig,
 				description: generalConfig.guideline,
 				preset,
+				fieldType,
+				dataType,
 			},
-			fields: parseFields(config.fields),
-			dataType: dataType.data.type,
 		};
 
 		if (isMultiple) {
