@@ -1,8 +1,8 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { TranslateFunc } from '@redactie/translations-module/public/lib/i18next/useTranslation';
+import classnames from 'classnames';
 import moment from 'moment';
-import { propOr } from 'ramda';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -29,15 +29,16 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: 'Titel',
 		value: 'label',
-		component(value: any, rowData: ContentOverviewTableRow) {
-			const { navigate } = rowData;
+		component(label: string, rowData: ContentOverviewTableRow) {
+			const { viewPath } = rowData;
+
 			return (
 				<>
-					<AUILink to={() => navigate(MODULE_PATHS.detailView)} component={Link}>
-						{rowData.label}
+					<AUILink to={viewPath} component={Link}>
+						{label}
 					</AUILink>
 					<p className="u-text-light u-margin-top-xs">
-						{propOr('Geen beschrijving.', 'description')(rowData)}
+						{rowData.description || 'Geen beschrijving.'}
 					</p>
 				</>
 			);
@@ -59,7 +60,7 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'lastEditor',
 		disableSorting: true,
 		component(value: any, rowData: ContentOverviewTableRow) {
-			return <p>{propOr('Onbekend', 'lastEditor')(rowData)}</p>;
+			return <p>{rowData.lastEditor || 'Onbekend'}</p>;
 		},
 	},
 	{
@@ -72,11 +73,12 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'published',
 		disableSorting: true,
 		component(value: unknown, rowData: ContentOverviewTableRow) {
-			const isOnline = rowData.published;
-			return isOnline ? (
-				<span className="u-text-success fa fa-circle"></span>
-			) : (
-				<span className="u-text-danger fa fa-circle"></span>
+			return (
+				<span
+					className={classnames('fa fa-circle', [
+						rowData.published ? 'u-text-success' : 'u-text-danger',
+					])}
+				/>
 			);
 		},
 	},

@@ -7,6 +7,7 @@ export interface ContentOverviewTableRow {
 	status?: string;
 	published?: boolean;
 	navigate: (path: string) => void;
+	viewPath: string;
 }
 
 export enum FilterKeys {

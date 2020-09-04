@@ -55,7 +55,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	] = rolesRightsConnector.api.hooks.useMySecurityRightsForSite({
 		onlyKeys: true,
 	});
-	const { navigate } = useNavigate();
+	const { generatePath, navigate } = useNavigate();
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
 			name: 'Content',
@@ -277,6 +277,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				: '',
 			published: content.meta?.published,
 			navigate: path => navigate(path, { contentId: content.uuid, siteId }),
+			viewPath: generatePath(MODULE_PATHS.detailView, { contentId: content.uuid, siteId }),
 		}));
 
 		return (
