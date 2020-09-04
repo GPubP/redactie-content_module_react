@@ -12,7 +12,11 @@ import TenantContext from '../../../context/TenantContext/TenantContext';
 import { useCcContent } from '../../../hooks';
 import { ccContentFacade } from '../../../store/ccContent';
 
-const ContentSelect: React.FC<InputFieldProps> = ({ fieldProps, fieldSchema }: InputFieldProps) => {
+const ContentSelect: React.FC<InputFieldProps> = ({
+	fieldProps,
+	fieldSchema,
+	fieldHelperProps,
+}: InputFieldProps) => {
 	const config = fieldSchema.config || {};
 	const { field, form } = fieldProps;
 
@@ -33,13 +37,8 @@ const ContentSelect: React.FC<InputFieldProps> = ({ fieldProps, fieldSchema }: I
 				multipleSelect={false}
 				defaultValue={field.value}
 				loading={contentLoadingState === LoadingState.Loading}
-				onSelection={(selected: any) => {
-					field.onChange({
-						target: {
-							id: fieldSchema.name,
-							value: selected,
-						},
-					});
+				onSelection={(selected: string) => {
+					fieldHelperProps.setValue(selected);
 				}}
 				asyncItems={async (query: string, cb: (options: any[]) => void) => {
 					await ccContentFacade.getContent(siteId, {
