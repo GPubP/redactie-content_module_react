@@ -7,7 +7,7 @@ export interface ContentOverviewTableRow {
 	lastEditor?: string;
 	status?: string;
 	published?: boolean;
-	navigate: (contentId: string) => void;
+	navigate: (path: string) => void;
 }
 
 export enum FilterKeys {

@@ -6,6 +6,8 @@ import { propOr } from 'ramda';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { MODULE_PATHS } from '../../content.const';
+
 import { ContentOverviewTableRow } from './ContentOverview.types';
 
 export const CONTENT_TYPES_SEARCH_OPTIONS = {
@@ -28,9 +30,10 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		label: 'Titel',
 		value: 'label',
 		component(value: any, rowData: ContentOverviewTableRow) {
+			const { navigate } = rowData;
 			return (
 				<>
-					<AUILink to={'#'} component={Link}>
+					<AUILink to={() => navigate(MODULE_PATHS.detailView)} component={Link}>
 						{rowData.label}
 					</AUILink>
 					<p className="u-text-light u-margin-top-xs">
@@ -82,13 +85,13 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		classList: ['u-text-right'],
 		disableSorting: true,
 		component(value: unknown, rowData: ContentOverviewTableRow) {
-			const { id, navigate } = rowData;
+			const { navigate } = rowData;
 
 			return (
 				<Button
 					ariaLabel="Edit"
 					icon="edit"
-					onClick={() => navigate(id)}
+					onClick={() => navigate(MODULE_PATHS.detailEdit)}
 					type="primary"
 					transparent
 				/>
