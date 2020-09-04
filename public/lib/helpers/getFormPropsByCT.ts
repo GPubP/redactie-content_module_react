@@ -27,6 +27,23 @@ export const getFormPropsByCT = (contentType: ContentTypeSchema): FormRendererPr
 	};
 };
 
+// TODO: export this from form-renderer module?
+export const parseValidationSchema = (schema: ValidateSchema, path?: string): ValidateSchema => ({
+	...schema,
+	properties:
+		schema.properties &&
+		Object.keys(schema.properties).reduce((acc, key) => {
+			const p = path === undefined ? key : `${path}.${key}`;
+			if (schema.properties) {
+				acc[key] = parseValidationSchema(schema?.properties[key], p);
+			}
+
+			return acc;
+		}, {} as Record<string, ValidationSchema>),
+	items: schema.items && parseValidationSchema(schema.items, `${path}[$]`),
+	name: path,
+});
+
 export const addWorkingTitleField = (formProps: FormRendererProps): FormRendererProps => ({
 	...formProps,
 	schema: {

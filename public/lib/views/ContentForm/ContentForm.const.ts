@@ -1,3 +1,4 @@
+import { buildYup } from '@redactie/schema-to-yup';
 import moment from 'moment';
 
 import { ContentSchema } from '../../api/api.types';
@@ -8,6 +9,7 @@ import {
 	STATUS_VALIDATION_SCHEMA,
 	StatusForm,
 } from '../../components';
+import { getFormPropsByCT, parseValidationSchema } from '../../helpers';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
@@ -18,6 +20,19 @@ export const INTERNAL_COMPARTMENTS: ContentCompartmentModel[] = [
 		slug: 'inhoud',
 		component: FieldsForm,
 		type: CompartmentType.CT,
+		isValid: false,
+		validate: values => {
+			const formProps = getFormPropsByCT(values.meta.contentType);
+
+			if (formProps.validationSchema) {
+				const yupSchema = buildYup(parseValidationSchema(formProps.validationSchema), {
+					errMessages: formProps.errorMessages || {},
+				});
+				return yupSchema.isValidSync(values.fields);
+			}
+			// If no validationSchema is found return compartment as valid
+			return true;
+		},
 	},
 	{
 		label: 'Info',
