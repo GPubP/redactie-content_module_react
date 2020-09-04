@@ -39,7 +39,7 @@ export const parseValidationSchema = (schema: ValidateSchema, path?: string): Va
 			}
 
 			return acc;
-		}, {} as Record<string, ValidationSchema>),
+		}, {} as Record<string, ValidateSchema>),
 	items: schema.items && parseValidationSchema(schema.items, `${path}[$]`),
 	name: path,
 });
@@ -69,6 +69,7 @@ export const addWorkingTitleField = (formProps: FormRendererProps): FormRenderer
 		...formProps.validationSchema,
 		properties: {
 			[WORKING_TITLE_KEY]: {
+				required: true,
 				type: 'string',
 			},
 			...formProps.validationSchema.properties,
