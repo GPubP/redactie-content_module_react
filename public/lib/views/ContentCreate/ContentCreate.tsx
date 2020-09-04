@@ -9,6 +9,7 @@ import { DataLoader, RenderChildRoutes } from '../../components';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { TenantContext } from '../../context';
+import { getInitialContentValues } from '../../helpers';
 import { useContentItem, useContentType, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { ContentCreateSchema, ContentSchema, ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content/content.facade';
@@ -51,7 +52,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		}
 
 		const defaultValue: ContentSchema = {
-			fields: {},
+			fields: getInitialContentValues(contentType),
 			modulesData: {},
 			meta: {
 				label: '',
