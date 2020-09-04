@@ -10,6 +10,8 @@ import { WORKING_TITLE_KEY } from '../content.const';
 import { ExternalCompartmentModel } from '../store/api/externalCompartments';
 import { CompartmentType, ContentCompartmentModel } from '../store/ui/contentCompartments';
 
+import { getInitialContentValues } from './getInitialContentValues';
+
 export const getSettings = (
 	contentType: ContentTypeSchema,
 	compartment: ContentCompartmentModel
@@ -35,7 +37,8 @@ export const getSettings = (
 
 export const getCompartmentValue = (
 	content: ContentSchema | undefined,
-	compartment: ContentCompartmentModel
+	compartment: ContentCompartmentModel,
+	contentType: ContentTypeSchema
 ): unknown => {
 	if (!content) {
 		return;
@@ -45,7 +48,7 @@ export const getCompartmentValue = (
 		case CompartmentType.CT:
 			return {
 				[WORKING_TITLE_KEY]: content.meta.label,
-				...content?.fields,
+				...getInitialContentValues(contentType, content?.fields),
 			};
 		case CompartmentType.INTERNAL:
 			return content?.meta;
@@ -80,7 +83,7 @@ export const filterCompartments = (
 				typeof ec.show === 'function' &&
 				!ec.show(
 					getSettings(contentType, contentCompartment) as ModuleSettings,
-					getCompartmentValue(content, contentCompartment),
+					getCompartmentValue(content, contentCompartment, contentType),
 					content,
 					contentType
 				)

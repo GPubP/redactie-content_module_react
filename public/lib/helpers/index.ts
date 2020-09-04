@@ -4,3 +4,4 @@ export * from './getFormPropsByCT';
 export * from './getViewPropsByCT';
 export * from './parseFields';
 export * from './onEmit';
+export * from './getInitialContentValues';
