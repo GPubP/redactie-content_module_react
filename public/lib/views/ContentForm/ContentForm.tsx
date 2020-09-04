@@ -192,7 +192,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 								isValid
 								settings={getSettings(contentType, activeCompartment)}
 								onChange={values => handleChange(activeCompartment, values)}
-								value={getCompartmentValue(contentItemDraft, activeCompartment)}
+								value={getCompartmentValue(
+									contentItemDraft,
+									activeCompartment,
+									contentType
+								)}
 								updateContent={(content: ContentSchema) =>
 									contentFacade.updateContentItemDraft(content)
 								}

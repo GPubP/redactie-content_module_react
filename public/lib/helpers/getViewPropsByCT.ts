@@ -3,6 +3,7 @@ import { FormikValues } from 'formik';
 
 import { ContentTypeSchema } from '../services/contentTypes';
 
+import { getInitialContentValues } from './getInitialContentValues';
 import { parseFields } from './parseFields';
 
 export const getViewPropsByCT = (
@@ -13,6 +14,6 @@ export const getViewPropsByCT = (
 		schema: {
 			fields: parseFields(contentType.fields),
 		},
-		values,
+		values: getInitialContentValues(contentType, values),
 	};
 };
