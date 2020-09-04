@@ -6,14 +6,12 @@
       "dom.iterable",
       "esnext"
     ],
-    "plugins": [
-      {
-        "name": "typescript-plugin-css-modules",
-        "options": {
-          "customMatcher": "\\.module\\.(c|le|sa|sc)ss$"
-        }
+    "plugins": [{
+      "name": "typescript-plugin-css-modules",
+      "options": {
+        "customMatcher": "\\.module\\.(c|le|sa|sc)ss$"
       }
-    ],
+    }],
     "sourceMap": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -29,6 +27,7 @@
   },
   "include": [
     "public",
-    "node_modules/@redactie/translations-module"
+    "node_modules/@redactie/translations-module",
+    "node_modules/@a-ui/core"
   ]
 }
