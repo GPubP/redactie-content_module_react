@@ -268,7 +268,6 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		}
 
 		const contentsRows: ContentOverviewTableRow[] = contents.map(content => ({
-			id: content.uuid as string,
 			label: content.meta?.label,
 			contentType: content.meta?.contentType?.meta?.label,
 			lastModified: content.meta?.lastModified,
