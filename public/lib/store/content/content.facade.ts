@@ -30,10 +30,10 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 	/**
 	 * API integration
 	 */
-	public getContent(siteId: string, searchParams: SearchParams): void {
+	public getContent(siteId: string, searchParams: SearchParams): Promise<void> {
 		this.store.setIsFetching(true);
 
-		this.service
+		return this.service
 			.getContent(siteId, searchParams)
 			.then(response => {
 				if (response) {

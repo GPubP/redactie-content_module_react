@@ -43,6 +43,7 @@ module.exports = env => {
 						},
 						'sass-loader',
 					],
+					include: [/public/, /node_modules\/@a-ui\/core/],
 				},
 			],
 		},

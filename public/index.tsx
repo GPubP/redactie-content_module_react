@@ -6,6 +6,7 @@ import React, { FC, useMemo } from 'react';
 import { registerContentAPI } from './lib/api/index';
 import { RenderChildRoutes } from './lib/components';
 import { registerCCViews } from './lib/components/CCViews';
+import { registerCCFields } from './lib/components/Fields/index';
 import rolesRightsConnector from './lib/connectors/rolesRights';
 import { registerRoutes } from './lib/connectors/sites';
 import { MODULE_PATHS, urlSiteParam } from './lib/content.const';
@@ -26,12 +27,18 @@ moment.locale('nl');
 
 // akitaDevtools();
 
-const ContentComponent: FC<ContentRouteProps> = ({ route, tenantId }) => {
+const ContentComponent: FC<ContentRouteProps<{ siteId: string }>> = ({
+	route,
+	tenantId,
+	match,
+}) => {
+	const { siteId } = match.params;
 	const guardsMeta = useMemo(
 		() => ({
 			tenantId,
+			siteId,
 		}),
-		[tenantId]
+		[siteId, tenantId]
 	);
 	const extraOptions = useMemo(
 		() => ({
@@ -42,7 +49,7 @@ const ContentComponent: FC<ContentRouteProps> = ({ route, tenantId }) => {
 	);
 
 	return (
-		<TenantContext.Provider value={{ tenantId }}>
+		<TenantContext.Provider value={{ tenantId, siteId }}>
 			<RenderChildRoutes
 				routes={route.routes}
 				guardsMeta={guardsMeta}
@@ -156,5 +163,6 @@ if (rolesRightsConnector.api) {
 
 registerCCViews();
 registerContentAPI();
+registerCCFields();
 
 export * from './lib/api/api.types';
