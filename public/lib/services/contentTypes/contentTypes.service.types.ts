@@ -10,6 +10,7 @@ export interface GeneralConfig {
 }
 
 export interface FieldType {
+	_id: string;
 	uuid: string;
 	data: {
 		componentName: string;
