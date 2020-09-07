@@ -120,7 +120,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		const extraOptions = {
 			contentType,
 			contentItemDraft,
-			onCancle: navigateToOverview,
+			onCancel: navigateToOverview,
 			onSubmit,
 		};
 
