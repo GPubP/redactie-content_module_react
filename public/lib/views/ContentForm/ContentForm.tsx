@@ -140,6 +140,18 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		return;
 	};
 
+	const handleCancel = (): void => {
+		const { current: formikRef } = activeCompartmentFormikRef;
+
+		if (formikRef) {
+			formikRef.resetForm();
+		}
+
+		alertService.dismiss();
+		setHasSubmit(false);
+		onCancel();
+	};
+
 	const onFormSubmit = (contentItemDraft: ContentSchema): void => {
 		const { current: formikRef } = activeCompartmentFormikRef;
 		const compartmentsAreValid = validateCompartments(compartments, contentItemDraft, validate);
@@ -220,7 +232,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						}
 						isPublishing={publishContentItemLoadingState === LoadingState.Loading}
 						onUpdatePublication={() => onUpdatePublication(contentItemDraft)}
-						onCancel={onCancel}
+						onCancel={handleCancel}
 					/>
 				</ActionBarContentSection>
 			</ActionBar>
