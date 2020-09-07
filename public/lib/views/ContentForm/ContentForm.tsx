@@ -1,13 +1,15 @@
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
+import { useObservable } from '@mindspace-io/react';
 import { alertService } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
+import kebabCase from 'lodash.kebabcase';
 import { clone, equals, isEmpty } from 'ramda';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { ContentSchema } from '../../api/api.types';
 import { ContentFormActions } from '../../components';
-import { ALERT_CONTAINER_IDS } from '../../content.const';
+import { ALERT_CONTAINER_IDS, WORKING_TITLE_KEY } from '../../content.const';
 import { LoadingState, NavListItem } from '../../content.types';
 import {
 	filterCompartments,
@@ -31,6 +33,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	contentType,
 	contentItem,
 	contentItemDraft,
+	isCreating,
 	match,
 	showPublishedStatus,
 	onSubmit = () => null,
@@ -63,6 +66,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		contentItem,
 		contentItemDraft,
 	]);
+	const [slugFieldTouched] = useObservable(contentFacade.slugFieldTouched$, false);
 
 	useEffect(() => {
 		if (!contentType) {
@@ -126,12 +130,23 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		switch (compartment.type) {
 			case CompartmentType.CT: {
-				contentFacade.updateContentFieldsDraft(values as ContentSchema['fields']);
+				const fieldValues = values as ContentSchema['fields'];
+				if (isCreating && !slugFieldTouched) {
+					contentFacade.updateContentMetaDraft({
+						slug: { nl: kebabCase(fieldValues[WORKING_TITLE_KEY]) },
+					});
+				}
+				contentFacade.updateContentFieldsDraft(fieldValues);
 				break;
 			}
-			case CompartmentType.INTERNAL:
-				contentFacade.updateContentMetaDraft(values as ContentSchema['meta']);
+			case CompartmentType.INTERNAL: {
+				const metaValues = values as ContentSchema['meta'];
+				if (isCreating && !isEmpty(metaValues.slug?.nl)) {
+					contentFacade.updateSlugFieldTouched(true);
+				}
+				contentFacade.updateContentMetaDraft(metaValues);
 				break;
+			}
 			case CompartmentType.MODULE:
 				contentFacade.updateContentModuleDraft(compartment.name, values);
 				break;
