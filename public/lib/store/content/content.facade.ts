@@ -195,7 +195,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		}));
 	}
 
-	public updateContentMetaDraft(data: ContentSchema['meta']): void {
+	public updateContentMetaDraft(data: Partial<ContentSchema['meta']>): void {
 		this.store.update(state => ({
 			contentItemDraft: {
 				...state.contentItemDraft,
