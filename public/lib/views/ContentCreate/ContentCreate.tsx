@@ -88,11 +88,10 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 
 		const request: ContentCreateSchema = {
 			meta: {
-				// TODO: Where does this string come from?
 				label: content.meta?.label,
 				slug: content.meta?.slug,
 				contentType: contentType._id,
-				status: ContentStatus.DRAFT,
+				status: content.meta.status as ContentStatus,
 				site: siteId,
 			},
 			modulesData: content.modulesData,
@@ -119,9 +118,9 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		}
 
 		const extraOptions = {
-			contentType: contentType,
+			contentType,
 			contentItemDraft,
-			onCancle: navigateToOverview,
+			onCancel: navigateToOverview,
 			onSubmit,
 		};
 
