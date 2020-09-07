@@ -74,6 +74,13 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		}
 	}, [siteId, contentTypeId]);
 
+	// Reset touched state of slug field when unmounting
+	useEffect(() => {
+		return () => {
+			contentFacade.updateSlugFieldTouched(false);
+		};
+	}, []);
+
 	/**
 	 * Methods
 	 */
