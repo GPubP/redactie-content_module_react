@@ -1,5 +1,4 @@
 export interface ContentOverviewTableRow {
-	id: string;
 	label?: string;
 	description?: string;
 	contentType?: string;
@@ -7,7 +6,8 @@ export interface ContentOverviewTableRow {
 	lastEditor?: string;
 	status?: string;
 	published?: boolean;
-	navigate: (contentId: string) => void;
+	navigate: (path: string) => void;
+	viewPath: string;
 }
 
 export enum FilterKeys {

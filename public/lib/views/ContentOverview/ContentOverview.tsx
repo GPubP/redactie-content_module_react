@@ -55,7 +55,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	] = rolesRightsConnector.api.hooks.useMySecurityRightsForSite({
 		onlyKeys: true,
 	});
-	const { navigate } = useNavigate();
+	const { generatePath, navigate } = useNavigate();
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
 			name: 'Content',
@@ -268,7 +268,6 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		}
 
 		const contentsRows: ContentOverviewTableRow[] = contents.map(content => ({
-			id: content.uuid as string,
 			label: content.meta?.label,
 			contentType: content.meta?.contentType?.meta?.label,
 			lastModified: content.meta?.lastModified,
@@ -277,7 +276,8 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				? CONTENT_STATUS_TRANSLATION_MAP[content.meta?.status as ContentStatus]
 				: '',
 			published: content.meta?.published,
-			navigate: contentId => navigate(MODULE_PATHS.detail, { contentId, siteId }),
+			navigate: path => navigate(path, { contentId: content.uuid, siteId }),
+			viewPath: generatePath(MODULE_PATHS.detailView, { contentId: content.uuid, siteId }),
 		}));
 
 		return (
