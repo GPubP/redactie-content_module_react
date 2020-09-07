@@ -20,6 +20,7 @@ export class ContentQuery extends BaseEntityQuery<ContentState> {
 	public isPublishing$ = this.select(state => state.isPublishing).pipe(
 		map(this.convertBoolToLoadingState)
 	);
+	public slugFieldTouched$ = this.select(state => state.slugFieldTouched);
 }
 
 export const contentQuery = new ContentQuery(contentStore);
