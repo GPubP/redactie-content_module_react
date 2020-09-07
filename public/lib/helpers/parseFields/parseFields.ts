@@ -26,7 +26,7 @@ export const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[
 		const isMultiple = generalConfig.max > 1;
 		const isPreset = !!preset;
 		const formField: FieldSchema = {
-			name: name,
+			name,
 			label,
 			module: fieldType?.data?.module,
 			type: fieldType?.data?.componentName,
@@ -69,9 +69,9 @@ export const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[
 			}
 
 			return {
-				name: name,
+				name,
 				module: 'core',
-				label: label,
+				label,
 				type: 'repeater',
 				dataType: 'array',
 				config: {
