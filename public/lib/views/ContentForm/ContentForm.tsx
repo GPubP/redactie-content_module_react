@@ -1,5 +1,4 @@
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
-import { useObservable } from '@mindspace-io/react';
 import { alertService } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
@@ -56,6 +55,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const [navList, setNavlist] = useState<NavListItem[]>([]);
 	const [hasSubmit, setHasSubmit] = useState(false);
+	const [slugFieldTouched, setSlugFieldTouched] = useState(false);
 	const [
 		,
 		createContentItemLoadingState,
@@ -66,7 +66,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		contentItem,
 		contentItemDraft,
 	]);
-	const [slugFieldTouched] = useObservable(contentFacade.slugFieldTouched$, false);
 
 	useEffect(() => {
 		if (!contentType) {
@@ -142,7 +141,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			case CompartmentType.INTERNAL: {
 				const metaValues = values as ContentSchema['meta'];
 				if (isCreating && !isEmpty(metaValues.slug?.nl)) {
-					contentFacade.updateSlugFieldTouched(true);
+					setSlugFieldTouched(true);
 				}
 				contentFacade.updateContentMetaDraft(metaValues);
 				break;

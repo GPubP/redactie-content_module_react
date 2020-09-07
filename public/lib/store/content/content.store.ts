@@ -19,5 +19,4 @@ export class ContentStore extends BaseEntityStore<ContentState, ContentModel> {
 
 export const contentStore = new ContentStore({
 	isPublishing: false,
-	slugFieldTouched: false,
 });

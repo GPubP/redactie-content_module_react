@@ -26,7 +26,6 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 	public readonly contentItem$ = this.query.contentItem$;
 	public readonly contentItemDraft$ = this.query.contentItemDraft$;
 	public readonly isPublishing$ = this.query.isPublishing$;
-	public readonly slugFieldTouched$ = this.query.slugFieldTouched$;
 
 	/**
 	 * API integration
@@ -215,10 +214,6 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 				},
 			},
 		}));
-	}
-
-	public updateSlugFieldTouched(slugFieldTouched: boolean): void {
-		this.store.update({ slugFieldTouched });
 	}
 }
 
