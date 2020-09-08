@@ -32,18 +32,20 @@ const ContentSelectView: React.FC<ViewFieldProps> = ({ value, fieldSchema }: Vie
 		}
 
 		return (
-			<Link
-				id={`${fieldSchema?.name}-${value}`}
-				className="u-margin-bottom a-button a-button-primary has-icon-right"
-				title={ccContentItem?.meta.label}
-				to={generatePath(MODULE_PATHS.detailView, {
-					contentId: ccContentItem?.uuid,
-					siteId,
-				})}
-			>
-				<span className="fa fa-chevron-right"></span>
-				{ccContentItem?.meta.label}
-			</Link>
+			<div>
+				<Link
+					id={`${fieldSchema?.name}-${value}`}
+					className="u-margin-bottom a-button a-button-primary has-icon-right"
+					title={ccContentItem?.meta.label}
+					to={generatePath(MODULE_PATHS.detailView, {
+						contentId: ccContentItem?.uuid,
+						siteId,
+					})}
+				>
+					<span className="fa fa-chevron-right"></span>
+					{ccContentItem?.meta.label}
+				</Link>
+			</div>
 		);
 	};
 
