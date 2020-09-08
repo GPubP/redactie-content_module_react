@@ -11,19 +11,26 @@ export const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[
 				max: 1,
 				hidden: false,
 				guideline: '',
-				defaultGuideline: '',
-				defaultLabel: '',
 			},
 			config = {
 				fields: [],
 			},
 			name,
-			fieldType,
+			fieldType = {
+				data: {
+					module: 'core',
+					componentName: 'text',
+					generalConfig: {
+						defaultGuideline: '',
+						defaultLabel: '',
+					},
+				},
+			},
 			dataType,
 			label,
 			preset,
 		} = field;
-		const isMultiple = generalConfig.max > 1;
+		const isMultiple = (generalConfig.max || 0) > 1;
 		const isPreset = !!preset;
 		const formField: FieldSchema = {
 			name,
@@ -50,11 +57,11 @@ export const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[
 			if (!isPreset) {
 				formField.config = {
 					...formField.config,
-					description: generalConfig.defaultGuideline,
+					description: fieldType.data.generalConfig.defaultGuideline,
 				};
 				// TODO: label is required in the form renderer
 				// Fix this when the label is not required anymore
-				formField.label = (generalConfig.defaultLabel as unknown) as string;
+				formField.label = (fieldType.data.generalConfig.defaultLabel as unknown) as string;
 			}
 
 			/**

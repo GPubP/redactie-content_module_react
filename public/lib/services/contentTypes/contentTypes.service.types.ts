@@ -17,6 +17,10 @@ export interface FieldType {
 	data: {
 		componentName: string;
 		module: string;
+		generalConfig: {
+			defaultGuideline?: string;
+			defaultLabel?: string;
+		};
 	};
 }
 
