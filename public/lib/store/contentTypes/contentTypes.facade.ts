@@ -1,6 +1,7 @@
+import { BaseEntityFacade } from '@redactie/utils';
+
 import { SearchParams } from '../../services/api/api.service.types';
 import { ContentTypesApiService, contentTypesApiService } from '../../services/contentTypes';
-import { BaseEntityFacade } from '../shared';
 
 import { ContentTypesQuery, contentTypesQuery } from './contentTypes.query';
 import { ContentTypesStore, contentTypesStore } from './contentTypes.store';

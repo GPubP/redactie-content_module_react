@@ -1,5 +1,6 @@
+import { BaseEntityState } from '@redactie/utils';
+
 import { ContentTypePaging, ContentTypeSchema } from '../../services/contentTypes';
-import { BaseEntityState } from '../shared';
 
 export type ContentTypeModel = ContentTypeSchema;
 

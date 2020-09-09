@@ -1,4 +1,4 @@
-import { alertService } from '@redactie/utils';
+import { alertService, BaseEntityFacade } from '@redactie/utils';
 import { omit } from 'ramda';
 
 import { ALERT_CONTAINER_IDS, WORKING_TITLE_KEY } from '../../content.const';
@@ -9,7 +9,6 @@ import {
 	ContentCreateSchema,
 	ContentSchema,
 } from '../../services/content';
-import { BaseEntityFacade } from '../shared';
 
 import { getAlertMessages } from './content.messages';
 import { ContentModel } from './content.model';

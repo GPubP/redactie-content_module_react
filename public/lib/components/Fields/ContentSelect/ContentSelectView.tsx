@@ -13,7 +13,7 @@ import { DataLoader } from '../../DataLoader';
 const ContentSelectView: React.FC<ViewFieldProps> = ({ value, fieldSchema }: ViewFieldProps) => {
 	const { siteId } = useContext(TenantContext);
 	const { generatePath } = useNavigate();
-	const [contentItemLoadingState, ccContentItem] = useCcContentItem();
+	const [contentItemLoadingState, ccContentItem] = useCcContentItem(value);
 
 	useEffect(() => {
 		if (!value) {

@@ -10,12 +10,6 @@ export interface ContentRouteProps<
 	tenantId: string;
 }
 
-export enum LoadingState {
-	Loading = 'loading',
-	Loaded = 'loaded',
-	Error = 'error',
-}
-
 export interface FilterItemSchema {
 	key?: string;
 	value: string;
