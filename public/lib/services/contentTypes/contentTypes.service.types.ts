@@ -7,6 +7,8 @@ export interface GeneralConfig {
 	min: number;
 	multilanguage: boolean;
 	required: boolean;
+	defaultLabel?: string;
+	defaultGuideline?: string;
 }
 
 export interface FieldType {
@@ -15,6 +17,10 @@ export interface FieldType {
 	data: {
 		componentName: string;
 		module: string;
+		generalConfig: {
+			defaultGuideline?: string;
+			defaultLabel?: string;
+		};
 	};
 }
 

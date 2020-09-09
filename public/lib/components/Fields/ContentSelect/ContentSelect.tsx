@@ -60,6 +60,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					});
 				}}
 			></Autocomplete>
+			{config.description && <small>{config.description}</small>}
 			<ErrorMessage name={field.name} />
 		</>
 	);
