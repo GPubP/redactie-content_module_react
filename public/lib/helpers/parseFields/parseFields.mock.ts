@@ -5,6 +5,7 @@ export const fieldTypeSingle = {
 		data: {
 			module: 'core',
 			componentName: 'text',
+			generalConfig: {},
 		},
 	},
 	dataType: {
