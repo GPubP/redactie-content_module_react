@@ -1,4 +1,4 @@
-import { Datepicker, Select, TextField } from '@acpaas-ui/react-components';
+import { Autocomplete, Datepicker, Select, TextField } from '@acpaas-ui/react-components';
 import { Filter, FilterBody } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
@@ -74,16 +74,19 @@ const FilterForm: FC<FilterFormProps> = ({
 										/>
 									</div>
 									<div className="col-xs-12 col-sm-6 u-margin-top">
-										<Field
-											as={Select}
-											label="Content type"
-											name="contentType"
-											id="contentType"
-											options={[
-												CONTENT_TYPES_DEFAULT_OPTION,
-												...contentTypeOptions,
-											]}
-										/>
+										<Field name="contentType">
+											{() => (
+												<Autocomplete
+													label="Content type"
+													id="contentType"
+													items={contentTypeOptions}
+													multipleSelect
+													onSelection={(selected: string[]) =>
+														setFieldValue('contentType', selected)
+													}
+												/>
+											)}
+										</Field>
 									</div>
 									<div className="col-xs-6 col-sm-3 u-margin-top">
 										<Field
