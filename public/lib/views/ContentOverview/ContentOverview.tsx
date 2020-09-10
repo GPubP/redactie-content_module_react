@@ -132,21 +132,12 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			},
 		];
 
-		const newContentTypeList = [
-			...contentTypeList,
-			...(contentType && !contentTypeList.find(item => item.formvalue === contentType)
-				? [
-						{
-							valuePrefix: 'Content type',
-							formvalue: contentType,
-							filterKey: FilterKeys.CONTENT_TYPE,
-							value:
-								contentTypes?.find(ct => ct._id === contentType)?.meta.label ||
-								contentType,
-						},
-				  ]
-				: []),
-		];
+		const newContentTypeList = contentType.map(ctId => ({
+			valuePrefix: 'Content type',
+			formvalue: contentType,
+			filterKey: FilterKeys.CONTENT_TYPE,
+			value: contentTypes?.find(ct => ct._id === ctId)?.meta.label || ctId,
+		}));
 
 		setContentTypeList(newContentTypeList);
 
@@ -227,7 +218,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				});
 				setFilterFormState({
 					...filterFormState,
-					contentType: '',
+					contentType: [],
 				});
 				break;
 			}

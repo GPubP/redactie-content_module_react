@@ -13,7 +13,7 @@ export interface FilterFormProps {
 
 export interface FilterFormState {
 	search: string;
-	contentType: string;
+	contentType: string[];
 	publishedFrom: string;
 	publishedTo: string;
 	status: string;
