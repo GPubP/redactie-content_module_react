@@ -17,7 +17,7 @@ import {
 } from '../../components/forms/FilterForm/FilterForm.types';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
-import { MODULE_PATHS } from '../../content.const';
+import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, FilterItemSchema, LoadingState } from '../../content.types';
 import { useContent, useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { OrderBy, SearchParams } from '../../services/api';
@@ -176,11 +176,11 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				: undefined,
 			publishedFrom:
 				filterFormState.publishedFrom && filterFormState.publishedTo
-					? moment(filterFormState.publishedFrom, 'DD/MM/YYYY').toISOString()
+					? moment(filterFormState.publishedFrom, DATE_FORMATS.date).toISOString()
 					: '',
 			publishedTo:
 				filterFormState.publishedTo && filterFormState.publishedFrom
-					? moment(filterFormState.publishedTo, 'DD/MM/YYYY').toISOString()
+					? moment(filterFormState.publishedTo, DATE_FORMATS.date).toISOString()
 					: '',
 			status: filterFormState.status,
 			creator: filterFormState.creator,

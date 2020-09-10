@@ -43,3 +43,8 @@ export const ALERT_CONTAINER_IDS = {
 };
 
 export const WORKING_TITLE_KEY = 'working-title';
+
+export const DATE_FORMATS = {
+	date: 'DD/MM/YYYY',
+	dateAndTime: 'DD/MM/YYYY [-] HH[u]mm',
+};

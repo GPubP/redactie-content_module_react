@@ -6,7 +6,7 @@ import moment from 'moment';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { MODULE_PATHS } from '../../content.const';
+import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
 
 import { ContentOverviewTableRow } from './ContentOverview.types';
 
@@ -53,7 +53,7 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		label: t(CORE_TRANSLATIONS['TABLE_LAST-MODIFIED']),
 		value: 'lastModified',
 		disableSorting: true,
-		format: (data: string) => moment(data).format('DD/MM/YYYY [-] hh[u]mm'),
+		format: (data: string) => moment(data).format(DATE_FORMATS.dateAndTime),
 	},
 	{
 		label: 'Aanmaker',
