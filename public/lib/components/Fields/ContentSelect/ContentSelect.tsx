@@ -37,6 +37,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 				multipleSelect={false}
 				defaultValue={field.value}
 				showSearchIcon={true}
+				disabled={!!config.disabled}
 				loading={contentLoadingState === LoadingState.Loading}
 				onSelection={(selected: string) => {
 					fieldHelperProps.setValue(selected);
