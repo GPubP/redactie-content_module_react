@@ -168,6 +168,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		//add array to searchParams
 		setContentSearchParams({
 			...contentSearchParams,
+			skip: 0,
 			search: filterFormState.search,
 			contentTypes: contentTypesString,
 			published: filterFormState.published
@@ -187,15 +188,16 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	};
 
 	const deleteAllFilters = (): void => {
-		const emptyFilter: [] = [];
-		setFilterItems(emptyFilter);
-		setContentTypeList(emptyFilter);
+		setFilterItems([]);
+		setContentTypeList([]);
 		setContentSearchParams(DEFAULT_CONTENT_SEARCH_PARAMS);
 		setFilterFormState(CONTENT_INITIAL_FILTER_STATE);
 	};
 
 	const deleteFilter = (item: FilterItemSchema): void => {
-		//delete item from filterItems
+		let updatedSearchParams: Partial<SearchParams> = {};
+		let updatedFormState: Partial<FilterFormState> = {};
+		// Delete item from filterItems
 		const setFilter = filterItems?.filter(el => el.value !== item.value);
 		setFilterItems(setFilter);
 
@@ -206,41 +208,33 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 					publishedFrom: '',
 					publishedTo: '',
 				};
-				setContentSearchParams({
-					...contentSearchParams,
-					...dateValues,
-				});
-				setFilterFormState({
-					...filterFormState,
-					...dateValues,
-				});
+				updatedSearchParams = dateValues;
+				updatedFormState = dateValues;
 				break;
 			}
 			case FilterKeys.CONTENT_TYPE: {
-				const newContentTypeList = [
-					...contentTypeList.filter(ct => ct.value !== item.value),
-				];
+				const newContentTypeList = contentTypeList.filter(ct => ct.value !== item.value);
 				setContentTypeList(newContentTypeList);
-				setContentSearchParams({
-					...contentSearchParams,
+				updatedSearchParams = {
 					contentTypes: newContentTypeList.map(item => item.formvalue),
-				});
-				setFilterFormState({
-					...filterFormState,
-					contentType: '',
-				});
+				};
+				updatedFormState = { contentType: '' };
 				break;
 			}
 			default:
-				setContentSearchParams({
-					...contentSearchParams,
-					[item.filterKey]: undefined,
-				});
-				setFilterFormState({
-					...filterFormState,
-					[item.filterKey]: '',
-				});
+				updatedSearchParams = { [item.filterKey]: undefined };
+				updatedFormState = { [item.filterKey]: '' };
 		}
+
+		setContentSearchParams({
+			...contentSearchParams,
+			skip: 0,
+			...updatedSearchParams,
+		});
+		setFilterFormState({
+			...filterFormState,
+			...updatedFormState,
+		});
 	};
 
 	const handlePageChange = (page: number): void => {
