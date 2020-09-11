@@ -8,7 +8,6 @@ import { useContentTypes } from '../../../hooks';
 import DataLoader from '../../DataLoader/DataLoader';
 
 import {
-	CONTENT_TYPES_DEFAULT_OPTION,
 	FILTER_STATUS_OPTIONS,
 	PUBLISHED_DEFAULT_OPTION,
 	PUBLISHED_OPTIONS,

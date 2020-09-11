@@ -10,11 +10,14 @@ import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18n
 import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { DataLoader, FILTER_STATUS_OPTIONS, FilterForm, PUBLISHED_OPTIONS } from '../../components';
 import {
+	DataLoader,
+	FILTER_STATUS_OPTIONS,
+	FilterForm,
 	FilterFormState,
+	PUBLISHED_OPTIONS,
 	PublishedStatuses,
-} from '../../components/forms/FilterForm/FilterForm.types';
+} from '../../components';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../content.const';
@@ -151,12 +154,12 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		setFilterFormState(filterFormState);
 		const filterItems = createFilterItems(filterFormState);
 
-		//get value array from filterItems
+		// Get value array from filterItems
 		const contentTypesString = filterItems.contentTypeFilters.map(item => item.formvalue);
 
 		setFilterItems(filterItems.filters);
 
-		//add array to searchParams
+		// Add array to searchParams
 		setContentSearchParams({
 			...contentSearchParams,
 			search: filterFormState.search,
@@ -186,9 +189,9 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	};
 
 	const deleteFilter = (item: FilterItemSchema): void => {
-		//delete item from filterItems
-		const setFilter = filterItems?.filter(el => el.value !== item.value);
-		setFilterItems(setFilter);
+		// Delete item from filterItems
+		const updatedFilters = filterItems?.filter(filter => filter.value !== item.value);
+		setFilterItems(updatedFilters);
 
 		// Update contentSearchParams
 		switch (item.filterKey) {
