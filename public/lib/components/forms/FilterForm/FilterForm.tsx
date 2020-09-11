@@ -78,6 +78,7 @@ const FilterForm: FC<FilterFormProps> = ({
 												<Autocomplete
 													label="Content type"
 													id="contentType"
+													defaultValue={values.contentType}
 													items={contentTypeOptions}
 													multipleSelect
 													onSelection={(selected: string[]) =>

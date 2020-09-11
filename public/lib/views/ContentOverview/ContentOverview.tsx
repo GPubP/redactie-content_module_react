@@ -137,7 +137,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 
 		const newContentTypeList = contentType.map(ctId => ({
 			valuePrefix: 'Content type',
-			formvalue: contentType,
+			formvalue: ctId,
 			filterKey: FilterKeys.CONTENT_TYPE,
 			value: contentTypes?.find(ct => ct._id === ctId)?.meta.label || ctId,
 		}));
