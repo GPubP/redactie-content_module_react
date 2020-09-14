@@ -1,14 +1,15 @@
-import { Datepicker, Select, TextField } from '@acpaas-ui/react-components';
+import { Autocomplete, Datepicker, Select, TextField } from '@acpaas-ui/react-components';
 import { Filter, FilterBody } from '@acpaas-ui/react-editorial-components';
 import { LoadingState } from '@redactie/utils';
 import { Field, Formik } from 'formik';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
+import { DATE_FORMATS } from '../../../content.const';
+import { LoadingState } from '../../../content.types';
 import { useContentTypes } from '../../../hooks';
 import DataLoader from '../../DataLoader/DataLoader';
 
 import {
-	CONTENT_TYPES_DEFAULT_OPTION,
 	FILTER_STATUS_OPTIONS,
 	PUBLISHED_DEFAULT_OPTION,
 	PUBLISHED_OPTIONS,
@@ -74,16 +75,20 @@ const FilterForm: FC<FilterFormProps> = ({
 										/>
 									</div>
 									<div className="col-xs-12 col-sm-6 u-margin-top">
-										<Field
-											as={Select}
-											label="Content type"
-											name="contentType"
-											id="contentType"
-											options={[
-												CONTENT_TYPES_DEFAULT_OPTION,
-												...contentTypeOptions,
-											]}
-										/>
+										<Field name="contentType">
+											{() => (
+												<Autocomplete
+													label="Content type"
+													id="contentType"
+													defaultValue={values.contentType}
+													items={contentTypeOptions}
+													multipleSelect
+													onSelection={(selected: string[]) =>
+														setFieldValue('contentType', selected)
+													}
+												/>
+											)}
+										</Field>
 									</div>
 									<div className="col-xs-6 col-sm-3 u-margin-top">
 										<Field
@@ -91,7 +96,7 @@ const FilterForm: FC<FilterFormProps> = ({
 											label="Publicatiedatum"
 											name="publishedFrom"
 											id="publishedFrom"
-											format="DD/MM/YYYY"
+											format={DATE_FORMATS.date}
 											mask="99/99/9999"
 											activeDate={values.publishedFrom}
 											onChange={(value: any) =>
@@ -106,7 +111,7 @@ const FilterForm: FC<FilterFormProps> = ({
 											label=""
 											name="publishedTo"
 											id="publishedTo"
-											format="DD/MM/YYYY"
+											format={DATE_FORMATS.date}
 											mask="99/99/9999"
 											activeDate={values.publishedTo}
 											onChange={(value: any) =>
