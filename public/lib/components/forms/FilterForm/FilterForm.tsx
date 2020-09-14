@@ -3,6 +3,7 @@ import { Filter, FilterBody } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
+import { DATE_FORMATS } from '../../../content.const';
 import { LoadingState } from '../../../content.types';
 import { useContentTypes } from '../../../hooks';
 import DataLoader from '../../DataLoader/DataLoader';
@@ -91,7 +92,7 @@ const FilterForm: FC<FilterFormProps> = ({
 											label="Publicatiedatum"
 											name="publishedFrom"
 											id="publishedFrom"
-											format="DD/MM/YYYY"
+											format={DATE_FORMATS.date}
 											mask="99/99/9999"
 											activeDate={values.publishedFrom}
 											onChange={(value: any) =>
@@ -106,7 +107,7 @@ const FilterForm: FC<FilterFormProps> = ({
 											label=""
 											name="publishedTo"
 											id="publishedTo"
-											format="DD/MM/YYYY"
+											format={DATE_FORMATS.date}
 											mask="99/99/9999"
 											activeDate={values.publishedTo}
 											onChange={(value: any) =>
