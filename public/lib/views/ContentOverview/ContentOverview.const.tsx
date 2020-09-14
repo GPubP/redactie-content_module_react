@@ -17,7 +17,7 @@ export const CONTENT_TYPES_SEARCH_OPTIONS = {
 
 export const CONTENT_INITIAL_FILTER_STATE = {
 	search: '',
-	contentType: '',
+	contentType: [],
 	publishedFrom: '',
 	publishedTo: '',
 	status: '',

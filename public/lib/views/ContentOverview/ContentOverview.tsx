@@ -10,11 +10,14 @@ import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18n
 import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { DataLoader, FILTER_STATUS_OPTIONS, FilterForm, PUBLISHED_OPTIONS } from '../../components';
 import {
+	DataLoader,
+	FILTER_STATUS_OPTIONS,
+	FilterForm,
 	FilterFormState,
+	PUBLISHED_OPTIONS,
 	PublishedStatuses,
-} from '../../components/forms/FilterForm/FilterForm.types';
+} from '../../components';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
 import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
@@ -132,21 +135,12 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			},
 		];
 
-		const newContentTypeList = [
-			...contentTypeList,
-			...(contentType && !contentTypeList.find(item => item.formvalue === contentType)
-				? [
-						{
-							valuePrefix: 'Content type',
-							formvalue: contentType,
-							filterKey: FilterKeys.CONTENT_TYPE,
-							value:
-								contentTypes?.find(ct => ct._id === contentType)?.meta.label ||
-								contentType,
-						},
-				  ]
-				: []),
-		];
+		const newContentTypeList = contentType.map(ctId => ({
+			valuePrefix: 'Content type',
+			formvalue: ctId,
+			filterKey: FilterKeys.CONTENT_TYPE,
+			value: contentTypes?.find(ct => ct._id === ctId)?.meta.label || ctId,
+		}));
 
 		setContentTypeList(newContentTypeList);
 
@@ -160,12 +154,12 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		setFilterFormState(filterFormState);
 		const filterItems = createFilterItems(filterFormState);
 
-		//get value array from filterItems
+		// Get value array from filterItems
 		const contentTypesString = filterItems.contentTypeFilters.map(item => item.formvalue);
 
 		setFilterItems(filterItems.filters);
 
-		//add array to searchParams
+		// Add array to searchParams
 		setContentSearchParams({
 			...contentSearchParams,
 			skip: 0,
@@ -198,8 +192,8 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		let updatedSearchParams: Partial<SearchParams> = {};
 		let updatedFormState: Partial<FilterFormState> = {};
 		// Delete item from filterItems
-		const setFilter = filterItems?.filter(el => el.value !== item.value);
-		setFilterItems(setFilter);
+		const updatedFilters = filterItems?.filter(filter => filter.value !== item.value);
+		setFilterItems(updatedFilters);
 
 		// Update contentSearchParams
 		switch (item.filterKey) {
@@ -218,7 +212,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				updatedSearchParams = {
 					contentTypes: newContentTypeList.map(item => item.formvalue),
 				};
-				updatedFormState = { contentType: '' };
+				updatedFormState = { contentType: [] };
 				break;
 			}
 			default:
