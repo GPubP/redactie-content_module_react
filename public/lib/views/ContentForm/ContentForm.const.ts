@@ -9,7 +9,7 @@ import {
 	STATUS_VALIDATION_SCHEMA,
 	StatusForm,
 } from '../../components';
-import { WORKING_TITLE_KEY } from '../../content.const';
+import { DATE_FORMATS, WORKING_TITLE_KEY } from '../../content.const';
 import { addWorkingTitleField, getFormPropsByCT, parseValidationSchema } from '../../helpers';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
@@ -49,7 +49,7 @@ export const INTERNAL_COMPARTMENTS = (
 				return;
 			}
 			const formattedDate = moment(contentItem?.meta.lastModified).format(
-				'DD/MM/YYYY [-] HH[u]mm'
+				DATE_FORMATS.dateAndTime
 			);
 			return `Laatst bewerkt op ${formattedDate}`;
 		},

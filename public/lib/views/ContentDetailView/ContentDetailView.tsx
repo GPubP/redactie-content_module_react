@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 import { PublishedStatus } from '../../components';
 import { getView } from '../../connectors/formRenderer';
-import { MODULE_PATHS } from '../../content.const';
+import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
 import { getViewPropsByCT } from '../../helpers';
 import { useNavigate } from '../../hooks';
 import { ContentDetailChildRouteProps } from '../ContentDetail/ContentDetail.types';
@@ -63,13 +63,13 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 								{meta.created && (
 									<div className="u-margin-bottom-xs">
 										<b>Aangemaakt op: </b>
-										{moment(meta.created).format('DD/MM/YYYY [-] hh[u]mm')}
+										{moment(meta.created).format(DATE_FORMATS.dateAndTime)}
 									</div>
 								)}
 								{meta.lastModified && (
 									<div>
 										<b>Laatst aangepast op: </b>
-										{moment(meta.lastModified).format('DD/MM/YYYY [-] hh[u]mm')}
+										{moment(meta.lastModified).format(DATE_FORMATS.dateAndTime)}
 									</div>
 								)}
 							</div>

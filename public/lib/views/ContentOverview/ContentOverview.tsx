@@ -20,7 +20,7 @@ import {
 } from '../../components';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
-import { MODULE_PATHS } from '../../content.const';
+import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, FilterItemSchema, LoadingState } from '../../content.types';
 import { useContent, useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { OrderBy, SearchParams } from '../../services/api';
@@ -162,6 +162,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		// Add array to searchParams
 		setContentSearchParams({
 			...contentSearchParams,
+			skip: 0,
 			search: filterFormState.search,
 			contentTypes: contentTypesString,
 			published: filterFormState.published
@@ -169,11 +170,11 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				: undefined,
 			publishedFrom:
 				filterFormState.publishedFrom && filterFormState.publishedTo
-					? moment(filterFormState.publishedFrom, 'DD/MM/YYYY').toISOString()
+					? moment(filterFormState.publishedFrom, DATE_FORMATS.date).toISOString()
 					: '',
 			publishedTo:
 				filterFormState.publishedTo && filterFormState.publishedFrom
-					? moment(filterFormState.publishedTo, 'DD/MM/YYYY').toISOString()
+					? moment(filterFormState.publishedTo, DATE_FORMATS.date).toISOString()
 					: '',
 			status: filterFormState.status,
 			creator: filterFormState.creator,
@@ -181,14 +182,15 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	};
 
 	const deleteAllFilters = (): void => {
-		const emptyFilter: [] = [];
-		setFilterItems(emptyFilter);
-		setContentTypeList(emptyFilter);
+		setFilterItems([]);
+		setContentTypeList([]);
 		setContentSearchParams(DEFAULT_CONTENT_SEARCH_PARAMS);
 		setFilterFormState(CONTENT_INITIAL_FILTER_STATE);
 	};
 
 	const deleteFilter = (item: FilterItemSchema): void => {
+		let updatedSearchParams: Partial<SearchParams> = {};
+		let updatedFormState: Partial<FilterFormState> = {};
 		// Delete item from filterItems
 		const updatedFilters = filterItems?.filter(filter => filter.value !== item.value);
 		setFilterItems(updatedFilters);
@@ -200,41 +202,33 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 					publishedFrom: '',
 					publishedTo: '',
 				};
-				setContentSearchParams({
-					...contentSearchParams,
-					...dateValues,
-				});
-				setFilterFormState({
-					...filterFormState,
-					...dateValues,
-				});
+				updatedSearchParams = dateValues;
+				updatedFormState = dateValues;
 				break;
 			}
 			case FilterKeys.CONTENT_TYPE: {
-				const newContentTypeList = [
-					...contentTypeList.filter(ct => ct.value !== item.value),
-				];
+				const newContentTypeList = contentTypeList.filter(ct => ct.value !== item.value);
 				setContentTypeList(newContentTypeList);
-				setContentSearchParams({
-					...contentSearchParams,
+				updatedSearchParams = {
 					contentTypes: newContentTypeList.map(item => item.formvalue),
-				});
-				setFilterFormState({
-					...filterFormState,
-					contentType: [],
-				});
+				};
+				updatedFormState = { contentType: [] };
 				break;
 			}
 			default:
-				setContentSearchParams({
-					...contentSearchParams,
-					[item.filterKey]: undefined,
-				});
-				setFilterFormState({
-					...filterFormState,
-					[item.filterKey]: '',
-				});
+				updatedSearchParams = { [item.filterKey]: undefined };
+				updatedFormState = { [item.filterKey]: '' };
 		}
+
+		setContentSearchParams({
+			...contentSearchParams,
+			skip: 0,
+			...updatedSearchParams,
+		});
+		setFilterFormState({
+			...filterFormState,
+			...updatedFormState,
+		});
 	};
 
 	const handlePageChange = (page: number): void => {
