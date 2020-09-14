@@ -50,11 +50,7 @@ const ContentSelectView: React.FC<ViewFieldProps> = ({ value, fieldSchema }: Vie
 	};
 
 	return (
-		<DataLoader
-			loadingState={contentItemLoadingState}
-			render={renderView}
-			notFoundMessage=""
-		></DataLoader>
+		<DataLoader loadingState={contentItemLoadingState} render={renderView} notFoundMessage="" />
 	);
 };
 
