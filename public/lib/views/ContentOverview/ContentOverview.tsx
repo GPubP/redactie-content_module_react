@@ -22,7 +22,7 @@ import {
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
 import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
-import { ContentRouteProps, FilterItemSchema, LoadingState } from '../../content.types';
+import { ContentRouteProps, FilterItemSchema } from '../../content.types';
 import { useContent, useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { OrderBy, SearchParams } from '../../services/api';
 import {
