@@ -13,6 +13,7 @@ describe('parseFields', () => {
 		describe('Single', () => {
 			it('should parse a content type single field to a FieldSchema', () => {
 				const fields = parseFields([fieldTypeSingle] as ContentTypeFieldSchema[]);
+
 				expect(fields[0]).toEqual({
 					name: fieldTypeSingle.name,
 					label: fieldTypeSingle.label,
@@ -44,15 +45,13 @@ describe('parseFields', () => {
 				config: {
 					max: 2,
 					guideline: fieldTypeMultiple.generalConfig.guideline,
-					defaultGuideline: fieldTypeMultiple.generalConfig.defaultGuideline,
-					defaultLabel: fieldTypeMultiple.generalConfig.defaultLabel,
 					hidden: fieldTypeMultiple.generalConfig.hidden,
 					description: fieldTypeMultiple.generalConfig.guideline,
 				},
 				fields: [
 					{
 						name: 'value',
-						label: fieldTypeMultiple.generalConfig.defaultLabel,
+						label: fieldTypeMultiple.fieldType.data.generalConfig.defaultLabel,
 						module: fieldTypeMultiple.fieldType.data.module,
 						type: fieldTypeMultiple.fieldType.data.componentName,
 						view: '',
@@ -61,10 +60,9 @@ describe('parseFields', () => {
 						config: {
 							max: 2,
 							guideline: fieldTypeMultiple.generalConfig.guideline,
-							defaultGuideline: fieldTypeMultiple.generalConfig.defaultGuideline,
-							defaultLabel: fieldTypeMultiple.generalConfig.defaultLabel,
 							hidden: false,
-							description: fieldTypeMultiple.generalConfig.defaultGuideline,
+							description:
+								fieldTypeMultiple.fieldType.data.generalConfig.defaultGuideline,
 							preset: undefined,
 							fieldType: fieldTypeMultiple.fieldType,
 							dataType: fieldTypeMultiple.dataType,
@@ -99,8 +97,6 @@ describe('parseFields', () => {
 							config: {
 								max: fieldTypeSingle.generalConfig.max,
 								guideline: fieldTypeSingle.generalConfig.guideline,
-								defaultGuideline: fieldTypeSingle.generalConfig.defaultGuideline,
-								defaultLabel: fieldTypeSingle.generalConfig.defaultLabel,
 								hidden: fieldTypeSingle.generalConfig.hidden,
 								description: fieldTypeSingle.generalConfig.guideline,
 								preset: undefined,
@@ -113,8 +109,6 @@ describe('parseFields', () => {
 						fields: presetSingle.config.fields,
 						max: presetSingle.generalConfig.max,
 						guideline: presetSingle.generalConfig.guideline,
-						defaultGuideline: presetSingle.generalConfig.defaultGuideline,
-						defaultLabel: presetSingle.generalConfig.defaultLabel,
 						hidden: presetSingle.generalConfig.hidden,
 						description: presetSingle.generalConfig.guideline,
 						preset: presetSingle.preset,
@@ -124,6 +118,7 @@ describe('parseFields', () => {
 				});
 			});
 		});
+
 		describe('Multiple', () => {
 			it('should parse a content type multiple preset to a FieldSchema', () => {
 				const fields = parseFields(([
@@ -140,8 +135,6 @@ describe('parseFields', () => {
 						fields: presetMultiple.config.fields,
 						max: presetMultiple.generalConfig.max,
 						guideline: presetMultiple.generalConfig.guideline,
-						defaultGuideline: presetMultiple.generalConfig.defaultGuideline,
-						defaultLabel: presetMultiple.generalConfig.defaultLabel,
 						hidden: presetMultiple.generalConfig.hidden,
 						description: presetMultiple.generalConfig.guideline,
 					},
@@ -165,9 +158,6 @@ describe('parseFields', () => {
 									config: {
 										max: fieldTypeSingle.generalConfig.max,
 										guideline: fieldTypeSingle.generalConfig.guideline,
-										defaultGuideline:
-											fieldTypeSingle.generalConfig.defaultGuideline,
-										defaultLabel: fieldTypeSingle.generalConfig.defaultLabel,
 										hidden: fieldTypeSingle.generalConfig.hidden,
 										description: fieldTypeSingle.generalConfig.guideline,
 										preset: undefined,
@@ -180,8 +170,6 @@ describe('parseFields', () => {
 								fields: presetMultiple.config.fields,
 								max: presetMultiple.generalConfig.max,
 								guideline: presetMultiple.generalConfig.guideline,
-								defaultGuideline: presetMultiple.generalConfig.defaultGuideline,
-								defaultLabel: presetMultiple.generalConfig.defaultLabel,
 								hidden: presetMultiple.generalConfig.hidden,
 								preset: presetMultiple.preset,
 								fieldType: presetMultiple.fieldType,
