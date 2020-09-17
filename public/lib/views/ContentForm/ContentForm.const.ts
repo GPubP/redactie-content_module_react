@@ -1,4 +1,4 @@
-import { buildYup } from '@redactie/schema-to-yup';
+import AJV from 'ajv';
 import moment from 'moment';
 
 import { ContentSchema, ContentTypeSchema } from '../../api/api.types';
@@ -10,7 +10,7 @@ import {
 	StatusForm,
 } from '../../components';
 import { DATE_FORMATS, WORKING_TITLE_KEY } from '../../content.const';
-import { addWorkingTitleField, getFormPropsByCT, parseValidationSchema } from '../../helpers';
+import { addWorkingTitleField, getFormPropsByCT } from '../../helpers';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
@@ -24,19 +24,18 @@ export const INTERNAL_COMPARTMENTS = (
 		component: FieldsForm,
 		type: CompartmentType.CT,
 		isValid: false,
-		validate: values => {
+		validate: (values: ContentSchema) => {
 			const formProps = getFormPropsByCT(contentType);
-			const { errorMessages, validationSchema } = addWorkingTitleField(formProps);
+			const { validationSchema } = addWorkingTitleField(formProps);
 
 			if (validationSchema) {
-				const yupSchema = buildYup(parseValidationSchema(validationSchema), {
-					errMessages: errorMessages || {},
-				});
+				const ajv = new AJV({ allErrors: true, messages: true });
+				const validator = ajv.compile(validationSchema);
 
-				return yupSchema.isValidSync({
+				return validator({
 					...values.fields,
 					[WORKING_TITLE_KEY]: values.meta.label,
-				});
+				}) as boolean;
 			}
 			// If no validationSchema is found return compartment as valid
 			return true;

@@ -12,17 +12,11 @@ interface FormRendererProps {
 }
 
 export const getFormPropsByCT = (contentType: ContentTypeSchema): FormRendererProps => {
-	const validateSchema = {
-		$schema: 'http://json-schema.org/draft-07/schema#',
-		type: 'object',
-		properties: contentType.validateSchema || {},
-	};
-
 	return {
 		schema: {
 			fields: parseFields(contentType.fields),
 		},
-		validationSchema: validateSchema,
+		validationSchema: contentType.validateSchema,
 		errorMessages: contentType.errorMessages || {},
 	};
 };
@@ -67,9 +61,10 @@ export const addWorkingTitleField = (formProps: FormRendererProps): FormRenderer
 	},
 	validationSchema: {
 		...formProps.validationSchema,
+		required: [...(formProps.validationSchema.required || []), WORKING_TITLE_KEY],
 		properties: {
 			[WORKING_TITLE_KEY]: {
-				required: true,
+				minLength: 1,
 				type: 'string',
 			},
 			...formProps.validationSchema.properties,
