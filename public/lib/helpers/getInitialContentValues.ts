@@ -10,7 +10,7 @@ export const getInitialContentValues = (
 	const { fields } = contentType;
 
 	return fields.reduce((values, field) => {
-		values[field.name] = data[field.name] ?? field.defaultValue ?? '';
+		values[field.name] = data[field.name] ?? field.defaultValue ?? undefined;
 
 		return values;
 	}, {} as Record<string, any>);
