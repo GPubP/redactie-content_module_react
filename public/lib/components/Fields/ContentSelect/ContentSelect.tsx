@@ -59,7 +59,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					);
 
 					ccContentFacade
-						.getItemValue('search')
+						.selectItemValue('search')
 						.pipe(first())
 						.subscribe(content => {
 							const newItems = (content as ContentModel[]).map(c => ({

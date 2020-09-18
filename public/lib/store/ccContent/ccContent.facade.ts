@@ -1,5 +1,4 @@
 import { BaseMultiEntityFacade } from '@redactie/utils';
-import { first } from 'rxjs/operators';
 
 import { SearchParams } from '../../services/api';
 import { contentApiService, ContentApiService } from '../../services/content';
@@ -21,12 +20,7 @@ export class CcContentFacade extends BaseMultiEntityFacade<
 		searchParams: SearchParams,
 		reload = false
 	): Promise<void> {
-		const oldValue = await new Promise(resolve =>
-			this.query
-				.getItem(key)
-				.pipe(first())
-				.subscribe(resolve, () => resolve(null))
-		);
+		const oldValue = this.query.getItem(key);
 
 		if (!reload && oldValue) {
 			return;
@@ -47,12 +41,7 @@ export class CcContentFacade extends BaseMultiEntityFacade<
 	}
 
 	public async getContentItem(siteId: string, uuid: string, reload = false): Promise<void> {
-		const oldValue = await new Promise(resolve =>
-			this.query
-				.getItem(uuid)
-				.pipe(first())
-				.subscribe(resolve, () => resolve(null))
-		);
+		const oldValue = this.query.getItem(uuid);
 
 		if (!reload && oldValue) {
 			return;

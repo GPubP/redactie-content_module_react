@@ -6,9 +6,9 @@ import { ccContentFacade } from '../../store/ccContent/ccContent.facade';
 import { ContentModel } from '../../store/content';
 
 const useCcContent = (key: string): [LoadingState, ContentModel[]] => {
-	const isFetching$ = useMemo(() => ccContentFacade.getIsFetching(key), [key]);
-	const content$ = useMemo(() => ccContentFacade.getItemValue(key), [key]);
-	const error$ = useMemo(() => ccContentFacade.getItemError(key), [key]);
+	const isFetching$ = useMemo(() => ccContentFacade.selectItemIsFetching(key), [key]);
+	const content$ = useMemo(() => ccContentFacade.selectItemValue(key), [key]);
+	const error$ = useMemo(() => ccContentFacade.selectItemError(key), [key]);
 
 	const [loading] = useObservable(isFetching$, LoadingState.Loading);
 	const [content] = useObservable(content$, []);
