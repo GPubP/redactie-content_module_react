@@ -37,7 +37,11 @@ export const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[
 			label,
 			module: fieldType?.data?.module,
 			type: fieldType?.data?.componentName,
-			view: preset ? preset.data.name : '',
+			view: preset
+				? preset.data?.viewComponentName
+					? preset.data?.viewComponentName
+					: preset.data.name
+				: '',
 			dataType: dataType.data.type,
 			fields: parseFields(config.fields),
 			config: {
