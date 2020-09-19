@@ -1,9 +1,7 @@
-import { ContentSchema, PagingSchema } from '../../services/content';
-import { BaseEntityState } from '../shared';
+import { BaseMultiEntityState } from '@redactie/utils';
 
-export type CcContentModel = ContentSchema;
+import { ContentSchema } from '../../services/content';
 
-export interface CcContentState extends BaseEntityState<CcContentModel, string> {
-	meta?: PagingSchema;
-	contentItem?: CcContentModel;
-}
+export type CcContentModel = ContentSchema | ContentSchema[];
+
+export type CcContentState = BaseMultiEntityState<CcContentModel, string>;

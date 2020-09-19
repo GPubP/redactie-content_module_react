@@ -1,6 +1,5 @@
 import { StoreConfig } from '@datorama/akita';
-
-import { BaseEntityStore } from '../shared';
+import { BaseEntityStore } from '@redactie/utils';
 
 import { ContentModel, ContentState } from './content.model';
 

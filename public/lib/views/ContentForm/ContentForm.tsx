@@ -1,5 +1,5 @@
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
-import { alertService } from '@redactie/utils';
+import { alertService, LoadingState } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { clone, equals, isEmpty } from 'ramda';
@@ -9,7 +9,7 @@ import { NavLink } from 'react-router-dom';
 import { ContentSchema } from '../../api/api.types';
 import { ContentFormActions } from '../../components';
 import { ALERT_CONTAINER_IDS, WORKING_TITLE_KEY } from '../../content.const';
-import { LoadingState, NavListItem } from '../../content.types';
+import { NavListItem } from '../../content.types';
 import {
 	filterCompartments,
 	getCompartmentValue,

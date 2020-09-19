@@ -1,66 +1,63 @@
-import { ALERT_CONTAINER_IDS } from '../../content.const';
+import { BaseMultiEntityFacade } from '@redactie/utils';
+
 import { SearchParams } from '../../services/api';
 import { contentApiService, ContentApiService } from '../../services/content';
-import { BaseEntityFacade } from '../shared';
 
 import { ccContentQuery, CcContentQuery } from './ccContent.query';
 import { ccContentStore, CcContentStore } from './ccContent.store';
 
-export class CcContentFacade extends BaseEntityFacade<
+export class CcContentFacade extends BaseMultiEntityFacade<
 	CcContentStore,
 	ContentApiService,
 	CcContentQuery
 > {
-	private readonly alertContainerProps = {
-		containerId: ALERT_CONTAINER_IDS.contentEdit,
-	};
-
-	public readonly content$ = this.query.content$;
-	public readonly contentItem$ = this.query.contentItem$;
-
 	/**
 	 * API integration
 	 */
-	public getContent(siteId: string, searchParams: SearchParams): Promise<void> {
-		this.store.setIsFetching(true);
+	public async getContent(
+		key: string,
+		siteId: string,
+		searchParams: SearchParams,
+		reload = false
+	): Promise<void> {
+		const oldValue = this.query.getItem(key);
+
+		if (!reload && oldValue) {
+			return;
+		}
+
+		reload && oldValue ? this.store.setItemIsFetching(key, true) : this.store.addItem(key);
 
 		return this.service
 			.getContent(siteId, searchParams)
 			.then(response => {
 				if (response) {
-					this.store.set(response.data);
-					this.store.update({
-						meta: response.paging,
-						isFetching: false,
-					});
+					this.store.setItemValue(key, response.data);
 				}
 			})
 			.catch(error => {
-				this.store.update({
-					error,
-					isFetching: false,
-				});
+				this.store.setItemError(key, error);
 			});
 	}
 
-	public getContentItem(siteId: string, uuid: string): void {
-		this.store.setIsFetchingOne(true);
+	public async getContentItem(siteId: string, uuid: string, reload = false): Promise<void> {
+		const oldValue = this.query.getItem(uuid);
 
-		this.service
+		if (!reload && oldValue) {
+			return;
+		}
+
+		reload && oldValue ? this.store.setItemIsFetching(uuid, true) : this.store.addItem(uuid);
+
+		return this.service
 			.getContentItem(siteId, uuid)
 			.then(response => {
 				if (response) {
-					this.store.update({
-						contentItem: response,
-						isFetchingOne: false,
-					});
+					this.store.setItemValue(uuid, response);
 				}
 			})
 			.catch(error => {
-				this.store.update({
-					error,
-					isFetchingOne: false,
-				});
+				this.store.setItemError(uuid, error);
 			});
 	}
 }

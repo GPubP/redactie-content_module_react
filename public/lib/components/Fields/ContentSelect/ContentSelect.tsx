@@ -1,5 +1,6 @@
 import { Autocomplete } from '@acpaas-ui/react-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
+import { LoadingState } from '@redactie/utils';
 import { getIn } from 'formik';
 import React, { useContext } from 'react';
 import { first } from 'rxjs/operators';
@@ -7,10 +8,10 @@ import { first } from 'rxjs/operators';
 import './ContentSelect.scss';
 
 import { ErrorMessage } from '../../../connectors/formRenderer';
-import { LoadingState } from '../../../content.types';
 import TenantContext from '../../../context/TenantContext/TenantContext';
 import { useCcContent } from '../../../hooks';
 import { ccContentFacade } from '../../../store/ccContent';
+import { ContentModel } from '../../../store/content';
 
 const ContentSelect: React.FC<InputFieldProps> = ({
 	fieldProps,
@@ -26,7 +27,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	const state = !!error && !!touch ? 'error' : '';
 	const { siteId } = useContext(TenantContext);
 
-	const [contentLoadingState] = useCcContent();
+	const [contentLoadingState] = useCcContent('search');
 
 	return (
 		<>
@@ -43,25 +44,37 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					fieldHelperProps.setValue(selected);
 				}}
 				asyncItems={async (query: string, cb: (options: any[]) => void) => {
-					await ccContentFacade.getContent(siteId, {
-						skip: 0,
-						limit: 10,
-						search: query,
-						...(config.contentTypes?.length
-							? { contentTypes: config.contentTypes.join(',') }
-							: {}),
-					});
+					await ccContentFacade.getContent(
+						'search',
+						siteId,
+						{
+							skip: 0,
+							limit: 10,
+							search: query,
+							...(config.contentTypes?.length
+								? { contentTypes: config.contentTypes.join(',') }
+								: {}),
+						},
+						true
+					);
 
-					ccContentFacade.content$.pipe(first()).subscribe(content => {
-						const newItems = content.map(c => ({
-							label: c.meta.label,
-							value: c.uuid,
-						}));
-						cb(newItems);
-					});
+					ccContentFacade
+						.selectItemValue('search')
+						.pipe(first())
+						.subscribe(content => {
+							const newItems = (content as ContentModel[]).map(c => ({
+								label: c.meta.label,
+								value: c.uuid,
+							}));
+							cb(newItems);
+						});
 				}}
 			></Autocomplete>
-			{config.description && <small>{config.description}</small>}
+			{config.description ? (
+				<div className="a-input a-input__wrapper">
+					<small>{config.description}</small>
+				</div>
+			) : null}
 			<ErrorMessage name={field.name} />
 		</>
 	);

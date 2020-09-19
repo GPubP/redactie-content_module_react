@@ -1,7 +1,6 @@
 import { isNil } from '@datorama/akita';
+import { BaseEntityQuery } from '@redactie/utils';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-
-import { BaseEntityQuery } from '../shared';
 
 import { ContentState } from './content.model';
 import { contentStore } from './content.store';

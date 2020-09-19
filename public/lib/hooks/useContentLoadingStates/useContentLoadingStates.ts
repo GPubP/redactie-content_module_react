@@ -1,6 +1,6 @@
 import { useObservable } from '@mindspace-io/react';
+import { LoadingState } from '@redactie/utils';
 
-import { LoadingState } from '../../content.types';
 import { contentFacade } from '../../store/content';
 
 const useContentLoadingStates = (): [LoadingState, LoadingState, LoadingState, LoadingState] => {

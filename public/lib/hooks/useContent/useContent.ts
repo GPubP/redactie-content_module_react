@@ -1,6 +1,6 @@
 import { useObservable } from '@mindspace-io/react';
+import { LoadingState } from '@redactie/utils';
 
-import { LoadingState } from '../../content.types';
 import { PagingSchema } from '../../services/content';
 import { contentFacade, ContentModel } from '../../store/content';
 

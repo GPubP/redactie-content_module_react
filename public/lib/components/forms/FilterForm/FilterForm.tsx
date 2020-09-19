@@ -1,10 +1,10 @@
 import { Autocomplete, Datepicker, Select, TextField } from '@acpaas-ui/react-components';
 import { Filter, FilterBody } from '@acpaas-ui/react-editorial-components';
+import { LoadingState } from '@redactie/utils';
 import { Field, Formik } from 'formik';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { DATE_FORMATS } from '../../../content.const';
-import { LoadingState } from '../../../content.types';
 import { useContentTypes } from '../../../hooks';
 import DataLoader from '../../DataLoader/DataLoader';
 

@@ -3,12 +3,13 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
+import { LoadingState } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
 import { MODULE_PATHS } from '../../content.const';
-import { ContentRouteProps, LoadingState } from '../../content.types';
+import { ContentRouteProps } from '../../content.types';
 import { generateDetailBadges } from '../../helpers';
 import {
 	useActiveTabs,
@@ -22,6 +23,7 @@ import { contentTypesFacade } from '../../store/contentTypes';
 
 import { CONTENT_UPDATE_TABS } from './ContentDetail.const';
 import { ContentDetailMatchProps } from './ContentDetail.types';
+
 import './ContentDetail.scss';
 
 const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
