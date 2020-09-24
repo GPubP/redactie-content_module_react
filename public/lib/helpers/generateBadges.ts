@@ -9,7 +9,7 @@ export const generateDetailBadges = (
 		return [];
 	}
 
-	const { contentType, published } = contentItem.meta;
+	const { contentType, historySummary } = contentItem.meta;
 	const status = contentItem.meta.status as ContentStatus;
 
 	const contentTypeLabel = contentType.meta.label;
@@ -18,8 +18,8 @@ export const generateDetailBadges = (
 	const contentTypeBadge: ContextHeaderBadge = { name: contentTypeLabel, type: 'primary' };
 	const statusBadge: ContextHeaderBadge = { name: statusLabel, type: 'primary' };
 	const publishedBadge: ContextHeaderBadge = {
-		name: published ? 'Online' : 'Offline',
-		type: published ? 'success' : 'danger',
+		name: historySummary?.published ? 'Online' : 'Offline',
+		type: historySummary?.published ? 'success' : 'danger',
 	};
 
 	const showStatusBadge = ![ContentStatus.PUBLISHED, ContentStatus.UNPUBLISHED].includes(status);
