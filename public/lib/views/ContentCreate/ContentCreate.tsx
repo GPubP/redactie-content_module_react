@@ -55,6 +55,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			fields: getInitialContentValues(contentType),
 			modulesData: {},
 			meta: {
+				activeLanguages: ['nl'],
 				label: '',
 				slug: {
 					nl: '',
@@ -88,6 +89,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 
 		const request: ContentCreateSchema = {
 			meta: {
+				activeLanguages: ['nl'],
 				label: content.meta?.label,
 				slug: content.meta?.slug,
 				contentType: contentType._id,
