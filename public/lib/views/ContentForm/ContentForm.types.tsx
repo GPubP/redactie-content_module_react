@@ -26,6 +26,7 @@ export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 export interface CompartmentProps {
 	contentType: ContentTypeSchema; // = deep clone
 	contentValue: ContentSchema | undefined; // = deep clone
+	contentItem: ContentSchema | undefined; // = deep clone
 	settings: ModuleSettings | ContentTypeSchema['fields'] | ContentTypeSchema | undefined; // = deep clone
 	value: ModuleValue; // module data section
 	isValid: boolean;

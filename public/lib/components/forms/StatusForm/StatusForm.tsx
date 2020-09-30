@@ -6,12 +6,27 @@ import { CompartmentProps } from '../../../api/api.types';
 import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandler';
 
 import { STATUS_OPTIONS, STATUS_VALIDATION_SCHEMA } from './StatusForm.const';
+import { StatusFormOption } from './StatusForm.types';
 
-const StatusForm: FC<CompartmentProps> = ({ value, onChange = () => undefined, formikRef }) => {
+const StatusForm: FC<CompartmentProps> = ({
+	value,
+	onChange = () => undefined,
+	formikRef,
+	contentItem,
+}) => {
 	const onFormChange = (values: FormikValues, submitForm: () => Promise<void>): void => {
 		submitForm();
 		onChange(values);
 	};
+
+	const getStatusOptions = (): StatusFormOption[] =>
+		STATUS_OPTIONS.map(option => {
+			if (option.value !== contentItem?.meta.status) {
+				return option;
+			}
+			return { ...option, label: `${option.label} (huidige status)` };
+		});
+
 	/**
 	 * RENDER
 	 */
@@ -33,7 +48,7 @@ const StatusForm: FC<CompartmentProps> = ({ value, onChange = () => undefined, f
 								label="U kan de status van dit item wijzigen volgens de rechten die u hebt."
 								name="status"
 								id="status"
-								options={STATUS_OPTIONS}
+								options={getStatusOptions()}
 								required
 								as={RadioGroup}
 							/>
