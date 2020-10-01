@@ -26,6 +26,7 @@ export interface ContentSchema {
 		published?: boolean;
 		created?: string;
 		lastModified?: string;
+		activeLanguages: string[];
 	};
 	modulesData?: Record<string, ModuleValue>;
 	fields: Record<string, any>;
@@ -38,6 +39,7 @@ export interface ContentsSchema {
 
 export interface ContentCreateSchema {
 	meta: {
+		activeLanguages: string[];
 		label: string;
 		slug: Record<string, string>;
 		contentType: string;

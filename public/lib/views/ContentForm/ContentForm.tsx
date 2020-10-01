@@ -1,5 +1,5 @@
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
-import { alertService, LoadingState } from '@redactie/utils';
+import { alertService, LeavePrompt, LoadingState } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { clone, equals, isEmpty } from 'ramda';
@@ -62,7 +62,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		updateContentItemLoadingState,
 		publishContentItemLoadingState,
 	] = useContentLoadingStates();
-	const ContentItemUnTouched = useMemo(() => equals(contentItem, contentItemDraft), [
+	const contentItemUnTouched = useMemo(() => equals(contentItem, contentItemDraft), [
 		contentItem,
 		contentItemDraft,
 	]);
@@ -236,7 +236,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				<ActionBarContentSection>
 					<ContentFormActions
 						isPublished={!!contentItem?.meta?.historySummary?.published}
-						isSaved={ContentItemUnTouched}
+						isSaved={contentItemUnTouched}
 						status={contentItem?.meta?.status}
 						onStatusClick={onStatusClick}
 						onSave={() => onFormSubmit(contentItemDraft)}
@@ -251,6 +251,10 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 					/>
 				</ActionBarContentSection>
 			</ActionBar>
+			<LeavePrompt
+				when={!contentItemUnTouched}
+				onConfirm={() => onFormSubmit(contentItemDraft)}
+			/>
 		</>
 	);
 };
