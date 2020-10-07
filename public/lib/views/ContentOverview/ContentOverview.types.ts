@@ -4,8 +4,8 @@ export interface ContentOverviewTableRow {
 	contentType?: string;
 	lastModified?: string;
 	lastEditor?: {
-		firstname: string;
-		lastname: string;
+		firstname?: string;
+		lastname?: string;
 	};
 	status?: string;
 	published?: boolean;
