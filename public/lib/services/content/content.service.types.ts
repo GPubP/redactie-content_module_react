@@ -21,7 +21,10 @@ export interface ContentSchema {
 			published: boolean;
 		};
 		theme?: string;
-		lastEditor?: string;
+		lastEditor?: {
+			firstname: string;
+			lastname: string;
+		};
 		status: string;
 		published?: boolean;
 		created?: string;

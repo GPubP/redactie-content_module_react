@@ -60,7 +60,13 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'lastEditor',
 		disableSorting: true,
 		component(value: any, rowData: ContentOverviewTableRow) {
-			return <p>{rowData.lastEditor || 'Onbekend'}</p>;
+			return (
+				<p>
+					{rowData.lastEditor?.firstname
+						? `${rowData.lastEditor?.firstname} ${rowData.lastEditor?.lastname}`
+						: 'Onbekend'}
+				</p>
+			);
 		},
 	},
 	{
