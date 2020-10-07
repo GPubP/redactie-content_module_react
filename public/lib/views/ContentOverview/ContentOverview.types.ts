@@ -3,7 +3,10 @@ export interface ContentOverviewTableRow {
 	description?: string;
 	contentType?: string;
 	lastModified?: string;
-	lastEditor?: string;
+	lastEditor?: {
+		firstname?: string;
+		lastname?: string;
+	};
 	status?: string;
 	published?: boolean;
 	navigate: (path: string) => void;
