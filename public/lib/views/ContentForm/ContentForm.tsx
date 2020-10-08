@@ -24,7 +24,11 @@ import {
 import { contentFacade } from '../../store/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
-import { INTERNAL_COMPARTMENTS } from './ContentForm.const';
+import {
+	CONTENT_CREATE_ALLOWED_PATHS,
+	CONTENT_EDIT_ALLOWED_PATHS,
+	INTERNAL_COMPARTMENTS,
+} from './ContentForm.const';
 import { ContentFormMatchProps, ContentFormRouteProps } from './ContentForm.types';
 
 const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
@@ -32,6 +36,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	contentType,
 	contentItem,
 	contentItemDraft,
+	hasChanges,
 	isCreating,
 	match,
 	showPublishedStatus,
@@ -62,10 +67,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		updateContentItemLoadingState,
 		publishContentItemLoadingState,
 	] = useContentLoadingStates();
-	const contentItemUnTouched = useMemo(() => equals(contentItem, contentItemDraft), [
-		contentItem,
-		contentItemDraft,
-	]);
 
 	useEffect(() => {
 		if (!contentType) {
@@ -251,7 +252,10 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				</ActionBarContentSection>
 			</ActionBar>
 			<LeavePrompt
-				when={!contentItemUnTouched}
+				allowedPaths={
+					isCreating ? CONTENT_CREATE_ALLOWED_PATHS : CONTENT_EDIT_ALLOWED_PATHS
+				}
+				when={hasChanges}
 				onConfirm={() => onFormSubmit(contentItemDraft)}
 			/>
 		</>

@@ -1,6 +1,6 @@
 import { AlertContainer } from '@redactie/utils';
 import { equals } from 'ramda';
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useMemo } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
 import { RenderChildRoutes } from '../../components';
@@ -24,6 +24,10 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	 * Hooks
 	 */
 	const { navigate } = useNavigate();
+	const hasChanges = useMemo(() => !equals(contentItem, contentItemDraft), [
+		contentItem,
+		contentItemDraft,
+	]);
 
 	/**
 	 * Methods
@@ -81,6 +85,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 			contentType,
 			contentItemDraft,
 			contentItem,
+			hasChanges,
 			onSubmit,
 			onCancel,
 			onStatusClick,
