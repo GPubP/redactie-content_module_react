@@ -3,6 +3,7 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
+import { useDetectValueChanges } from '@redactie/utils';
 import React, { FC, useContext, useEffect, useMemo } from 'react';
 
 import { DataLoader, RenderChildRoutes } from '../../components';

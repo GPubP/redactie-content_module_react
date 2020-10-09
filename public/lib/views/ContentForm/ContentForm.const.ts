@@ -84,8 +84,8 @@ export const INTERNAL_COMPARTMENTS = (
 ];
 
 export const CONTENT_CREATE_ALLOWED_PATHS = [
-	`${TENANT_ROOT}sites${MODULE_PATHS.createCompartment}`,
+	`${TENANT_ROOT}/sites${MODULE_PATHS.createCompartment}`,
 ];
 export const CONTENT_EDIT_ALLOWED_PATHS = [
-	`${TENANT_ROOT}sites${MODULE_PATHS.detailEditCompartment}`,
+	`${TENANT_ROOT}/sites${MODULE_PATHS.detailEditCompartment}`,
 ];

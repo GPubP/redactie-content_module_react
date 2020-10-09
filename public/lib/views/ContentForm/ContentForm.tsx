@@ -2,8 +2,8 @@ import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-ed
 import { alertService, LeavePrompt, LoadingState } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import { clone, equals, isEmpty } from 'ramda';
-import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { equals, isEmpty } from 'ramda';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { ContentSchema } from '../../api/api.types';
@@ -214,8 +214,10 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 										activeCompartmentFormikRef.current = instance;
 									}
 								}}
-								contentType={clone(contentType)}
-								contentValue={clone(contentItemDraft)}
+								// TODO: only clone for external modules
+								// Temp. remove clones to restore performance
+								contentType={contentType}
+								contentValue={contentItemDraft}
 								isValid
 								settings={getSettings(contentType, activeCompartment)}
 								onChange={values => handleChange(activeCompartment, values)}
@@ -236,7 +238,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				<ActionBarContentSection>
 					<ContentFormActions
 						isPublished={!!contentItem?.meta?.historySummary?.published}
-						isSaved={contentItemUnTouched}
+						isSaved={!hasChanges}
 						status={contentItem?.meta?.status}
 						onStatusClick={onStatusClick}
 						onSave={() => onFormSubmit(contentItemDraft)}
