@@ -1,15 +1,17 @@
+export const TENANT_ROOT = '/:tenantId';
+
 export const BREADCRUMB_OPTIONS = {
 	excludePaths: [
 		'/',
-		'/:tenantId',
-		'/:tenantId/sites',
-		'/:tenantId/sites/:siteId/content',
-		'/:tenantId/sites/:siteId/content/:contentId/bekijk',
-		'/:tenantId/sites/:siteId/content/:contentId/bewerk',
-		'/:tenantId/sites/:siteId/content/:contentId/bewerk/:compartment',
-		'/:tenantId/sites/:siteId/content/content-type',
-		'/:tenantId/sites/:siteId/content/content-type/:contentTypeId',
-		'/:tenantId/sites/:siteId/content/content-type/:contentTypeId/aanmaken',
+		`${TENANT_ROOT}`,
+		`${TENANT_ROOT}/sites`,
+		`${TENANT_ROOT}/sites/:siteId/content`,
+		`${TENANT_ROOT}/sites/:siteId/content/:contentId/bekijk`,
+		`${TENANT_ROOT}/sites/:siteId/content/:contentId/bewerk`,
+		`${TENANT_ROOT}/sites/:siteId/content/:contentId/bewerk/:compartment`,
+		`${TENANT_ROOT}/sites/:siteId/content/content-type`,
+		`${TENANT_ROOT}/sites/:siteId/content/content-type/:contentTypeId`,
+		`${TENANT_ROOT}/sites/:siteId/content/content-type/:contentTypeId/aanmaken`,
 	],
 };
 

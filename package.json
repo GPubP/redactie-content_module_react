@@ -48,7 +48,7 @@
     "@redactie/roles-rights-module": "^0.3.0-7",
     "@redactie/sites-module": "^0.10.0",
     "@redactie/translations-module": "^0.5.1",
-    "@redactie/utils": "0.8.0",
+    "@redactie/utils": "0.10.0",
     "@testing-library/jest-dom": "5.0.2",
     "@testing-library/react": "9.4.0",
     "@types/classnames": "^2.2.10",

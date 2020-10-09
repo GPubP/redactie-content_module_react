@@ -9,7 +9,7 @@ import {
 	STATUS_VALIDATION_SCHEMA,
 	StatusForm,
 } from '../../components';
-import { DATE_FORMATS, WORKING_TITLE_KEY } from '../../content.const';
+import { DATE_FORMATS, MODULE_PATHS, TENANT_ROOT, WORKING_TITLE_KEY } from '../../content.const';
 import { addWorkingTitleField, getFormPropsByCT } from '../../helpers';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
@@ -81,4 +81,11 @@ export const INTERNAL_COMPARTMENTS = (
 	// 	isValid: false,
 	// 	validate: (values: ContentSchema) => PLANNING_VALIDATION_SCHEMA.isValidSync(values),
 	// },
+];
+
+export const CONTENT_CREATE_ALLOWED_PATHS = [
+	`${TENANT_ROOT}/sites${MODULE_PATHS.createCompartment}`,
+];
+export const CONTENT_EDIT_ALLOWED_PATHS = [
+	`${TENANT_ROOT}/sites${MODULE_PATHS.detailEditCompartment}`,
 ];
