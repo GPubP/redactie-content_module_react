@@ -47,6 +47,7 @@ export interface ContentCreateSchema {
 		slug: Record<string, string>;
 		contentType: string;
 		status: ContentStatus;
+		published: boolean;
 		site: string;
 	};
 	modulesData?: Record<string, ModuleValue>;
