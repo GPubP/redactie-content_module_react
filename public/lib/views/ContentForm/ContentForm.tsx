@@ -2,8 +2,8 @@ import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-ed
 import { alertService, LeavePrompt, LoadingState } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import { clone, equals, isEmpty } from 'ramda';
-import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { equals, isEmpty } from 'ramda';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { ContentSchema } from '../../api/api.types';
@@ -24,7 +24,11 @@ import {
 import { contentFacade } from '../../store/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
-import { INTERNAL_COMPARTMENTS } from './ContentForm.const';
+import {
+	CONTENT_CREATE_ALLOWED_PATHS,
+	CONTENT_EDIT_ALLOWED_PATHS,
+	INTERNAL_COMPARTMENTS,
+} from './ContentForm.const';
 import { ContentFormMatchProps, ContentFormRouteProps } from './ContentForm.types';
 
 const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
@@ -32,6 +36,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	contentType,
 	contentItem,
 	contentItemDraft,
+	hasChanges,
 	isCreating,
 	match,
 	showPublishedStatus,
@@ -62,10 +67,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		updateContentItemLoadingState,
 		publishContentItemLoadingState,
 	] = useContentLoadingStates();
-	const contentItemUnTouched = useMemo(() => equals(contentItem, contentItemDraft), [
-		contentItem,
-		contentItemDraft,
-	]);
 
 	useEffect(() => {
 		if (!contentType) {
@@ -213,9 +214,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 										activeCompartmentFormikRef.current = instance;
 									}
 								}}
-								contentType={clone(contentType)}
-								contentValue={clone(contentItemDraft)}
-								contentItem={clone(contentItem)}
+								// TODO: only clone for external modules
+								// Temp. remove clones to restore performance
+								contentType={contentType}
+								contentValue={contentItemDraft}
+								contentItem={contentItem}
 								isValid
 								settings={getSettings(contentType, activeCompartment)}
 								onChange={values => handleChange(activeCompartment, values)}
@@ -236,7 +239,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				<ActionBarContentSection>
 					<ContentFormActions
 						isPublished={!!contentItem?.meta?.historySummary?.published}
-						isSaved={contentItemUnTouched}
+						isSaved={!hasChanges}
 						status={contentItem?.meta?.status}
 						onStatusClick={onStatusClick}
 						onSave={() => onFormSubmit(contentItemDraft)}
@@ -252,7 +255,10 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				</ActionBarContentSection>
 			</ActionBar>
 			<LeavePrompt
-				when={!contentItemUnTouched}
+				allowedPaths={
+					isCreating ? CONTENT_CREATE_ALLOWED_PATHS : CONTENT_EDIT_ALLOWED_PATHS
+				}
+				when={hasChanges}
 				onConfirm={() => onFormSubmit(contentItemDraft)}
 			/>
 		</>

@@ -3,6 +3,7 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
+import { useDetectValueChanges } from '@redactie/utils';
 import React, { FC, useContext, useEffect, useMemo } from 'react';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
@@ -39,12 +40,8 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			}),
 		},
 	]);
-	const guardsMeta = useMemo(
-		() => ({
-			tenantId,
-		}),
-		[tenantId]
-	);
+	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
+	const [hasChanges] = useDetectValueChanges(!!contentItemDraft, contentItemDraft);
 
 	useEffect(() => {
 		if (!contentType) {
@@ -122,6 +119,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		const extraOptions = {
 			contentType,
 			contentItemDraft,
+			hasChanges,
 			isCreating: true,
 			onCancel: navigateToOverview,
 			onSubmit,
