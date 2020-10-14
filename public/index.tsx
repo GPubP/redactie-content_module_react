@@ -1,6 +1,4 @@
 // import { akitaDevtools } from '@datorama/akita';
-import * as moment from 'moment';
-import 'moment/locale/nl';
 import React, { FC, useMemo } from 'react';
 
 import { registerContentAPI } from './lib/api/index';
@@ -21,9 +19,6 @@ import {
 	ContentOverview,
 } from './lib/views';
 import ContentForm from './lib/views/ContentForm/ContentForm';
-
-// eslint-disable-next-line import/namespace
-moment.locale('nl');
 
 // akitaDevtools();
 
