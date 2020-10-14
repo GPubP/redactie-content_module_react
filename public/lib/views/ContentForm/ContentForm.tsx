@@ -218,6 +218,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 								// Temp. remove clones to restore performance
 								contentType={contentType}
 								contentValue={contentItemDraft}
+								contentItem={contentItem}
 								isValid
 								settings={getSettings(contentType, activeCompartment)}
 								onChange={values => handleChange(activeCompartment, values)}

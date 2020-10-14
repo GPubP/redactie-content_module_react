@@ -1,17 +1,36 @@
 import { RadioGroup } from '@acpaas-ui/react-components';
 import { Field, Formik, FormikValues } from 'formik';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 
 import { CompartmentProps } from '../../../api/api.types';
 import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandler';
 
 import { STATUS_OPTIONS, STATUS_VALIDATION_SCHEMA } from './StatusForm.const';
+import { StatusFormOption } from './StatusForm.types';
 
-const StatusForm: FC<CompartmentProps> = ({ value, onChange = () => undefined, formikRef }) => {
+const StatusForm: FC<CompartmentProps> = ({
+	value,
+	onChange = () => undefined,
+	formikRef,
+	contentItem,
+}) => {
 	const onFormChange = (values: FormikValues, submitForm: () => Promise<void>): void => {
 		submitForm();
 		onChange(values);
 	};
+
+	const getStatusOptions = useMemo(
+		(): StatusFormOption[] =>
+			STATUS_OPTIONS.map(option => {
+				if (option.value !== contentItem?.meta.status) {
+					return option;
+				}
+				return { ...option, label: `${option.label} (huidige status)` };
+			}),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[contentItem?.meta.status]
+	);
+
 	/**
 	 * RENDER
 	 */
@@ -33,7 +52,7 @@ const StatusForm: FC<CompartmentProps> = ({ value, onChange = () => undefined, f
 								label="U kan de status van dit item wijzigen volgens de rechten die u hebt."
 								name="status"
 								id="status"
-								options={STATUS_OPTIONS}
+								options={getStatusOptions}
 								required
 								as={RadioGroup}
 							/>

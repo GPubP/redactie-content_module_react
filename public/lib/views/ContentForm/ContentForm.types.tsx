@@ -25,9 +25,10 @@ export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 }
 
 export interface CompartmentProps {
-	contentType: ContentTypeSchema; // = deep clone
-	contentValue: ContentSchema | undefined; // = deep clone
-	settings: ModuleSettings | ContentTypeSchema['fields'] | ContentTypeSchema | undefined; // = deep clone
+	contentType: ContentTypeSchema;
+	contentValue: ContentSchema | undefined;
+	contentItem: ContentSchema | undefined;
+	settings: ModuleSettings | ContentTypeSchema['fields'] | ContentTypeSchema | undefined;
 	value: ModuleValue; // module data section
 	isValid: boolean;
 	formikRef?: (instance: FormikProps<FormikValues>) => void;
