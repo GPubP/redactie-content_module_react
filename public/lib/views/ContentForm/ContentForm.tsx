@@ -2,7 +2,7 @@ import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-ed
 import { alertService, LeavePrompt, LoadingState } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import { equals, isEmpty } from 'ramda';
+import { equals, isEmpty, lensPath, set } from 'ramda';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -179,9 +179,17 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				}
 			});
 		}
+
 		// Only submit the form if all compartments are valid
 		if (compartmentsAreValid) {
-			onSubmit(contentItemDraft);
+			const slugLens = lensPath(['meta', 'slug', 'nl']);
+
+			const modifiedContentItemDraft = set(
+				slugLens,
+				kebabCase(contentItemDraft.meta.slug.nl),
+				contentItemDraft
+			);
+			onSubmit(modifiedContentItemDraft);
 		} else {
 			alertService.danger(
 				{
