@@ -44,6 +44,7 @@ export const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[
 				: '',
 			dataType: dataType.data.type,
 			fields: parseFields(config.fields),
+			uuid: (field as any).uuid,
 			config: {
 				...config,
 				...generalConfig,
