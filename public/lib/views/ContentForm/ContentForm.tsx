@@ -182,14 +182,20 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		// Only submit the form if all compartments are valid
 		if (compartmentsAreValid) {
-			const slugLens = lensPath(['meta', 'slug', 'nl']);
-
-			const modifiedContentItemDraft = set(
-				slugLens,
-				kebabCase(contentItemDraft.meta.slug.nl),
-				contentItemDraft
+			contentItemDraft.meta.slug = contentItemDraft.meta.activeLanguages.reduce(
+				(acc, lang) => {
+					if (!contentItemDraft.meta.slug[lang]) {
+						return acc;
+					}
+					return {
+						...acc,
+						[lang]: kebabCase(contentItemDraft.meta.slug[lang]),
+					};
+				},
+				{}
 			);
-			onSubmit(modifiedContentItemDraft);
+
+			onSubmit(contentItemDraft);
 		} else {
 			alertService.danger(
 				{
