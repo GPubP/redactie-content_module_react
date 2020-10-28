@@ -87,7 +87,7 @@ module.exports = env => {
 				...defaultConfig.plugins,
 				new BundleAnalyzerPlugin(),
 				new webpack.SourceMapDevToolPlugin({
-					filename: `${kebabCase(packageJSON.name)}.umd.map.js`,
+					filename: `${kebabCase(packageJSON.name)}.umd.js.map`,
 					publicPath: `${kebabCase(packageJSON.name + packageJSON.version)}/dist/`,
 				}),
 			],

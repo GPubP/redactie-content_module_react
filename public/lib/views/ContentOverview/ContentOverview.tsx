@@ -57,6 +57,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		mySecurityRightsLoadingState,
 		mySecurityrights,
 	] = rolesRightsConnector.api.hooks.useMySecurityRightsForSite({
+		siteUuid: siteId,
 		onlyKeys: true,
 	});
 	const { generatePath, navigate } = useNavigate();
