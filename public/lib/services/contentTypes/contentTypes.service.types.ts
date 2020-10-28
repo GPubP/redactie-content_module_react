@@ -56,6 +56,7 @@ export interface ContentTypeFieldSchema {
 		required: boolean;
 		[key: string]: any;
 	};
+	uuid: string;
 	generalConfig: GeneralConfig;
 	defaultValue: string;
 	preset?: Preset;
