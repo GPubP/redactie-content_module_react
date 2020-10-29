@@ -10,6 +10,7 @@ export interface SearchParams {
 	creator?: string;
 	direction?: number;
 	published?: boolean;
+	sparse?: boolean;
 }
 
 export interface OrderBy {
