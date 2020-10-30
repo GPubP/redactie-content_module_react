@@ -106,7 +106,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		uuid: string,
 		data: ContentSchema,
 		publish = false
-	): void {
+	): Promise<void> {
 		if (publish) {
 			this.store.setIsPublishing(true);
 		} else {
@@ -115,7 +115,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		const alertProps = publish ? getAlertMessages(data).publish : getAlertMessages(data).update;
 		alertService.dismiss();
 
-		this.service
+		return this.service
 			.updateContentItem(siteId, uuid, data)
 			.then(response => {
 				if (response) {
@@ -134,11 +134,10 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 									isUpdating: false,
 									isPublishing: false,
 								});
+								alertService.success(alertProps.success, this.alertContainerProps);
 							}
 						})
 						.catch(error => this.store.setError(error));
-
-					alertService.success(alertProps.success, this.alertContainerProps);
 				}
 			})
 			.catch(error => {

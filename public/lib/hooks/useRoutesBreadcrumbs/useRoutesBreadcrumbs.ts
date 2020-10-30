@@ -11,7 +11,7 @@ const useRoutesBreadcrumbs = (
 	extraProps?: Record<string, unknown>
 ): ReactNode => {
 	const { generatePath } = useNavigate();
-	const { siteId } = useParams();
+	const { siteId } = useParams<{ siteId: string }>();
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,

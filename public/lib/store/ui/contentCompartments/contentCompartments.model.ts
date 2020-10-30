@@ -1,7 +1,7 @@
 import { ActiveState, EntityState } from '@datorama/akita';
 import { FC } from 'react';
 
-import { ContentSchema } from '../../../api/api.types';
+import { ContentSchema, ContentTypeSchema } from '../../../api/api.types';
 import { CompartmentProps } from '../../../views/ContentForm/ContentForm.types';
 
 export type ModuleValue = any;
@@ -15,6 +15,23 @@ export interface ContentCompartmentRegisterOptions {
 	replace?: true;
 }
 
+export type ContentCompartmentBeforeSubmitFn = (
+	activeCompartmentName: string,
+	moduleValue: ModuleValue,
+	contentItem: ContentSchema,
+	contentType: ContentTypeSchema,
+	isCreating: boolean
+) => Promise<boolean>;
+
+export type ContentCompartmentAfterSubmitFn = (
+	error: Error | undefined,
+	activeCompartmentName: string,
+	moduleValue: ModuleValue,
+	contentItem: ContentSchema,
+	contentType: ContentTypeSchema,
+	isCreating: boolean
+) => Promise<boolean>;
+
 export interface ContentCompartmentModel {
 	name: string;
 	label: string;
@@ -24,6 +41,8 @@ export interface ContentCompartmentModel {
 	type: CompartmentType;
 	isValid?: boolean;
 	validate?: (values: ContentSchema) => boolean;
+	beforeSubmit?: ContentCompartmentBeforeSubmitFn;
+	afterSubmit?: ContentCompartmentAfterSubmitFn;
 }
 
 export interface ContentCompartmentState

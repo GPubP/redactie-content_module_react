@@ -14,6 +14,7 @@ import {
 	filterCompartments,
 	getCompartmentValue,
 	getSettings,
+	runAllSubmitHooks,
 	validateCompartments,
 } from '../../helpers/contentCompartments';
 import {
@@ -22,7 +23,11 @@ import {
 	useExternalCompartment,
 } from '../../hooks';
 import { contentFacade } from '../../store/content';
-import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
+import {
+	CompartmentType,
+	ContentCompartmentModel,
+	contentCompartmentsFacade,
+} from '../../store/ui/contentCompartments';
 
 import {
 	CONTENT_CREATE_ALLOWED_PATHS,
@@ -179,9 +184,40 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				}
 			});
 		}
-		// Only submit the form if all compartments are valid
-		if (compartmentsAreValid) {
-			onSubmit(contentItemDraft);
+
+		if (compartmentsAreValid && activeCompartment) {
+			runAllSubmitHooks(
+				activeCompartment,
+				compartments,
+				contentType,
+				contentItemDraft,
+				!!isCreating,
+				'beforeSubmit'
+			).then(({ hasRejected, errorMessages, contentItem }) => {
+				if (!hasRejected) {
+					contentFacade.setContentItemDraft(contentItem);
+					onSubmit(contentItem, activeCompartment, compartments);
+					return;
+				}
+				errorMessages.forEach(message => {
+					contentCompartmentsFacade.setValid(message.compartmentName, false);
+				});
+				alertService.danger(
+					{
+						title: 'Er zijn nog fouten',
+						message: (
+							<>
+								<ul className="a-list">
+									{errorMessages.map((error, index) => (
+										<li key={index}>{error.error.message}</li>
+									))}
+								</ul>
+							</>
+						),
+					},
+					{ containerId: ALERT_CONTAINER_IDS.contentEdit }
+				);
+			});
 		} else {
 			alertService.danger(
 				{
@@ -195,6 +231,10 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		setHasSubmit(true);
 	};
 
+	if (!activeCompartment) {
+		return null;
+	}
+
 	/**
 	 * RENDER
 	 */
@@ -207,31 +247,29 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 				<div className="m-card col-xs-9 u-padding">
 					<div className="u-margin">
-						{activeCompartment ? (
-							<activeCompartment.component
-								formikRef={instance => {
-									if (!equals(instance, activeCompartmentFormikRef.current)) {
-										activeCompartmentFormikRef.current = instance;
-									}
-								}}
-								// TODO: only clone for external modules
-								// Temp. remove clones to restore performance
-								contentType={contentType}
-								contentValue={contentItemDraft}
-								contentItem={contentItem}
-								isValid
-								settings={getSettings(contentType, activeCompartment)}
-								onChange={values => handleChange(activeCompartment, values)}
-								value={getCompartmentValue(
-									contentItemDraft,
-									activeCompartment,
-									contentType
-								)}
-								updateContent={(content: ContentSchema) =>
-									contentFacade.updateContentItemDraft(content)
+						<activeCompartment.component
+							formikRef={instance => {
+								if (!equals(instance, activeCompartmentFormikRef.current)) {
+									activeCompartmentFormikRef.current = instance;
 								}
-							/>
-						) : null}
+							}}
+							// TODO: only clone for external modules
+							// Temp. remove clones to restore performance
+							contentType={contentType}
+							contentValue={contentItemDraft}
+							contentItem={contentItem}
+							isValid
+							settings={getSettings(contentType, activeCompartment)}
+							onChange={values => handleChange(activeCompartment, values)}
+							value={getCompartmentValue(
+								contentItemDraft,
+								activeCompartment,
+								contentType
+							)}
+							updateContent={(content: ContentSchema) =>
+								contentFacade.updateContentItemDraft(content)
+							}
+						/>
 					</div>
 				</div>
 			</div>
@@ -249,7 +287,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							createContentItemLoadingState === LoadingState.Loading
 						}
 						isPublishing={publishContentItemLoadingState === LoadingState.Loading}
-						onUpdatePublication={() => onUpdatePublication(contentItemDraft)}
+						onUpdatePublication={() =>
+							onUpdatePublication(contentItemDraft, activeCompartment, compartments)
+						}
 						onCancel={handleCancel}
 					/>
 				</ActionBarContentSection>

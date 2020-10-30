@@ -10,11 +10,12 @@ import { DataLoader, RenderChildRoutes } from '../../components';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { TenantContext } from '../../context';
-import { getInitialContentValues } from '../../helpers';
+import { getInitialContentValues, runAllSubmitHooks } from '../../helpers';
 import { useContentItem, useContentType, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { ContentCreateSchema, ContentSchema, ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content/content.facade';
 import { contentTypesFacade } from '../../store/contentTypes';
+import { ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
 import { ContentCreateMatchProps } from './ContentCreate.types';
 
@@ -79,7 +80,11 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		navigate(MODULE_PATHS.overview, { siteId });
 	};
 
-	const onSubmit = (content: ContentSchema): void => {
+	const onSubmit = (
+		content: ContentSchema,
+		activeCompartment: ContentCompartmentModel,
+		compartments: ContentCompartmentModel[]
+	): void => {
 		if (!contentType || !content) {
 			return;
 		}
@@ -98,14 +103,39 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			fields: content.fields,
 		};
 
-		contentFacade.createContentItem(siteId, request).then(response => {
-			if (response) {
-				navigate(`${MODULE_PATHS.detailEdit}/default`, {
-					siteId,
-					contentId: response.uuid,
-				});
-			}
-		});
+		contentFacade
+			.createContentItem(siteId, request)
+			.then(response => {
+				if (response) {
+					runAllSubmitHooks(
+						activeCompartment,
+						compartments,
+						contentType,
+						response,
+						true,
+						'afterSubmit'
+					).then(({ hasRejected }) => {
+						if (!hasRejected) {
+							navigate(`${MODULE_PATHS.detailEdit}/default`, {
+								siteId,
+								contentId: response.uuid,
+							});
+						}
+					});
+				}
+			})
+			.catch(error => {
+				// Run rollback
+				runAllSubmitHooks(
+					activeCompartment,
+					compartments,
+					contentType,
+					(request as unknown) as ContentSchema,
+					true,
+					'afterSubmit',
+					error
+				);
+			});
 	};
 
 	/**

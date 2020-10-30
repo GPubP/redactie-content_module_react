@@ -32,7 +32,8 @@ export const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[
 		} = field;
 		const isMultiple = (generalConfig.max || 0) > 1;
 		const isPreset = !!preset;
-		const formField: FieldSchema = {
+		// Type is set to any because uuid is not a known prop on FieldSchema
+		const formField: any = {
 			name,
 			label,
 			module: fieldType?.data?.module,

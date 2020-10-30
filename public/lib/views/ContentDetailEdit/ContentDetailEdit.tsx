@@ -3,11 +3,14 @@ import { equals } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
+import { registerContentDetailCompartment } from '../../api/registerContentDetailCompartment';
 import { RenderChildRoutes } from '../../components';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
+import { runAllSubmitHooks } from '../../helpers';
 import { useNavigate } from '../../hooks';
 import { ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content';
+import { ContentCompartmentModel } from '../../store/ui/contentCompartments';
 import { ContentDetailChildRouteProps } from '../ContentDetail/ContentDetail.types';
 
 import { ContentDetailEditMatchProps } from './ContentDetailEdit.types';
@@ -36,23 +39,48 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		contentFacade.setContentItemDraft(contentItem);
 	};
 
-	const onSubmit = (contentItemDraft: ContentSchema): void => {
+	const onSubmit = (
+		contentItemDraft: ContentSchema,
+		activeCompartment: ContentCompartmentModel,
+		compartments: ContentCompartmentModel[]
+	): void => {
 		// Every change with current status published should be saved as a draft version unless the status has changed
-		if (
+		const data =
 			contentItem.meta.status === ContentStatus.PUBLISHED &&
 			equals(contentItemDraft.meta.status, contentItem.meta.status)
-		) {
-			contentFacade.updateContentItem(siteId, contentId, {
-				...contentItemDraft,
-				meta: {
-					...contentItemDraft.meta,
-					status: ContentStatus.DRAFT,
-				},
-			});
-			return;
-		}
+				? {
+						...contentItemDraft,
+						meta: {
+							...contentItemDraft.meta,
+							status: ContentStatus.DRAFT,
+						},
+				  }
+				: contentItemDraft;
 
-		contentFacade.updateContentItem(siteId, contentId, contentItemDraft);
+		contentFacade
+			.updateContentItem(siteId, contentId, data)
+			.then(() =>
+				runAllSubmitHooks(
+					activeCompartment,
+					compartments,
+					contentType,
+					data,
+					false,
+					'afterSubmit'
+				)
+			)
+			.catch(error =>
+				// Run rollback
+				runAllSubmitHooks(
+					activeCompartment,
+					compartments,
+					contentType,
+					data,
+					false,
+					'afterSubmit',
+					error
+				)
+			);
 	};
 
 	const onStatusClick = (): void => {
@@ -62,19 +90,42 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		});
 	};
 
-	const onUpdatePublication = (content: ContentSchema): void => {
-		contentFacade.updateContentItem(
-			siteId,
-			contentId,
-			{
-				...content,
-				meta: {
-					...content.meta,
-					status: ContentStatus.PUBLISHED,
-				},
+	const onUpdatePublication = (
+		content: ContentSchema,
+		activeCompartment: ContentCompartmentModel,
+		compartments: ContentCompartmentModel[]
+	): void => {
+		const data = {
+			...content,
+			meta: {
+				...content.meta,
+				status: ContentStatus.PUBLISHED,
 			},
-			true
-		);
+		};
+		contentFacade
+			.updateContentItem(siteId, contentId, data, true)
+			.then(() =>
+				runAllSubmitHooks(
+					activeCompartment,
+					compartments,
+					contentType,
+					data,
+					false,
+					'afterSubmit'
+				)
+			)
+			.catch(error =>
+				// Run rollback
+				runAllSubmitHooks(
+					activeCompartment,
+					compartments,
+					contentType,
+					data,
+					false,
+					'afterSubmit',
+					error
+				)
+			);
 	};
 
 	/**

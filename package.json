@@ -1,6 +1,6 @@
 {
   "name": "@redactie/content-module",
-  "version": "0.15.8",
+  "version": "0.15.9",
   "description": "redactie content module",
   "main": "dist/redactie-content-module.umd.js",
   "module": "dist/redactie-content-module.umd.js",
@@ -95,7 +95,7 @@
     "stylelint-config-standard": "19.0.0",
     "ts-jest": "^25.2.1",
     "ts-loader": "6.2.1",
-    "typescript": "3.7.5",
+    "typescript": "^3.8.3",
     "typescript-plugin-css-modules": "^2.1.2",
     "webpack": "4.41.5",
     "webpack-bundle-analyzer": "^3.6.1",
