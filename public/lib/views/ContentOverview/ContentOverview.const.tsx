@@ -7,11 +7,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
+import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../services/contentTypes';
 
 import { ContentOverviewTableRow } from './ContentOverview.types';
 
 export const CONTENT_TYPES_SEARCH_OPTIONS = {
-	skip: 0,
+	...DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
 	limit: -1,
 };
 

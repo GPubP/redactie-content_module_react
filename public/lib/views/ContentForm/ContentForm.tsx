@@ -2,7 +2,7 @@ import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-ed
 import { alertService, LeavePrompt, LoadingState } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import { equals, isEmpty } from 'ramda';
+import { equals, isEmpty, lensPath, set } from 'ramda';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -186,6 +186,19 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		}
 
 		if (compartmentsAreValid && activeCompartment) {
+			const kebabCasedSlugs = contentItemDraft.meta.activeLanguages.reduce((acc, lang) => {
+				if (!contentItemDraft.meta.slug[lang]) {
+					return acc;
+				}
+				return {
+					...acc,
+					[lang]: kebabCase(contentItemDraft.meta.slug[lang]),
+				};
+			}, {});
+
+			const slugLens = lensPath(['meta', 'slug']);
+			const modifiedContentItemDraft = set(slugLens, kebabCasedSlugs, contentItemDraft);
+
 			if (isCreating) {
 				contentFacade.setIsCreating(true);
 			} else {
@@ -195,7 +208,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				activeCompartment,
 				compartments,
 				contentType,
-				contentItemDraft,
+				modifiedContentItemDraft,
 				!!isCreating,
 				'beforeSubmit'
 			).then(({ hasRejected, errorMessages, contentItem }) => {
