@@ -61,6 +61,8 @@ export const mapExternalCompartmentToContentCompartment = (
 	ec: ExternalCompartmentModel
 ): ContentCompartmentModel => ({
 	label: ec.label,
+	afterSubmit: ec.afterSubmit,
+	beforeSubmit: ec.beforeSubmit,
 	getDescription: ec.getDescription,
 	isValid: ec.isValid,
 	validate: ec.validate,
@@ -121,4 +123,105 @@ export const validateCompartments = (
 
 	// Return false if one of the compartments is invalid
 	return !validatedCompartments.includes(false);
+};
+
+export const runAllSubmitHooks = (
+	activeCompartment: ContentCompartmentModel,
+	compartments: ContentCompartmentModel[],
+	contentType: ContentTypeSchema,
+	contentItem: ContentSchema,
+	isCreating: boolean,
+	type: 'beforeSubmit' | 'afterSubmit',
+	error?: any
+): Promise<{
+	hasRejected: boolean;
+	errorMessages: { compartmentName: string; error: Error }[];
+	contentItem: ContentSchema;
+}> => {
+	const allPromises = compartments.reduce((acc, compartment) => {
+		if (type === 'beforeSubmit' && typeof compartment.beforeSubmit === 'function') {
+			acc.push(
+				compartment.beforeSubmit(
+					activeCompartment.name,
+					getCompartmentValue(contentItem, activeCompartment, contentType),
+					contentItem,
+					contentType,
+					isCreating
+				)
+			);
+			return acc;
+		}
+
+		if (type === 'afterSubmit' && typeof compartment.afterSubmit === 'function') {
+			acc.push(
+				compartment.afterSubmit(
+					error,
+					activeCompartment.name,
+					getCompartmentValue(contentItem, activeCompartment, contentType),
+					contentItem,
+					contentType,
+					isCreating
+				)
+			);
+			return acc;
+		}
+
+		acc.push(Promise.resolve(true));
+
+		return acc;
+	}, [] as Promise<any>[]);
+
+	return Promise.allSettled(allPromises).then(values => {
+		const allValues = values
+			.filter(c => c.status === 'fulfilled')
+			.map(c => {
+				return c as PromiseFulfilledResult<any>;
+			})
+			.map(c => c.value);
+		const errorMessages = values
+			.map(c => c as PromiseRejectedResult)
+			.reduce((acc, c, index) => {
+				const compartment = compartments.find((comp, compIndex) => compIndex === index);
+				if (c.status === 'rejected' && c.reason && compartment) {
+					acc.push({
+						compartmentName: compartment.name,
+						error: c.reason,
+					});
+				}
+				return acc;
+			}, [] as { compartmentName: string; error: Error }[]);
+		const hasRejected = errorMessages.length > 0;
+
+		const newContentItem =
+			!hasRejected && type === 'beforeSubmit'
+				? allValues.reduce(
+						(newContentItem, moduleValue, index) => {
+							const compartment = compartments.find(
+								(comp, compIndex) => compIndex === index
+							);
+							if (
+								moduleValue &&
+								compartment &&
+								compartment.type === CompartmentType.MODULE
+							) {
+								return {
+									...newContentItem,
+									modulesData: {
+										...newContentItem.modulesData,
+										[compartment.name]: moduleValue,
+									},
+								};
+							}
+							return newContentItem;
+						},
+						{ ...contentItem }
+				  )
+				: contentItem;
+
+		return {
+			hasRejected,
+			errorMessages,
+			contentItem: newContentItem,
+		};
+	});
 };

@@ -14,6 +14,7 @@ import {
 	filterCompartments,
 	getCompartmentValue,
 	getSettings,
+	runAllSubmitHooks,
 	validateCompartments,
 } from '../../helpers/contentCompartments';
 import {
@@ -22,7 +23,11 @@ import {
 	useExternalCompartment,
 } from '../../hooks';
 import { contentFacade } from '../../store/content';
-import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
+import {
+	CompartmentType,
+	ContentCompartmentModel,
+	contentCompartmentsFacade,
+} from '../../store/ui/contentCompartments';
 
 import {
 	CONTENT_CREATE_ALLOWED_PATHS,
@@ -180,8 +185,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			});
 		}
 
-		// Only submit the form if all compartments are valid
-		if (compartmentsAreValid) {
+		if (compartmentsAreValid && activeCompartment) {
 			const kebabCasedSlugs = contentItemDraft.meta.activeLanguages.reduce((acc, lang) => {
 				if (!contentItemDraft.meta.slug[lang]) {
 					return acc;
@@ -193,22 +197,62 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			}, {});
 
 			const slugLens = lensPath(['meta', 'slug']);
-
 			const modifiedContentItemDraft = set(slugLens, kebabCasedSlugs, contentItemDraft);
 
-			onSubmit(modifiedContentItemDraft);
-		} else {
-			alertService.danger(
-				{
-					title: 'Er zijn nog fouten',
-					message: 'Lorem ipsum',
-				},
-				{ containerId: ALERT_CONTAINER_IDS.contentEdit }
-			);
+			if (isCreating) {
+				contentFacade.setIsCreating(true);
+			} else {
+				contentFacade.setIsUpdating(true);
+			}
+			runAllSubmitHooks(
+				activeCompartment,
+				compartments,
+				contentType,
+				modifiedContentItemDraft,
+				!!isCreating,
+				'beforeSubmit'
+			).then(({ hasRejected, errorMessages, contentItem }) => {
+				if (!hasRejected) {
+					contentFacade.setContentItemDraft(contentItem);
+					onSubmit(contentItem, activeCompartment, compartments);
+					return;
+				}
+				if (isCreating) {
+					contentFacade.setIsCreating(false);
+				} else {
+					contentFacade.setIsUpdating(false);
+				}
+				errorMessages.forEach(message => {
+					contentCompartmentsFacade.setValid(message.compartmentName, false);
+				});
+				alertService.danger(
+					{
+						title: 'Er zijn nog fouten',
+						message: (
+							<>
+								<ul className="a-list">
+									{errorMessages.map((error, index) => (
+										<li key={index}>{error.error.message}</li>
+									))}
+								</ul>
+							</>
+						),
+					},
+					{
+						containerId: isCreating
+							? ALERT_CONTAINER_IDS.contentCreate
+							: ALERT_CONTAINER_IDS.contentEdit,
+					}
+				);
+			});
 		}
 
 		setHasSubmit(true);
 	};
+
+	if (!activeCompartment) {
+		return null;
+	}
 
 	/**
 	 * RENDER
@@ -222,31 +266,29 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 				<div className="m-card col-xs-9 u-padding">
 					<div className="u-margin">
-						{activeCompartment ? (
-							<activeCompartment.component
-								formikRef={instance => {
-									if (!equals(instance, activeCompartmentFormikRef.current)) {
-										activeCompartmentFormikRef.current = instance;
-									}
-								}}
-								// TODO: only clone for external modules
-								// Temp. remove clones to restore performance
-								contentType={contentType}
-								contentValue={contentItemDraft}
-								contentItem={contentItem}
-								isValid
-								settings={getSettings(contentType, activeCompartment)}
-								onChange={values => handleChange(activeCompartment, values)}
-								value={getCompartmentValue(
-									contentItemDraft,
-									activeCompartment,
-									contentType
-								)}
-								updateContent={(content: ContentSchema) =>
-									contentFacade.updateContentItemDraft(content)
+						<activeCompartment.component
+							formikRef={instance => {
+								if (!equals(instance, activeCompartmentFormikRef.current)) {
+									activeCompartmentFormikRef.current = instance;
 								}
-							/>
-						) : null}
+							}}
+							// TODO: only clone for external modules
+							// Temp. remove clones to restore performance
+							contentType={contentType}
+							contentValue={contentItemDraft}
+							contentItem={contentItem}
+							isValid
+							settings={getSettings(contentType, activeCompartment)}
+							onChange={values => handleChange(activeCompartment, values)}
+							value={getCompartmentValue(
+								contentItemDraft,
+								activeCompartment,
+								contentType
+							)}
+							updateContent={(content: ContentSchema) =>
+								contentFacade.updateContentItemDraft(content)
+							}
+						/>
 					</div>
 				</div>
 			</div>

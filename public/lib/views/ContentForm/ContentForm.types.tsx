@@ -4,6 +4,7 @@ import { ModuleSettings, ModuleValue } from '../../api/api.types';
 import { ContentRouteProps } from '../../content.types';
 import { ContentSchema } from '../../services/content/content.service.types';
 import { ContentTypeSchema } from '../../services/contentTypes/contentTypes.service.types';
+import { ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
 export interface ContentFormMatchProps {
 	siteId: string;
@@ -19,7 +20,11 @@ export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 	isCreating?: boolean;
 	showPublishedStatus?: boolean;
 	onCancel: () => void;
-	onSubmit: (content: ContentSchema) => void;
+	onSubmit: (
+		content: ContentSchema,
+		activeCompartment: ContentCompartmentModel,
+		compartments: ContentCompartmentModel[]
+	) => void;
 	onStatusClick: () => void;
 	onUpdatePublication: (content: ContentSchema) => void;
 }
