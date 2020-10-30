@@ -186,6 +186,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		}
 
 		if (compartmentsAreValid && activeCompartment) {
+			if (isCreating) {
+				contentFacade.setIsCreating(true);
+			} else {
+				contentFacade.setIsUpdating(true);
+			}
 			runAllSubmitHooks(
 				activeCompartment,
 				compartments,
@@ -194,10 +199,16 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				!!isCreating,
 				'beforeSubmit'
 			).then(({ hasRejected, errorMessages, contentItem }) => {
+				console.log(hasRejected, errorMessages, contentItem);
 				if (!hasRejected) {
 					contentFacade.setContentItemDraft(contentItem);
 					onSubmit(contentItem, activeCompartment, compartments);
 					return;
+				}
+				if (isCreating) {
+					contentFacade.setIsCreating(false);
+				} else {
+					contentFacade.setIsUpdating(false);
 				}
 				errorMessages.forEach(message => {
 					contentCompartmentsFacade.setValid(message.compartmentName, false);
@@ -215,17 +226,13 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							</>
 						),
 					},
-					{ containerId: ALERT_CONTAINER_IDS.contentEdit }
+					{
+						containerId: isCreating
+							? ALERT_CONTAINER_IDS.contentCreate
+							: ALERT_CONTAINER_IDS.contentEdit,
+					}
 				);
 			});
-		} else {
-			alertService.danger(
-				{
-					title: 'Er zijn nog fouten',
-					message: 'Lorem ipsum',
-				},
-				{ containerId: ALERT_CONTAINER_IDS.contentEdit }
-			);
 		}
 
 		setHasSubmit(true);
@@ -287,9 +294,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							createContentItemLoadingState === LoadingState.Loading
 						}
 						isPublishing={publishContentItemLoadingState === LoadingState.Loading}
-						onUpdatePublication={() =>
-							onUpdatePublication(contentItemDraft, activeCompartment, compartments)
-						}
+						onUpdatePublication={() => onUpdatePublication(contentItemDraft)}
 						onCancel={handleCancel}
 					/>
 				</ActionBarContentSection>

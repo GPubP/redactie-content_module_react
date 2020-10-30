@@ -26,6 +26,14 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 	public readonly contentItemDraft$ = this.query.contentItemDraft$;
 	public readonly isPublishing$ = this.query.isPublishing$;
 
+	public setIsUpdating(isUpdating = false): void {
+		this.store.setIsUpdating(isUpdating);
+	}
+
+	public setIsCreating(isCreating = false): void {
+		this.store.setIsCreating(isCreating);
+	}
+
 	/**
 	 * API integration
 	 */

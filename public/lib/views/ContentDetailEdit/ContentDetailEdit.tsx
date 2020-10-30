@@ -3,7 +3,6 @@ import { equals } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
-import { registerContentDetailCompartment } from '../../api/registerContentDetailCompartment';
 import { RenderChildRoutes } from '../../components';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
 import { runAllSubmitHooks } from '../../helpers';
@@ -90,11 +89,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		});
 	};
 
-	const onUpdatePublication = (
-		content: ContentSchema,
-		activeCompartment: ContentCompartmentModel,
-		compartments: ContentCompartmentModel[]
-	): void => {
+	const onUpdatePublication = (content: ContentSchema): void => {
 		const data = {
 			...content,
 			meta: {
@@ -102,30 +97,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 				status: ContentStatus.PUBLISHED,
 			},
 		};
-		contentFacade
-			.updateContentItem(siteId, contentId, data, true)
-			.then(() =>
-				runAllSubmitHooks(
-					activeCompartment,
-					compartments,
-					contentType,
-					data,
-					false,
-					'afterSubmit'
-				)
-			)
-			.catch(error =>
-				// Run rollback
-				runAllSubmitHooks(
-					activeCompartment,
-					compartments,
-					contentType,
-					data,
-					false,
-					'afterSubmit',
-					error
-				)
-			);
+		contentFacade.updateContentItem(siteId, contentId, data, true);
 	};
 
 	/**

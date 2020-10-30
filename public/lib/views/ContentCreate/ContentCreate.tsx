@@ -3,11 +3,11 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { useDetectValueChanges } from '@redactie/utils';
+import { AlertContainer, useDetectValueChanges } from '@redactie/utils';
 import React, { FC, useContext, useEffect, useMemo } from 'react';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
-import { MODULE_PATHS } from '../../content.const';
+import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { TenantContext } from '../../context';
 import { getInitialContentValues, runAllSubmitHooks } from '../../helpers';
@@ -184,6 +184,9 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>
+				<div className="u-margin-bottom">
+					<AlertContainer containerId={ALERT_CONTAINER_IDS.contentCreate} />
+				</div>
 				<DataLoader loadingState={contentTypesLoading} render={renderChildRoutes} />
 			</Container>
 		</>

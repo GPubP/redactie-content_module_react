@@ -26,11 +26,7 @@ export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 		compartments: ContentCompartmentModel[]
 	) => void;
 	onStatusClick: () => void;
-	onUpdatePublication: (
-		content: ContentSchema,
-		activeCompartment: ContentCompartmentModel,
-		compartments: ContentCompartmentModel[]
-	) => void;
+	onUpdatePublication: (content: ContentSchema) => void;
 }
 
 export interface CompartmentProps {
