@@ -8,6 +8,7 @@ import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
+import { LockMessage } from '../../components/LockMessage/LockMessage';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { generateDetailBadges } from '../../helpers';
@@ -15,13 +16,15 @@ import {
 	useActiveTabs,
 	useContentItem,
 	useContentType,
+	useLock,
 	useNavigate,
 	useRoutesBreadcrumbs,
 } from '../../hooks';
 import { contentFacade } from '../../store/content';
 import { contentTypesFacade } from '../../store/contentTypes';
+import { locksFacade } from '../../store/locks';
 
-import { CONTENT_UPDATE_TABS } from './ContentDetail.const';
+import { CONTENT_UPDATE_TABS, LOCK_GET_REFRESH_TIME } from './ContentDetail.const';
 import { ContentDetailMatchProps } from './ContentDetail.types';
 
 import './ContentDetail.scss';
@@ -48,6 +51,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		},
 	]);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [lockLoading, , lock] = useLock(contentId);
 
 	const guardsMeta = useMemo(
 		() => ({
@@ -65,12 +69,13 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		if (
 			contentTypeLoading !== LoadingState.Loading &&
 			contentItemLoading !== LoadingState.Loading &&
+			lockLoading !== LoadingState.Loading &&
 			contentType &&
 			contentItem
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [contentTypeLoading, contentItemLoading, contentType, contentItem]);
+	}, [contentTypeLoading, contentItemLoading, contentType, contentItem, lockLoading]);
 
 	useEffect(() => {
 		if (contentItem?.meta.contentType.uuid && siteId) {
@@ -79,9 +84,18 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	}, [siteId, contentItem]);
 
 	useEffect(() => {
-		if (siteId && contentId) {
-			contentFacade.getContentItem(siteId, contentId);
+		if (!siteId || !contentId) {
+			return;
 		}
+
+		contentFacade.getContentItem(siteId, contentId);
+		locksFacade.getLock(siteId, contentId);
+		const interval = setInterval(
+			() => locksFacade.getLock(siteId, contentId),
+			LOCK_GET_REFRESH_TIME
+		);
+
+		return () => clearInterval(interval);
 	}, [siteId, contentId]);
 
 	useEffect(() => {
@@ -98,14 +112,18 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 			contentType,
 			contentItem: contentItem,
 			contentItemDraft,
+			lock,
 		};
 
 		return (
-			<RenderChildRoutes
-				routes={route.routes}
-				guardsMeta={guardsMeta}
-				extraOptions={extraOptions}
-			/>
+			<>
+				{lock && <LockMessage className="u-margin-bottom" lock={lock} />}
+				<RenderChildRoutes
+					routes={route.routes}
+					guardsMeta={guardsMeta}
+					extraOptions={extraOptions}
+				/>
+			</>
 		);
 	};
 
