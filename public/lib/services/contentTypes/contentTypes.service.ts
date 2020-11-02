@@ -1,5 +1,5 @@
 import { api, parseSearchParams, SearchParams } from '../api';
-import { SITE_REQUEST_NON_PROXY_PREFIX_URL } from '../api/api.service.const';
+import { SITE_REQUEST_PREFIX_URL } from '../api/api.service.const';
 
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from './contentTypes.service.const';
 import { ContentTypeSchema, ContentTypesSchema } from './contentTypes.service.types';
@@ -13,7 +13,7 @@ export class ContentTypesApiService {
 		try {
 			const response: ContentTypesSchema = await api
 				.get(
-					`${SITE_REQUEST_NON_PROXY_PREFIX_URL}/${siteId}/content-types?${parseSearchParams(
+					`${SITE_REQUEST_PREFIX_URL}/${siteId}/content-types?${parseSearchParams(
 						searchParams
 					)}`
 				)
@@ -33,7 +33,7 @@ export class ContentTypesApiService {
 	public async getContentType(siteId: string, uuid: string): Promise<ContentTypeSchema | null> {
 		try {
 			const response: ContentTypeSchema = await api
-				.get(`${SITE_REQUEST_NON_PROXY_PREFIX_URL}/${siteId}/content-types/${uuid}`)
+				.get(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content-types/${uuid}`)
 				.json();
 
 			if (!response.fields) {
