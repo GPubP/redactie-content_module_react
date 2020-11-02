@@ -62,7 +62,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 						.selectItemValue('search')
 						.pipe(first())
 						.subscribe(content => {
-							const newItems = (content as ContentModel[]).map(c => ({
+							const newItems = ((content as ContentModel[]) || []).map(c => ({
 								label: c.meta.label,
 								value: c.uuid,
 							}));

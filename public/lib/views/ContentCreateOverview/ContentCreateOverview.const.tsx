@@ -8,6 +8,7 @@ import { ContentCreateOverviewTableRow } from './ContentCreateOverview.types';
 export const CONTENT_CREATE_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
+		value: 'label',
 		component(value: unknown, rowData: ContentCreateOverviewTableRow) {
 			const { label, description } = rowData;
 

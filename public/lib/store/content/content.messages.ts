@@ -1,6 +1,9 @@
+import { AlertMessage } from '../../content.types';
 import { ContentSchema } from '../../services/content';
 
-export const getAlertMessages = (data: ContentSchema): Record<string, any> => ({
+export const getAlertMessages = (
+	data: ContentSchema
+): Record<string, Record<string, AlertMessage>> => ({
 	create: {
 		success: {
 			title: 'Aangemaakt',

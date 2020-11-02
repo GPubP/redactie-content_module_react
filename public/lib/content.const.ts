@@ -42,6 +42,7 @@ export const MODULE_PATHS = {
 
 export const ALERT_CONTAINER_IDS = {
 	contentEdit: 'content-edit',
+	contentCreate: 'content-create',
 };
 
 export const WORKING_TITLE_KEY = 'working-title';

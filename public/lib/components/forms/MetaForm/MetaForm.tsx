@@ -64,8 +64,8 @@ const MetaForm: FC<CompartmentProps> = ({
 							/>
 							<ErrorMessage name="slug.nl" />
 							<div className="u-text-light u-margin-top-xs">
-								Bepaal de &apos;slug&apos; voor dit content item. Deze wordt
-								ondererandere gebruikt in de URL.
+								Bepaal de &apos;slug&apos; voor dit content item. Deze wordt onder
+								andere gebruikt in de URL.
 							</div>
 						</div>
 					</div>

@@ -26,6 +26,14 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 	public readonly contentItemDraft$ = this.query.contentItemDraft$;
 	public readonly isPublishing$ = this.query.isPublishing$;
 
+	public setIsUpdating(isUpdating = false): void {
+		this.store.setIsUpdating(isUpdating);
+	}
+
+	public setIsCreating(isCreating = false): void {
+		this.store.setIsCreating(isCreating);
+	}
+
 	/**
 	 * API integration
 	 */
@@ -106,7 +114,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		uuid: string,
 		data: ContentSchema,
 		publish = false
-	): void {
+	): Promise<void> {
 		if (publish) {
 			this.store.setIsPublishing(true);
 		} else {
@@ -115,7 +123,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		const alertProps = publish ? getAlertMessages(data).publish : getAlertMessages(data).update;
 		alertService.dismiss();
 
-		this.service
+		return this.service
 			.updateContentItem(siteId, uuid, data)
 			.then(response => {
 				if (response) {
@@ -134,11 +142,10 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 									isUpdating: false,
 									isPublishing: false,
 								});
+								alertService.success(alertProps.success, this.alertContainerProps);
 							}
 						})
 						.catch(error => this.store.setError(error));
-
-					alertService.success(alertProps.success, this.alertContainerProps);
 				}
 			})
 			.catch(error => {
