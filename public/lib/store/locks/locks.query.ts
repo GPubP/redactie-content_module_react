@@ -1,7 +1,7 @@
 import Core from '@redactie/redactie-core';
 import { BaseEntityQuery } from '@redactie/utils';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 import { LockModel, LocksState } from './locks.model';
 import { locksStore } from './locks.store';
@@ -13,27 +13,29 @@ export class LocksQuery extends BaseEntityQuery<LocksState> {
 		this.selectEntity(contentId).pipe(
 			map(lock => {
 				if (
-					!!lock?.meta.lastEditor?.id &&
+					!!lock?.meta?.lastEditor?.id &&
 					lock.meta.lastEditor.id === Core.config.getValue('core')?.user?.id
 				) {
 					return lock;
 				}
 
 				return null;
-			})
+			}),
+			distinctUntilChanged()
 		);
 	public externalLock$ = (contentId: string): Observable<LockModel | null> =>
 		this.selectEntity(contentId).pipe(
 			map(lock => {
 				if (
-					!!lock?.meta.lastEditor?.id &&
+					!!lock?.meta?.lastEditor?.id &&
 					lock.meta.lastEditor.id !== Core.config.getValue('core')?.user?.id
 				) {
 					return lock;
 				}
 
 				return null;
-			})
+			}),
+			distinctUntilChanged()
 		);
 }
 

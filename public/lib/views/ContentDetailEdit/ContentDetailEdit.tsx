@@ -7,14 +7,14 @@ import { RenderChildRoutes } from '../../components';
 import DataLoader from '../../components/DataLoader/DataLoader';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
 import { runAllSubmitHooks } from '../../helpers';
-import { useLock, useNavigate } from '../../hooks';
+import { useLock, useNavigate, useWorker } from '../../hooks';
 import { ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content';
-import { locksFacade } from '../../store/locks';
+import { LockModel, locksFacade } from '../../store/locks';
 import { ContentCompartmentModel } from '../../store/ui/contentCompartments';
+import { SetLockWorkerData } from '../../workers/pollSetLock/pollSetLock.types';
 import { ContentDetailChildRouteProps } from '../ContentDetail/ContentDetail.types';
 
-import { LOCK_SET_REFRESH_TIME } from './ContentDetailEdit.const';
 import { ContentDetailEditMatchProps } from './ContentDetailEdit.types';
 
 const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchProps>> = ({
@@ -23,7 +23,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	contentItem,
 	contentItemDraft,
 	match,
-	lock,
+	tenantId,
 }) => {
 	const { siteId, contentId } = match.params;
 	/**
@@ -36,6 +36,21 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		contentItem,
 		contentItemDraft,
 	]);
+	const workerData = useMemo(
+		() =>
+			({
+				siteId,
+				tenantId,
+				expiresAt: userLock?.expireAt || null,
+				lockId: contentId,
+				type: 'content',
+			} as SetLockWorkerData),
+		[contentId, userLock?.expireAt, siteId, tenantId] // eslint-disable-line react-hooks/exhaustive-deps
+	);
+	const [refreshedLock] = useWorker<SetLockWorkerData, LockModel>(
+		'pollSetLock.worker',
+		workerData
+	);
 
 	useEffect(() => {
 		if (userLock || externalLock) {
@@ -43,20 +58,15 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		}
 	}, [externalLock, userLock]);
 
+	useEffect(() => locksFacade.setLockValue(contentId, refreshedLock), [contentId, refreshedLock]);
+
 	useEffect(() => {
-		if (lock) {
+		if (externalLock) {
 			return;
 		}
 
 		locksFacade.setLock(siteId, contentId);
-
-		const interval = setInterval(
-			() => locksFacade.setLock(siteId, contentId),
-			LOCK_SET_REFRESH_TIME
-		);
-
-		return () => clearInterval(interval);
-	}, [contentId, lock, siteId]);
+	}, [contentId, externalLock, siteId]);
 
 	/**
 	 * Methods
@@ -157,7 +167,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		);
 	};
 
-	if (lock) {
+	if (externalLock) {
 		return null;
 	}
 

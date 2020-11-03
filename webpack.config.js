@@ -13,12 +13,26 @@ const packageJSON = require('./package.json');
 module.exports = env => {
 	const defaultConfig = {
 		mode: 'production',
-		entry: './public/index.tsx',
+		entry: {
+			[kebabCase(packageJSON.name)]: './public/index.tsx',
+		},
 		performance: {
 			hints: false,
 		},
 		module: {
 			rules: [
+				{
+					test: /\.worker\.ts$/,
+					use: [
+						{
+							loader: 'worker-loader',
+							options: {
+								filename: '[name].umd.js',
+							},
+						},
+					],
+					include: [/public/],
+				},
 				{
 					test: /\.ts(x)?$/,
 					use: 'ts-loader',
@@ -53,11 +67,17 @@ module.exports = env => {
 		plugins: [
 			// add default plugins here
 			new CleanWebpackPlugin(),
+			new webpack.DefinePlugin({
+				BFF_MODULE_PUBLIC_PATH: JSON.stringify(
+					`${kebabCase(packageJSON.name + packageJSON.version)}/dist/`
+				),
+			}),
 		],
 		externals: {
 			react: 'react',
 			formik: 'formik',
-			ky: 'ky',
+			// TODO: find solution for worker import of ky
+			// ky: 'ky',
 			yup: 'yup',
 			ramda: 'ramda',
 			rxjs: 'rxjs',
@@ -74,7 +94,7 @@ module.exports = env => {
 			'@acpaas-ui/react-editorial-components': '@acpaas-ui/react-editorial-components',
 		},
 		output: {
-			filename: `${kebabCase(packageJSON.name)}.umd.js`,
+			filename: '[name].umd.js',
 			path: path.resolve(__dirname, 'dist'),
 			libraryTarget: 'umd',
 		},
@@ -87,7 +107,7 @@ module.exports = env => {
 				...defaultConfig.plugins,
 				new BundleAnalyzerPlugin(),
 				new webpack.SourceMapDevToolPlugin({
-					filename: `${kebabCase(packageJSON.name)}.umd.js.map`,
+					filename: '[name].umd.js.map',
 					publicPath: `${kebabCase(packageJSON.name + packageJSON.version)}/dist/`,
 				}),
 			],
@@ -101,9 +121,10 @@ module.exports = env => {
 				...defaultConfig.plugins,
 				new RedactionWebpackPlugin({
 					moduleName: packageJSON.name,
+					exclude: [/worker\.umd\.js$/],
 				}),
 				new webpack.SourceMapDevToolPlugin({
-					filename: `${kebabCase(packageJSON.name)}.umd.js.map`,
+					filename: '[name].umd.js.map',
 					publicPath: `${kebabCase(packageJSON.name + packageJSON.version)}/dist/`,
 				}),
 			],

@@ -24,7 +24,7 @@ import { contentFacade } from '../../store/content';
 import { contentTypesFacade } from '../../store/contentTypes';
 import { locksFacade } from '../../store/locks';
 
-import { CONTENT_UPDATE_TABS, LOCK_GET_REFRESH_TIME } from './ContentDetail.const';
+import { CONTENT_UPDATE_TABS } from './ContentDetail.const';
 import { ContentDetailMatchProps } from './ContentDetail.types';
 
 import './ContentDetail.scss';
@@ -90,12 +90,6 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 
 		contentFacade.getContentItem(siteId, contentId);
 		locksFacade.getLock(siteId, contentId);
-		const interval = setInterval(
-			() => locksFacade.getLock(siteId, contentId),
-			LOCK_GET_REFRESH_TIME
-		);
-
-		return () => clearInterval(interval);
 	}, [siteId, contentId]);
 
 	useEffect(() => {
@@ -113,6 +107,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 			contentItem: contentItem,
 			contentItemDraft,
 			lock,
+			tenantId,
 		};
 
 		return (

@@ -19,6 +19,7 @@ import {
 	ContentOverview,
 } from './lib/views';
 import ContentForm from './lib/views/ContentForm/ContentForm';
+import './lib/workers';
 
 // akitaDevtools();
 
