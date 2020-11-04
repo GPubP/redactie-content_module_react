@@ -1,17 +1,20 @@
-import { AlertContainer } from '@redactie/utils';
+import { AlertContainer, LoadingState } from '@redactie/utils';
 import { equals } from 'ramda';
-import React, { FC, ReactElement, useMemo } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
 import { RenderChildRoutes } from '../../components';
+import DataLoader from '../../components/DataLoader/DataLoader';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
 import { runAllSubmitHooks } from '../../helpers';
-import { useNavigate } from '../../hooks';
+import { useLock, useNavigate } from '../../hooks';
 import { ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content';
+import { locksFacade } from '../../store/locks';
 import { ContentCompartmentModel } from '../../store/ui/contentCompartments';
 import { ContentDetailChildRouteProps } from '../ContentDetail/ContentDetail.types';
 
+import { LOCK_SET_REFRESH_TIME } from './ContentDetailEdit.const';
 import { ContentDetailEditMatchProps } from './ContentDetailEdit.types';
 
 const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchProps>> = ({
@@ -20,16 +23,40 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	contentItem,
 	contentItemDraft,
 	match,
+	lock,
 }) => {
 	const { siteId, contentId } = match.params;
 	/**
 	 * Hooks
 	 */
 	const { navigate } = useNavigate();
+	const [, , externalLock, userLock] = useLock(contentId);
+	const [initialLoadingState, setInitialLoadingState] = useState(LoadingState.Loading);
 	const hasChanges = useMemo(() => !equals(contentItem, contentItemDraft), [
 		contentItem,
 		contentItemDraft,
 	]);
+
+	useEffect(() => {
+		if (userLock || externalLock) {
+			setInitialLoadingState(LoadingState.Loaded);
+		}
+	}, [externalLock, userLock]);
+
+	useEffect(() => {
+		if (lock) {
+			return;
+		}
+
+		locksFacade.setLock(siteId, contentId);
+
+		const interval = setInterval(
+			() => locksFacade.setLock(siteId, contentId),
+			LOCK_SET_REFRESH_TIME
+		);
+
+		return () => clearInterval(interval);
+	}, [contentId, lock, siteId]);
 
 	/**
 	 * Methods
@@ -129,7 +156,11 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		);
 	};
 
-	return <>{renderChildRoutes()}</>;
+	if (lock) {
+		return null;
+	}
+
+	return <DataLoader loadingState={initialLoadingState} render={renderChildRoutes} />;
 };
 
 export default ContentDetailEdit;
