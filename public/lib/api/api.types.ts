@@ -1,6 +1,7 @@
 import { Context } from 'react';
 
 import { TenantContextValue } from '../context';
+import { ModuleValue } from '../services/content';
 import {
 	ExternalCompartmentAfterSubmitFn,
 	ExternalCompartmentBeforeSubmitFn,
@@ -12,7 +13,7 @@ export {
 	ModuleSettings,
 	ModuleValue,
 } from '../store/api/externalCompartments/externalCompartments.model';
-export { ContentSchema } from '../services/content/content.service.types';
+export { ContentSchema, ContentStatus } from '../services/content/content.service.types';
 export {
 	ContentTypeSchema,
 	ContentTypeFieldSchema,
@@ -24,6 +25,9 @@ export {
 	ExternalCompartmentBeforeSubmitFn,
 };
 export interface ContentAPI {
-	registerContentDetailCompartment: (name: string, options: ExternalCompartmentOptions) => void;
+	registerContentDetailCompartment: <M = ModuleValue>(
+		name: string,
+		options: ExternalCompartmentOptions<M>
+	) => void;
 	contentTenantContext: Context<TenantContextValue>;
 }
