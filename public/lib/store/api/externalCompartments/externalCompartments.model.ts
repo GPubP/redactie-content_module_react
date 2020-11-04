@@ -24,8 +24,10 @@ export interface ModuleSettings {
 	};
 }
 
-export type ExternalCompartmentBeforeSubmitFn = ContentCompartmentBeforeSubmitFn;
-export type ExternalCompartmentAfterSubmitFn = ContentCompartmentAfterSubmitFn;
+export type ExternalCompartmentBeforeSubmitFn<M = ModuleValue> = ContentCompartmentBeforeSubmitFn<
+	M
+>;
+export type ExternalCompartmentAfterSubmitFn<M = ModuleValue> = ContentCompartmentAfterSubmitFn<M>;
 
 export interface ExternalCompartmentOptions<M = ModuleValue> {
 	label: string;
@@ -34,8 +36,8 @@ export interface ExternalCompartmentOptions<M = ModuleValue> {
 	component: FC<CompartmentProps<M>>;
 	isValid?: boolean;
 	validate?: (values: ContentSchema, activeCompartment: ContentCompartmentModel) => boolean;
-	beforeSubmit?: ExternalCompartmentBeforeSubmitFn;
-	afterSubmit?: ExternalCompartmentAfterSubmitFn;
+	beforeSubmit?: ExternalCompartmentBeforeSubmitFn<M>;
+	afterSubmit?: ExternalCompartmentAfterSubmitFn<M>;
 	show?: (
 		settings: ModuleSettings,
 		value: M,
