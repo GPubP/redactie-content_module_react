@@ -106,7 +106,6 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 				)
 			)
 			.catch(error =>
-				// Run rollback
 				runAllSubmitHooks(
 					activeCompartment,
 					compartments,
@@ -134,7 +133,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 				status: ContentStatus.PUBLISHED,
 			},
 		};
-		contentFacade.updateContentItem(siteId, contentId, data, true);
+		contentFacade.updateContentItem(siteId, contentId, data, true).catch();
 	};
 
 	/**
