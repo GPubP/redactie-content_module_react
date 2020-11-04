@@ -155,6 +155,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 					isPublishing: false,
 				});
 				alertService.danger(alertProps.error, this.alertContainerProps);
+				throw error;
 			});
 	}
 
