@@ -29,14 +29,14 @@ export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 	onUpdatePublication: (content: ContentSchema) => void;
 }
 
-export interface CompartmentProps {
+export interface CompartmentProps<M = ModuleValue> {
 	contentType: ContentTypeSchema;
 	contentValue: ContentSchema | undefined;
 	contentItem: ContentSchema | undefined;
 	settings: ModuleSettings | ContentTypeSchema['fields'] | ContentTypeSchema | undefined;
-	value: ModuleValue; // module data section
+	value: M; // module data section
 	isValid: boolean;
 	formikRef?: (instance: FormikProps<FormikValues>) => void;
-	onChange: (e: ModuleValue) => void; // Boolean for validation result (maybe?)
+	onChange: (e: M) => void; // Boolean for validation result (maybe?)
 	updateContent: (e: ContentSchema) => void; // For edge cases where content item must be changed. Boolean for validation
 }

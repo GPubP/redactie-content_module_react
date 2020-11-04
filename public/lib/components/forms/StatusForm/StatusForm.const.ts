@@ -30,4 +30,9 @@ export const STATUS_OPTIONS: StatusFormOption[] = [
 		value: ContentStatus.PUBLISHED,
 		label: 'Gepubliceerd',
 	},
+	{
+		key: '3',
+		value: ContentStatus.UNPUBLISHED,
+		label: 'Depubliceer',
+	},
 ];

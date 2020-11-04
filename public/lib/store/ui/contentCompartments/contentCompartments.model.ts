@@ -15,24 +15,24 @@ export interface ContentCompartmentRegisterOptions {
 	replace?: true;
 }
 
-export type ContentCompartmentBeforeSubmitFn = (
+export type ContentCompartmentBeforeSubmitFn<M = ModuleValue> = (
 	activeCompartmentName: string,
-	moduleValue: ModuleValue,
+	moduleValue: M,
 	contentItem: ContentSchema,
 	contentType: ContentTypeSchema,
 	isCreating: boolean
-) => Promise<boolean>;
+) => Promise<M | void>;
 
-export type ContentCompartmentAfterSubmitFn = (
+export type ContentCompartmentAfterSubmitFn<M = ModuleValue> = (
 	error: Error | undefined,
 	activeCompartmentName: string,
-	moduleValue: ModuleValue,
+	moduleValue: M,
 	contentItem: ContentSchema,
 	contentType: ContentTypeSchema,
 	isCreating: boolean
-) => Promise<boolean>;
+) => Promise<M | void>;
 
-export interface ContentCompartmentModel {
+export interface ContentCompartmentModel<M = ModuleValue> {
 	name: string;
 	label: string;
 	getDescription?: (contentItem: ContentSchema | undefined) => string | undefined;
@@ -40,9 +40,9 @@ export interface ContentCompartmentModel {
 	component: FC<CompartmentProps>;
 	type: CompartmentType;
 	isValid?: boolean;
-	validate?: (values: ContentSchema) => boolean;
-	beforeSubmit?: ContentCompartmentBeforeSubmitFn;
-	afterSubmit?: ContentCompartmentAfterSubmitFn;
+	validate?: (values: ContentSchema, activeCompartment: ContentCompartmentModel) => boolean;
+	beforeSubmit?: ContentCompartmentBeforeSubmitFn<M>;
+	afterSubmit?: ContentCompartmentAfterSubmitFn<M>;
 }
 
 export interface ContentCompartmentState

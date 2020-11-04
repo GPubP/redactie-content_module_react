@@ -174,7 +174,12 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 	const onFormSubmit = (contentItemDraft: ContentSchema): void => {
 		const { current: formikRef } = activeCompartmentFormikRef;
-		const compartmentsAreValid = validateCompartments(compartments, contentItemDraft, validate);
+		const compartmentsAreValid = validateCompartments(
+			activeCompartment as ContentCompartmentModel,
+			compartments,
+			contentItemDraft,
+			validate
+		);
 
 		// Validate current form to trigger fields error states
 		if (formikRef) {
