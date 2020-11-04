@@ -10,47 +10,31 @@ import {
 } from './content.service.types';
 
 export class ContentApiService {
-	public async getContent(
+	public getContent(
 		siteId: string,
 		contentSearchParams: SearchParams
 	): Promise<ContentsSchema | null> {
-		try {
-			const response: ContentsSchema = await api
-				.get(
-					`${SITE_REQUEST_PREFIX_URL}/${siteId}/content?${parseSearchParams(
-						contentSearchParams
-					)}`
-				)
-				.json();
-
-			if (!response) {
-				throw new Error('Failed to get content items');
-			}
-
-			return response;
-		} catch (error) {
-			return error;
-		}
+		return api
+			.get(
+				`${SITE_REQUEST_PREFIX_URL}/${siteId}/content?${parseSearchParams(
+					contentSearchParams
+				)}`
+			)
+			.json();
 	}
 
-	public async createContentItem(
+	public createContentItem(
 		siteId: string,
 		data: ContentCreateSchema
 	): Promise<ContentSchema | null> {
-		try {
-			const response: ContentSchema = await api
-				.post(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content`, {
-					json: data,
-				})
-				.json();
-
-			return response;
-		} catch (err) {
-			return null;
-		}
+		return api
+			.post(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content`, {
+				json: data,
+			})
+			.json();
 	}
 
-	public async updateContentItem(
+	public updateContentItem(
 		siteId: string,
 		uuid: string,
 		data: ContentSchema
@@ -59,29 +43,17 @@ export class ContentApiService {
 			CONTENT_STATUS_API_MAP[data.meta.status as ContentStatus] ||
 			CONTENT_STATUS_API_MAP[ContentStatus.DRAFT];
 
-		try {
-			const response: ContentSchema = await api
-				.put(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}/${type}`, {
-					json: data,
-				})
-				.json();
-
-			return response;
-		} catch (error) {
-			return error;
-		}
+		return api
+			.put(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}/${type}`, {
+				json: data,
+			})
+			.json();
 	}
 
-	public async getContentItem(siteId: string, uuid: string): Promise<ContentSchema | null> {
-		try {
-			const response: ContentSchema = await api
-				.get(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}/history/latest`)
-				.json();
-
-			return response;
-		} catch (error) {
-			return error;
-		}
+	public getContentItem(siteId: string, uuid: string): Promise<ContentSchema | null> {
+		return api
+			.get(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}/history/latest`)
+			.json();
 	}
 }
 

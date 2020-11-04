@@ -20,5 +20,5 @@ export const CONTENT_STATUS_API_MAP = {
 	[ContentStatus.PENDING]: 'pending',
 	[ContentStatus.SCHEDULED]: 'scheduled',
 	[ContentStatus.PUBLISHED]: 'published',
-	[ContentStatus.UNPUBLISHED]: 'unpublished',
+	[ContentStatus.UNPUBLISHED]: 'unpublish',
 };

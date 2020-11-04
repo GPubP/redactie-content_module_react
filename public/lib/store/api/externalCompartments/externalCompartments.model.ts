@@ -6,6 +6,7 @@ import { CompartmentProps } from '../../../views/ContentForm/ContentForm.types';
 import {
 	ContentCompartmentAfterSubmitFn,
 	ContentCompartmentBeforeSubmitFn,
+	ContentCompartmentModel,
 } from '../../ui/contentCompartments';
 
 export type ModuleValue = any;
@@ -26,18 +27,18 @@ export interface ModuleSettings {
 export type ExternalCompartmentBeforeSubmitFn = ContentCompartmentBeforeSubmitFn;
 export type ExternalCompartmentAfterSubmitFn = ContentCompartmentAfterSubmitFn;
 
-export interface ExternalCompartmentOptions {
+export interface ExternalCompartmentOptions<M = ModuleValue> {
 	label: string;
 	getDescription?: (contentItem: ContentSchema | undefined) => string;
 	module: string;
-	component: FC<CompartmentProps>;
+	component: FC<CompartmentProps<M>>;
 	isValid?: boolean;
-	validate?: (values: ContentSchema) => boolean;
+	validate?: (values: ContentSchema, activeCompartment: ContentCompartmentModel) => boolean;
 	beforeSubmit?: ExternalCompartmentBeforeSubmitFn;
 	afterSubmit?: ExternalCompartmentAfterSubmitFn;
 	show?: (
 		settings: ModuleSettings,
-		value: ModuleValue,
+		value: M,
 		content: ContentSchema,
 		contentType: ContentTypeSchema
 	) => boolean | boolean;

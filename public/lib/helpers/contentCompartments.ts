@@ -104,6 +104,7 @@ export const filterCompartments = (
 };
 
 export const validateCompartments = (
+	activeCompartment: ContentCompartmentModel,
 	compartments: ContentCompartmentModel[],
 	values: ContentSchema,
 	setValidity: (id: string, isValid: boolean) => void
@@ -111,7 +112,7 @@ export const validateCompartments = (
 	// Create array of booleans from compartment validation
 	const validatedCompartments: boolean[] = compartments.map(compartment => {
 		if (compartment.validate) {
-			const isValid = compartment.validate(values);
+			const isValid = compartment.validate(values, activeCompartment);
 			setValidity(compartment.name, isValid);
 
 			return isValid;

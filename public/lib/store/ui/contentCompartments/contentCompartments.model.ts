@@ -40,7 +40,7 @@ export interface ContentCompartmentModel {
 	component: FC<CompartmentProps>;
 	type: CompartmentType;
 	isValid?: boolean;
-	validate?: (values: ContentSchema) => boolean;
+	validate?: (values: ContentSchema, activeCompartment: ContentCompartmentModel) => boolean;
 	beforeSubmit?: ContentCompartmentBeforeSubmitFn;
 	afterSubmit?: ContentCompartmentAfterSubmitFn;
 }
