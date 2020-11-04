@@ -17,7 +17,12 @@ import { contentStore, ContentStore } from './content.store';
 
 export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiService, ContentQuery> {
 	private readonly alertContainerProps = {
-		containerId: ALERT_CONTAINER_IDS.contentEdit,
+		create: {
+			containerId: ALERT_CONTAINER_IDS.contentCreate,
+		},
+		update: {
+			containerId: ALERT_CONTAINER_IDS.contentEdit,
+		},
 	};
 
 	public readonly meta$ = this.query.meta$;
@@ -96,7 +101,10 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 						contentItem: response,
 						isCreating: false,
 					});
-					alertService.success(alertProps.create.success, this.alertContainerProps);
+					alertService.success(
+						alertProps.create.success,
+						this.alertContainerProps.create
+					);
 				}
 				return response;
 			})
@@ -105,7 +113,8 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 					error,
 					isCreating: false,
 				});
-				alertService.danger(alertProps.create.error, this.alertContainerProps);
+				alertService.danger(alertProps.create.error, this.alertContainerProps.create);
+				throw error;
 			});
 	}
 
@@ -142,7 +151,10 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 									isUpdating: false,
 									isPublishing: false,
 								});
-								alertService.success(alertProps.success, this.alertContainerProps);
+								alertService.success(
+									alertProps.success,
+									this.alertContainerProps.update
+								);
 							}
 						})
 						.catch(error => this.store.setError(error));
@@ -154,7 +166,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 					isUpdating: false,
 					isPublishing: false,
 				});
-				alertService.danger(alertProps.error, this.alertContainerProps);
+				alertService.danger(alertProps.error, this.alertContainerProps.update);
 				throw error;
 			});
 	}

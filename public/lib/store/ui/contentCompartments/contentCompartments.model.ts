@@ -16,20 +16,14 @@ export interface ContentCompartmentRegisterOptions {
 }
 
 export type ContentCompartmentBeforeSubmitFn<M = ModuleValue> = (
-	activeCompartmentName: string,
-	moduleValue: M,
 	contentItem: ContentSchema,
-	contentType: ContentTypeSchema,
-	isCreating: boolean
+	contentType: ContentTypeSchema
 ) => Promise<M | void>;
 
 export type ContentCompartmentAfterSubmitFn<M = ModuleValue> = (
 	error: Error | undefined,
-	activeCompartmentName: string,
-	moduleValue: M,
 	contentItem: ContentSchema,
-	contentType: ContentTypeSchema,
-	isCreating: boolean
+	contentType: ContentTypeSchema
 ) => Promise<M | void>;
 
 export interface ContentCompartmentModel<M = ModuleValue> {

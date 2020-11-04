@@ -127,11 +127,9 @@ export const validateCompartments = (
 };
 
 export const runAllSubmitHooks = (
-	activeCompartment: ContentCompartmentModel,
 	compartments: ContentCompartmentModel[],
 	contentType: ContentTypeSchema,
 	contentItem: ContentSchema,
-	isCreating: boolean,
 	type: 'beforeSubmit' | 'afterSubmit',
 	error?: any
 ): Promise<{
@@ -141,29 +139,12 @@ export const runAllSubmitHooks = (
 }> => {
 	const allPromises = compartments.reduce((acc, compartment) => {
 		if (type === 'beforeSubmit' && typeof compartment.beforeSubmit === 'function') {
-			acc.push(
-				compartment.beforeSubmit(
-					activeCompartment.name,
-					getCompartmentValue(contentItem, activeCompartment, contentType),
-					contentItem,
-					contentType,
-					isCreating
-				)
-			);
+			acc.push(compartment.beforeSubmit(contentItem, contentType));
 			return acc;
 		}
 
 		if (type === 'afterSubmit' && typeof compartment.afterSubmit === 'function') {
-			acc.push(
-				compartment.afterSubmit(
-					error,
-					activeCompartment.name,
-					getCompartmentValue(contentItem, activeCompartment, contentType),
-					contentItem,
-					contentType,
-					isCreating
-				)
-			);
+			acc.push(compartment.afterSubmit(error, contentItem, contentType));
 			return acc;
 		}
 
@@ -193,31 +174,37 @@ export const runAllSubmitHooks = (
 			}, [] as { compartmentName: string; error: Error }[]);
 		const hasRejected = errorMessages.length > 0;
 
-		const newContentItem =
-			!hasRejected && type === 'beforeSubmit'
-				? allValues.reduce(
-						(newContentItem, moduleValue, index) => {
-							const compartment = compartments.find(
-								(comp, compIndex) => compIndex === index
-							);
-							if (
-								moduleValue &&
-								compartment &&
-								compartment.type === CompartmentType.MODULE
-							) {
-								return {
-									...newContentItem,
-									modulesData: {
-										...newContentItem.modulesData,
-										[compartment.name]: moduleValue,
-									},
-								};
-							}
-							return newContentItem;
-						},
-						{ ...contentItem }
-				  )
-				: contentItem;
+		const newContentItem = !hasRejected
+			? allValues.reduce(
+					(newContentItem, moduleValue, index) => {
+						const compartment = compartments.find(
+							(comp, compIndex) => compIndex === index
+						);
+						if (
+							moduleValue &&
+							compartment &&
+							compartment.type === CompartmentType.MODULE
+						) {
+							console.log({
+								...newContentItem,
+								modulesData: {
+									...newContentItem.modulesData,
+									[compartment.name]: moduleValue,
+								},
+							});
+							return {
+								...newContentItem,
+								modulesData: {
+									...newContentItem.modulesData,
+									[compartment.name]: moduleValue,
+								},
+							};
+						}
+						return newContentItem;
+					},
+					{ ...contentItem }
+			  )
+			: contentItem;
 
 		return {
 			hasRejected,
