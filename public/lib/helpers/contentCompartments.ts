@@ -8,6 +8,7 @@ import {
 } from '../api/api.types';
 import { WORKING_TITLE_KEY } from '../content.const';
 import { ExternalCompartmentModel } from '../store/api/externalCompartments';
+import { contentFacade } from '../store/content';
 import { CompartmentType, ContentCompartmentModel } from '../store/ui/contentCompartments';
 
 import { getInitialContentValues } from './getInitialContentValues';
@@ -174,37 +175,24 @@ export const runAllSubmitHooks = (
 			}, [] as { compartmentName: string; error: Error }[]);
 		const hasRejected = errorMessages.length > 0;
 
-		const newContentItem = !hasRejected
-			? allValues.reduce(
-					(newContentItem, moduleValue, index) => {
-						const compartment = compartments.find(
-							(comp, compIndex) => compIndex === index
-						);
-						if (
-							moduleValue &&
-							compartment &&
-							compartment.type === CompartmentType.MODULE
-						) {
-							console.log({
-								...newContentItem,
-								modulesData: {
-									...newContentItem.modulesData,
-									[compartment.name]: moduleValue,
-								},
-							});
-							return {
-								...newContentItem,
-								modulesData: {
-									...newContentItem.modulesData,
-									[compartment.name]: moduleValue,
-								},
-							};
-						}
-						return newContentItem;
-					},
-					{ ...contentItem }
-			  )
-			: contentItem;
+		const newContentItem = allValues.reduce(
+			(newContentItem, moduleValue, index) => {
+				const compartment = compartments.find((comp, compIndex) => compIndex === index);
+				if (moduleValue && compartment && compartment.type === CompartmentType.MODULE) {
+					return {
+						...newContentItem,
+						modulesData: {
+							...newContentItem.modulesData,
+							[compartment.name]: moduleValue,
+						},
+					};
+				}
+				return newContentItem;
+			},
+			{ ...contentItem }
+		);
+
+		contentFacade.updateContentItemDraft(newContentItem);
 
 		return {
 			hasRejected,
