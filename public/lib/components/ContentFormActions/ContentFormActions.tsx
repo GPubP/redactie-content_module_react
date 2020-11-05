@@ -34,7 +34,7 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 
 	return (
 		<div className="u-wrapper row end-xs">
-			{isSaved ? (
+			{isSaved && !isSaving ? (
 				<Button className="u-margin-right-xs" disabled>
 					{/* TODO: Add to translations */}
 					Bewaard
