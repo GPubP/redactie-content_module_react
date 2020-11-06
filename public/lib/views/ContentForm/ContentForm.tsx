@@ -210,15 +210,13 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				contentFacade.setIsUpdating(true);
 			}
 			runAllSubmitHooks(
-				activeCompartment,
 				compartments,
 				contentType,
 				modifiedContentItemDraft,
-				!!isCreating,
+				contentItem,
 				'beforeSubmit'
 			).then(({ hasRejected, errorMessages, contentItem }) => {
 				if (!hasRejected) {
-					contentFacade.setContentItemDraft(contentItem);
 					onSubmit(contentItem, activeCompartment, compartments);
 					return;
 				}

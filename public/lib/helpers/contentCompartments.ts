@@ -8,6 +8,7 @@ import {
 } from '../api/api.types';
 import { WORKING_TITLE_KEY } from '../content.const';
 import { ExternalCompartmentModel } from '../store/api/externalCompartments';
+import { contentFacade } from '../store/content';
 import { CompartmentType, ContentCompartmentModel } from '../store/ui/contentCompartments';
 
 import { getInitialContentValues } from './getInitialContentValues';
@@ -127,11 +128,10 @@ export const validateCompartments = (
 };
 
 export const runAllSubmitHooks = (
-	activeCompartment: ContentCompartmentModel,
 	compartments: ContentCompartmentModel[],
 	contentType: ContentTypeSchema,
-	contentItem: ContentSchema,
-	isCreating: boolean,
+	contentItemDraft: ContentSchema,
+	contentItem: ContentSchema | undefined,
 	type: 'beforeSubmit' | 'afterSubmit',
 	error?: any
 ): Promise<{
@@ -141,29 +141,12 @@ export const runAllSubmitHooks = (
 }> => {
 	const allPromises = compartments.reduce((acc, compartment) => {
 		if (type === 'beforeSubmit' && typeof compartment.beforeSubmit === 'function') {
-			acc.push(
-				compartment.beforeSubmit(
-					activeCompartment.name,
-					getCompartmentValue(contentItem, activeCompartment, contentType),
-					contentItem,
-					contentType,
-					isCreating
-				)
-			);
+			acc.push(compartment.beforeSubmit(contentItemDraft, contentType, contentItem));
 			return acc;
 		}
 
 		if (type === 'afterSubmit' && typeof compartment.afterSubmit === 'function') {
-			acc.push(
-				compartment.afterSubmit(
-					error,
-					activeCompartment.name,
-					getCompartmentValue(contentItem, activeCompartment, contentType),
-					contentItem,
-					contentType,
-					isCreating
-				)
-			);
+			acc.push(compartment.afterSubmit(error, contentItemDraft, contentType, contentItem));
 			return acc;
 		}
 
@@ -193,36 +176,29 @@ export const runAllSubmitHooks = (
 			}, [] as { compartmentName: string; error: Error }[]);
 		const hasRejected = errorMessages.length > 0;
 
-		const newContentItem =
-			!hasRejected && type === 'beforeSubmit'
-				? allValues.reduce(
-						(newContentItem, moduleValue, index) => {
-							const compartment = compartments.find(
-								(comp, compIndex) => compIndex === index
-							);
-							if (
-								moduleValue &&
-								compartment &&
-								compartment.type === CompartmentType.MODULE
-							) {
-								return {
-									...newContentItem,
-									modulesData: {
-										...newContentItem.modulesData,
-										[compartment.name]: moduleValue,
-									},
-								};
-							}
-							return newContentItem;
+		const newContentItemDraft = allValues.reduce(
+			(newContentItem, moduleValue, index) => {
+				const compartment = compartments.find((comp, compIndex) => compIndex === index);
+				if (moduleValue && compartment && compartment.type === CompartmentType.MODULE) {
+					return {
+						...newContentItem,
+						modulesData: {
+							...newContentItem.modulesData,
+							[compartment.name]: moduleValue,
 						},
-						{ ...contentItem }
-				  )
-				: contentItem;
+					};
+				}
+				return newContentItem;
+			},
+			{ ...contentItemDraft }
+		);
+
+		contentFacade.updateContentItemDraft(newContentItemDraft);
 
 		return {
 			hasRejected,
 			errorMessages,
-			contentItem: newContentItem,
+			contentItem: newContentItemDraft,
 		};
 	});
 };

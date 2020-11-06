@@ -108,11 +108,10 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			.then(response => {
 				if (response) {
 					runAllSubmitHooks(
-						activeCompartment,
 						compartments,
 						contentType,
 						response,
-						true,
+						undefined,
 						'afterSubmit'
 					).then(({ hasRejected }) => {
 						if (!hasRejected) {
@@ -127,11 +126,10 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			.catch(error => {
 				// Run rollback
 				runAllSubmitHooks(
-					activeCompartment,
 					compartments,
 					contentType,
 					(request as unknown) as ContentSchema,
-					true,
+					undefined,
 					'afterSubmit',
 					error
 				);
