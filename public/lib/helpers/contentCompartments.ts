@@ -130,7 +130,8 @@ export const validateCompartments = (
 export const runAllSubmitHooks = (
 	compartments: ContentCompartmentModel[],
 	contentType: ContentTypeSchema,
-	contentItem: ContentSchema,
+	contentItemDraft: ContentSchema,
+	contentItem: ContentSchema | undefined,
 	type: 'beforeSubmit' | 'afterSubmit',
 	error?: any
 ): Promise<{
@@ -140,12 +141,12 @@ export const runAllSubmitHooks = (
 }> => {
 	const allPromises = compartments.reduce((acc, compartment) => {
 		if (type === 'beforeSubmit' && typeof compartment.beforeSubmit === 'function') {
-			acc.push(compartment.beforeSubmit(contentItem, contentType));
+			acc.push(compartment.beforeSubmit(contentItemDraft, contentType, contentItem));
 			return acc;
 		}
 
 		if (type === 'afterSubmit' && typeof compartment.afterSubmit === 'function') {
-			acc.push(compartment.afterSubmit(error, contentItem, contentType));
+			acc.push(compartment.afterSubmit(error, contentItemDraft, contentType, contentItem));
 			return acc;
 		}
 
@@ -175,7 +176,7 @@ export const runAllSubmitHooks = (
 			}, [] as { compartmentName: string; error: Error }[]);
 		const hasRejected = errorMessages.length > 0;
 
-		const newContentItem = allValues.reduce(
+		const newContentItemDraft = allValues.reduce(
 			(newContentItem, moduleValue, index) => {
 				const compartment = compartments.find((comp, compIndex) => compIndex === index);
 				if (moduleValue && compartment && compartment.type === CompartmentType.MODULE) {
@@ -189,15 +190,15 @@ export const runAllSubmitHooks = (
 				}
 				return newContentItem;
 			},
-			{ ...contentItem }
+			{ ...contentItemDraft }
 		);
 
-		contentFacade.updateContentItemDraft(newContentItem);
+		contentFacade.updateContentItemDraft(newContentItemDraft);
 
 		return {
 			hasRejected,
 			errorMessages,
-			contentItem: newContentItem,
+			contentItem: newContentItemDraft,
 		};
 	});
 };

@@ -213,11 +213,17 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				compartments,
 				contentType,
 				modifiedContentItemDraft,
+				contentItem,
 				'beforeSubmit'
 			).then(({ hasRejected, errorMessages, contentItem }) => {
 				if (!hasRejected) {
 					onSubmit(contentItem, activeCompartment, compartments);
 					return;
+				}
+				if (isCreating) {
+					contentFacade.setIsCreating(false);
+				} else {
+					contentFacade.setIsUpdating(false);
 				}
 				errorMessages.forEach(message => {
 					contentCompartmentsFacade.setValid(message.compartmentName, false);

@@ -16,14 +16,16 @@ export interface ContentCompartmentRegisterOptions {
 }
 
 export type ContentCompartmentBeforeSubmitFn<M = ModuleValue> = (
-	contentItem: ContentSchema,
-	contentType: ContentTypeSchema
+	contentItemDraft: ContentSchema,
+	contentType: ContentTypeSchema,
+	contentItem: ContentSchema | undefined
 ) => Promise<M | void>;
 
 export type ContentCompartmentAfterSubmitFn<M = ModuleValue> = (
 	error: Error | undefined,
-	contentItem: ContentSchema,
-	contentType: ContentTypeSchema
+	contentItemDraft: ContentSchema,
+	contentType: ContentTypeSchema,
+	contentItem: ContentSchema | undefined
 ) => Promise<M | void>;
 
 export interface ContentCompartmentModel<M = ModuleValue> {

@@ -58,9 +58,18 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 
 		contentFacade
 			.updateContentItem(siteId, contentId, data)
-			.then(() => runAllSubmitHooks(compartments, contentType, data, 'afterSubmit'))
+			.then(() =>
+				runAllSubmitHooks(compartments, contentType, data, contentItem, 'afterSubmit')
+			)
 			.catch(error =>
-				runAllSubmitHooks(compartments, contentType, data, 'afterSubmit', error)
+				runAllSubmitHooks(
+					compartments,
+					contentType,
+					data,
+					contentItem,
+					'afterSubmit',
+					error
+				)
 			);
 	};
 
