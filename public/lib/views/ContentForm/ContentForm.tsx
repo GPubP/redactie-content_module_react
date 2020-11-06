@@ -62,7 +62,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		validate,
 	] = useContentCompartment();
 	const [externalCompartments] = useExternalCompartment();
-	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
+	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues> | null>();
 	const [navList, setNavlist] = useState<NavListItem[]>([]);
 	const [hasSubmit, setHasSubmit] = useState(false);
 	const [slugFieldTouched, setSlugFieldTouched] = useState(false);

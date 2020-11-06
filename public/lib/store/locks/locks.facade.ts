@@ -11,6 +11,8 @@ export class LocksFacade extends BaseEntityFacade<LocksStore, LocksApiService, L
 	public readonly lock$ = this.query.lock$;
 	public readonly userLock$ = this.query.userLock$;
 	public readonly externalLock$ = this.query.externalLock$;
+	public readonly getUserLock = this.query.getUserLock;
+	public readonly getExternalLock = this.query.getExternalLock;
 
 	public async getLock(siteId: string, contentId: string): Promise<void> {
 		// Check if active lock has already been fetched

@@ -1,6 +1,6 @@
 import { Autocomplete } from '@acpaas-ui/react-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
-import { LoadingState } from '@redactie/utils';
+import { LoadingState, SiteContext } from '@redactie/utils';
 import { getIn } from 'formik';
 import React, { useContext } from 'react';
 import { first } from 'rxjs/operators';
@@ -8,7 +8,6 @@ import { first } from 'rxjs/operators';
 import './ContentSelect.scss';
 
 import { ErrorMessage } from '../../../connectors/formRenderer';
-import TenantContext from '../../../context/TenantContext/TenantContext';
 import { useCcContent } from '../../../hooks';
 import { ccContentFacade } from '../../../store/ccContent';
 import { ContentModel } from '../../../store/content';
@@ -25,7 +24,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	const error = getIn(form.errors, field.name);
 
 	const state = !!error && !!touch ? 'error' : '';
-	const { siteId } = useContext(TenantContext);
+	const { siteId } = useContext(SiteContext);
 
 	const [contentLoadingState] = useCcContent('search');
 

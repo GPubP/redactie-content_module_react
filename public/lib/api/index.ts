@@ -1,6 +1,5 @@
 import Core from '@redactie/redactie-core';
-
-import TenantContext from '../context/TenantContext/TenantContext';
+import { TenantContext } from '@redactie/utils';
 
 import { registerContentDetailCompartment } from './registerContentDetailCompartment';
 

@@ -1,2 +1,2 @@
 // 10 seconds
-export const FETCH_MARIGN_IN_MS = 10000;
+export const SET_MARIGN_IN_MS = 10000;

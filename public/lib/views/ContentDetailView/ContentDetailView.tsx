@@ -1,5 +1,6 @@
 import { Link as AuiLink, Button, Card, CardBody, CardTitle } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
+import { useWorker } from '@redactie/utils';
 import moment from 'moment';
 import { isEmpty } from 'ramda';
 import React, { FC, useEffect, useMemo } from 'react';
@@ -9,7 +10,7 @@ import { PublishedStatus } from '../../components';
 import { getView } from '../../connectors/formRenderer';
 import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
 import { getViewPropsByCT } from '../../helpers';
-import { useLock, useNavigate, useWorker } from '../../hooks';
+import { useLock, useNavigate } from '../../hooks';
 import { LockModel, locksFacade } from '../../store/locks';
 import { LockWorkerData } from '../../workers/pollGetLock/pollGetLock.types';
 import { ContentDetailChildRouteProps } from '../ContentDetail/ContentDetail.types';
@@ -30,7 +31,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 	 * Hooks
 	 */
 	const { navigate, generatePath } = useNavigate();
-	const [, , lock] = useLock(contentId);
+	const [, , externalLock, userLock] = useLock(contentId);
 	const viewProps = useMemo(() => getViewPropsByCT(contentType, contentItemDraft.fields), [
 		contentType,
 		contentItemDraft.fields,
@@ -43,12 +44,16 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 			({
 				siteId,
 				tenantId,
-				expiresAt: lock?.expireAt || null,
+				expiresAt: externalLock?.expireAt || null,
 				lockId: contentId,
 			} as LockWorkerData),
-		[contentId, lock?.expireAt, siteId, tenantId] // eslint-disable-line react-hooks/exhaustive-deps
+		[contentId, externalLock?.expireAt, userLock?.expireAt, siteId, tenantId] // eslint-disable-line react-hooks/exhaustive-deps
 	);
-	const [refreshedLock] = useWorker<LockWorkerData, LockModel>('pollGetLock.worker', workerData);
+	const [refreshedLock] = useWorker<LockWorkerData, LockModel>(
+		BFF_MODULE_PUBLIC_PATH,
+		'pollGetLock.worker',
+		workerData
+	);
 
 	useEffect(() => {
 		locksFacade.setLockValue(contentId, refreshedLock);

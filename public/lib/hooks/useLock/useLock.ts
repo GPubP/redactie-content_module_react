@@ -12,8 +12,8 @@ const useLock = (
 
 	const [isFetching] = useObservable(locksFacade.isFetchingOne$, LoadingState.Loading);
 	const [isCreating] = useObservable(locksFacade.isCreating$, LoadingState.Loading);
-	const [externalLock] = useObservable(externalLock$, null);
-	const [userLock] = useObservable(userLock$, null);
+	const [externalLock] = useObservable(externalLock$, locksFacade.getExternalLock(contentId));
+	const [userLock] = useObservable(userLock$, locksFacade.getUserLock(contentId));
 	const [error] = useObservable(locksFacade.error$, null);
 
 	const fetchingState = error ? LoadingState.Error : isFetching;

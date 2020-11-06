@@ -1,6 +1,6 @@
+import { TenantContextValue } from '@redactie/utils';
 import { Context } from 'react';
 
-import { TenantContextValue } from '../context';
 import { ModuleValue } from '../services/content';
 import {
 	ExternalCompartmentAfterSubmitFn,

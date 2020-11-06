@@ -1,6 +1,5 @@
 import { ContentSchema, ContentTypeSchema } from '../../api/api.types';
 import { ContentRouteProps } from '../../content.types';
-import { LockModel } from '../../store/locks';
 
 export interface ContentDetailMatchProps {
 	siteId: string;
@@ -12,5 +11,4 @@ export interface ContentDetailChildRouteProps<T = ContentDetailMatchProps>
 	contentType: ContentTypeSchema;
 	contentItemDraft: ContentSchema;
 	contentItem: ContentSchema;
-	lock?: LockModel;
 }

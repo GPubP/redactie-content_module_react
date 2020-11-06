@@ -1,4 +1,4 @@
-import { AlertContainer, LoadingState } from '@redactie/utils';
+import { AlertContainer, LoadingState, useWorker } from '@redactie/utils';
 import { equals } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
@@ -7,7 +7,8 @@ import { RenderChildRoutes } from '../../components';
 import DataLoader from '../../components/DataLoader/DataLoader';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
 import { runAllSubmitHooks } from '../../helpers';
-import { useLock, useNavigate, useWorker } from '../../hooks';
+import { getTimeUntilLockExpires } from '../../helpers/getTimeUntilLockExpires';
+import { useLock, useNavigate } from '../../hooks';
 import { ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content';
 import { LockModel, locksFacade } from '../../store/locks';
@@ -48,8 +49,10 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		[contentId, userLock?.expireAt, siteId, tenantId] // eslint-disable-line react-hooks/exhaustive-deps
 	);
 	const [refreshedLock] = useWorker<SetLockWorkerData, LockModel>(
+		BFF_MODULE_PUBLIC_PATH,
 		'pollSetLock.worker',
-		workerData
+		workerData,
+		userLock
 	);
 
 	useEffect(() => {
@@ -65,8 +68,12 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 			return;
 		}
 
+		if (getTimeUntilLockExpires(userLock?.expireAt) > 0) {
+			return;
+		}
+
 		locksFacade.setLock(siteId, contentId);
-	}, [contentId, externalLock, siteId]);
+	}, [contentId, externalLock?.expireAt, siteId, userLock?.expireAt]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/**
 	 * Methods

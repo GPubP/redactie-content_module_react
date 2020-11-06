@@ -1,8 +1,7 @@
+import { TenantContext } from '@redactie/utils';
 import * as H from 'history';
 import { useContext } from 'react';
 import { generatePath, useHistory } from 'react-router-dom';
-
-import { TenantContext } from '../../context';
 
 type Params = { [paramName: string]: string | number | boolean | undefined };
 type GenerateFn = (path: string, params?: Params) => string;
