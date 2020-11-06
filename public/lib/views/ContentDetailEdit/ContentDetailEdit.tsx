@@ -103,22 +103,14 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		contentFacade
 			.updateContentItem(siteId, contentId, data)
 			.then(() =>
-				runAllSubmitHooks(
-					activeCompartment,
-					compartments,
-					contentType,
-					data,
-					false,
-					'afterSubmit'
-				)
+				runAllSubmitHooks(compartments, contentType, data, contentItem, 'afterSubmit')
 			)
 			.catch(error =>
 				runAllSubmitHooks(
-					activeCompartment,
 					compartments,
 					contentType,
 					data,
-					false,
+					contentItem,
 					'afterSubmit',
 					error
 				)
