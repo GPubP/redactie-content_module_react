@@ -89,36 +89,36 @@ if (rolesRightsConnector.api) {
 			{
 				path: MODULE_PATHS.createOverview,
 				component: ContentCreateOverview,
-				// guardOptions: {
-				// 	guards: [
-				// 		rolesRightsConnector.api.guards.securityRightsSiteGuard(urlSiteParam, [
-				// 			rolesRightsConnector.securityRights.create,
-				// 		]),
-				// 	],
-				// },
+				guardOptions: {
+					guards: [
+						rolesRightsConnector.api.guards.securityRightsSiteGuard(urlSiteParam, [
+							rolesRightsConnector.securityRights.create,
+						]),
+					],
+				},
 				navigation: {
 					context: 'site',
 					label: 'Content aanmaken',
 					parentPath: MODULE_PATHS.root,
-					// canShown: [
-					// 	rolesRightsConnector.api.canShowns.securityRightsSiteCanShown(
-					// 		urlSiteParam,
-					// 		[rolesRightsConnector.securityRights.create]
-					// 	),
-					// ],
+					canShown: [
+						rolesRightsConnector.api.canShowns.securityRightsSiteCanShown(
+							urlSiteParam,
+							[rolesRightsConnector.securityRights.create]
+						),
+					],
 				},
 			},
 			{
 				path: MODULE_PATHS.create,
 				component: ContentCreate,
 				redirect: `${MODULE_PATHS.create}/default`,
-				// guardOptions: {
-				// 	guards: [
-				// 		rolesRightsConnector.api.guards.securityRightsSiteGuard(urlSiteParam, [
-				// 			rolesRightsConnector.securityRights.create,
-				// 		]),
-				// 	],
-				// },
+				guardOptions: {
+					guards: [
+						rolesRightsConnector.api.guards.securityRightsSiteGuard(urlSiteParam, [
+							rolesRightsConnector.securityRights.create,
+						]),
+					],
+				},
 				routes: [
 					{
 						path: MODULE_PATHS.createCompartment,
