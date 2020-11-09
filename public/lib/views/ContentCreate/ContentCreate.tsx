@@ -3,13 +3,12 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { AlertContainer, useDetectValueChanges } from '@redactie/utils';
+import { AlertContainer, TenantContext, useDetectValueChanges } from '@redactie/utils';
 import React, { FC, useContext, useEffect, useMemo } from 'react';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
-import { TenantContext } from '../../context';
 import { getInitialContentValues, runAllSubmitHooks } from '../../helpers';
 import { useContentItem, useContentType, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { ContentCreateSchema, ContentSchema, ContentStatus } from '../../services/content';

@@ -36,7 +36,7 @@ export interface CompartmentProps<M = ModuleValue> {
 	settings: ModuleSettings | ContentTypeSchema['fields'] | ContentTypeSchema | undefined;
 	value: M; // module data section
 	isValid: boolean;
-	formikRef?: (instance: FormikProps<FormikValues>) => void;
+	formikRef?: (instance: FormikProps<FormikValues> | null) => void;
 	onChange: (e: M) => void; // Boolean for validation result (maybe?)
 	updateContent: (e: ContentSchema) => void; // For edge cases where content item must be changed. Boolean for validation
 }

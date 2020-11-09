@@ -2,6 +2,7 @@ import { BaseEntityFacade } from '@redactie/utils';
 
 import { locksApiService, LocksApiService } from '../../services/locks';
 
+import { LockModel } from './locks.model';
 import { LocksQuery, locksQuery } from './locks.query';
 import { LocksStore, locksStore } from './locks.store';
 
@@ -10,6 +11,8 @@ export class LocksFacade extends BaseEntityFacade<LocksStore, LocksApiService, L
 	public readonly lock$ = this.query.lock$;
 	public readonly userLock$ = this.query.userLock$;
 	public readonly externalLock$ = this.query.externalLock$;
+	public readonly getUserLock = this.query.getUserLock;
+	public readonly getExternalLock = this.query.getExternalLock;
 
 	public async getLock(siteId: string, contentId: string): Promise<void> {
 		// Check if active lock has already been fetched
@@ -69,6 +72,14 @@ export class LocksFacade extends BaseEntityFacade<LocksStore, LocksApiService, L
 				this.store.setError(error);
 				this.store.setIsCreating(false);
 			});
+	}
+
+	public setLockValue(contentId: string, lock: LockModel | null): void {
+		if (!lock) {
+			return this.store.remove(contentId);
+		}
+
+		this.store.upsert([contentId], lock);
 	}
 }
 

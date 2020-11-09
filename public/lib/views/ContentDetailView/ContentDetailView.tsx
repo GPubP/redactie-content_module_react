@@ -1,15 +1,18 @@
 import { Link as AuiLink, Button, Card, CardBody, CardTitle } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
+import { useWorker } from '@redactie/utils';
 import moment from 'moment';
 import { isEmpty } from 'ramda';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import { PublishedStatus } from '../../components';
 import { getView } from '../../connectors/formRenderer';
 import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
 import { getViewPropsByCT } from '../../helpers';
-import { useNavigate } from '../../hooks';
+import { useLock, useNavigate } from '../../hooks';
+import { LockModel, locksFacade } from '../../store/locks';
+import { LockWorkerData } from '../../workers/pollGetLock/pollGetLock.types';
 import { ContentDetailChildRouteProps } from '../ContentDetail/ContentDetail.types';
 
 import './ContentDetailView.scss';
@@ -18,6 +21,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 	contentItemDraft,
 	contentType,
 	match,
+	tenantId,
 }) => {
 	const { meta } = contentItemDraft;
 	const { siteId, contentId } = match.params;
@@ -27,6 +31,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 	 * Hooks
 	 */
 	const { navigate, generatePath } = useNavigate();
+	const [, , externalLock, userLock] = useLock(contentId);
 	const viewProps = useMemo(() => getViewPropsByCT(contentType, contentItemDraft.fields), [
 		contentType,
 		contentItemDraft.fields,
@@ -34,6 +39,25 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 	const contentItemIsEmpty = useMemo(() => isEmpty(contentItemDraft.fields || {}), [
 		contentItemDraft.fields,
 	]);
+	const workerData = useMemo(
+		() =>
+			({
+				siteId,
+				tenantId,
+				expiresAt: externalLock?.expireAt || null,
+				lockId: contentId,
+			} as LockWorkerData),
+		[contentId, externalLock?.expireAt, userLock?.expireAt, siteId, tenantId] // eslint-disable-line react-hooks/exhaustive-deps
+	);
+	const [refreshedLock] = useWorker<LockWorkerData, LockModel>(
+		BFF_MODULE_PUBLIC_PATH,
+		'pollGetLock.worker',
+		workerData
+	);
+
+	useEffect(() => {
+		locksFacade.setLockValue(contentId, refreshedLock);
+	}, [contentId, refreshedLock]);
 
 	/**
 	 * Methods

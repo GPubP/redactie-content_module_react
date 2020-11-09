@@ -22,9 +22,8 @@ import {
 } from '../../hooks';
 import { contentFacade } from '../../store/content';
 import { contentTypesFacade } from '../../store/contentTypes';
-import { locksFacade } from '../../store/locks';
 
-import { CONTENT_UPDATE_TABS, LOCK_GET_REFRESH_TIME } from './ContentDetail.const';
+import { CONTENT_UPDATE_TABS } from './ContentDetail.const';
 import { ContentDetailMatchProps } from './ContentDetail.types';
 
 import './ContentDetail.scss';
@@ -51,7 +50,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		},
 	]);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const [lockLoading, , lock] = useLock(contentId);
+	const [, , externalLock] = useLock(contentId);
 
 	const guardsMeta = useMemo(
 		() => ({
@@ -69,13 +68,12 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		if (
 			contentTypeLoading !== LoadingState.Loading &&
 			contentItemLoading !== LoadingState.Loading &&
-			lockLoading !== LoadingState.Loading &&
 			contentType &&
 			contentItem
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [contentTypeLoading, contentItemLoading, contentType, contentItem, lockLoading]);
+	}, [contentTypeLoading, contentItemLoading, contentType, contentItem]);
 
 	useEffect(() => {
 		if (contentItem?.meta.contentType.uuid && siteId) {
@@ -89,13 +87,6 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		}
 
 		contentFacade.getContentItem(siteId, contentId);
-		locksFacade.getLock(siteId, contentId);
-		const interval = setInterval(
-			() => locksFacade.getLock(siteId, contentId),
-			LOCK_GET_REFRESH_TIME
-		);
-
-		return () => clearInterval(interval);
 	}, [siteId, contentId]);
 
 	useEffect(() => {
@@ -112,12 +103,12 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 			contentType,
 			contentItem: contentItem,
 			contentItemDraft,
-			lock,
+			tenantId,
 		};
 
 		return (
 			<>
-				{lock && <LockMessage className="u-margin-bottom" lock={lock} />}
+				{externalLock && <LockMessage className="u-margin-bottom" lock={externalLock} />}
 				<RenderChildRoutes
 					routes={route.routes}
 					guardsMeta={guardsMeta}
