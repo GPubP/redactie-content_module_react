@@ -1,6 +1,6 @@
 import { ViewFieldProps } from '@redactie/form-renderer-module';
-import { SiteContext } from '@redactie/utils';
-import React, { ReactElement, useContext, useEffect } from 'react';
+import { useSiteContext } from '@redactie/utils';
+import React, { ReactElement, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import './ContentSelect.scss';
@@ -11,7 +11,7 @@ import { ccContentFacade } from '../../../store/ccContent';
 import { DataLoader } from '../../DataLoader';
 
 const ContentSelectView: React.FC<ViewFieldProps> = ({ value, fieldSchema }: ViewFieldProps) => {
-	const { siteId } = useContext(SiteContext);
+	const { siteId } = useSiteContext();
 	const { generatePath } = useNavigate();
 	const [contentItemLoadingState, ccContentItem] = useCcContentItem(value);
 

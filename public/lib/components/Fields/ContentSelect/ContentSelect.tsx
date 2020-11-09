@@ -1,8 +1,8 @@
 import { Autocomplete } from '@acpaas-ui/react-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
-import { LoadingState, SiteContext } from '@redactie/utils';
+import { LoadingState, useSiteContext } from '@redactie/utils';
 import { getIn } from 'formik';
-import React, { useContext } from 'react';
+import React from 'react';
 import { first } from 'rxjs/operators';
 
 import './ContentSelect.scss';
@@ -24,7 +24,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	const error = getIn(form.errors, field.name);
 
 	const state = !!error && !!touch ? 'error' : '';
-	const { siteId } = useContext(SiteContext);
+	const { siteId } = useSiteContext();
 
 	const [contentLoadingState] = useCcContent('search');
 
