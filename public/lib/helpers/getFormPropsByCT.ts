@@ -1,15 +1,8 @@
-import { FormSchema } from '@redactie/form-renderer-module';
-
 import { WORKING_TITLE_KEY } from '../content.const';
-import { ContentTypeSchema, ErrorMessagesSchema, ValidateSchema } from '../services/contentTypes';
+import { ContentTypeSchema, ValidateSchema } from '../services/contentTypes';
+import { FormRendererProps } from '../views/ContentForm/ContentForm.types';
 
 import { parseFields } from './parseFields';
-
-interface FormRendererProps {
-	schema: FormSchema;
-	validationSchema: ValidateSchema;
-	errorMessages: ErrorMessagesSchema;
-}
 
 export const getFormPropsByCT = (contentType: ContentTypeSchema): FormRendererProps => {
 	return {
