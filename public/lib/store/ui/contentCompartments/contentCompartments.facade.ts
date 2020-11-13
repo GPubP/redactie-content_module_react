@@ -19,14 +19,11 @@ export class ContentCompartmentsFacade {
 	): void {
 		const compartments = Array.isArray(data) ? data : [data];
 
-		compartments.forEach(compartment => {
-			if (!options?.replace) {
-				this.store.add(compartment);
-				return;
-			}
+		if (options.replace) {
+			this.clearCompartments();
+		}
 
-			this.store.upsert(compartment.name, compartment);
-		});
+		compartments.forEach(compartment => this.store.add(compartment));
 	}
 
 	public clearCompartments(): void {
