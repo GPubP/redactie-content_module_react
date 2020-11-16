@@ -1,10 +1,21 @@
+import { FormSchema } from '@redactie/form-renderer-module';
 import { FormikProps, FormikValues } from 'formik';
 
 import { ModuleSettings, ModuleValue } from '../../api/api.types';
 import { ContentRouteProps } from '../../content.types';
 import { ContentSchema } from '../../services/content/content.service.types';
-import { ContentTypeSchema } from '../../services/contentTypes/contentTypes.service.types';
+import {
+	ContentTypeSchema,
+	ErrorMessagesSchema,
+	ValidateSchema,
+} from '../../services/contentTypes/contentTypes.service.types';
 import { ContentCompartmentModel } from '../../store/ui/contentCompartments';
+
+export interface FormRendererProps {
+	schema: FormSchema;
+	validationSchema: ValidateSchema;
+	errorMessages: ErrorMessagesSchema;
+}
 
 export interface ContentFormMatchProps {
 	siteId: string;
@@ -29,11 +40,19 @@ export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 	onUpdatePublication: (content: ContentSchema) => void;
 }
 
-export interface CompartmentProps<M = ModuleValue> {
+export type CtTypeSettings = Pick<
+	ContentTypeSchema,
+	'fields' | 'validateSchema' | 'errorMessages'
+> & { includeWorkintTitle: boolean };
+
+export interface CompartmentProps<
+	M = ModuleValue,
+	S = ModuleSettings | CtTypeSettings | ContentTypeSchema | undefined
+> {
 	contentType: ContentTypeSchema;
 	contentValue: ContentSchema | undefined;
 	contentItem: ContentSchema | undefined;
-	settings: ModuleSettings | ContentTypeSchema['fields'] | ContentTypeSchema | undefined;
+	settings: S;
 	value: M; // module data section
 	isValid: boolean;
 	formikRef?: (instance: FormikProps<FormikValues> | null) => void;

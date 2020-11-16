@@ -47,6 +47,11 @@ interface ModuleSettings {
 	validationSchema?: any;
 }
 
+export interface ContentTypeFieldCompartmentRef {
+	uuid: string;
+	position: number;
+}
+
 export interface ContentTypeFieldSchema {
 	name: string;
 	label: string;
@@ -60,6 +65,13 @@ export interface ContentTypeFieldSchema {
 	generalConfig: GeneralConfig;
 	defaultValue: string;
 	preset?: Preset;
+	compartment: ContentTypeFieldCompartmentRef;
+}
+
+export interface ContentTypeCompartment {
+	uuid: string;
+	label: string;
+	removable: boolean;
 }
 
 export interface ContentTypeSchema {
@@ -70,6 +82,7 @@ export interface ContentTypeSchema {
 		description: string;
 	};
 	fields: ContentTypeFieldSchema[];
+	compartments: ContentTypeCompartment[];
 	modulesConfig?: ModuleSettings[];
 	validateSchema: ValidateSchema;
 	errorMessages: ErrorMessagesSchema;

@@ -1,4 +1,17 @@
-import { always, clone, compose, find, identity, ifElse, pick } from 'ramda';
+import kebabCase from 'lodash.kebabcase';
+import {
+	always,
+	clone,
+	compose,
+	filter,
+	find,
+	identity,
+	ifElse,
+	isEmpty,
+	omit,
+	pick,
+	sort,
+} from 'ramda';
 
 import {
 	CompartmentProps,
@@ -6,11 +19,20 @@ import {
 	ContentTypeSchema,
 	ModuleSettings,
 } from '../api/api.types';
+import { FieldsForm } from '../components';
+import { getCustomValidator } from '../connectors/formRenderer';
 import { WORKING_TITLE_KEY } from '../content.const';
+import { ContentTypeFieldSchema } from '../services/contentTypes/contentTypes.service.types';
 import { ExternalCompartmentModel } from '../store/api/externalCompartments';
 import { contentFacade } from '../store/content';
-import { CompartmentType, ContentCompartmentModel } from '../store/ui/contentCompartments';
+import {
+	CompartmentType,
+	ContentCompartmentModel,
+	ModuleValue,
+} from '../store/ui/contentCompartments';
+import { CtTypeSettings } from '../views/ContentForm/ContentForm.types';
 
+import { getCompartmentFormProps } from './getCompartmentFormProps';
 import { getInitialContentValues } from './getInitialContentValues';
 
 export const getSettings = (
@@ -23,16 +45,24 @@ export const getSettings = (
 
 	switch (compartment.type) {
 		case CompartmentType.CT:
-			return contentType?.fields;
+			return compartment.context as CtTypeSettings;
 		case CompartmentType.INTERNAL:
 			return contentType;
 		case CompartmentType.MODULE:
-			return compose(
+			return compose<
+				ModuleSettings[],
+				ModuleSettings | undefined,
+				ModuleSettings | undefined,
+				Pick<ModuleSettings, 'config' | 'validationSchema'>,
+				Pick<ModuleSettings, 'config' | 'validationSchema'>
+			>(
 				clone,
 				pick(['config', 'validationSchema']) as any,
 				ifElse(identity, identity, always({})),
 				find((moduleConfig: ModuleSettings) => moduleConfig.name === compartment.name)
-			)(contentType.modulesConfig || []) as CompartmentProps['settings'];
+			)(
+				contentType.modulesConfig || ([] as ModuleSettings[])
+			) as CompartmentProps['settings'];
 	}
 };
 
@@ -72,7 +102,7 @@ export const mapExternalCompartmentToContentCompartment = (
 	type: CompartmentType.MODULE,
 });
 
-export const filterCompartments = (
+export const filterExternalCompartments = (
 	content: ContentSchema | undefined,
 	contentType: ContentTypeSchema,
 	externalCompartments: ExternalCompartmentModel[]
@@ -102,6 +132,122 @@ export const filterCompartments = (
 		},
 		[] as ContentCompartmentModel[]
 	);
+};
+
+const getCTCompartmentErrorMessages = (
+	contentType: ContentTypeSchema,
+	compartmentFieldNames: string[]
+): ContentTypeSchema['validateSchema'] =>
+	Object.keys(contentType.errorMessages).reduce((acc, key) => {
+		if (!compartmentFieldNames.includes(key)) {
+			return acc;
+		}
+
+		return {
+			...acc,
+			[key]: contentType.errorMessages[key],
+		};
+	}, {});
+
+const getCTCompartmentValidationSchema = (
+	contentType: ContentTypeSchema,
+	compartmentFieldNames: string[]
+): ContentTypeSchema['validateSchema'] =>
+	Object.keys(contentType.validateSchema.properties).reduce((acc, key) => {
+		if (!compartmentFieldNames.includes(key)) {
+			return acc;
+		}
+
+		return {
+			...acc,
+			properties: {
+				...(acc.properties || {}),
+				[key]: contentType.validateSchema.properties[key],
+			},
+			required: contentType.validateSchema.required.includes(key)
+				? [...(acc.required || []), key]
+				: acc.required,
+		};
+	}, omit(['properties', 'required'])(contentType.validateSchema));
+
+const validateCTCompartment = (contentType: ContentTypeSchema, settings: CtTypeSettings) => (
+	values: ContentSchema
+): boolean => {
+	const { validationSchema, errorMessages } = getCompartmentFormProps(contentType, settings);
+	const CustomValidator = getCustomValidator();
+
+	if (validationSchema && CustomValidator) {
+		const validator = new CustomValidator(validationSchema, errorMessages, {
+			allErrors: true,
+			messages: true,
+		});
+
+		const errors = validator.validate({
+			...values.fields,
+			...(settings.includeWorkintTitle ? { [WORKING_TITLE_KEY]: values.meta.label } : {}),
+		}) as boolean;
+
+		return isEmpty(errors);
+	}
+	// If no validationSchema is found return compartment as valid
+	return true;
+};
+
+export const getContentTypeCompartments = (
+	contentType: ContentTypeSchema
+): ContentCompartmentModel<ModuleValue, CtTypeSettings>[] => {
+	const compartments = contentType.compartments?.length
+		? contentType.compartments
+		: [{ uuid: 'default', label: 'Inhoud', removable: false }];
+
+	return compartments.reduce((acc, compartment) => {
+		const compartmentFields = compose<
+			ContentTypeFieldSchema[],
+			ContentTypeFieldSchema[],
+			ContentTypeFieldSchema[]
+		>(
+			filter<ContentTypeFieldSchema>(
+				field =>
+					field.compartment?.uuid === compartment.uuid ||
+					(compartment.removable === false && !field.compartment)
+			),
+			sort<ContentTypeFieldSchema>(field => field.compartment?.position || Number.MAX_VALUE)
+		)(contentType.fields);
+
+		if (!compartmentFields.length) {
+			return acc;
+		}
+
+		const compartmentFieldNames = compartmentFields.map(field => field.name);
+		const compartmentErrorMessages = getCTCompartmentErrorMessages(
+			contentType,
+			compartmentFieldNames
+		);
+		const compartmentValidateSchema = getCTCompartmentValidationSchema(
+			contentType,
+			compartmentFieldNames
+		);
+		const context = {
+			fields: compartmentFields,
+			validateSchema: compartmentValidateSchema,
+			errorMessages: compartmentErrorMessages,
+			includeWorkintTitle: acc.length === 0, // Is first compartment
+		};
+		const slug = kebabCase(compartment.label);
+
+		return acc.concat([
+			{
+				slug,
+				context,
+				label: compartment.label,
+				name: `fields_${slug}`,
+				component: FieldsForm,
+				type: CompartmentType.CT,
+				isValid: false,
+				validate: validateCTCompartment(contentType, context),
+			},
+		]);
+	}, [] as ContentCompartmentModel<ModuleValue, CtTypeSettings>[]);
 };
 
 export const validateCompartments = (

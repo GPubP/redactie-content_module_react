@@ -2,13 +2,15 @@ import React, { FC, ReactElement } from 'react';
 
 import { CompartmentProps } from '../../../api/api.types';
 import { getForm } from '../../../connectors/formRenderer';
-import { addWorkingTitleField, getFormPropsByCT } from '../../../helpers';
+import { getCompartmentFormProps } from '../../../helpers/getCompartmentFormProps';
+import { CtTypeSettings } from '../../../views/ContentForm/ContentForm.types';
 
-const FieldsForm: FC<CompartmentProps> = ({
+const FieldsForm: FC<CompartmentProps & { settings: CtTypeSettings }> = ({
 	contentType,
 	value,
 	onChange,
 	formikRef,
+	settings,
 }): ReactElement | null => {
 	const Form = getForm();
 
@@ -23,14 +25,13 @@ const FieldsForm: FC<CompartmentProps> = ({
 		return null;
 	}
 
-	const formProps = getFormPropsByCT(contentType);
-	const formPropsWithWorkingTitle = addWorkingTitleField(formProps);
+	const formProps = getCompartmentFormProps(contentType, settings);
 
 	return (
 		<>
 			<h5 className="u-margin-bottom">Inhoud</h5>
 			<Form
-				{...formPropsWithWorkingTitle}
+				{...formProps}
 				formikRef={instance => {
 					if (instance) {
 						formikRef && formikRef(instance);

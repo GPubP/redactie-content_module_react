@@ -11,8 +11,9 @@ import { ContentFormActions } from '../../components';
 import { ALERT_CONTAINER_IDS, WORKING_TITLE_KEY } from '../../content.const';
 import { NavListItem } from '../../content.types';
 import {
-	filterCompartments,
+	filterExternalCompartments,
 	getCompartmentValue,
+	getContentTypeCompartments,
 	getSettings,
 	runAllSubmitHooks,
 	validateCompartments,
@@ -80,8 +81,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		register(
 			[
-				...INTERNAL_COMPARTMENTS(contentType),
-				...filterCompartments(contentItemDraft, contentType, externalCompartments),
+				...(getContentTypeCompartments(contentType) as ContentCompartmentModel[]),
+				...INTERNAL_COMPARTMENTS,
+				...filterExternalCompartments(contentItemDraft, contentType, externalCompartments),
 			],
 			{ replace: true }
 		);
