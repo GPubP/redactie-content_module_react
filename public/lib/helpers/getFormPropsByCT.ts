@@ -70,4 +70,11 @@ export const addWorkingTitleField = (formProps: FormRendererProps): FormRenderer
 			...formProps.validationSchema.properties,
 		},
 	},
+	errorMessages: {
+		...formProps.errorMessages,
+		[WORKING_TITLE_KEY]: {
+			required: 'Dit veld is verplicht',
+			minLength: 'Dit veld is verplicht',
+		},
+	},
 });

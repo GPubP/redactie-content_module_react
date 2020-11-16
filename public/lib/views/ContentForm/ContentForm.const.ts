@@ -1,5 +1,5 @@
-import AJV from 'ajv';
 import moment from 'moment';
+import { isEmpty } from 'ramda';
 
 import { ContentSchema, ContentTypeSchema } from '../../api/api.types';
 import {
@@ -9,6 +9,7 @@ import {
 	STATUS_VALIDATION_SCHEMA,
 	StatusForm,
 } from '../../components';
+import { getCustomValidator } from '../../connectors/formRenderer';
 import { DATE_FORMATS, MODULE_PATHS, TENANT_ROOT, WORKING_TITLE_KEY } from '../../content.const';
 import { addWorkingTitleField, getFormPropsByCT } from '../../helpers';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
@@ -26,16 +27,21 @@ export const INTERNAL_COMPARTMENTS = (
 		isValid: false,
 		validate: (values: ContentSchema) => {
 			const formProps = getFormPropsByCT(contentType);
-			const { validationSchema } = addWorkingTitleField(formProps);
+			const { validationSchema, errorMessages } = addWorkingTitleField(formProps);
+			const CustomValidator = getCustomValidator();
 
-			if (validationSchema) {
-				const ajv = new AJV({ allErrors: true, messages: true });
-				const validator = ajv.compile(validationSchema);
+			if (validationSchema && CustomValidator) {
+				const validator = new CustomValidator(validationSchema, errorMessages, {
+					allErrors: true,
+					messages: true,
+				});
 
-				return validator({
+				const errors = validator.validate({
 					...values.fields,
 					[WORKING_TITLE_KEY]: values.meta.label,
 				}) as boolean;
+
+				return isEmpty(errors);
 			}
 			// If no validationSchema is found return compartment as valid
 			return true;
