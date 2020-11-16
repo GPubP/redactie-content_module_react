@@ -1,4 +1,3 @@
-import AJV from 'ajv';
 import moment from 'moment';
 
 import { ContentSchema } from '../../api/api.types';

@@ -21,6 +21,7 @@ export const parseValidationSchema = (schema: ValidateSchema, path?: string): Va
 		schema.properties &&
 		Object.keys(schema.properties).reduce((acc, key) => {
 			const p = path === undefined ? key : `${path}.${key}`;
+
 			if (schema.properties) {
 				acc[key] = parseValidationSchema(schema?.properties[key], p);
 			}
@@ -61,6 +62,13 @@ export const addWorkingTitleField = (formProps: FormRendererProps): FormRenderer
 				type: 'string',
 			},
 			...formProps.validationSchema.properties,
+		},
+	},
+	errorMessages: {
+		...formProps.errorMessages,
+		[WORKING_TITLE_KEY]: {
+			required: 'Dit veld is verplicht',
+			minLength: 'Dit veld is verplicht',
 		},
 	},
 });
