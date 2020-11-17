@@ -12,3 +12,4 @@ export { default as useContentCompartment } from './useContentCompartment/useCon
 export { default as useExternalCompartment } from './useExternalCompartment/useExternalCompartment';
 export { default as useLock } from './useLock/useLock';
 export { default as useContentLoadingStates } from './useContentLoadingStates/useContentLoadingStates';
+export { default as useValueChanges } from './useValueChanges/useValueChanges';

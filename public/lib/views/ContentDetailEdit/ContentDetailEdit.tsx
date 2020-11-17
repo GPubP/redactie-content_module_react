@@ -13,6 +13,7 @@ import { ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content';
 import { LockModel, locksFacade } from '../../store/locks';
 import { ContentCompartmentModel } from '../../store/ui/contentCompartments';
+import { HasChangesWorkerData } from '../../workers/hasChanges/hasChanges.types';
 import { SetLockWorkerData } from '../../workers/pollSetLock/pollSetLock.types';
 import { ContentDetailChildRouteProps } from '../ContentDetail/ContentDetail.types';
 
@@ -33,10 +34,20 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	const { navigate } = useNavigate();
 	const [, , externalLock, userLock] = useLock(contentId);
 	const [initialLoadingState, setInitialLoadingState] = useState(LoadingState.Loading);
-	const hasChanges = useMemo(() => !equals(contentItem, contentItemDraft), [
-		contentItem,
-		contentItemDraft,
-	]);
+	const hasChangesWorkerData = useMemo(
+		() => ({
+			currentValue: contentItem,
+			nextValue: contentItemDraft,
+		}),
+		[contentItem, contentItemDraft]
+	);
+	const [hasChanges] = useWorker<HasChangesWorkerData, boolean>(
+		BFF_MODULE_PUBLIC_PATH,
+		'hasChanges.worker',
+		hasChangesWorkerData,
+		false
+	);
+
 	const workerData = useMemo(
 		() =>
 			({
