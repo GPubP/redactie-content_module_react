@@ -1,9 +1,9 @@
 import { useWorker } from '@redactie/utils';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { HasChangesWorkerData } from '../../workers/hasChanges/hasChanges.types';
 
-const useValueChanges = (isLoaded: boolean, value: unknown): [boolean, Function] => {
+const useValueChanges = (isLoaded: boolean, value: unknown): [boolean] => {
 	const [currentValue, setCurrentValue] = useState<any>();
 	const data = useMemo<HasChangesWorkerData>(
 		() => ({
@@ -20,10 +20,6 @@ const useValueChanges = (isLoaded: boolean, value: unknown): [boolean, Function]
 		false
 	);
 
-	const reset = useCallback(() => {
-		setCurrentValue(undefined);
-	}, []);
-
 	useEffect(() => {
 		if (!isLoaded) {
 			return;
@@ -34,7 +30,7 @@ const useValueChanges = (isLoaded: boolean, value: unknown): [boolean, Function]
 		}
 	}, [value, isLoaded, currentValue]);
 
-	return [!!hasChanges, reset];
+	return [!!hasChanges];
 };
 
 export default useValueChanges;
