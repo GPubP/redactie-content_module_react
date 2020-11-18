@@ -8,7 +8,7 @@ module.exports = env => {
 	const defaultConfig = getModuleConfig({
 		packageJSON,
 		mainEntryPath: path.resolve(__dirname, './public/index.tsx'),
-		tsIncludes: [/public/, /node_modules\/@redactie\/translations-module/],
+		tsIncludes: [/public/],
 		sassIncludes: [/public/, /node_modules\/@a-ui\/core/],
 		outputPath: path.resolve(__dirname, 'dist'),
 	})(env);

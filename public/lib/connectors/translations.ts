@@ -12,3 +12,5 @@ export const useCoreTranslation = (): [(keys: string | string[]) => string] =>
 	translationsAPI?.core?.useTranslation
 		? translationsAPI.core.useTranslation('nl_BE')
 		: [() => 'TRANSLATIONS MODULE ERROR'];
+
+export const CORE_TRANSLATIONS = translationsAPI?.core?.CORE_TRANSLATIONS || {};

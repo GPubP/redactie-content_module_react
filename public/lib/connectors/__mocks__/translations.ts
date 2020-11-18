@@ -5,3 +5,8 @@ export const useCoreTranslation = (): [(keys: string | string[]) => string] => {
 		},
 	];
 };
+
+export const CORE_TRANSLATIONS = {
+	BUTTON_CANCEL: 'cancel',
+	BUTTON_SAVE: 'save',
+};
