@@ -1,4 +1,4 @@
-import { AlertContainer, LoadingState, useWorker } from '@redactie/utils';
+import { AlertContainer, HasChangesWorkerData, LoadingState, useWorker } from '@redactie/utils';
 import { equals } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
@@ -13,7 +13,6 @@ import { ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content';
 import { LockModel, locksFacade } from '../../store/locks';
 import { ContentCompartmentModel } from '../../store/ui/contentCompartments';
-import { HasChangesWorkerData } from '../../workers/hasChanges/hasChanges.types';
 import { SetLockWorkerData } from '../../workers/pollSetLock/pollSetLock.types';
 import { ContentDetailChildRouteProps } from '../ContentDetail/ContentDetail.types';
 

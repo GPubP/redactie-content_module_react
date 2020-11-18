@@ -3,20 +3,14 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { AlertContainer, TenantContext } from '@redactie/utils';
+import { AlertContainer, TenantContext, useDetectValueChangesWorker } from '@redactie/utils';
 import React, { FC, useContext, useEffect, useMemo } from 'react';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { getInitialContentValues, runAllSubmitHooks } from '../../helpers';
-import {
-	useContentItem,
-	useContentType,
-	useNavigate,
-	useRoutesBreadcrumbs,
-	useValueChanges,
-} from '../../hooks';
+import { useContentItem, useContentType, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { ContentCreateSchema, ContentSchema, ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content/content.facade';
 import { contentTypesFacade } from '../../store/contentTypes';
@@ -47,7 +41,11 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		},
 	]);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
-	const [hasChanges] = useValueChanges(!!contentItemDraft, contentItemDraft);
+	const [hasChanges] = useDetectValueChangesWorker(
+		!!contentItemDraft,
+		contentItemDraft,
+		BFF_MODULE_PUBLIC_PATH
+	);
 
 	useEffect(() => {
 		if (!contentType) {
