@@ -6,7 +6,6 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { LoadingState } from '@redactie/utils';
 import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
@@ -20,7 +19,7 @@ import {
 	PublishedStatuses,
 } from '../../components';
 import rolesRightsConnector from '../../connectors/rolesRights';
-import { useCoreTranslation } from '../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, FilterItemSchema } from '../../content.types';
 import { useContent, useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';

@@ -2,3 +2,4 @@
 
 import './pollGetLock/pollGetLock.worker';
 import './pollSetLock/pollSetLock.worker';
+import './hasChanges/hasChanges.worker';

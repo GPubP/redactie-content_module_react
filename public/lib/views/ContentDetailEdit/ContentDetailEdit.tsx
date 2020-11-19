@@ -1,4 +1,4 @@
-import { AlertContainer, LoadingState, useWorker } from '@redactie/utils';
+import { AlertContainer, HasChangesWorkerData, LoadingState, useWorker } from '@redactie/utils';
 import { equals } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
@@ -33,10 +33,20 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	const { navigate } = useNavigate();
 	const [, , externalLock, userLock] = useLock(contentId);
 	const [initialLoadingState, setInitialLoadingState] = useState(LoadingState.Loading);
-	const hasChanges = useMemo(() => !equals(contentItem, contentItemDraft), [
-		contentItem,
-		contentItemDraft,
-	]);
+	const hasChangesWorkerData = useMemo(
+		() => ({
+			currentValue: contentItem,
+			nextValue: contentItemDraft,
+		}),
+		[contentItem, contentItemDraft]
+	);
+	const [hasChanges] = useWorker<HasChangesWorkerData, boolean>(
+		BFF_MODULE_PUBLIC_PATH,
+		'hasChanges.worker',
+		hasChangesWorkerData,
+		false
+	);
+
 	const workerData = useMemo(
 		() =>
 			({

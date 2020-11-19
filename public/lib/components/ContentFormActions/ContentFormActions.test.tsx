@@ -1,7 +1,7 @@
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { fireEvent, getNodeText, render } from '@testing-library/react';
 import React from 'react';
 
+import { CORE_TRANSLATIONS } from '../../connectors/translations';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
 
 import ContentFormActions from './ContentFormActions';
