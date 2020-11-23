@@ -265,20 +265,18 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	return (
 		<>
 			<div className="row between-xs top-xs u-margin-bottom-lg">
-				<div className="col-xs-3">
+				<div className="col-xs-12 col-md-3 u-margin-bottom">
 					<NavList linkComponent={NavLink} items={navList} />
 				</div>
 
-				<div className="m-card col-xs-9 u-padding">
-					<div className="u-margin">
+				<div className="col-xs-12 col-md-9">
+					<div className="m-card u-padding">
 						<activeCompartment.component
 							formikRef={instance => {
 								if (!equals(instance, activeCompartmentFormikRef.current)) {
 									activeCompartmentFormikRef.current = instance;
 								}
 							}}
-							// TODO: only clone for external modules
-							// Temp. remove clones to restore performance
 							contentType={contentType}
 							contentValue={contentItemDraft}
 							contentItem={contentItem}
