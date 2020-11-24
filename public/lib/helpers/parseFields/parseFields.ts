@@ -104,17 +104,6 @@ export const parseFields = (fields: ContentTypeFieldSchema[] = []): FieldSchema[
 	};
 
 	return fields.reduce((acc, field) => {
-		// const {
-		// 	generalConfig = {
-		// 		hidden: false,
-		// 	},
-		// } = field;
-
-		// // Don't show field when it is a hidden field
-		// if (generalConfig.hidden) {
-		// 	return acc;
-		// }
-
 		acc.push(getFieldSchema(field));
 
 		return acc;
