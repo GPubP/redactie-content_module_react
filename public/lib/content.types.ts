@@ -40,3 +40,8 @@ export interface NavListItem extends NavLinkProps {
 	label: string;
 	hasError?: boolean;
 }
+
+export interface AlertMessage {
+	title: string;
+	message: string;
+}

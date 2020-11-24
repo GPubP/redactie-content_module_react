@@ -2,6 +2,8 @@ import { object, string } from 'yup';
 
 import { ContentStatus } from '../../../services/content';
 
+import { StatusFormOption } from './StatusForm.types';
+
 export const STATUS_VALIDATION_SCHEMA = object().shape({
 	status: string().required(),
 });
@@ -12,11 +14,11 @@ export const STATUS_VALIDATION_SCHEMA = object().shape({
  *
  * Add UNPUBLISHED option (gearchiveerd)
  */
-export const STATUS_OPTIONS = [
+export const STATUS_OPTIONS: StatusFormOption[] = [
 	{
 		key: '0',
 		value: ContentStatus.DRAFT,
-		label: 'Werkversie (huidige status)',
+		label: 'Werkversie',
 	},
 	{
 		key: '1',
@@ -27,5 +29,10 @@ export const STATUS_OPTIONS = [
 		key: '2',
 		value: ContentStatus.PUBLISHED,
 		label: 'Gepubliceerd',
+	},
+	{
+		key: '3',
+		value: ContentStatus.UNPUBLISHED,
+		label: 'Depubliceer',
 	},
 ];

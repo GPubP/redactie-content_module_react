@@ -1,13 +1,19 @@
-import { AlertContainer } from '@redactie/utils';
+import { AlertContainer, HasChangesWorkerData, LoadingState, useWorker } from '@redactie/utils';
 import { equals } from 'ramda';
-import React, { FC, ReactElement, useMemo } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
 import { RenderChildRoutes } from '../../components';
+import DataLoader from '../../components/DataLoader/DataLoader';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
-import { useNavigate } from '../../hooks';
+import { runAllSubmitHooks } from '../../helpers';
+import { getTimeUntilLockExpires } from '../../helpers/getTimeUntilLockExpires';
+import { useLock, useNavigate } from '../../hooks';
 import { ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content';
+import { LockModel, locksFacade } from '../../store/locks';
+import { ContentCompartmentModel } from '../../store/ui/contentCompartments';
+import { SetLockWorkerData } from '../../workers/pollSetLock/pollSetLock.types';
 import { ContentDetailChildRouteProps } from '../ContentDetail/ContentDetail.types';
 
 import { ContentDetailEditMatchProps } from './ContentDetailEdit.types';
@@ -18,16 +24,66 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	contentItem,
 	contentItemDraft,
 	match,
+	tenantId,
 }) => {
 	const { siteId, contentId } = match.params;
 	/**
 	 * Hooks
 	 */
 	const { navigate } = useNavigate();
-	const hasChanges = useMemo(() => !equals(contentItem, contentItemDraft), [
-		contentItem,
-		contentItemDraft,
-	]);
+	const [, , externalLock, userLock] = useLock(contentId);
+	const [initialLoadingState, setInitialLoadingState] = useState(LoadingState.Loading);
+	const hasChangesWorkerData = useMemo(
+		() => ({
+			currentValue: contentItem,
+			nextValue: contentItemDraft,
+		}),
+		[contentItem, contentItemDraft]
+	);
+	const [hasChanges] = useWorker<HasChangesWorkerData, boolean>(
+		BFF_MODULE_PUBLIC_PATH,
+		'hasChanges.worker',
+		hasChangesWorkerData,
+		false
+	);
+
+	const workerData = useMemo(
+		() =>
+			({
+				siteId,
+				tenantId,
+				expiresAt: userLock?.expireAt || null,
+				lockId: contentId,
+				type: 'content',
+			} as SetLockWorkerData),
+		[contentId, userLock?.expireAt, siteId, tenantId] // eslint-disable-line react-hooks/exhaustive-deps
+	);
+	const [refreshedLock] = useWorker<SetLockWorkerData, LockModel>(
+		BFF_MODULE_PUBLIC_PATH,
+		'pollSetLock.worker',
+		workerData,
+		userLock
+	);
+
+	useEffect(() => {
+		if (userLock || externalLock) {
+			setInitialLoadingState(LoadingState.Loaded);
+		}
+	}, [externalLock, userLock]);
+
+	useEffect(() => locksFacade.setLockValue(contentId, refreshedLock), [contentId, refreshedLock]);
+
+	useEffect(() => {
+		if (externalLock) {
+			return;
+		}
+
+		if (getTimeUntilLockExpires(userLock?.expireAt) > 0) {
+			return;
+		}
+
+		locksFacade.setLock(siteId, contentId);
+	}, [contentId, externalLock?.expireAt, siteId, userLock?.expireAt]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/**
 	 * Methods
@@ -36,23 +92,39 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		contentFacade.setContentItemDraft(contentItem);
 	};
 
-	const onSubmit = (contentItemDraft: ContentSchema): void => {
+	const onSubmit = (
+		contentItemDraft: ContentSchema,
+		activeCompartment: ContentCompartmentModel,
+		compartments: ContentCompartmentModel[]
+	): void => {
 		// Every change with current status published should be saved as a draft version unless the status has changed
-		if (
+		const data =
 			contentItem.meta.status === ContentStatus.PUBLISHED &&
 			equals(contentItemDraft.meta.status, contentItem.meta.status)
-		) {
-			contentFacade.updateContentItem(siteId, contentId, {
-				...contentItemDraft,
-				meta: {
-					...contentItemDraft.meta,
-					status: ContentStatus.DRAFT,
-				},
-			});
-			return;
-		}
+				? {
+						...contentItemDraft,
+						meta: {
+							...contentItemDraft.meta,
+							status: ContentStatus.DRAFT,
+						},
+				  }
+				: contentItemDraft;
 
-		contentFacade.updateContentItem(siteId, contentId, contentItemDraft);
+		contentFacade
+			.updateContentItem(siteId, contentId, data)
+			.then(() =>
+				runAllSubmitHooks(compartments, contentType, data, contentItem, 'afterSubmit')
+			)
+			.catch(error =>
+				runAllSubmitHooks(
+					compartments,
+					contentType,
+					data,
+					contentItem,
+					'afterSubmit',
+					error
+				)
+			);
 	};
 
 	const onStatusClick = (): void => {
@@ -63,18 +135,14 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	};
 
 	const onUpdatePublication = (content: ContentSchema): void => {
-		contentFacade.updateContentItem(
-			siteId,
-			contentId,
-			{
-				...content,
-				meta: {
-					...content.meta,
-					status: ContentStatus.PUBLISHED,
-				},
+		const data = {
+			...content,
+			meta: {
+				...content.meta,
+				status: ContentStatus.PUBLISHED,
 			},
-			true
-		);
+		};
+		contentFacade.updateContentItem(siteId, contentId, data, true).catch();
 	};
 
 	/**
@@ -95,9 +163,10 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 
 		return (
 			<>
-				<div className="u-margin-bottom">
-					<AlertContainer containerId={ALERT_CONTAINER_IDS.contentEdit} />
-				</div>
+				<AlertContainer
+					toastClassName="u-margin-bottom"
+					containerId={ALERT_CONTAINER_IDS.contentEdit}
+				/>
 				<RenderChildRoutes
 					routes={route.routes}
 					guardsMeta={{}}
@@ -107,7 +176,11 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		);
 	};
 
-	return <>{renderChildRoutes()}</>;
+	if (externalLock) {
+		return null;
+	}
+
+	return <DataLoader loadingState={initialLoadingState} render={renderChildRoutes} />;
 };
 
 export default ContentDetailEdit;

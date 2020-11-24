@@ -1,8 +1,8 @@
 import { ActiveState, EntityState } from '@datorama/akita';
 import { FC } from 'react';
 
-import { ContentSchema } from '../../../api/api.types';
-import { CompartmentProps } from '../../../views/ContentForm/ContentForm.types';
+import { ContentSchema, ContentTypeSchema, ModuleSettings } from '../../../api/api.types';
+import { CompartmentProps, CtTypeSettings } from '../../../views/ContentForm/ContentForm.types';
 
 export type ModuleValue = any;
 export enum CompartmentType {
@@ -15,15 +15,34 @@ export interface ContentCompartmentRegisterOptions {
 	replace?: true;
 }
 
-export interface ContentCompartmentModel {
+export type ContentCompartmentBeforeSubmitFn<M = ModuleValue> = (
+	contentItemDraft: ContentSchema,
+	contentType: ContentTypeSchema,
+	contentItem: ContentSchema | undefined
+) => Promise<M | void>;
+
+export type ContentCompartmentAfterSubmitFn<M = ModuleValue> = (
+	error: Error | undefined,
+	contentItemDraft: ContentSchema,
+	contentType: ContentTypeSchema,
+	contentItem: ContentSchema | undefined
+) => Promise<M | void>;
+
+export interface ContentCompartmentModel<
+	M = ModuleValue,
+	S = ModuleSettings | CtTypeSettings | ContentTypeSchema | undefined
+> {
 	name: string;
 	label: string;
 	getDescription?: (contentItem: ContentSchema | undefined) => string | undefined;
 	slug?: string;
-	component: FC<CompartmentProps>;
+	component: FC<CompartmentProps<M, S>>;
 	type: CompartmentType;
 	isValid?: boolean;
-	validate?: (values: ContentSchema) => boolean;
+	context?: Record<string, any>;
+	validate?: (values: ContentSchema, activeCompartment: ContentCompartmentModel) => boolean;
+	beforeSubmit?: ContentCompartmentBeforeSubmitFn<M>;
+	afterSubmit?: ContentCompartmentAfterSubmitFn<M>;
 }
 
 export interface ContentCompartmentState

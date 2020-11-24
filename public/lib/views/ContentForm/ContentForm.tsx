@@ -1,8 +1,9 @@
+import { Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import { alertService, LeavePrompt, LoadingState } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import { equals, isEmpty } from 'ramda';
+import { equals, isEmpty, lensPath, set } from 'ramda';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -11,9 +12,11 @@ import { ContentFormActions } from '../../components';
 import { ALERT_CONTAINER_IDS, WORKING_TITLE_KEY } from '../../content.const';
 import { NavListItem } from '../../content.types';
 import {
-	filterCompartments,
+	filterExternalCompartments,
 	getCompartmentValue,
+	getContentTypeCompartments,
 	getSettings,
+	runAllSubmitHooks,
 	validateCompartments,
 } from '../../helpers/contentCompartments';
 import {
@@ -22,7 +25,11 @@ import {
 	useExternalCompartment,
 } from '../../hooks';
 import { contentFacade } from '../../store/content';
-import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
+import {
+	CompartmentType,
+	ContentCompartmentModel,
+	contentCompartmentsFacade,
+} from '../../store/ui/contentCompartments';
 
 import {
 	CONTENT_CREATE_ALLOWED_PATHS,
@@ -57,7 +64,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		validate,
 	] = useContentCompartment();
 	const [externalCompartments] = useExternalCompartment();
-	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
+	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues> | null>();
 	const [navList, setNavlist] = useState<NavListItem[]>([]);
 	const [hasSubmit, setHasSubmit] = useState(false);
 	const [slugFieldTouched, setSlugFieldTouched] = useState(false);
@@ -75,8 +82,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		register(
 			[
-				...INTERNAL_COMPARTMENTS(contentType),
-				...filterCompartments(contentItemDraft, contentType, externalCompartments),
+				...(getContentTypeCompartments(contentType) as ContentCompartmentModel[]),
+				...INTERNAL_COMPARTMENTS,
+				...filterExternalCompartments(contentItemDraft, contentType, externalCompartments),
 			],
 			{ replace: true }
 		);
@@ -169,7 +177,12 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 	const onFormSubmit = (contentItemDraft: ContentSchema): void => {
 		const { current: formikRef } = activeCompartmentFormikRef;
-		const compartmentsAreValid = validateCompartments(compartments, contentItemDraft, validate);
+		const compartmentsAreValid = validateCompartments(
+			activeCompartment as ContentCompartmentModel,
+			compartments,
+			contentItemDraft,
+			validate
+		);
 
 		// Validate current form to trigger fields error states
 		if (formikRef) {
@@ -179,21 +192,73 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				}
 			});
 		}
-		// Only submit the form if all compartments are valid
-		if (compartmentsAreValid) {
-			onSubmit(contentItemDraft);
-		} else {
-			alertService.danger(
-				{
-					title: 'Er zijn nog fouten',
-					message: 'Lorem ipsum',
-				},
-				{ containerId: ALERT_CONTAINER_IDS.contentEdit }
-			);
+
+		if (compartmentsAreValid && activeCompartment) {
+			const kebabCasedSlugs = contentItemDraft.meta.activeLanguages.reduce((acc, lang) => {
+				if (!contentItemDraft.meta.slug[lang]) {
+					return acc;
+				}
+				return {
+					...acc,
+					[lang]: kebabCase(contentItemDraft.meta.slug[lang]),
+				};
+			}, {});
+
+			const slugLens = lensPath(['meta', 'slug']);
+			const modifiedContentItemDraft = set(slugLens, kebabCasedSlugs, contentItemDraft);
+
+			if (isCreating) {
+				contentFacade.setIsCreating(true);
+			} else {
+				contentFacade.setIsUpdating(true);
+			}
+			runAllSubmitHooks(
+				compartments,
+				contentType,
+				modifiedContentItemDraft,
+				contentItem,
+				'beforeSubmit'
+			).then(({ hasRejected, errorMessages, contentItem }) => {
+				if (!hasRejected) {
+					onSubmit(contentItem, activeCompartment, compartments);
+					return;
+				}
+				if (isCreating) {
+					contentFacade.setIsCreating(false);
+				} else {
+					contentFacade.setIsUpdating(false);
+				}
+				errorMessages.forEach(message => {
+					contentCompartmentsFacade.setValid(message.compartmentName, false);
+				});
+				alertService.danger(
+					{
+						title: 'Er zijn nog fouten',
+						message: (
+							<>
+								<ul className="a-list">
+									{errorMessages.map((error, index) => (
+										<li key={index}>{error.error.message}</li>
+									))}
+								</ul>
+							</>
+						),
+					},
+					{
+						containerId: isCreating
+							? ALERT_CONTAINER_IDS.contentCreate
+							: ALERT_CONTAINER_IDS.contentEdit,
+					}
+				);
+			});
 		}
 
 		setHasSubmit(true);
 	};
+
+	if (!activeCompartment) {
+		return null;
+	}
 
 	/**
 	 * RENDER
@@ -201,23 +266,22 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	return (
 		<>
 			<div className="row between-xs top-xs u-margin-bottom-lg">
-				<div className="col-xs-3">
+				<div className="col-xs-12 col-md-3 u-margin-bottom">
 					<NavList linkComponent={NavLink} items={navList} />
 				</div>
 
-				<div className="m-card col-xs-9 u-padding">
-					<div className="u-margin">
-						{activeCompartment ? (
+				<div className="col-xs-12 col-md-9">
+					<Card>
+						<CardBody>
 							<activeCompartment.component
 								formikRef={instance => {
 									if (!equals(instance, activeCompartmentFormikRef.current)) {
 										activeCompartmentFormikRef.current = instance;
 									}
 								}}
-								// TODO: only clone for external modules
-								// Temp. remove clones to restore performance
 								contentType={contentType}
 								contentValue={contentItemDraft}
+								contentItem={contentItem}
 								isValid
 								settings={getSettings(contentType, activeCompartment)}
 								onChange={values => handleChange(activeCompartment, values)}
@@ -230,8 +294,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 									contentFacade.updateContentItemDraft(content)
 								}
 							/>
-						) : null}
-					</div>
+						</CardBody>
+					</Card>
 				</div>
 			</div>
 			<ActionBar className="o-action-bar--fixed" isOpen>

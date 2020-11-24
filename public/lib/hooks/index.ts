@@ -10,4 +10,5 @@ export { default as useNavigate } from './useNavigate/useNavigate';
 export { default as useActiveTabs } from './useActiveTabs/useActiveTabs';
 export { default as useContentCompartment } from './useContentCompartment/useContentCompartment';
 export { default as useExternalCompartment } from './useExternalCompartment/useExternalCompartment';
+export { default as useLock } from './useLock/useLock';
 export { default as useContentLoadingStates } from './useContentLoadingStates/useContentLoadingStates';

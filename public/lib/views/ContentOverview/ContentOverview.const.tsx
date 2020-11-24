@@ -1,17 +1,18 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { TranslateFunc } from '@redactie/translations-module/public/lib/i18next/useTranslation';
 import classnames from 'classnames';
 import moment from 'moment';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { CORE_TRANSLATIONS } from '../../connectors/translations';
 import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
+import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../services/contentTypes';
 
 import { ContentOverviewTableRow } from './ContentOverview.types';
 
 export const CONTENT_TYPES_SEARCH_OPTIONS = {
-	skip: 0,
+	...DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
 	limit: -1,
 };
 

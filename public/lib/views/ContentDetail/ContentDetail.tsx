@@ -8,6 +8,7 @@ import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
+import { LockMessage } from '../../components/LockMessage/LockMessage';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { generateDetailBadges } from '../../helpers';
@@ -15,6 +16,7 @@ import {
 	useActiveTabs,
 	useContentItem,
 	useContentType,
+	useLock,
 	useNavigate,
 	useRoutesBreadcrumbs,
 } from '../../hooks';
@@ -48,6 +50,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		},
 	]);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [, , externalLock] = useLock(contentId);
 
 	const guardsMeta = useMemo(
 		() => ({
@@ -79,9 +82,11 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	}, [siteId, contentItem]);
 
 	useEffect(() => {
-		if (siteId && contentId) {
-			contentFacade.getContentItem(siteId, contentId);
+		if (!siteId || !contentId) {
+			return;
 		}
+
+		contentFacade.getContentItem(siteId, contentId);
 	}, [siteId, contentId]);
 
 	useEffect(() => {
@@ -98,14 +103,18 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 			contentType,
 			contentItem: contentItem,
 			contentItemDraft,
+			tenantId,
 		};
 
 		return (
-			<RenderChildRoutes
-				routes={route.routes}
-				guardsMeta={guardsMeta}
-				extraOptions={extraOptions}
-			/>
+			<>
+				{externalLock && <LockMessage className="u-margin-bottom" lock={externalLock} />}
+				<RenderChildRoutes
+					routes={route.routes}
+					guardsMeta={guardsMeta}
+					extraOptions={extraOptions}
+				/>
+			</>
 		);
 	};
 

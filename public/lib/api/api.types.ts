@@ -1,21 +1,33 @@
+import { TenantContextValue } from '@redactie/utils';
 import { Context } from 'react';
 
-import { TenantContextValue } from '../context';
-import { ExternalCompartmentOptions } from '../store/api/externalCompartments';
+import { ModuleValue } from '../services/content';
+import {
+	ExternalCompartmentAfterSubmitFn,
+	ExternalCompartmentBeforeSubmitFn,
+	ExternalCompartmentOptions,
+} from '../store/api/externalCompartments';
 
 export { CompartmentProps } from '../views/ContentForm/ContentForm.types';
 export {
 	ModuleSettings,
 	ModuleValue,
 } from '../store/api/externalCompartments/externalCompartments.model';
-export { ContentSchema } from '../services/content/content.service.types';
+export { ContentSchema, ContentStatus } from '../services/content/content.service.types';
 export {
 	ContentTypeSchema,
 	ContentTypeFieldSchema,
 } from '../services/contentTypes/contentTypes.service.types';
 
-export { ExternalCompartmentOptions };
+export {
+	ExternalCompartmentOptions,
+	ExternalCompartmentAfterSubmitFn,
+	ExternalCompartmentBeforeSubmitFn,
+};
 export interface ContentAPI {
-	registerContentDetailCompartment: (name: string, options: ExternalCompartmentOptions) => void;
+	registerContentDetailCompartment: <M = ModuleValue>(
+		name: string,
+		options: ExternalCompartmentOptions<M>
+	) => void;
 	contentTenantContext: Context<TenantContextValue>;
 }

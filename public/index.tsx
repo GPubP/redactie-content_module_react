@@ -1,6 +1,5 @@
 // import { akitaDevtools } from '@datorama/akita';
-import * as moment from 'moment';
-import 'moment/locale/nl';
+import { SiteContext, TenantContext } from '@redactie/utils';
 import React, { FC, useMemo } from 'react';
 
 import { registerContentAPI } from './lib/api/index';
@@ -11,7 +10,6 @@ import rolesRightsConnector from './lib/connectors/rolesRights';
 import { registerRoutes } from './lib/connectors/sites';
 import { MODULE_PATHS, urlSiteParam } from './lib/content.const';
 import { ContentRouteProps } from './lib/content.types';
-import { TenantContext } from './lib/context';
 import {
 	ContentCreate,
 	ContentCreateOverview,
@@ -21,9 +19,6 @@ import {
 	ContentOverview,
 } from './lib/views';
 import ContentForm from './lib/views/ContentForm/ContentForm';
-
-// eslint-disable-next-line import/namespace
-moment.locale('nl');
 
 // akitaDevtools();
 
@@ -49,12 +44,14 @@ const ContentComponent: FC<ContentRouteProps<{ siteId: string }>> = ({
 	);
 
 	return (
-		<TenantContext.Provider value={{ tenantId, siteId }}>
-			<RenderChildRoutes
-				routes={route.routes}
-				guardsMeta={guardsMeta}
-				extraOptions={extraOptions}
-			/>
+		<TenantContext.Provider value={{ tenantId }}>
+			<SiteContext.Provider value={{ siteId }}>
+				<RenderChildRoutes
+					routes={route.routes}
+					guardsMeta={guardsMeta}
+					extraOptions={extraOptions}
+				/>
+			</SiteContext.Provider>
 		</TenantContext.Provider>
 	);
 };

@@ -1,46 +1,17 @@
-import AJV from 'ajv';
 import moment from 'moment';
 
-import { ContentSchema, ContentTypeSchema } from '../../api/api.types';
+import { ContentSchema } from '../../api/api.types';
 import {
-	FieldsForm,
 	META_VALIDATION_SCHEMA,
 	MetaForm,
 	STATUS_VALIDATION_SCHEMA,
 	StatusForm,
 } from '../../components';
-import { DATE_FORMATS, MODULE_PATHS, TENANT_ROOT, WORKING_TITLE_KEY } from '../../content.const';
-import { addWorkingTitleField, getFormPropsByCT } from '../../helpers';
+import { DATE_FORMATS, MODULE_PATHS, TENANT_ROOT } from '../../content.const';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
-export const INTERNAL_COMPARTMENTS = (
-	contentType: ContentTypeSchema
-): ContentCompartmentModel[] => [
-	{
-		label: 'Inhoud',
-		name: 'fields',
-		slug: 'inhoud',
-		component: FieldsForm,
-		type: CompartmentType.CT,
-		isValid: false,
-		validate: (values: ContentSchema) => {
-			const formProps = getFormPropsByCT(contentType);
-			const { validationSchema } = addWorkingTitleField(formProps);
-
-			if (validationSchema) {
-				const ajv = new AJV({ allErrors: true, messages: true });
-				const validator = ajv.compile(validationSchema);
-
-				return validator({
-					...values.fields,
-					[WORKING_TITLE_KEY]: values.meta.label,
-				}) as boolean;
-			}
-			// If no validationSchema is found return compartment as valid
-			return true;
-		},
-	},
+export const INTERNAL_COMPARTMENTS: ContentCompartmentModel[] = [
 	{
 		label: 'Info',
 		getDescription: contentItem => {
@@ -85,6 +56,7 @@ export const INTERNAL_COMPARTMENTS = (
 
 export const CONTENT_CREATE_ALLOWED_PATHS = [
 	`${TENANT_ROOT}/sites${MODULE_PATHS.createCompartment}`,
+	`${TENANT_ROOT}/sites${MODULE_PATHS.detailEditCompartment}`,
 ];
 export const CONTENT_EDIT_ALLOWED_PATHS = [
 	`${TENANT_ROOT}/sites${MODULE_PATHS.detailEditCompartment}`,

@@ -1,15 +1,8 @@
-import { FormSchema } from '@redactie/form-renderer-module';
-
 import { WORKING_TITLE_KEY } from '../content.const';
-import { ContentTypeSchema, ErrorMessagesSchema, ValidateSchema } from '../services/contentTypes';
+import { ContentTypeSchema, ValidateSchema } from '../services/contentTypes';
+import { FormRendererProps } from '../views/ContentForm/ContentForm.types';
 
 import { parseFields } from './parseFields';
-
-interface FormRendererProps {
-	schema: FormSchema;
-	validationSchema: ValidateSchema;
-	errorMessages: ErrorMessagesSchema;
-}
 
 export const getFormPropsByCT = (contentType: ContentTypeSchema): FormRendererProps => {
 	return {
@@ -28,6 +21,7 @@ export const parseValidationSchema = (schema: ValidateSchema, path?: string): Va
 		schema.properties &&
 		Object.keys(schema.properties).reduce((acc, key) => {
 			const p = path === undefined ? key : `${path}.${key}`;
+
 			if (schema.properties) {
 				acc[key] = parseValidationSchema(schema?.properties[key], p);
 			}
@@ -68,6 +62,13 @@ export const addWorkingTitleField = (formProps: FormRendererProps): FormRenderer
 				type: 'string',
 			},
 			...formProps.validationSchema.properties,
+		},
+	},
+	errorMessages: {
+		...formProps.errorMessages,
+		[WORKING_TITLE_KEY]: {
+			required: 'Dit veld is verplicht',
+			minLength: 'Dit veld is verplicht',
 		},
 	},
 });
