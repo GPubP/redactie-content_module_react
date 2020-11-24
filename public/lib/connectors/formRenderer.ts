@@ -12,3 +12,5 @@ export const getView: () => FormsAPI['View'] | undefined = () => formsAPI?.View;
 export const ErrorMessage = formsAPI?.ErrorMessage as FormsAPI['ErrorMessage'];
 export const getCustomValidator = (): typeof CustomValidator | undefined =>
 	formsAPI?.CustomValidator as typeof CustomValidator | undefined;
+export const parseFields: FormsAPI['parseFields'] = fields =>
+	formsAPI?.parseFields ? formsAPI.parseFields(fields) : [];

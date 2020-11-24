@@ -1,4 +1,4 @@
-import { Preset } from '@redactie/form-renderer-module';
+import { Operator, Preset, Validation, Validator } from '@redactie/form-renderer-module';
 
 export interface GeneralConfig {
 	guideline: string;
@@ -53,17 +53,20 @@ export interface ContentTypeFieldCompartmentRef {
 }
 
 export interface ContentTypeFieldSchema {
-	name: string;
+	uuid: string;
 	label: string;
-	fieldType: FieldType;
-	dataType: DataType;
+	module: string;
+	name: string;
 	config?: {
-		required: boolean;
 		[key: string]: any;
 	};
-	uuid: string;
+	defaultValue?: string;
+	validators: Validator[];
+	operators: Operator[];
+	validation?: Validation;
 	generalConfig: GeneralConfig;
-	defaultValue: string;
+	dataType: DataType;
+	fieldType: FieldType;
 	preset?: Preset;
 	compartment: ContentTypeFieldCompartmentRef;
 }
