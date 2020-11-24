@@ -72,7 +72,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 	return (
 		<>
 			<div className="row between-xs top-xs u-margin-bottom-lg">
-				<div className="col-xs-4 u-padding">
+				<div className="col-xs-12 col-md-4">
 					<Card>
 						<CardBody>
 							<CardTitle>{meta.label}</CardTitle>
@@ -100,7 +100,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 						</CardBody>
 					</Card>
 				</div>
-				<div className="col-xs-8">
+				<div className="col-xs-12 col-md-8">
 					{contentItemIsEmpty && (
 						<div className="empty-state">
 							<div className="empty-state__content">
@@ -117,7 +117,12 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 							</div>
 						</div>
 					)}
-					{View && !contentItemIsEmpty && <View {...viewProps} />}
+					{View && !contentItemIsEmpty && (
+						<>
+							{meta.label && <h1>{meta.label}</h1>}
+							<View {...viewProps} />
+						</>
+					)}
 				</div>
 			</div>
 			<ActionBar className="o-action-bar--fixed" isOpen>
@@ -126,9 +131,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 						<div className="button-group">
 							<Button onClick={goToDetailEdit}>Bewerken</Button>
 						</div>
-						<PublishedStatus
-							published={!!contentItemDraft.meta.historySummary?.published}
-						/>
+						<PublishedStatus published={!!meta.historySummary?.published} />
 					</div>
 				</ActionBarContentSection>
 			</ActionBar>
