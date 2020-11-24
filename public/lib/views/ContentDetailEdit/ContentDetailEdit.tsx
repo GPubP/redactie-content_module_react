@@ -163,9 +163,10 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 
 		return (
 			<>
-				<div className="u-margin-bottom">
-					<AlertContainer containerId={ALERT_CONTAINER_IDS.contentEdit} />
-				</div>
+				<AlertContainer
+					toastClassName="u-margin-bottom"
+					containerId={ALERT_CONTAINER_IDS.contentEdit}
+				/>
 				<RenderChildRoutes
 					routes={route.routes}
 					guardsMeta={{}}

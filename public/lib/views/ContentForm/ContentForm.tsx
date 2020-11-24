@@ -1,3 +1,4 @@
+import { Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import { alertService, LeavePrompt, LoadingState } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
@@ -265,36 +266,36 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	return (
 		<>
 			<div className="row between-xs top-xs u-margin-bottom-lg">
-				<div className="col-xs-3">
+				<div className="col-xs-12 col-md-3 u-margin-bottom">
 					<NavList linkComponent={NavLink} items={navList} />
 				</div>
 
-				<div className="m-card col-xs-9 u-padding">
-					<div className="u-margin">
-						<activeCompartment.component
-							formikRef={instance => {
-								if (!equals(instance, activeCompartmentFormikRef.current)) {
-									activeCompartmentFormikRef.current = instance;
+				<div className="col-xs-12 col-md-9">
+					<Card>
+						<CardBody>
+							<activeCompartment.component
+								formikRef={instance => {
+									if (!equals(instance, activeCompartmentFormikRef.current)) {
+										activeCompartmentFormikRef.current = instance;
+									}
+								}}
+								contentType={contentType}
+								contentValue={contentItemDraft}
+								contentItem={contentItem}
+								isValid
+								settings={getSettings(contentType, activeCompartment)}
+								onChange={values => handleChange(activeCompartment, values)}
+								value={getCompartmentValue(
+									contentItemDraft,
+									activeCompartment,
+									contentType
+								)}
+								updateContent={(content: ContentSchema) =>
+									contentFacade.updateContentItemDraft(content)
 								}
-							}}
-							// TODO: only clone for external modules
-							// Temp. remove clones to restore performance
-							contentType={contentType}
-							contentValue={contentItemDraft}
-							contentItem={contentItem}
-							isValid
-							settings={getSettings(contentType, activeCompartment)}
-							onChange={values => handleChange(activeCompartment, values)}
-							value={getCompartmentValue(
-								contentItemDraft,
-								activeCompartment,
-								contentType
-							)}
-							updateContent={(content: ContentSchema) =>
-								contentFacade.updateContentItemDraft(content)
-							}
-						/>
-					</div>
+							/>
+						</CardBody>
+					</Card>
 				</div>
 			</div>
 			<ActionBar className="o-action-bar--fixed" isOpen>
