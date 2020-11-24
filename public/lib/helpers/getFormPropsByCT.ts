@@ -1,8 +1,7 @@
+import { parseFields } from '../connectors/formRenderer';
 import { WORKING_TITLE_KEY } from '../content.const';
 import { ContentTypeSchema, ValidateSchema } from '../services/contentTypes';
 import { FormRendererProps } from '../views/ContentForm/ContentForm.types';
-
-import { parseFields } from './parseFields';
 
 export const getFormPropsByCT = (contentType: ContentTypeSchema): FormRendererProps => {
 	return {
