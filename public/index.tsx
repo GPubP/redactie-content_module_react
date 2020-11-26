@@ -70,6 +70,7 @@ if (rolesRightsConnector.api) {
 		navigation: {
 			renderContext: 'site',
 			context: 'site',
+			order: 0,
 			label: 'Content',
 			canShown: [
 				rolesRightsConnector.api.canShowns.securityRightsSiteCanShown(urlSiteParam, [
@@ -84,6 +85,7 @@ if (rolesRightsConnector.api) {
 				component: ContentOverview,
 				navigation: {
 					context: 'site',
+					order: 0,
 					label: 'Content overzicht',
 					parentPath: MODULE_PATHS.root,
 				},
@@ -101,6 +103,7 @@ if (rolesRightsConnector.api) {
 				navigation: {
 					context: 'site',
 					label: 'Content aanmaken',
+					order: 1,
 					parentPath: MODULE_PATHS.root,
 					canShown: [
 						rolesRightsConnector.api.canShowns.securityRightsSiteCanShown(
