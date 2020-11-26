@@ -14,6 +14,6 @@ export const getViewPropsByCT = (
 		schema: {
 			fields: parseFields(contentType.fields),
 		},
-		values: getInitialContentValues(contentType, values),
+		values: getInitialContentValues(contentType?.fields, values),
 	};
 };

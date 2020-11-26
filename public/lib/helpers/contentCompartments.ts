@@ -79,7 +79,7 @@ export const getCompartmentValue = (
 		case CompartmentType.CT:
 			return {
 				[WORKING_TITLE_KEY]: content.meta.label,
-				...getInitialContentValues(contentType, content?.fields),
+				...getInitialContentValues(contentType?.fields, content?.fields),
 			};
 		case CompartmentType.INTERNAL:
 			return content?.meta;
@@ -139,7 +139,7 @@ const getCTCompartmentErrorMessages = (
 	compartmentFieldNames: string[]
 ): ContentTypeSchema['validateSchema'] =>
 	Object.keys(contentType.errorMessages).reduce((acc, key) => {
-		if (!compartmentFieldNames.includes(key)) {
+		if (!compartmentFieldNames.find(fieldName => key.startsWith(fieldName))) {
 			return acc;
 		}
 
