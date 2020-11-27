@@ -60,7 +60,7 @@ export interface ContentTypeFieldSchema {
 	config?: {
 		[key: string]: any;
 	};
-	defaultValue?: string;
+	defaultValue?: any;
 	validators: Validator[];
 	operators: Operator[];
 	validation?: Validation;

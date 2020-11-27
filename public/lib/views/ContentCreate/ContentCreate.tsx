@@ -53,7 +53,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		}
 
 		const defaultValue: ContentSchema = {
-			fields: getInitialContentValues(contentType),
+			fields: getInitialContentValues(contentType?.fields),
 			modulesData: {},
 			meta: {
 				activeLanguages: ['nl'],
