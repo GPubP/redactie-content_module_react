@@ -39,13 +39,13 @@ const MetaForm: FC<CompartmentProps> = ({
 					<FormikOnChangeHandler onChange={values => onFormChange(values, submitForm)} />
 					<h5 className="u-margin-bottom">Informatie</h5>
 					<p className="u-margin-bottom">Lorem Ipsum.</p>
-					<div className="row u-margin-bottom">
+					<div className="row">
 						{contentValue?.uuid && contentValue.uuid !== 'new' ? (
 							<CopyValue
 								label="UUID"
 								value={contentValue.uuid}
 								buttonText={t(CORE_TRANSLATIONS.GENERAL_COPY)}
-								className="col-xs-12"
+								className="col-xs-12 u-margin-bottom"
 							/>
 						) : null}
 					</div>
