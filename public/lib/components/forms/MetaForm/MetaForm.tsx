@@ -1,10 +1,11 @@
-import { Link, Textarea, TextField } from '@acpaas-ui/react-components';
+import { Textarea, TextField } from '@acpaas-ui/react-components';
+import { CopyValue } from '@redactie/utils';
 import { Field, Formik, FormikValues } from 'formik';
 import React, { FC, ReactElement } from 'react';
-import CopyToClipboard from 'react-copy-to-clipboard';
 
 import { CompartmentProps } from '../../../api/api.types';
 import { ErrorMessage } from '../../../connectors/formRenderer';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandler';
 
 import { META_VALIDATION_SCHEMA } from './MetaForm.const';
@@ -19,6 +20,8 @@ const MetaForm: FC<CompartmentProps> = ({
 		submitForm();
 		onChange(values);
 	};
+
+	const [t] = useCoreTranslation();
 
 	/**
 	 * RENDER
@@ -38,17 +41,12 @@ const MetaForm: FC<CompartmentProps> = ({
 					<p className="u-margin-bottom">Lorem Ipsum.</p>
 					<div className="row">
 						{contentValue?.uuid && contentValue.uuid !== 'new' ? (
-							<div className="col-xs-12 col-md-6 u-margin-bottom">
-								<label className="a-input__label">UID</label>
-								<p className="u-text-light">
-									{contentValue?.uuid}
-									<CopyToClipboard text={contentValue?.uuid}>
-										<Link className="u-margin-left-xs" alt="copy to clipboard">
-											kopieer
-										</Link>
-									</CopyToClipboard>
-								</p>
-							</div>
+							<CopyValue
+								label="UUID"
+								value={contentValue.uuid}
+								buttonText={t(CORE_TRANSLATIONS.GENERAL_COPY)}
+								className="col-xs-12 u-margin-bottom"
+							/>
 						) : null}
 					</div>
 					<div className="row">
