@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 import { TEXT_HTML_TYPES } from './TextLine.const';
 
 const CCTextLineView: FC<ViewFieldProps> = ({ value = {} }) => {
-	const { text, textHTMLType: TextComponent } = value;
+	const { text, textType: TextComponent } = value;
 
 	if (!text || !TextComponent) {
 		return null;

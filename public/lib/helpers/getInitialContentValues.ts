@@ -14,9 +14,10 @@ export const getInitialContentValues = (
 			field.generalConfig.max &&
 			field.generalConfig.max <= 1
 		) {
-			values[field.name] =
-				field.defaultValue ||
-				getInitialContentValues(field.preset.data.fields.map(f => f.field));
+			values[field.name] = getInitialContentValues(
+				field.preset.data.fields.map(f => f.field),
+				data[field.name] || field.defaultValue
+			);
 
 			return values;
 		}
