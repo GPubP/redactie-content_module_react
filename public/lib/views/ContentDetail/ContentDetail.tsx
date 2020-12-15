@@ -128,7 +128,6 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 
 	return (
 		<>
-			ContentDetail
 			<ContextHeader
 				className="v-content-detail__header"
 				title={headerTitle}
