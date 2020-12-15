@@ -48,6 +48,10 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 			name: 'Content',
 			target: '',
 		},
+		{
+			name: 'Content Overzicht',
+			target: generatePath(`${MODULE_PATHS.overview}`, { siteId }),
+		},
 	]);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [, , externalLock] = useLock(contentId);
