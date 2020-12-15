@@ -48,6 +48,10 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 			name: 'Content',
 			target: '',
 		},
+		{
+			name: 'Content Overzicht',
+			target: generatePath(`${MODULE_PATHS.overview}`, { siteId }),
+		},
 	]);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [, , externalLock] = useLock(contentId);
@@ -124,6 +128,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 
 	return (
 		<>
+			ContentDetail
 			<ContextHeader
 				className="v-content-detail__header"
 				title={headerTitle}
