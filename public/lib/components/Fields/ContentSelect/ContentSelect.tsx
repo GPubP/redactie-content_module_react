@@ -68,7 +68,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 							cb(newItems);
 						});
 				}}
-			></Autocomplete>
+			/>
 			{config.description ? (
 				<div className="a-input a-input__wrapper">
 					<small>{config.description}</small>

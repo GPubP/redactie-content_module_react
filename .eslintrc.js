@@ -20,9 +20,9 @@ module.exports = {
 		'prettier/react',
 	],
 	env: {
-		'browser': true,
-		'amd': true,
-		'node': true
+		browser: true,
+		amd: true,
+		node: true,
 	},
 	rules: {
 		'@typescript-eslint/explicit-function-return-type': ['warn', {
@@ -30,6 +30,7 @@ module.exports = {
 		}],
 		'@typescript-eslint/no-var-requires': 0,
 		'@typescript-eslint/no-explicit-any': 0,
+		'react/self-closing-comp': 'warn',
 		'react-hooks/rules-of-hooks': 'error',
 		'react-hooks/exhaustive-deps': 'warn',
 		'import/first': 'error',
@@ -43,12 +44,17 @@ module.exports = {
 			ignoreDeclarationSort: true,
 		}],
 	},
-	"overrides": [
+	overrides: [
 		{
-				"files": ["**/*.tsx"],
-				"rules": {
-						"react/prop-types": "off"
-				}
-		}
-	]
+			files: ['**/*.tsx'],
+			rules: {
+				'react/prop-types': 'off',
+			},
+		},
+	],
+	settings: {
+		react: {
+			version: 'detect',
+		},
+	},
 };

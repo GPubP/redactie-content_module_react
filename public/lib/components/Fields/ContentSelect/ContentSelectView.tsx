@@ -42,7 +42,7 @@ const ContentSelectView: React.FC<ViewFieldProps> = ({ value, fieldSchema }: Vie
 						siteId,
 					})}
 				>
-					<span className="fa fa-chevron-right"></span>
+					<span className="fa fa-chevron-right" />
 					{ccContentItem?.meta.label}
 				</Link>
 			</div>
