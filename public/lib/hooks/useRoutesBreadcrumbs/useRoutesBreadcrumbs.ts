@@ -23,6 +23,10 @@ const useRoutesBreadcrumbs = (
 					siteId,
 				}),
 			},
+			{
+				name: 'Content',
+				target: '',
+			},
 			...extraBreadcrumbs,
 		],
 	});

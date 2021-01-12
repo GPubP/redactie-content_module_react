@@ -60,12 +60,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		onlyKeys: true,
 	});
 	const { generatePath, navigate } = useNavigate();
-	const breadcrumbs = useRoutesBreadcrumbs([
-		{
-			name: 'Content',
-			target: '',
-		},
-	]);
+	const breadcrumbs = useRoutesBreadcrumbs();
 	const [contentSearchParams, setContentSearchParams] = useState<SearchParams>(
 		DEFAULT_CONTENT_SEARCH_PARAMS
 	);

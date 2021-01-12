@@ -24,13 +24,13 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 	/**
 	 * Hooks
 	 */
+	const { navigate, generatePath } = useNavigate();
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
-			name: 'Content',
-			target: '',
+			name: 'Content Overzicht',
+			target: generatePath(`${MODULE_PATHS.overview}`, { siteId }),
 		},
 	]);
-	const { navigate } = useNavigate();
 	const [contentTypesSearchParams, setContentTypesSearchParams] = useState(
 		DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
 	);

@@ -30,10 +30,6 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 	const { tenantId } = useContext(TenantContext);
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
-			name: 'Content',
-			target: '',
-		},
-		{
 			name: 'Content aanmaken',
 			target: generatePath(MODULE_PATHS.createOverview, {
 				siteId,

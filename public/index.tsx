@@ -59,6 +59,7 @@ const ContentComponent: FC<ContentRouteProps<{ siteId: string }>> = ({
 if (rolesRightsConnector.api) {
 	registerRoutes({
 		path: MODULE_PATHS.root,
+		breadcrumb: false,
 		component: ContentComponent,
 		guardOptions: {
 			guards: [
@@ -82,6 +83,7 @@ if (rolesRightsConnector.api) {
 		routes: [
 			{
 				path: MODULE_PATHS.overview,
+				breadcrumb: false,
 				component: ContentOverview,
 				navigation: {
 					context: 'site',
@@ -92,6 +94,7 @@ if (rolesRightsConnector.api) {
 			},
 			{
 				path: MODULE_PATHS.createOverview,
+				breadcrumb: false,
 				component: ContentCreateOverview,
 				guardOptions: {
 					guards: [
@@ -115,6 +118,7 @@ if (rolesRightsConnector.api) {
 			},
 			{
 				path: MODULE_PATHS.create,
+				breadcrumb: false,
 				component: ContentCreate,
 				redirect: `${MODULE_PATHS.create}/default`,
 				guardOptions: {
@@ -127,26 +131,31 @@ if (rolesRightsConnector.api) {
 				routes: [
 					{
 						path: MODULE_PATHS.createCompartment,
+						breadcrumb: false,
 						component: ContentForm,
 					},
 				],
 			},
 			{
 				path: MODULE_PATHS.detail,
+				breadcrumb: false,
 				component: ContentDetail,
 				redirect: MODULE_PATHS.detailView,
 				routes: [
 					{
 						path: MODULE_PATHS.detailView,
+						breadcrumb: false,
 						component: ContentDetailView,
 					},
 					{
 						path: MODULE_PATHS.detailEdit,
+						breadcrumb: false,
 						component: ContentDetailEdit,
 						redirect: `${MODULE_PATHS.detailEdit}/default`,
 						routes: [
 							{
 								path: MODULE_PATHS.detailEditCompartment,
+								breadcrumb: false,
 								component: ContentForm,
 							},
 						],

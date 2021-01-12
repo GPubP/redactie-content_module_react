@@ -5,13 +5,8 @@ export const BREADCRUMB_OPTIONS = {
 		'/',
 		`${TENANT_ROOT}`,
 		`${TENANT_ROOT}/sites`,
-		`${TENANT_ROOT}/sites/:siteId/content`,
-		`${TENANT_ROOT}/sites/:siteId/content/:contentId/bekijk`,
-		`${TENANT_ROOT}/sites/:siteId/content/:contentId/bewerk`,
-		`${TENANT_ROOT}/sites/:siteId/content/:contentId/bewerk/:compartment`,
-		`${TENANT_ROOT}/sites/:siteId/content/content-type`,
-		`${TENANT_ROOT}/sites/:siteId/content/content-type/:contentTypeId`,
-		`${TENANT_ROOT}/sites/:siteId/content/content-type/:contentTypeId/aanmaken`,
+		`${TENANT_ROOT}/sites/:siteId`,
+		`${TENANT_ROOT}/sites/:siteId/content/content-type/:contentTypeId([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})`,
 	],
 };
 
