@@ -45,10 +45,6 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	const [contentTypeLoading, contentType] = useContentType();
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
-			name: 'Content',
-			target: '',
-		},
-		{
 			name: 'Content Overzicht',
 			target: generatePath(`${MODULE_PATHS.overview}`, { siteId }),
 		},
