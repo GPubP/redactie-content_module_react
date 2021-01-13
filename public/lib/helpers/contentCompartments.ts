@@ -137,8 +137,12 @@ export const filterExternalCompartments = (
 const getCTCompartmentErrorMessages = (
 	contentType: ContentTypeSchema,
 	compartmentFieldNames: string[]
-): ContentTypeSchema['validateSchema'] =>
-	Object.keys(contentType.errorMessages).reduce((acc, key) => {
+): ContentTypeSchema['validateSchema'] => {
+	if (!contentType.errorMessages) {
+		return {};
+	}
+
+	return Object.keys(contentType.errorMessages).reduce((acc, key) => {
 		if (!compartmentFieldNames.find(fieldName => key.startsWith(fieldName))) {
 			return acc;
 		}
@@ -148,12 +152,17 @@ const getCTCompartmentErrorMessages = (
 			[key]: contentType.errorMessages[key],
 		};
 	}, {});
+};
 
 const getCTCompartmentValidationSchema = (
 	contentType: ContentTypeSchema,
 	compartmentFieldNames: string[]
-): ContentTypeSchema['validateSchema'] =>
-	Object.keys(contentType.validateSchema.properties).reduce((acc, key) => {
+): ContentTypeSchema['validateSchema'] => {
+	if (!contentType.validateSchema?.properties) {
+		return contentType.validateSchema;
+	}
+
+	return Object.keys(contentType.validateSchema.properties).reduce((acc, key) => {
 		if (!compartmentFieldNames.includes(key)) {
 			return acc;
 		}
@@ -169,6 +178,7 @@ const getCTCompartmentValidationSchema = (
 				: acc.required,
 		};
 	}, omit(['properties', 'required'])(contentType.validateSchema));
+};
 
 const validateCTCompartment = (contentType: ContentTypeSchema, settings: CtTypeSettings) => (
 	values: ContentSchema
@@ -214,8 +224,30 @@ export const getContentTypeCompartments = (
 			sort<ContentTypeFieldSchema>(field => field.compartment?.position || Number.MAX_VALUE)
 		)(contentType.fields);
 
+		const slug = kebabCase(compartment.label);
+		const defaultCompartment = {
+			slug,
+			label: compartment.label,
+			name: `fields_${slug}`,
+			context: {
+				fields: compartmentFields,
+				validateSchema: getCTCompartmentErrorMessages(contentType, []),
+				errorMessages: getCTCompartmentValidationSchema(contentType, []),
+				includeWorkingTitle: true,
+			},
+			component: FieldsForm,
+			type: CompartmentType.CT,
+			isValid: false,
+		};
+
 		if (!compartmentFields.length) {
-			return acc;
+			// Always show working title field
+			return acc.concat([
+				{
+					...defaultCompartment,
+					validate: validateCTCompartment(contentType, defaultCompartment.context),
+				},
+			]);
 		}
 
 		const compartmentFieldNames = compartmentFields.map(field => field.name);
@@ -233,17 +265,11 @@ export const getContentTypeCompartments = (
 			errorMessages: compartmentErrorMessages,
 			includeWorkingTitle: acc.length === 0, // Is first compartment
 		};
-		const slug = kebabCase(compartment.label);
 
 		return acc.concat([
 			{
-				slug,
+				...defaultCompartment,
 				context,
-				label: compartment.label,
-				name: `fields_${slug}`,
-				component: FieldsForm,
-				type: CompartmentType.CT,
-				isValid: false,
 				validate: validateCTCompartment(contentType, context),
 			},
 		]);
