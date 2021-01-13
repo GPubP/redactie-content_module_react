@@ -184,7 +184,7 @@ const validateCTCompartment = (contentType: ContentTypeSchema, settings: CtTypeS
 
 		const errors = validator.validate({
 			...values.fields,
-			...(settings.includeWorkintTitle ? { [WORKING_TITLE_KEY]: values.meta.label } : {}),
+			...(settings.includeWorkingTitle ? { [WORKING_TITLE_KEY]: values.meta.label } : {}),
 		}) as boolean;
 
 		return isEmpty(errors);
@@ -231,7 +231,7 @@ export const getContentTypeCompartments = (
 			fields: compartmentFields,
 			validateSchema: compartmentValidateSchema,
 			errorMessages: compartmentErrorMessages,
-			includeWorkintTitle: acc.length === 0, // Is first compartment
+			includeWorkingTitle: acc.length === 0, // Is first compartment
 		};
 		const slug = kebabCase(compartment.label);
 

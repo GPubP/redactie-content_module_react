@@ -14,5 +14,5 @@ export const getCompartmentFormProps = (
 		errorMessages: settings.errorMessages,
 	});
 
-	return settings.includeWorkintTitle ? addWorkingTitleField(formProps) : formProps;
+	return settings.includeWorkingTitle ? addWorkingTitleField(formProps) : formProps;
 };
