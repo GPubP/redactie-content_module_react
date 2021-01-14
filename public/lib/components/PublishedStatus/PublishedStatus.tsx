@@ -9,11 +9,13 @@ const PublishedStatus: FC<PublishedStatusProps> = ({ published }) => {
 		<div className="published-status row middle-xs">
 			{published ? (
 				<div className="published-status__online col-xs-12">
-					<span className="published-status__dot u-margin-right-xs"></span>Online
+					<span className="published-status__dot u-margin-right-xs" />
+					Online
 				</div>
 			) : (
 				<div className="published-status__offline col-xs-12">
-					<span className="published-status__dot u-margin-right-xs"></span>Offline
+					<span className="published-status__dot u-margin-right-xs" />
+					Offline
 				</div>
 			)}
 		</div>
