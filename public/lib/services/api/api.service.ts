@@ -1,8 +1,7 @@
 import Core from '@redactie/redactie-core';
+import { SearchParams } from '@redactie/utils';
 import ky from 'ky';
 import { stringify } from 'query-string';
-
-import { SearchParams } from './api.service.types';
 
 export type KyInstance = typeof ky;
 
