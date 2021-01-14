@@ -6,7 +6,7 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { LoadingState } from '@redactie/utils';
+import { LoadingState, OrderBy, SearchParams } from '@redactie/utils';
 import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
@@ -23,7 +23,6 @@ import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translat
 import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps, FilterItemSchema } from '../../content.types';
 import { useContent, useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
-import { OrderBy, SearchParams } from '../../services/api';
 import {
 	CONTENT_STATUS_TRANSLATION_MAP,
 	ContentStatus,

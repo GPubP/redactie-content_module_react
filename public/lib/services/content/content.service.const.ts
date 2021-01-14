@@ -1,10 +1,11 @@
-import { SearchParams } from '../api';
+import { SearchParams } from '@redactie/utils';
 
 import { ContentStatus } from './content.service.types';
 
-export const DEFAULT_CONTENT_SEARCH_PARAMS: SearchParams = {
+export const DEFAULT_CONTENT_SEARCH_PARAMS: SearchParams & { limit: number } = {
 	skip: 0,
 	limit: 10,
+	sparse: true,
 };
 
 export const CONTENT_STATUS_TRANSLATION_MAP = {

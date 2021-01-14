@@ -1,6 +1,5 @@
-import { BaseMultiEntityFacade } from '@redactie/utils';
+import { BaseMultiEntityFacade, SearchParams } from '@redactie/utils';
 
-import { SearchParams } from '../../services/api';
 import { contentApiService, ContentApiService } from '../../services/content';
 
 import { ccContentQuery, CcContentQuery } from './ccContent.query';

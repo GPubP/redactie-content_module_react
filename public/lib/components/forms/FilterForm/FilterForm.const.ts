@@ -7,6 +7,7 @@ import { PublishedStatuses } from './FilterForm.types';
 export const CONTENT_TYPES_SEARCH_OPTIONS = {
 	skip: 0,
 	limit: -1,
+	sparse: true,
 };
 
 export const FILTER_FORM_VALIDATION_SCHEMA = object().shape({
