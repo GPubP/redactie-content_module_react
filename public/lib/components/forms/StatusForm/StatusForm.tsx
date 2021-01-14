@@ -1,4 +1,4 @@
-import { RadioGroup } from '@acpaas-ui/react-components';
+import { CardBody, RadioGroup } from '@acpaas-ui/react-components';
 import { Field, Formik, FormikValues } from 'formik';
 import React, { FC, useMemo } from 'react';
 
@@ -43,9 +43,9 @@ const StatusForm: FC<CompartmentProps> = ({
 			validationSchema={STATUS_VALIDATION_SCHEMA}
 		>
 			{({ submitForm }) => (
-				<>
+				<CardBody>
 					<FormikOnChangeHandler onChange={values => onFormChange(values, submitForm)} />
-					<h5 className="u-margin-bottom">Status</h5>
+					<h2 className="h5 u-margin-bottom">Status</h2>
 					<div className="row">
 						<div className="col-xs-12 col-md-6 u-margin-bottom">
 							<Field
@@ -58,7 +58,7 @@ const StatusForm: FC<CompartmentProps> = ({
 							/>
 						</div>
 					</div>
-				</>
+				</CardBody>
 			)}
 		</Formik>
 	);

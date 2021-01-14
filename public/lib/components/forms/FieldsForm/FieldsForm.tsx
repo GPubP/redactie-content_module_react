@@ -28,8 +28,7 @@ const FieldsForm: FC<CompartmentProps & { settings: CtTypeSettings }> = ({
 	const formProps = getCompartmentFormProps(contentType, settings);
 
 	return (
-		<>
-			<h5 className="u-margin-bottom">Inhoud</h5>
+		<div className="u-margin-top-lg u-margin-bottom-lg">
 			<Form
 				{...formProps}
 				formikRef={instance => {
@@ -39,8 +38,9 @@ const FieldsForm: FC<CompartmentProps & { settings: CtTypeSettings }> = ({
 				}}
 				initialValues={value}
 				onChange={onChange}
+				{...({ useDividers: true } as any)}
 			/>
-		</>
+		</div>
 	);
 };
 
