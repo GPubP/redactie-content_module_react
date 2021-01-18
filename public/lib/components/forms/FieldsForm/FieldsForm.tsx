@@ -36,9 +36,10 @@ const FieldsForm: FC<CompartmentProps & { settings: CtTypeSettings }> = ({
 						formikRef && formikRef(instance);
 					}
 				}}
+				log={false}
 				initialValues={value}
 				onChange={onChange}
-				{...({ useDividers: true } as any)}
+				useDividers={true}
 			/>
 		</div>
 	);
