@@ -259,8 +259,12 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				? CONTENT_STATUS_TRANSLATION_MAP[content.meta?.status as ContentStatus]
 				: '',
 			published: content.meta?.published,
+			description: content.meta?.description,
 			navigate: path => navigate(path, { contentId: content.uuid, siteId }),
-			viewPath: generatePath(MODULE_PATHS.detailView, { contentId: content.uuid, siteId }),
+			viewPath: generatePath(MODULE_PATHS.detailView, {
+				contentId: content.uuid,
+				siteId,
+			}),
 		}));
 
 		return (

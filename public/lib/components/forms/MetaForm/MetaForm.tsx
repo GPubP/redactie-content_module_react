@@ -1,4 +1,4 @@
-import { Textarea, TextField } from '@acpaas-ui/react-components';
+import { CardBody, Textarea, TextField } from '@acpaas-ui/react-components';
 import { CopyValue } from '@redactie/utils';
 import { Field, Formik, FormikValues } from 'formik';
 import React, { FC, ReactElement } from 'react';
@@ -35,9 +35,9 @@ const MetaForm: FC<CompartmentProps> = ({
 			initialValues={value}
 		>
 			{({ submitForm }) => (
-				<>
+				<CardBody>
 					<FormikOnChangeHandler onChange={values => onFormChange(values, submitForm)} />
-					<h5 className="u-margin-bottom">Informatie</h5>
+					<h2 className="h5 u-margin-bottom">Informatie</h2>
 					<p className="u-margin-bottom">Lorem Ipsum.</p>
 					<div className="row">
 						{contentValue?.uuid && contentValue.uuid !== 'new' ? (
@@ -82,7 +82,7 @@ const MetaForm: FC<CompartmentProps> = ({
 							</div>
 						</div>
 					</div>
-				</>
+				</CardBody>
 			)}
 		</Formik>
 	);

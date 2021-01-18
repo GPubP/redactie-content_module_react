@@ -272,29 +272,27 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 				<div className="col-xs-12 col-md-9">
 					<Card>
-						<CardBody>
-							<activeCompartment.component
-								formikRef={instance => {
-									if (!equals(instance, activeCompartmentFormikRef.current)) {
-										activeCompartmentFormikRef.current = instance;
-									}
-								}}
-								contentType={contentType}
-								contentValue={contentItemDraft}
-								contentItem={contentItem}
-								isValid
-								settings={getSettings(contentType, activeCompartment)}
-								onChange={values => handleChange(activeCompartment, values)}
-								value={getCompartmentValue(
-									contentItemDraft,
-									activeCompartment,
-									contentType
-								)}
-								updateContent={(content: ContentSchema) =>
-									contentFacade.updateContentItemDraft(content)
+						<activeCompartment.component
+							formikRef={instance => {
+								if (!equals(instance, activeCompartmentFormikRef.current)) {
+									activeCompartmentFormikRef.current = instance;
 								}
-							/>
-						</CardBody>
+							}}
+							contentType={contentType}
+							contentValue={contentItemDraft}
+							contentItem={contentItem}
+							isValid
+							settings={getSettings(contentType, activeCompartment)}
+							onChange={values => handleChange(activeCompartment, values)}
+							value={getCompartmentValue(
+								contentItemDraft,
+								activeCompartment,
+								contentType
+							)}
+							updateContent={(content: ContentSchema) =>
+								contentFacade.updateContentItemDraft(content)
+							}
+						/>
 					</Card>
 				</div>
 			</div>
