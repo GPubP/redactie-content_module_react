@@ -37,7 +37,7 @@ const MetaForm: FC<CompartmentProps> = ({
 			{({ submitForm }) => (
 				<CardBody>
 					<FormikOnChangeHandler onChange={values => onFormChange(values, submitForm)} />
-					<h2 className="h5 u-margin-bottom">Informatie</h2>
+					<h2 className="h3 u-margin-bottom">Informatie</h2>
 					<p className="u-margin-bottom">Lorem Ipsum.</p>
 					<div className="row">
 						{contentValue?.uuid && contentValue.uuid !== 'new' ? (
