@@ -45,7 +45,7 @@ const StatusForm: FC<CompartmentProps> = ({
 			{({ submitForm }) => (
 				<CardBody>
 					<FormikOnChangeHandler onChange={values => onFormChange(values, submitForm)} />
-					<h2 className="h5 u-margin-bottom">Status</h2>
+					<h2 className="h3 u-margin-bottom">Status</h2>
 					<div className="row">
 						<div className="col-xs-12 col-md-6 u-margin-bottom">
 							<Field
