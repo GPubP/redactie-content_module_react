@@ -1,6 +1,7 @@
 import kebabCase from 'lodash.kebabcase';
 import {
 	always,
+	assocPath,
 	clone,
 	compose,
 	filter,
@@ -37,7 +38,8 @@ import { getInitialContentValues } from './getInitialContentValues';
 
 export const getSettings = (
 	contentType: ContentTypeSchema,
-	compartment: ContentCompartmentModel
+	compartment: ContentCompartmentModel,
+	content?: ContentSchema | undefined
 ): CompartmentProps['settings'] => {
 	if (!contentType) {
 		return;
@@ -48,8 +50,8 @@ export const getSettings = (
 			return compartment.context as CtTypeSettings;
 		case CompartmentType.INTERNAL:
 			return contentType;
-		case CompartmentType.MODULE:
-			return compose<
+		case CompartmentType.MODULE: {
+			const settings = compose<
 				ModuleSettings[],
 				ModuleSettings | undefined,
 				ModuleSettings | undefined,
@@ -63,6 +65,11 @@ export const getSettings = (
 			)(
 				contentType.modulesConfig || ([] as ModuleSettings[])
 			) as CompartmentProps['settings'];
+
+			return content?.meta?.site
+				? assocPath(['config', 'siteUuid'], content?.meta?.site, settings)
+				: settings;
+		}
 	}
 };
 
@@ -115,7 +122,7 @@ export const filterExternalCompartments = (
 				content &&
 				typeof ec.show === 'function' &&
 				!ec.show(
-					getSettings(contentType, contentCompartment) as ModuleSettings,
+					getSettings(contentType, contentCompartment, content) as ModuleSettings,
 					getCompartmentValue(content, contentCompartment, contentType),
 					content,
 					contentType

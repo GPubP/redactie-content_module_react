@@ -1,15 +1,20 @@
-import { Card, CardBody } from '@acpaas-ui/react-components';
+import { Card } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
-import { alertService, LeavePrompt, LoadingState } from '@redactie/utils';
+import { alertService, LeavePrompt, LoadingState, useNavigate } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { equals, isEmpty, lensPath, set } from 'ramda';
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 
 import { ContentSchema } from '../../api/api.types';
 import { ContentFormActions } from '../../components';
-import { ALERT_CONTAINER_IDS, WORKING_TITLE_KEY } from '../../content.const';
+import {
+	ALERT_CONTAINER_IDS,
+	MODULE_PATHS,
+	SITES_ROOT,
+	WORKING_TITLE_KEY,
+} from '../../content.const';
 import { NavListItem } from '../../content.types';
 import {
 	filterExternalCompartments,
@@ -74,6 +79,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		updateContentItemLoadingState,
 		publishContentItemLoadingState,
 	] = useContentLoadingStates();
+	const { navigate } = useNavigate(SITES_ROOT);
+	const { contentTypeId, siteId } = useParams<{ contentTypeId: string; siteId: string }>();
 
 	useEffect(() => {
 		if (!contentType) {
@@ -257,6 +264,12 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	};
 
 	if (!activeCompartment) {
+		if (isCreating) {
+			navigate(`${MODULE_PATHS.create}/default`, { siteId, contentTypeId });
+		} else {
+			navigate(`${MODULE_PATHS.detailEdit}/default`, { siteId, contentTypeId });
+		}
+
 		return null;
 	}
 
