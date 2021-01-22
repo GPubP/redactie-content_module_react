@@ -1,4 +1,5 @@
 export const TENANT_ROOT = '/:tenantId';
+export const SITES_ROOT = 'sites';
 
 export const BREADCRUMB_OPTIONS = {
 	excludePaths: [
