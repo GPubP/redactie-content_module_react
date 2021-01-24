@@ -21,6 +21,7 @@ export interface ContentFormMatchProps {
 	siteId: string;
 	contentTypeId: string;
 	compartment: string;
+	contentId: string;
 }
 
 export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
