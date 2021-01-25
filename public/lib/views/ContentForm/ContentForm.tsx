@@ -57,7 +57,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	onStatusClick = () => null,
 	onUpdatePublication = () => null,
 }) => {
-	const { compartment } = match.params;
+	const { compartment, contentTypeId, siteId, contentId } = match.params;
 
 	/**
 	 * Hooks
@@ -80,7 +80,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		publishContentItemLoadingState,
 	] = useContentLoadingStates();
 	const { navigate } = useNavigate(SITES_ROOT);
-	const { contentTypeId, siteId } = useParams<{ contentTypeId: string; siteId: string }>();
 
 	useEffect(() => {
 		if (!contentType) {
@@ -263,13 +262,15 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		setHasSubmit(true);
 	};
 
-	if (!activeCompartment) {
+	if (!activeCompartment && compartment !== 'default') {
 		if (isCreating) {
 			navigate(`${MODULE_PATHS.create}/default`, { siteId, contentTypeId });
 		} else {
-			navigate(`${MODULE_PATHS.detailEdit}/default`, { siteId, contentTypeId });
+			navigate(`${MODULE_PATHS.detailEdit}/default`, { siteId, contentTypeId, contentId });
 		}
+	}
 
+	if (!activeCompartment) {
 		return null;
 	}
 
