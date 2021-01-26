@@ -119,7 +119,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 					)}
 					{View && !contentItemIsEmpty && (
 						<>
-							{meta.label && <h1>{meta.label}</h1>}
+							{meta.label && <h2 className="u-margin-bottom h3">{meta.label}</h2>}
 							<View {...viewProps} />
 						</>
 					)}
