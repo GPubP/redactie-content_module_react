@@ -48,12 +48,10 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_TYPE),
 		value: 'contentType',
-		disableSorting: true,
 	},
 	{
 		label: t(CORE_TRANSLATIONS['TABLE_LAST-MODIFIED']),
 		value: 'lastModified',
-		disableSorting: true,
 		format: (data: string) => moment(data).format(DATE_FORMATS.dateAndTime),
 	},
 	{
@@ -73,12 +71,10 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 		value: 'status',
-		disableSorting: true,
 	},
 	{
 		label: 'Online',
 		value: 'published',
-		disableSorting: true,
 		component(value: unknown, rowData: ContentOverviewTableRow) {
 			return (
 				<span
