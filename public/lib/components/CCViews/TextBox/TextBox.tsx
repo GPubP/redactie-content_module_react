@@ -1,22 +1,24 @@
 import { ViewFieldProps } from '@redactie/form-renderer-module';
-import React, { FC } from 'react';
+import React, { createElement, FC } from 'react';
 
 import { TEXT_HTML_TYPES } from './TextBox.const';
 
 const CCTextBoxView: FC<ViewFieldProps> = ({ value = {} }) => {
-	const { text, textType: TextComponent } = value;
+	const { text, textType } = value;
 
-	if (!text || !TextComponent) {
+	if (!text || !textType) {
 		return null;
 	}
 
-	if (!TEXT_HTML_TYPES.includes(TextComponent)) {
+	const htmlType = TEXT_HTML_TYPES[textType];
+
+	if (!htmlType) {
 		return null;
 	}
 
 	return (
 		<div className="u-margin-bottom">
-			<TextComponent>{text}</TextComponent>
+			{createElement(htmlType.el, { className: htmlType.class }, text)}
 		</div>
 	);
 };
