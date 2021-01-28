@@ -10,11 +10,11 @@ const CCTextLineView: FC<ViewFieldProps> = ({ value = {} }) => {
 		return null;
 	}
 
-	if (!TEXT_HTML_TYPES[textType]) {
+	const htmlType = TEXT_HTML_TYPES[textType];
+
+	if (!htmlType) {
 		return null;
 	}
-
-	const htmlType = TEXT_HTML_TYPES[textType];
 
 	return (
 		<div className="u-margin-bottom">
