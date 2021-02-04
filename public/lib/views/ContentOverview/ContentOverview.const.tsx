@@ -1,4 +1,5 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
+import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module/public/lib/i18next/useTranslation';
 import classnames from 'classnames';
 import moment from 'moment';
@@ -30,16 +31,21 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: 'Titel',
 		value: 'label',
+		width: '27%',
 		component(label: string, rowData: ContentOverviewTableRow) {
 			const { viewPath } = rowData;
 
 			return (
 				<>
 					<AUILink to={viewPath} component={Link}>
-						{label}
+						<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
 					</AUILink>
 					<p className="u-text-light u-margin-top-xs">
-						{rowData.description || 'Geen beschrijving.'}
+						{rowData.description ? (
+							<EllipsisWithTooltip>{rowData.description}</EllipsisWithTooltip>
+						) : (
+							'Geen beschrijving.'
+						)}
 					</p>
 				</>
 			);
@@ -48,22 +54,30 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_TYPE),
 		value: 'contentType',
+		ellipsis: true,
+		width: '15%',
 	},
 	{
 		label: t(CORE_TRANSLATIONS['TABLE_LAST-MODIFIED']),
 		value: 'lastModified',
+		width: '18%',
 		format: (data: string) => moment(data).format(DATE_FORMATS.dateAndTime),
 	},
 	{
 		label: 'Aanmaker',
 		value: 'lastEditor',
 		disableSorting: true,
+		width: '15%',
 		component(value: any, rowData: ContentOverviewTableRow) {
 			return (
 				<p>
-					{rowData.lastEditor?.firstname
-						? `${rowData.lastEditor?.firstname} ${rowData.lastEditor?.lastname}`
-						: 'Onbekend'}
+					{rowData.lastEditor?.firstname ? (
+						<EllipsisWithTooltip>
+							{rowData.lastEditor?.firstname} {rowData.lastEditor?.lastname}
+						</EllipsisWithTooltip>
+					) : (
+						'Onbekend'
+					)}
 				</p>
 			);
 		},
@@ -71,10 +85,12 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 		value: 'status',
+		width: '10%',
 	},
 	{
 		label: 'Online',
 		value: 'published',
+		width: '5%',
 		component(value: unknown, rowData: ContentOverviewTableRow) {
 			return (
 				<span
@@ -89,6 +105,7 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		label: '',
 		classList: ['u-text-right'],
 		disableSorting: true,
+		width: '10%',
 		component(value: unknown, rowData: ContentOverviewTableRow) {
 			const { navigate } = rowData;
 

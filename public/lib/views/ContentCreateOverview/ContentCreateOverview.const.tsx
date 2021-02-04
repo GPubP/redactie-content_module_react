@@ -1,4 +1,5 @@
 import { Button } from '@acpaas-ui/react-components';
+import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module/public/lib/i18next/useTranslation';
 import React from 'react';
 
@@ -10,14 +11,17 @@ export const CONTENT_CREATE_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
+		width: '65%',
 		component(value: unknown, rowData: ContentCreateOverviewTableRow) {
 			const { label, description } = rowData;
 
 			return (
 				<>
-					{label}
+					<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
 					<p>
-						<small>{description}</small>
+						<small>
+							<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
+						</small>
 					</p>
 				</>
 			);
@@ -27,6 +31,7 @@ export const CONTENT_CREATE_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		label: '',
 		classList: ['u-text-right'],
 		disableSorting: true,
+		width: '35%',
 		component(value: unknown, rowData: ContentCreateOverviewTableRow) {
 			const { navigate, uuid } = rowData;
 

@@ -280,7 +280,9 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 					/>
 				</div>
 				<PaginatedTable
+					fixed
 					className="u-margin-top"
+					tableClassName="a-table--fixed--lg"
 					columns={CONTENT_OVERVIEW_COLUMNS(t)}
 					rows={contentsRows}
 					loading={loadingState === LoadingState.Loading}
