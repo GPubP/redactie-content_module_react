@@ -86,7 +86,9 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 
 		return (
 			<PaginatedTable
+				fixed
 				className="u-margin-top"
+				tableClassName="a-table--fixed--xs"
 				columns={CONTENT_CREATE_OVERVIEW_COLUMNS(t)}
 				rows={contentTypesRows}
 				currentPage={Math.ceil(meta.skip / DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit) + 1}
@@ -94,7 +96,6 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 				onPageChange={handlePageChange}
 				orderBy={handleOrderBy}
 				activeSorting={activeSorting}
-				responsive={false}
 				totalValues={meta.total || 0}
 				loading={loadingState === LoadingState.Loading}
 				hideResultsMessage

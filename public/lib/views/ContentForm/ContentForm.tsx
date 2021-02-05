@@ -5,7 +5,7 @@ import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { equals, isEmpty, lensPath, set } from 'ramda';
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import { ContentSchema } from '../../api/api.types';
 import { ContentFormActions } from '../../components';
