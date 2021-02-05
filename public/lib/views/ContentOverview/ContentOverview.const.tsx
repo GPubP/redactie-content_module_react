@@ -33,18 +33,20 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'label',
 		width: '27%',
 		component(label: string, rowData: ContentOverviewTableRow) {
-			const { viewPath } = rowData;
+			const { viewPath, description } = rowData;
 
 			return (
 				<>
 					<AUILink to={viewPath} component={Link}>
 						<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
 					</AUILink>
-					<p className="u-text-light u-margin-top-xs">
-						{rowData.description ? (
-							<EllipsisWithTooltip>{rowData.description}</EllipsisWithTooltip>
+					<p className="small">
+						{description ? (
+							<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
 						) : (
-							'Geen beschrijving.'
+							<span className="u-text-italic">
+								{t(CORE_TRANSLATIONS['TABLE_NO-DESCRIPTION'])}
+							</span>
 						)}
 					</p>
 				</>

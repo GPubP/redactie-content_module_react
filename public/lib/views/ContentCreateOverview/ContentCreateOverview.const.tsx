@@ -18,10 +18,14 @@ export const CONTENT_CREATE_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 			return (
 				<>
 					<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
-					<p>
-						<small>
+					<p className="small">
+						{description ? (
 							<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
-						</small>
+						) : (
+							<span className="u-text-italic">
+								{t(CORE_TRANSLATIONS['TABLE_NO-DESCRIPTION'])}
+							</span>
+						)}
 					</p>
 				</>
 			);
