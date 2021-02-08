@@ -89,7 +89,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		register(
 			[
 				...(getContentTypeCompartments(contentType) as ContentCompartmentModel[]),
-				...INTERNAL_COMPARTMENTS,
+				...INTERNAL_COMPARTMENTS(siteId),
 				...filterExternalCompartments(contentItemDraft, contentType, externalCompartments),
 			],
 			{ replace: true }

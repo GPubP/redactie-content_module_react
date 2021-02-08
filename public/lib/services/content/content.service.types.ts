@@ -61,3 +61,9 @@ export enum ContentStatus {
 	PUBLISHED = 'PUBLISHED',
 	UNPUBLISHED = 'UNPUBLISHED',
 }
+
+export interface ValidateSlugPayload {
+	id?: string;
+	slug: string;
+	language: string;
+}

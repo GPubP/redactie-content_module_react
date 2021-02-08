@@ -11,7 +11,7 @@ import { DATE_FORMATS, MODULE_PATHS, TENANT_ROOT } from '../../content.const';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
-export const INTERNAL_COMPARTMENTS: ContentCompartmentModel[] = [
+export const INTERNAL_COMPARTMENTS = (siteId: string): ContentCompartmentModel[] => [
 	{
 		label: 'Info',
 		getDescription: contentItem => {
@@ -28,7 +28,7 @@ export const INTERNAL_COMPARTMENTS: ContentCompartmentModel[] = [
 		component: MetaForm,
 		type: CompartmentType.INTERNAL,
 		isValid: false,
-		validate: values => META_VALIDATION_SCHEMA.isValidSync(values.meta),
+		validate: values => META_VALIDATION_SCHEMA(siteId).isValidSync(values.meta),
 	},
 	{
 		label: 'Status',
