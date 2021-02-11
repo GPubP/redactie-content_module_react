@@ -1,25 +1,22 @@
-import debounce from 'lodash.debounce';
 import { object, ObjectSchema, string } from 'yup';
 
-import { contentApiService } from '../../../services/content';
+import { ContentCompartmentsValidateOptions } from '../../../store/ui/contentCompartments';
 
-const debouncedValdation = (siteId: string): ((slug: string) => Promise<boolean>) =>
-	debounce(async (slug: string) => {
-		const payload = { language: 'nl', slug };
-		const response = await contentApiService.validateSlug(siteId, payload);
-		console.log(response);
-		return false;
-	}, 1000);
+import { validatieSlugDebouncedWrapper } from './MetaForm.helpers';
 
-export const META_VALIDATION_SCHEMA = (siteId: string): ObjectSchema<any> =>
+export const META_VALIDATION_SCHEMA = (
+	siteId: string,
+	contentId?: string,
+	options: ContentCompartmentsValidateOptions = { async: true }
+): ObjectSchema<any> =>
 	object().shape({
 		slug: object({
 			nl: string()
 				.required('Gelieve een slug in te vullen')
 				.test({
 					name: 'noDuplicateSlug',
-					message: value => `Slug ${value.originalValue} bestaat reeds`,
-					test: debouncedValdation(siteId),
+					message: 'Deze slug bestaat reeds',
+					test: validatieSlugDebouncedWrapper(siteId, 'nl', contentId, options),
 				}),
 		}),
 	});

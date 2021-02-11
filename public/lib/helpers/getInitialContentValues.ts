@@ -18,14 +18,13 @@ export const getInitialContentValues = (
 				field.generalConfig.required || data[field.name] || field.defaultValue
 					? getInitialContentValues(
 							field.preset.data.fields.map(f => f.field),
-							data[field.name] || field.defaultValue
+							data[field.name] ?? field.defaultValue ?? {}
 					  )
-					: undefined;
-
+					: '';
 			return values;
 		}
 
-		values[field.name] = data[field.name] ?? field.defaultValue ?? undefined;
+		values[field.name] = data[field.name] ?? field.defaultValue ?? '';
 
 		return values;
 	}, {} as Record<string, any>);

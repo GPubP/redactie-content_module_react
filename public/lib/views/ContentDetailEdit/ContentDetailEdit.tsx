@@ -6,7 +6,7 @@ import { ContentSchema } from '../../api/api.types';
 import { RenderChildRoutes } from '../../components';
 import DataLoader from '../../components/DataLoader/DataLoader';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
-import { runAllSubmitHooks } from '../../helpers';
+import { getInitialContentValues, runAllSubmitHooks } from '../../helpers';
 import { getTimeUntilLockExpires } from '../../helpers/getTimeUntilLockExpires';
 import { useLock, useNavigate } from '../../hooks';
 import { ContentStatus } from '../../services/content';
@@ -70,6 +70,20 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 			setInitialLoadingState(LoadingState.Loaded);
 		}
 	}, [externalLock, userLock]);
+
+	// Set nieuw default values for when new properties are added to CT post create
+	useEffect(() => {
+		if (!contentType) {
+			return;
+		}
+
+		const defaultValue: ContentSchema = {
+			...contentItem,
+			fields: getInitialContentValues(contentType?.fields, contentItem.fields),
+		};
+
+		contentFacade.setContentItemDraft(defaultValue);
+	}, [contentType]); // eslint-disable-line
 
 	useEffect(() => locksFacade.setLockValue(contentId, refreshedLock), [contentId, refreshedLock]);
 

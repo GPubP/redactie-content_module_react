@@ -10,6 +10,7 @@ export interface PagingSchema {
 }
 
 export interface ContentSchema {
+	_id?: string;
 	uuid?: string;
 	meta: {
 		label: string;

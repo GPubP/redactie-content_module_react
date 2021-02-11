@@ -16,7 +16,8 @@ const useContentCompartmentFacade = (): [
 	CompartmentState,
 	(compartments: ContentCompartmentModel[], options: ContentCompartmentRegisterOptions) => void,
 	(names: ID) => void,
-	(name: string, isValid: boolean) => void
+	(name: string, isValid: boolean) => void,
+	(isValid: boolean) => void
 ] => {
 	const register = (
 		compartments: ContentCompartmentModel[] | ContentCompartmentModel,
@@ -25,11 +26,13 @@ const useContentCompartmentFacade = (): [
 	const activate = (name: ID): void => contentCompartmentsFacade.setActiveByNamOrSlug(name);
 	const validate = (name: string, isValid: boolean): void =>
 		contentCompartmentsFacade.setValid(name, isValid);
+	const setActiveIsValid = (isValid: boolean): void =>
+		contentCompartmentsFacade.setActiveIsValid(isValid);
 
 	const [compartments] = useObservable(contentCompartmentsFacade.all$, []);
 	const [active] = useObservable(contentCompartmentsFacade.active$);
 
-	return [{ compartments, active }, register, activate, validate];
+	return [{ compartments, active }, register, activate, validate, setActiveIsValid];
 };
 
 export default useContentCompartmentFacade;

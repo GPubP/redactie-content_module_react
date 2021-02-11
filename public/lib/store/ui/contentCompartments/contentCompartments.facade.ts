@@ -44,6 +44,19 @@ export class ContentCompartmentsFacade {
 		return this.setActive(id);
 	}
 
+	public setActiveIsValid(isValid: boolean): void {
+		const activeCompartment = this.query.getActive();
+
+		if (!activeCompartment) {
+			return;
+		}
+
+		this.store.update(activeCompartment.name, {
+			...activeCompartment,
+			isValid,
+		});
+	}
+
 	public setActive(name: ID): void {
 		this.store.setActive(name);
 	}
