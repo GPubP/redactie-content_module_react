@@ -42,6 +42,7 @@ export interface ContentsSchema {
 
 export interface ContentCreateSchema {
 	meta: {
+		description?: string;
 		activeLanguages: string[];
 		label: string;
 		slug: Record<string, string>;
