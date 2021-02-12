@@ -228,7 +228,12 @@ export const getContentTypeCompartments = (
 					field.compartment?.uuid === compartment.uuid ||
 					(compartment.removable === false && !field.compartment)
 			),
-			sort<ContentTypeFieldSchema>(field => field.compartment?.position || Number.MAX_VALUE)
+			sort<ContentTypeFieldSchema>(
+				(fieldA, fieldB) =>
+					fieldA.compartment?.position ??
+					Number.MAX_VALUE - fieldB.compartment?.position ??
+					Number.MAX_VALUE
+			)
 		)(contentType.fields);
 
 		const slug = kebabCase(compartment.label);
