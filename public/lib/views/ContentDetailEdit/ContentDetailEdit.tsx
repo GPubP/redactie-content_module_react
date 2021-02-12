@@ -71,7 +71,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		}
 	}, [externalLock, userLock]);
 
-	// Set nieuw default values for when new properties are added to CT post create
+	// Set new default values for when new properties are added to CT post create
 	useEffect(() => {
 		if (!contentType) {
 			return;
