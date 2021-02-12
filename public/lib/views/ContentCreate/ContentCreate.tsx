@@ -90,6 +90,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 
 		const request: ContentCreateSchema = {
 			meta: {
+				description: content.meta?.description,
 				activeLanguages: ['nl'],
 				label: content.meta?.label,
 				slug: content.meta?.slug,
