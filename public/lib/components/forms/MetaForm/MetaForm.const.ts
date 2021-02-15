@@ -2,7 +2,7 @@ import { object, ObjectSchema, string } from 'yup';
 
 import { ContentCompartmentsValidateOptions } from '../../../store/ui/contentCompartments';
 
-import { validatieSlugDebouncedWrapper } from './MetaForm.helpers';
+import { default as MetaFormHelper } from './MetaForm.helpers';
 
 export const META_VALIDATION_SCHEMA = (
 	siteId: string,
@@ -16,7 +16,12 @@ export const META_VALIDATION_SCHEMA = (
 				.test({
 					name: 'noDuplicateSlug',
 					message: 'Deze slug bestaat reeds',
-					test: validatieSlugDebouncedWrapper(siteId, 'nl', contentId, options),
+					test: MetaFormHelper.validatieSlugDebouncedWrapper(
+						siteId,
+						'nl',
+						contentId,
+						options
+					),
 				}),
 		}),
 	});

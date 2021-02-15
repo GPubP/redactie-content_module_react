@@ -2,9 +2,9 @@ import moment from 'moment';
 
 import { ContentSchema } from '../../api/api.types';
 import {
-	afterSubmitMeta,
 	META_VALIDATION_SCHEMA,
 	MetaForm,
+	MetaFormHelper,
 	STATUS_VALIDATION_SCHEMA,
 	StatusForm,
 } from '../../components';
@@ -31,7 +31,7 @@ export const INTERNAL_COMPARTMENTS = (siteId: string): ContentCompartmentModel[]
 		isValid: false,
 		validate: (values, ac, options) =>
 			META_VALIDATION_SCHEMA(siteId, values.uuid, options).isValid(values.meta),
-		afterSubmit: afterSubmitMeta,
+		afterSubmit: MetaFormHelper.afterSubmitMeta,
 	},
 	{
 		label: 'Status',

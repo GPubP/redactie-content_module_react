@@ -15,79 +15,88 @@ export const BE_ERROR_CODES = {
 	INVALID_SLUG: 'slug_0',
 };
 
-const queue: ((isValid: boolean) => void)[] = [];
-let lastValidatedValue = true;
+class MetaFormHelper {
+	private queue: ((isValid: boolean) => void)[] = [];
+	private lastValidatedValue = true;
+	private debouncedValidation: Function;
 
-const runQueue = (partialQueue: ((isValid: boolean) => void)[], isValid: boolean): void => {
-	while (partialQueue.length >= 1) {
-		const resolver = partialQueue.shift();
+	constructor() {
+		this.debouncedValidation = debounce(this.validateSlug, 1000);
+	}
 
-		if (resolver) {
-			resolver(isValid);
+	public validatieSlugDebouncedWrapper(
+		siteId: string,
+		language: string,
+		contentId?: string,
+		options?: ContentCompartmentsValidateOptions
+	): (slug: string) => Promise<boolean> {
+		return (slug: string): Promise<boolean> => {
+			if (options && !options.async) {
+				return Promise.resolve(this.lastValidatedValue);
+			}
+
+			return new Promise(resolve => {
+				this.queue.push(resolve);
+				this.debouncedValidation(siteId, language, slug, contentId);
+			});
+		};
+	}
+
+	public afterSubmitMeta: ExternalCompartmentAfterSubmitFn = async (
+		error,
+		contentItemDraft,
+		ct,
+		existingContentItem
+	) => {
+		if (typeof (error as ResponseError)?.response?.json !== 'function') {
+			return;
+		}
+
+		const body = await (error as ResponseError)?.response?.json();
+		const alertProps = getAlertMessages(contentItemDraft);
+
+		contentCompartmentsFacade.setValid('meta', false);
+
+		if (body.code === BE_ERROR_CODES.INVALID_SLUG) {
+			alertService.danger(
+				existingContentItem ? alertProps.update.errorSlug : alertProps.create.errorSlug,
+				existingContentItem
+					? contentFacade.alertContainerProps.update
+					: contentFacade.alertContainerProps.create
+			);
+			throw error;
+		}
+	};
+
+	private runQueue(partialQueue: ((isValid: boolean) => void)[], isValid: boolean): void {
+		while (partialQueue.length >= 1) {
+			const resolver = partialQueue.shift();
+
+			if (resolver) {
+				resolver(isValid);
+			}
 		}
 	}
-};
 
-const validateSlug = async (
-	siteId: string,
-	language: string,
-	slug: string,
-	contentId?: string
-): Promise<void> => {
-	const payload = { language, slug, ...(contentId ? { id: contentId } : {}) };
-	const partialQueue = [...queue];
+	private async validateSlug(
+		siteId: string,
+		language: string,
+		slug: string,
+		contentId?: string
+	): Promise<void> {
+		const payload = { language, slug, ...(contentId ? { id: contentId } : {}) };
+		const partialQueue = [...this.queue];
 
-	try {
-		await contentApiService.validateSlug(siteId, payload);
-		lastValidatedValue = true;
+		try {
+			await contentApiService.validateSlug(siteId, payload);
+			this.lastValidatedValue = true;
 
-		runQueue(partialQueue, true);
-	} catch (error) {
-		lastValidatedValue = false;
-		runQueue(partialQueue, false);
+			this.runQueue(partialQueue, true);
+		} catch (error) {
+			this.lastValidatedValue = false;
+			this.runQueue(partialQueue, false);
+		}
 	}
-};
+}
 
-const debouncedValidation = debounce(validateSlug, 1000);
-
-export const validatieSlugDebouncedWrapper = (
-	siteId: string,
-	language: string,
-	contentId?: string,
-	options?: ContentCompartmentsValidateOptions
-): ((slug: string) => Promise<boolean>) => (slug: string): Promise<boolean> => {
-	if (options && !options.async) {
-		return Promise.resolve(lastValidatedValue);
-	}
-
-	return new Promise(resolve => {
-		queue.push(resolve);
-		debouncedValidation(siteId, language, slug, contentId);
-	});
-};
-
-export const afterSubmitMeta: ExternalCompartmentAfterSubmitFn = async (
-	error,
-	contentItemDraft,
-	ct,
-	existingContentItem
-) => {
-	if (typeof (error as ResponseError)?.response?.json !== 'function') {
-		return;
-	}
-
-	const body = await (error as ResponseError)?.response?.json();
-	const alertProps = getAlertMessages(contentItemDraft);
-
-	contentCompartmentsFacade.setValid('meta', false);
-
-	if (body.code === BE_ERROR_CODES.INVALID_SLUG) {
-		alertService.danger(
-			existingContentItem ? alertProps.update.errorSlug : alertProps.create.errorSlug,
-			existingContentItem
-				? contentFacade.alertContainerProps.update
-				: contentFacade.alertContainerProps.create
-		);
-		throw error;
-	}
-};
+export default new MetaFormHelper();
