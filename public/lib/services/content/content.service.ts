@@ -9,6 +9,7 @@ import {
 	ContentSchema,
 	ContentsSchema,
 	ContentStatus,
+	ValidateSlugPayload,
 } from './content.service.types';
 
 export class ContentApiService {
@@ -55,6 +56,12 @@ export class ContentApiService {
 	public getContentItem(siteId: string, uuid: string): Promise<ContentSchema | null> {
 		return api
 			.get(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}/history/latest`)
+			.json();
+	}
+
+	public validateSlug(siteId: string, payload: ValidateSlugPayload): Promise<void> {
+		return api
+			.post(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/slug/validate`, { json: payload })
 			.json();
 	}
 }

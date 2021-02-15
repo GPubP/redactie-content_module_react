@@ -106,22 +106,24 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		contentFacade
 			.createContentItem(siteId, request)
 			.then(response => {
-				if (response) {
-					runAllSubmitHooks(
-						compartments,
-						contentType,
-						response,
-						undefined,
-						'afterSubmit'
-					).then(({ hasRejected }) => {
-						if (!hasRejected) {
-							navigate(`${MODULE_PATHS.detailEdit}/default`, {
-								siteId,
-								contentId: response.uuid,
-							});
-						}
-					});
+				if (!response) {
+					return;
 				}
+
+				runAllSubmitHooks(
+					compartments,
+					contentType,
+					response,
+					undefined,
+					'afterSubmit'
+				).then(({ hasRejected }) => {
+					if (!hasRejected) {
+						navigate(`${MODULE_PATHS.detailEdit}/default`, {
+							siteId,
+							contentId: response.uuid,
+						});
+					}
+				});
 			})
 			.catch(error => {
 				// Run rollback

@@ -29,6 +29,7 @@ import { contentFacade } from '../store/content';
 import {
 	CompartmentType,
 	ContentCompartmentModel,
+	ContentCompartmentsValidateOptions,
 	ModuleValue,
 } from '../store/ui/contentCompartments';
 import { CtTypeSettings } from '../views/ContentForm/ContentForm.types';
@@ -288,24 +289,27 @@ export const getContentTypeCompartments = (
 	}, [] as ContentCompartmentModel<ModuleValue, CtTypeSettings>[]);
 };
 
-export const validateCompartments = (
+export const validateCompartments = async (
 	activeCompartment: ContentCompartmentModel,
 	compartments: ContentCompartmentModel[],
 	values: ContentSchema,
-	setValidity: (id: string, isValid: boolean) => void
-): boolean => {
+	setValidity: (id: string, isValid: boolean) => void,
+	options: ContentCompartmentsValidateOptions = { async: true }
+): Promise<boolean> => {
 	// Create array of booleans from compartment validation
-	const validatedCompartments: boolean[] = compartments.map(compartment => {
-		if (compartment.validate) {
-			const isValid = compartment.validate(values, activeCompartment);
-			setValidity(compartment.name, isValid);
+	const validatedCompartments: boolean[] = await Promise.all(
+		compartments.map(async compartment => {
+			if (compartment.validate) {
+				const isValid = await compartment.validate(values, activeCompartment, options);
+				setValidity(compartment.name, isValid);
 
-			return isValid;
-		}
+				return isValid;
+			}
 
-		// Compartment is valid if no validate function is given
-		return true;
-	});
+			// Compartment is valid if no validate function is given
+			return true;
+		})
+	);
 
 	// Return false if one of the compartments is invalid
 	return !validatedCompartments.includes(false);

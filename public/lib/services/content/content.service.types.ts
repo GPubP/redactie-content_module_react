@@ -10,6 +10,7 @@ export interface PagingSchema {
 }
 
 export interface ContentSchema {
+	_id?: string;
 	uuid?: string;
 	meta: {
 		label: string;
@@ -61,4 +62,10 @@ export enum ContentStatus {
 	SCHEDULED = 'SCHEDULED',
 	PUBLISHED = 'PUBLISHED',
 	UNPUBLISHED = 'UNPUBLISHED',
+}
+
+export interface ValidateSlugPayload {
+	id?: string;
+	slug: string;
+	language: string;
 }

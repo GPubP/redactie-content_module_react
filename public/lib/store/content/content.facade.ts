@@ -15,7 +15,7 @@ import { contentQuery, ContentQuery } from './content.query';
 import { contentStore, ContentStore } from './content.store';
 
 export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiService, ContentQuery> {
-	private readonly alertContainerProps = {
+	public readonly alertContainerProps = {
 		create: {
 			containerId: ALERT_CONTAINER_IDS.contentCreate,
 		},

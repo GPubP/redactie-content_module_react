@@ -7,11 +7,15 @@ export const getAlertMessages = (
 	create: {
 		success: {
 			title: 'Aangemaakt',
-			message: `U hebt een nieuwe revisie van ${data.meta.label} aangemaakt`,
+			message: `U hebt een nieuw content item '${data.meta.label}' aangemaakt`,
 		},
 		error: {
 			title: 'Aanmaken mislukt',
-			message: `Aanmaken nieuwe revisie van ${data.meta.label} mislukt`,
+			message: `Aanmaken voor '${data.meta.label}' mislukt`,
+		},
+		errorSlug: {
+			title: 'Aanmaken mislukt',
+			message: `Aanmaken voor '${data.meta.label}' mislukt. De opgegeven slug is reeds in gebruik.`,
 		},
 	},
 	update: {
@@ -21,17 +25,21 @@ export const getAlertMessages = (
 		},
 		error: {
 			title: 'Bewaren mislukt',
-			message: `Bewaren nieuwe versie van ${data.meta.label} is mislukt`,
+			message: `Bewaren nieuwe revisie van '${data.meta.label}' is mislukt`,
+		},
+		errorSlug: {
+			title: 'Bewaren mislukt',
+			message: `Bewaren nieuwe revisie van '${data.meta.label}' mislukt. De opgegeven slug is reeds in gebruik.`,
 		},
 	},
 	publish: {
 		success: {
 			title: 'Status gewijzigd: gepubliceerd',
-			message: `U hebt een nieuwe revisie van ${data.meta.label} gepubliceerd`,
+			message: `U hebt een nieuwe revisie van '${data.meta.label}' gepubliceerd`,
 		},
 		error: {
 			title: 'Status wijzigen naar gepubliceerd mislukt',
-			message: `Publiceren nieuwe revisie van ${data.meta.label} is mislukt`,
+			message: `Publiceren nieuwe revisie van '${data.meta.label}' is mislukt`,
 		},
 	},
 });

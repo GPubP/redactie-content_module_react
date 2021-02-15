@@ -21,12 +21,20 @@ export type ContentCompartmentBeforeSubmitFn<M = ModuleValue> = (
 	contentItem: ContentSchema | undefined
 ) => Promise<M | void>;
 
+export interface ResponseError {
+	response: Response;
+}
+
 export type ContentCompartmentAfterSubmitFn<M = ModuleValue> = (
-	error: Error | undefined,
+	error: Error | ResponseError | undefined,
 	contentItemDraft: ContentSchema,
 	contentType: ContentTypeSchema,
 	contentItem: ContentSchema | undefined
 ) => Promise<M | void>;
+
+export interface ContentCompartmentsValidateOptions {
+	async: boolean;
+}
 
 export interface ContentCompartmentModel<
 	M = ModuleValue,
@@ -40,7 +48,11 @@ export interface ContentCompartmentModel<
 	type: CompartmentType;
 	isValid?: boolean;
 	context?: Record<string, any>;
-	validate?: (values: ContentSchema, activeCompartment: ContentCompartmentModel) => boolean;
+	validate?: (
+		values: ContentSchema,
+		activeCompartment: ContentCompartmentModel,
+		options: ContentCompartmentsValidateOptions
+	) => Promise<boolean> | boolean;
 	beforeSubmit?: ContentCompartmentBeforeSubmitFn<M>;
 	afterSubmit?: ContentCompartmentAfterSubmitFn<M>;
 }

@@ -1,7 +1,14 @@
 import { CardBody, Textarea, TextField } from '@acpaas-ui/react-components';
-import { CopyValue } from '@redactie/utils';
-import { Field, Formik, FormikValues } from 'formik';
-import React, { FC, ReactElement } from 'react';
+import { CopyValue, useSiteContext } from '@redactie/utils';
+import {
+	Field,
+	FieldProps,
+	Formik,
+	FormikValues,
+	validateYupSchema,
+	yupToFormErrors,
+} from 'formik';
+import React, { FC, ReactElement, useMemo } from 'react';
 
 import { CompartmentProps } from '../../../api/api.types';
 import { ErrorMessage } from '../../../connectors/formRenderer';
@@ -20,7 +27,11 @@ const MetaForm: FC<CompartmentProps> = ({
 		submitForm();
 		onChange(values);
 	};
-
+	const { siteId } = useSiteContext();
+	const metaValidationSchema = useMemo(() => {
+		return META_VALIDATION_SCHEMA(siteId, contentValue?.uuid);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [contentValue?.uuid, siteId]);
 	const [t] = useCoreTranslation();
 
 	/**
@@ -29,16 +40,19 @@ const MetaForm: FC<CompartmentProps> = ({
 	return (
 		<Formik
 			innerRef={instance => formikRef && formikRef(instance)}
-			validationSchema={META_VALIDATION_SCHEMA}
 			onSubmit={onChange}
-			enableReinitialize
+			validate={(values: FormikValues) =>
+				// Run like this so that it can handle async
+				validateYupSchema(values, metaValidationSchema, false)
+					.then(() => ({}))
+					.catch(err => yupToFormErrors(err))
+			}
 			initialValues={value}
 		>
 			{({ submitForm }) => (
 				<CardBody>
 					<FormikOnChangeHandler onChange={values => onFormChange(values, submitForm)} />
 					<h2 className="h3 u-margin-bottom">Informatie</h2>
-					<p className="u-margin-bottom">Lorem Ipsum.</p>
 					<div className="row">
 						{contentValue?.uuid && contentValue.uuid !== 'new' ? (
 							<CopyValue
@@ -58,9 +72,22 @@ const MetaForm: FC<CompartmentProps> = ({
 								id="slug"
 								placeholder="Typ een slug"
 								required
-								as={TextField}
-							/>
-							<ErrorMessage name="slug.nl" />
+							>
+								{(fieldProps: FieldProps<any, {}>) => {
+									return (
+										<>
+											<TextField
+												loading={fieldProps.form.isValidating}
+												{...fieldProps.field}
+											/>
+											{!fieldProps.form.isValidating ? (
+												<ErrorMessage name="slug.nl" />
+											) : null}
+										</>
+									);
+								}}
+							</Field>
+
 							<div className="u-text-light u-margin-top-xs">
 								Bepaal de &apos;slug&apos; voor dit content item. Deze wordt onder
 								andere gebruikt in de URL.

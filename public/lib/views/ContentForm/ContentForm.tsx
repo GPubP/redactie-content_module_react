@@ -4,7 +4,7 @@ import { alertService, LeavePrompt, LoadingState, useNavigate } from '@redactie/
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { equals, isEmpty, lensPath, set } from 'ramda';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { ContentSchema } from '../../api/api.types';
@@ -67,6 +67,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		register,
 		activate,
 		validate,
+		setActiveIsValid,
 	] = useContentCompartment();
 	const [externalCompartments] = useExternalCompartment();
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues> | null>();
@@ -80,6 +81,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		publishContentItemLoadingState,
 	] = useContentLoadingStates();
 	const { navigate } = useNavigate(SITES_ROOT);
+	const internalCompartments = useMemo(() => INTERNAL_COMPARTMENTS(siteId), [siteId]);
 
 	useEffect(() => {
 		if (!contentType) {
@@ -89,12 +91,12 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		register(
 			[
 				...(getContentTypeCompartments(contentType) as ContentCompartmentModel[]),
-				...INTERNAL_COMPARTMENTS,
+				...internalCompartments,
 				...filterExternalCompartments(contentItemDraft, contentType, externalCompartments),
 			],
 			{ replace: true }
 		);
-	}, [contentType, externalCompartments]); // eslint-disable-line
+	}, [contentType, externalCompartments, internalCompartments]); // eslint-disable-line
 
 	useEffect(() => {
 		if (compartments.length && (!compartment || compartment === 'default')) {
@@ -142,6 +144,12 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			return;
 		}
 
+		if (hasSubmit) {
+			const { current: formikRef } = activeCompartmentFormikRef;
+
+			setActiveIsValid(isEmpty(formikRef?.errors));
+		}
+
 		switch (compartment.type) {
 			case CompartmentType.CT: {
 				const fieldValues = values as ContentSchema['fields'];
@@ -155,9 +163,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			}
 			case CompartmentType.INTERNAL: {
 				const metaValues = values as ContentSchema['meta'];
+
 				if (isCreating && !isEmpty(metaValues.slug?.nl)) {
 					setSlugFieldTouched(true);
 				}
+
 				contentFacade.updateContentMetaDraft(metaValues);
 				break;
 			}
@@ -181,14 +191,26 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		onCancel();
 	};
 
-	const onFormSubmit = (contentItemDraft: ContentSchema): void => {
+	const setContentLoading = (isLoading: boolean): void => {
+		if (isCreating) {
+			contentFacade.setIsCreating(isLoading);
+		} else {
+			contentFacade.setIsUpdating(isLoading);
+		}
+	};
+
+	const onFormSubmit = async (contentItemDraft: ContentSchema): Promise<void> => {
+		setContentLoading(true);
+		setHasSubmit(true);
+
 		const { current: formikRef } = activeCompartmentFormikRef;
-		const compartmentsAreValid = validateCompartments(
+		const compartmentsAreValid = await validateCompartments(
 			activeCompartment as ContentCompartmentModel,
 			compartments,
 			contentItemDraft,
-			validate
-		);
+			validate,
+			{ async: false }
+		).catch(() => setContentLoading(false));
 
 		// Validate current form to trigger fields error states
 		if (formikRef) {
@@ -199,65 +221,62 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			});
 		}
 
-		if (compartmentsAreValid && activeCompartment) {
-			const kebabCasedSlugs = contentItemDraft.meta.activeLanguages.reduce((acc, lang) => {
-				if (!contentItemDraft.meta.slug[lang]) {
-					return acc;
-				}
-				return {
-					...acc,
-					[lang]: kebabCase(contentItemDraft.meta.slug[lang]),
-				};
-			}, {});
-
-			const slugLens = lensPath(['meta', 'slug']);
-			const modifiedContentItemDraft = set(slugLens, kebabCasedSlugs, contentItemDraft);
-
-			if (isCreating) {
-				contentFacade.setIsCreating(true);
-			} else {
-				contentFacade.setIsUpdating(true);
-			}
-			runAllSubmitHooks(
-				compartments,
-				contentType,
-				modifiedContentItemDraft,
-				contentItem,
-				'beforeSubmit'
-			).then(({ hasRejected, errorMessages, contentItem }) => {
-				if (!hasRejected) {
-					onSubmit(contentItem, activeCompartment, compartments);
-					return;
-				}
-				if (isCreating) {
-					contentFacade.setIsCreating(false);
-				} else {
-					contentFacade.setIsUpdating(false);
-				}
-				errorMessages.forEach(message => {
-					contentCompartmentsFacade.setValid(message.compartmentName, false);
-				});
-				alertService.danger(
-					{
-						title: 'Er zijn nog fouten',
-						message: (
-							<>
-								<ul className="a-list">
-									{errorMessages.map((error, index) => (
-										<li key={index}>{error.error.message}</li>
-									))}
-								</ul>
-							</>
-						),
-					},
-					{
-						containerId: isCreating
-							? ALERT_CONTAINER_IDS.contentCreate
-							: ALERT_CONTAINER_IDS.contentEdit,
-					}
-				);
-			});
+		if (!compartmentsAreValid || !activeCompartment) {
+			setContentLoading(false);
+			return;
 		}
+
+		const kebabCasedSlugs = contentItemDraft.meta.activeLanguages.reduce((acc, lang) => {
+			if (!contentItemDraft.meta.slug[lang]) {
+				return acc;
+			}
+			return {
+				...acc,
+				[lang]: kebabCase(contentItemDraft.meta.slug[lang]),
+			};
+		}, {});
+
+		const slugLens = lensPath(['meta', 'slug']);
+		const modifiedContentItemDraft = set(slugLens, kebabCasedSlugs, contentItemDraft);
+
+		runAllSubmitHooks(
+			compartments,
+			contentType,
+			modifiedContentItemDraft,
+			contentItem,
+			'beforeSubmit'
+		).then(({ hasRejected, errorMessages, contentItem }) => {
+			if (!hasRejected) {
+				onSubmit(contentItem, activeCompartment, compartments);
+				return;
+			}
+
+			setContentLoading(false);
+
+			errorMessages.forEach(message => {
+				contentCompartmentsFacade.setValid(message.compartmentName, false);
+			});
+
+			alertService.danger(
+				{
+					title: 'Er zijn nog fouten',
+					message: (
+						<>
+							<ul className="a-list">
+								{errorMessages.map((error, index) => (
+									<li key={index}>{error.error.message}</li>
+								))}
+							</ul>
+						</>
+					),
+				},
+				{
+					containerId: isCreating
+						? ALERT_CONTAINER_IDS.contentCreate
+						: ALERT_CONTAINER_IDS.contentEdit,
+				}
+			);
+		});
 
 		setHasSubmit(true);
 	};
