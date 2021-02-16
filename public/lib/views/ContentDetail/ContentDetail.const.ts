@@ -7,11 +7,13 @@ export const CONTENT_UPDATE_TAB_MAP: {
 		name: 'Bekijk',
 		target: 'bekijk',
 		active: true,
+		disabled: false,
 	},
 	edit: {
 		name: 'Bewerk',
 		target: 'bewerk',
 		active: false,
+		disabled: false,
 	},
 };
 

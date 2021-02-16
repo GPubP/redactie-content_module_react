@@ -3,10 +3,16 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { AlertContainer, TenantContext, useDetectValueChangesWorker } from '@redactie/utils';
+import {
+	AlertContainer,
+	TenantContext,
+	useDetectValueChangesWorker,
+	useWillUnmount,
+} from '@redactie/utils';
 import React, { FC, useContext, useEffect, useMemo } from 'react';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { getInitialContentValues, runAllSubmitHooks } from '../../helpers';
@@ -26,6 +32,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 	 */
 	const { generatePath, navigate } = useNavigate();
 	const [contentTypesLoading, contentType] = useContentType();
+	const [t] = useCoreTranslation();
 	const [, , contentItemDraft] = useContentItem();
 	const { tenantId } = useContext(TenantContext);
 	const breadcrumbs = useRoutesBreadcrumbs([
@@ -42,6 +49,10 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		contentItemDraft,
 		BFF_MODULE_PUBLIC_PATH
 	);
+
+	useWillUnmount(() => {
+		contentTypesFacade.clearContentType();
+	});
 
 	useEffect(() => {
 		if (!contentType) {
@@ -168,19 +179,15 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 	};
 
 	const contentTypeLabel = contentType?.meta.label;
-	const headerTitle = contentTypeLabel ? `${contentTypeLabel} Aanmaken` : '';
-	const badges = contentTypeLabel
-		? [
-				{
-					name: contentTypeLabel,
-					type: 'primary',
-				},
-		  ]
-		: [];
+	const pageTitle = (
+		<>
+			<i>{contentTypeLabel ?? 'Content'}</i> {t(CORE_TRANSLATIONS.ROUTING_CREATE)}
+		</>
+	);
 
 	return (
 		<>
-			<ContextHeader title={headerTitle} badges={badges}>
+			<ContextHeader title={pageTitle}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>

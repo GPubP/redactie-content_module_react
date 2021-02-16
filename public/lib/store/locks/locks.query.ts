@@ -9,7 +9,7 @@ import { locksStore } from './locks.store';
 const parseLockAsUserLock = (lock: LockModel | null): LockModel | null => {
 	if (
 		(!!lock?.meta?.lastEditor?.id &&
-		lock.meta.lastEditor.id === Core.config.getValue('core')?.user?.id) ||
+			lock.meta.lastEditor.id === Core.config.getValue('core')?.user?.id) ||
 		lock?.meta?.lastEditor === Core.config.getValue('core')?.user?.id
 	) {
 		return lock;
