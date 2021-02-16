@@ -13,7 +13,12 @@ export const LockMessage: FC<{ lock: LockModel; className?: string }> = ({ lock,
 			closable={false}
 		>
 			Dit content item wordt momenteel bewerkt door{' '}
-			<b>{is(Object, lock.meta.lastEditor) ? `${lock.meta.lastEditor?.firstname} ${lock.meta.lastEditor?.lastname}` : 'een collega'}</b>. <br />
+			<b>
+				{is(Object, lock.meta.lastEditor)
+					? `${lock.meta.lastEditor?.firstname} ${lock.meta.lastEditor?.lastname}`
+					: 'een collega'}
+			</b>
+			. <br />
 			Je kan wachten of de collega vragen om de bewerk pagina te verlaten van dit content
 			item.
 		</Alert>
