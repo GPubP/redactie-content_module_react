@@ -1,4 +1,5 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
+import { ContextHeaderTab } from '@redactie/utils';
 import { NavLinkProps } from 'react-router-dom';
 
 export interface ContentRouteProps<
@@ -18,12 +19,8 @@ export interface FilterItemSchema {
 	formvalue?: any;
 }
 
-export interface Tab {
+export interface Tab extends ContextHeaderTab {
 	id?: string;
-	name: string;
-	target: string;
-	active: boolean;
-	disabled?: boolean;
 }
 
 export interface FilterItemsSchema {

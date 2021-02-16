@@ -3,12 +3,13 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { LoadingState } from '@redactie/utils';
+import { LoadingState, useWillUnmount } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
 import { LockMessage } from '../../components/LockMessage/LockMessage';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { generateDetailBadges } from '../../helpers';
@@ -40,6 +41,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	 * Hooks
 	 */
 	const { generatePath } = useNavigate();
+	const [t] = useCoreTranslation();
 	const activeTabs = useActiveTabs(CONTENT_UPDATE_TABS, location.pathname);
 	const [contentItemLoading, contentItem, contentItemDraft] = useContentItem();
 	const [contentTypeLoading, contentType] = useContentType();
@@ -59,10 +61,10 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		[tenantId]
 	);
 
-	useEffect(() => {
+	useWillUnmount(() => {
 		contentFacade.clearContentItemDraft();
 		contentFacade.clearContentItem();
-	}, []);
+	});
 
 	useEffect(() => {
 		if (
@@ -119,14 +121,18 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	};
 
 	const contentItemLabel = contentItem?.meta.label;
-	const headerTitle = contentItemLabel ? `${contentItemLabel} Bewerken` : '';
+	const pageTitle = (
+		<>
+			<i>{contentItemLabel ?? 'Content'}</i> {t(CORE_TRANSLATIONS.ROUTING_UPDATE)}
+		</>
+	);
 	const badges = generateDetailBadges(contentItem);
 
 	return (
 		<>
 			<ContextHeader
 				className="v-content-detail__header"
-				title={headerTitle}
+				title={pageTitle}
 				tabs={activeTabs}
 				linkProps={(props: any) => ({
 					...props,

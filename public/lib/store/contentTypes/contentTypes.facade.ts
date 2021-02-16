@@ -65,6 +65,12 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				});
 			});
 	}
+
+	public clearContentType(): void {
+		this.store.update({
+			contentType: undefined,
+		});
+	}
 }
 
 export const contentTypesFacade = new ContentTypesFacade(
