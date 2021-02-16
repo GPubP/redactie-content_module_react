@@ -58,6 +58,8 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'contentType',
 		ellipsis: true,
 		width: '15%',
+		// Temporary fix until sorting on referenced fields is supported by the backend
+		disableSorting: true,
 	},
 	{
 		label: t(CORE_TRANSLATIONS['TABLE_LAST-MODIFIED']),
