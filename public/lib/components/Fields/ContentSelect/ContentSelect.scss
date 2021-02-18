@@ -8,6 +8,16 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
+
+	.m-flyout__content {
+		max-width: 100%;
+	}
+
+	.m-selectable-list__item {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 }
 
 .m-autocomplete.is-multiple-select {

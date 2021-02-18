@@ -4,4 +4,4 @@ import { ContentSchema } from '../../services/content';
 
 export type CcContentModel = ContentSchema | ContentSchema[];
 
-export type CcContentState = BaseMultiEntityState<CcContentModel, string>;
+export type CcContentState = BaseMultiEntityState<CcContentModel | null, string>;

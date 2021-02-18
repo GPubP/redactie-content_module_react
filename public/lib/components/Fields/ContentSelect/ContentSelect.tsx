@@ -111,12 +111,6 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 							});
 					}}
 				/>
-				{config.description ? (
-					<div className="a-input a-input__wrapper">
-						<small>{config.description}</small>
-					</div>
-				) : null}
-				<ErrorMessage name={field.name} />
 			</div>
 			<Tooltip
 				type={CONTENT_SELECT_TOOLTIP_TYPE}
@@ -125,6 +119,12 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 			>
 				{currentValueLabel}
 			</Tooltip>
+			{config.description ? (
+				<div className="a-input a-input__wrapper">
+					<small>{config.description}</small>
+				</div>
+			) : null}
+			<ErrorMessage name={field.name} />
 		</>
 	);
 };

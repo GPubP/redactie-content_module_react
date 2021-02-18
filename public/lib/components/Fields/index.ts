@@ -1,17 +1,16 @@
 import { getFieldRegistery } from '../../connectors/formRenderer';
 
-import { ContentSelect, ContentSelectView } from './ContentSelect';
+import { ContentSelect } from './ContentSelect';
 
 export const registerCCFields = (): void => {
-	const fieldRegistery = getFieldRegistery();
+	const fieldRegistry = getFieldRegistery();
 
-	if (fieldRegistery) {
-		fieldRegistery.add([
+	if (fieldRegistry) {
+		fieldRegistry.add([
 			{
 				name: 'contentReference',
 				module: 'content',
 				component: ContentSelect,
-				viewComponent: ContentSelectView,
 			},
 		]);
 	}
