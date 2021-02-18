@@ -2,6 +2,12 @@
 
 .m-autocomplete {
 	width: 100%;
+
+	input {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 }
 
 .m-autocomplete.is-multiple-select {
