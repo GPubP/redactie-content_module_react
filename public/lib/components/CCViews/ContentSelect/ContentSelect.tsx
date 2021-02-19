@@ -1,30 +1,34 @@
 import { ViewFieldProps } from '@redactie/form-renderer-module';
-import { useSiteContext } from '@redactie/utils';
+import { DataLoader, useSiteContext } from '@redactie/utils';
+import classnames from 'classnames';
 import React, { ReactElement, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
-import './ContentSelect.scss';
 
 import { MODULE_PATHS } from '../../../content.const';
 import { useCcContentItem, useNavigate } from '../../../hooks';
 import { ccContentFacade } from '../../../store/ccContent';
-import { DataLoader } from '../../DataLoader';
 
-const ContentSelectView: React.FC<ViewFieldProps> = ({ value, fieldSchema }: ViewFieldProps) => {
+const CCContentSelectView: React.FC<ViewFieldProps> = ({ value, fieldSchema }: ViewFieldProps) => {
 	const { siteId } = useSiteContext();
 	const { generatePath } = useNavigate();
-	const [contentItemLoadingState, ccContentItem] = useCcContentItem(value);
+	const [contentItemLoadingState, ccContentItem] = useCcContentItem(value?.content);
 
 	useEffect(() => {
-		if (!value) {
+		if (!value?.content) {
 			return;
 		}
-		ccContentFacade.getContentItem(siteId, value);
+		ccContentFacade.getContentItem(siteId, value.content);
 	}, [siteId, value]);
 
-	if (!value || typeof value !== 'string') {
+	if (typeof value?.content !== 'string') {
 		return null;
 	}
+
+	const { text, style } = value;
+
+	const className = classnames('u-margin-bottom', {
+		'a-button a-button-primary': style === 'button',
+	});
 
 	const renderView = (): ReactElement | null => {
 		if (!ccContentItem) {
@@ -35,23 +39,29 @@ const ContentSelectView: React.FC<ViewFieldProps> = ({ value, fieldSchema }: Vie
 			<div>
 				<Link
 					id={`${fieldSchema?.name}-${value}`}
-					className="u-margin-bottom a-button a-button-primary has-icon-right"
+					className={className}
 					title={ccContentItem?.meta.label}
 					to={generatePath(MODULE_PATHS.detailView, {
 						contentId: ccContentItem?.uuid,
 						siteId,
 					})}
+					target="_blank"
 				>
-					<span className="fa fa-chevron-right" />
-					{ccContentItem?.meta.label}
+					{text || ccContentItem?.meta.label}
 				</Link>
 			</div>
 		);
 	};
 
 	return (
-		<DataLoader loadingState={contentItemLoadingState} render={renderView} notFoundMessage="" />
+		<div className="u-margin-bottom">
+			<DataLoader
+				loadingState={contentItemLoadingState}
+				render={renderView}
+				notFoundMessage=""
+			/>
+		</div>
 	);
 };
 
-export default ContentSelectView;
+export default CCContentSelectView;

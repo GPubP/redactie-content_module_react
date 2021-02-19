@@ -46,7 +46,14 @@ export class CcContentFacade extends BaseMultiEntityFacade<
 			return;
 		}
 
-		reload && oldValue ? this.store.setItemIsFetching(uuid, true) : this.store.addItem(uuid);
+		reload && oldValue
+			? this.store.setItemIsFetching(uuid, true)
+			: this.store.addItem(uuid, {
+					isFetching: true,
+					error: null,
+					id: uuid,
+					value: null,
+			  });
 
 		return this.service
 			.getContentItem(siteId, uuid)
