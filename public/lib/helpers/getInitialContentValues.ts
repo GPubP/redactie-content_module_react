@@ -1,5 +1,8 @@
 import { ContentTypeFieldSchema } from '../api/api.types';
 
+const setFieldValue = (dataValue: any, defaultValue: any, fallback: any): any =>
+	dataValue && typeof dataValue !== 'function' ? dataValue : defaultValue ?? fallback;
+
 export const getInitialContentValues = (
 	fields: ContentTypeFieldSchema[],
 	data: Record<string, any> = {}
@@ -18,13 +21,12 @@ export const getInitialContentValues = (
 				field.generalConfig.required || data[field.name] || field.defaultValue
 					? getInitialContentValues(
 							field.preset.data.fields.map(f => f.field),
-							data[field.name] ?? field.defaultValue ?? {}
+							setFieldValue(data[field.name], field.defaultValue, {})
 					  )
 					: '';
 			return values;
 		}
-
-		values[field.name] = data[field.name] ?? field.defaultValue ?? '';
+		values[field.name] = setFieldValue(data[field.name], field.defaultValue, '');
 
 		return values;
 	}, {} as Record<string, any>);
