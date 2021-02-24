@@ -231,9 +231,8 @@ export const getContentTypeCompartments = (
 			),
 			sort<ContentTypeFieldSchema>(
 				(fieldA, fieldB) =>
-					fieldA.compartment?.position ??
-					Number.MAX_VALUE - fieldB.compartment?.position ??
-					Number.MAX_VALUE
+					(fieldA.compartment?.position ?? Number.MAX_VALUE) -
+					(fieldB.compartment?.position ?? Number.MAX_VALUE)
 			)
 		)(contentType.fields);
 
