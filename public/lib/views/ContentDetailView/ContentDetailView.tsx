@@ -1,4 +1,11 @@
-import { Link as AuiLink, Button, Card, CardBody, CardTitle } from '@acpaas-ui/react-components';
+import {
+	Link as AuiLink,
+	Button,
+	Card,
+	CardBody,
+	CardTitle,
+	Label,
+} from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { useWorker } from '@redactie/utils';
 import moment from 'moment';
@@ -11,6 +18,7 @@ import { getView } from '../../connectors/formRenderer';
 import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
 import { getViewPropsByCT } from '../../helpers';
 import { useLock, useNavigate } from '../../hooks';
+import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
 import { LockModel, locksFacade } from '../../store/locks';
 import { LockWorkerData } from '../../workers/pollGetLock/pollGetLock.types';
 import { ContentDetailChildRouteProps } from '../ContentDetail/ContentDetail.types';
@@ -78,14 +86,19 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 							<CardTitle>{meta.label}</CardTitle>
 
 							<div className="u-margin-top">
+								{meta.description && (
+									<div className="u-margin-bottom u-text-light">
+										{meta.description}
+									</div>
+								)}
 								{meta.slug && (
-									<div className="u-margin-bottom-xs">
+									<div>
 										<b>Slug: </b>
 										{meta.slug.nl}
 									</div>
 								)}
 								{meta.created && (
-									<div className="u-margin-bottom-xs">
+									<div>
 										<b>Aangemaakt op: </b>
 										{moment(meta.created).format(DATE_FORMATS.dateAndTime)}
 									</div>
@@ -94,6 +107,26 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 									<div>
 										<b>Laatst aangepast op: </b>
 										{moment(meta.lastModified).format(DATE_FORMATS.dateAndTime)}
+									</div>
+								)}
+								{meta.lastEditor && (
+									<div>
+										<b>Door: </b>
+										{`${meta.lastEditor?.firstname} ${meta.lastEditor?.lastname}`}
+									</div>
+								)}
+								{meta.status && (
+									<div className="u-margin-top">
+										<p>
+											<b>Status</b>
+										</p>
+										<Label type="primary">
+											{
+												CONTENT_STATUS_TRANSLATION_MAP[
+													meta.status as ContentStatus
+												]
+											}
+										</Label>
 									</div>
 								)}
 							</div>
