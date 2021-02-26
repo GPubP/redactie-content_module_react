@@ -112,7 +112,6 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 			contentItemError?.actionType === 'fetchingOne' &&
 			contentItemError?.response?.status === 403
 		) {
-			// TODO: get route from roles and rights module
 			contentFacade.clearError();
 			push(
 				`/${tenantId}${
