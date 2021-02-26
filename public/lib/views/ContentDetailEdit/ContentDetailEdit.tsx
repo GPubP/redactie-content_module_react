@@ -1,13 +1,14 @@
 import { AlertContainer, HasChangesWorkerData, LoadingState, useWorker } from '@redactie/utils';
 import { equals } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { ContentSchema } from '../../api/api.types';
 import { RenderChildRoutes } from '../../components';
 import DataLoader from '../../components/DataLoader/DataLoader';
+import rolesRightsConnector from '../../connectors/rolesRights';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
-import { getInitialContentValues, runAllSubmitHooks } from '../../helpers';
-import { getTimeUntilLockExpires } from '../../helpers/getTimeUntilLockExpires';
+import { getInitialContentValues, getTimeUntilLockExpires, runAllSubmitHooks } from '../../helpers';
 import { useLock, useNavigate } from '../../hooks';
 import { ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content';
@@ -25,12 +26,14 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	contentItemDraft,
 	match,
 	tenantId,
+	contentTypeRights,
 }) => {
 	const { siteId, contentId } = match.params;
 	/**
 	 * Hooks
 	 */
-	const { navigate } = useNavigate();
+	const { navigate, generatePath } = useNavigate();
+	const { push } = useHistory();
 	const [, , externalLock, userLock] = useLock(contentId);
 	const [initialLoadingState, setInitialLoadingState] = useState(LoadingState.Loading);
 	const hasChangesWorkerData = useMemo(
@@ -64,6 +67,18 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		workerData,
 		userLock
 	);
+
+	useEffect(() => {
+		if (contentTypeRights && !contentTypeRights.update) {
+			push(
+				`/${tenantId}${
+					rolesRightsConnector.api.consts.forbidden403Path
+				}?redirect=${generatePath(MODULE_PATHS.overview, {
+					siteId,
+				})}`
+			);
+		}
+	}, [contentTypeRights, generatePath, push, siteId, tenantId]);
 
 	useEffect(() => {
 		if (userLock || externalLock) {

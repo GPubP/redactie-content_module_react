@@ -47,3 +47,17 @@ export const DATE_FORMATS = {
 	date: 'DD/MM/YYYY',
 	dateAndTime: 'DD/MM/YYYY [-] HH[u]mm',
 };
+
+export const DEFAULT_CRUD_RIGHTS = {
+	read: false,
+	create: false,
+	update: false,
+	delete: false,
+};
+
+export const CONTENT_TYPE_CRUD_RIGHT_KEYS = {
+	read: 'content_read',
+	create: 'content_create',
+	update: 'content_update',
+	delete: 'content_delete',
+};

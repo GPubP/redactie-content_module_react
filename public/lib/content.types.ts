@@ -42,3 +42,10 @@ export interface AlertMessage {
 	title: string;
 	message: string;
 }
+
+export interface CRUDSecurityRights {
+	read: boolean;
+	create: boolean;
+	update: boolean;
+	delete: boolean;
+}
