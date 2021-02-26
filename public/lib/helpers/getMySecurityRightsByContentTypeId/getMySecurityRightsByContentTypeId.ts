@@ -7,13 +7,11 @@ export const getMySecurityRightsByContentTypeId = (
 	contentTypeId: string,
 	mySecurityRights: MySecurityRightModel[] = []
 ): CRUDSecurityRights => {
-	return mySecurityRights
-		.filter(
-			mySecurityRight =>
-				mySecurityRight.attributes.type === 'content-type' &&
-				mySecurityRight.attributes.reference === contentTypeId
-		)
-		.reduce((acc, mySecurityRight) => {
+	return mySecurityRights.reduce((acc, mySecurityRight) => {
+		if (
+			mySecurityRight.attributes.type === 'content-type' &&
+			mySecurityRight.attributes.reference === contentTypeId
+		) {
 			return Object.keys(CONTENT_TYPE_CRUD_RIGHT_KEYS).reduce(
 				(rights, mySecurityRightKey) => {
 					return {
@@ -33,5 +31,7 @@ export const getMySecurityRightsByContentTypeId = (
 				},
 				acc
 			);
-		}, DEFAULT_CRUD_RIGHTS);
+		}
+		return acc;
+	}, DEFAULT_CRUD_RIGHTS);
 };
