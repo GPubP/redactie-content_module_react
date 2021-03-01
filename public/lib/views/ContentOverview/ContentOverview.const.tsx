@@ -111,16 +111,20 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		disableSorting: true,
 		width: '10%',
 		component(value: unknown, rowData: ContentOverviewTableRow) {
-			const { navigate } = rowData;
+			const { navigate, securityRights } = rowData;
 
 			return (
-				<Button
-					ariaLabel="Edit"
-					icon="edit"
-					onClick={() => navigate(MODULE_PATHS.detailEdit)}
-					type="primary"
-					transparent
-				/>
+				<>
+					{securityRights.update ? (
+						<Button
+							ariaLabel="Edit"
+							icon="edit"
+							onClick={() => navigate(MODULE_PATHS.detailEdit)}
+							type="primary"
+							transparent
+						/>
+					) : null}
+				</>
 			);
 		},
 	},

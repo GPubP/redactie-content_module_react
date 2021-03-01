@@ -5,18 +5,27 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import {
 	AlertContainer,
+	LoadingState,
 	TenantContext,
 	useDetectValueChangesWorker,
 	useWillUnmount,
 } from '@redactie/utils';
-import React, { FC, useContext, useEffect, useMemo } from 'react';
+import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
+import rolesRightsConnector from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { getInitialContentValues, runAllSubmitHooks } from '../../helpers';
-import { useContentItem, useContentType, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
+import {
+	useContentItem,
+	useContentType,
+	useMyContentTypeRights,
+	useNavigate,
+	useRoutesBreadcrumbs,
+} from '../../hooks';
 import { ContentCreateSchema, ContentSchema, ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content/content.facade';
 import { contentTypesFacade } from '../../store/contentTypes';
@@ -31,9 +40,18 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 	 * Hooks
 	 */
 	const { generatePath, navigate } = useNavigate();
-	const [contentTypesLoading, contentType] = useContentType();
+	const [contentTypeLoading, contentType] = useContentType();
+	const { push } = useHistory();
 	const [t] = useCoreTranslation();
 	const [, , contentItemDraft] = useContentItem();
+	const [
+		mySecurityRightsLoadingState,
+		mySecurityrights,
+	] = rolesRightsConnector.api.hooks.useMySecurityRightsForSite({
+		siteUuid: siteId,
+		onlyKeys: false,
+	});
+	const contentTypeRights = useMyContentTypeRights(contentType?._id, mySecurityrights);
 	const { tenantId } = useContext(TenantContext);
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
@@ -49,10 +67,32 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		contentItemDraft,
 		BFF_MODULE_PUBLIC_PATH
 	);
+	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+
+	useEffect(() => {
+		if (
+			contentTypeLoading !== LoadingState.Loading &&
+			mySecurityRightsLoadingState !== LoadingState.Loading
+		) {
+			setInitialLoading(LoadingState.Loaded);
+		}
+	}, [mySecurityRightsLoadingState, contentTypeLoading, contentType, mySecurityrights]);
 
 	useWillUnmount(() => {
 		contentTypesFacade.clearContentType();
 	});
+
+	useEffect(() => {
+		if (contentTypeRights && !contentTypeRights.create) {
+			push(
+				`/${tenantId}${
+					rolesRightsConnector.api.consts.forbidden403Path
+				}?redirect=${generatePath(MODULE_PATHS.createOverview, {
+					siteId,
+				})}`
+			);
+		}
+	}, [contentTypeRights, generatePath, push, siteId, tenantId]);
 
 	useEffect(() => {
 		if (!contentType) {
@@ -195,7 +235,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 					toastClassName="u-margin-bottom"
 					containerId={ALERT_CONTAINER_IDS.contentCreate}
 				/>
-				<DataLoader loadingState={contentTypesLoading} render={renderChildRoutes} />
+				<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
 			</Container>
 		</>
 	);
