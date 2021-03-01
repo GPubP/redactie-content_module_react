@@ -7,7 +7,7 @@ import {
 	Label,
 } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
-import { useWorker } from '@redactie/utils';
+import { useNavigate, useWorker } from '@redactie/utils';
 import moment from 'moment';
 import { isEmpty } from 'ramda';
 import React, { FC, useEffect, useMemo } from 'react';
@@ -15,9 +15,9 @@ import { Link } from 'react-router-dom';
 
 import { PublishedStatus } from '../../components';
 import { getView } from '../../connectors/formRenderer';
-import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
+import { DATE_FORMATS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { getViewPropsByCT } from '../../helpers';
-import { useLock, useNavigate } from '../../hooks';
+import { useLock } from '../../hooks';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
 import { LockModel, locksFacade } from '../../store/locks';
 import { LockWorkerData } from '../../workers/pollGetLock/pollGetLock.types';
@@ -38,7 +38,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 	/**
 	 * Hooks
 	 */
-	const { navigate, generatePath } = useNavigate();
+	const { navigate, generatePath } = useNavigate(SITES_ROOT);
 	const [, , externalLock, userLock] = useLock(contentId);
 	const viewProps = useMemo(() => getViewPropsByCT(contentType, contentItemDraft.fields), [
 		contentType,

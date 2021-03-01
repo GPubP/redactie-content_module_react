@@ -1,5 +1,6 @@
+import { ContextHeaderBadge } from '@redactie/utils';
+
 import { ContentSchema } from '../api/api.types';
-import { ContextHeaderBadge } from '../content.types';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../services/content';
 
 export const generateDetailBadges = (

@@ -3,14 +3,19 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { LoadingState, useWillUnmount } from '@redactie/utils';
+import {
+	DataLoader,
+	LoadingState,
+	RenderChildRoutes,
+	useNavigate,
+	useWillUnmount,
+} from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { DataLoader, RenderChildRoutes } from '../../components';
-import { LockMessage } from '../../components/LockMessage/LockMessage';
+import { LockMessage } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
-import { MODULE_PATHS } from '../../content.const';
+import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { generateDetailBadges } from '../../helpers';
 import {
@@ -18,7 +23,6 @@ import {
 	useContentItem,
 	useContentType,
 	useLock,
-	useNavigate,
 	useRoutesBreadcrumbs,
 } from '../../hooks';
 import { contentFacade } from '../../store/content';
@@ -40,7 +44,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	/**
 	 * Hooks
 	 */
-	const { generatePath } = useNavigate();
+	const { generatePath } = useNavigate(SITES_ROOT);
 	const [t] = useCoreTranslation();
 	const activeTabs = useActiveTabs(CONTENT_UPDATE_TABS, location.pathname);
 	const [contentItemLoading, contentItem, contentItemDraft] = useContentItem();

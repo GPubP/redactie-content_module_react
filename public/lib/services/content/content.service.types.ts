@@ -1,13 +1,7 @@
+import { PagingSchema } from '../../content.types';
 import { ContentTypeSchema } from '../contentTypes';
 
 export type ModuleValue = Record<string, any>;
-
-export interface PagingSchema {
-	total: number;
-	moreResults: boolean;
-	limit: number;
-	skip: number;
-}
 
 export interface ContentSchema {
 	_id?: string;

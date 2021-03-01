@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 
 import { LockModel } from '../../store/locks';
 
-export const LockMessage: FC<{ lock: LockModel; className?: string }> = ({ lock, className }) => {
+const LockMessage: FC<{ lock: LockModel; className?: string }> = ({ lock, className }) => {
 	return (
 		<Alert
 			className={className}
@@ -24,3 +24,5 @@ export const LockMessage: FC<{ lock: LockModel; className?: string }> = ({ lock,
 		</Alert>
 	);
 };
+
+export default LockMessage;

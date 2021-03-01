@@ -1,6 +1,7 @@
 import { BaseEntityState } from '@redactie/utils';
 
-import { ContentSchema, PagingSchema } from '../../services/content';
+import { PagingSchema } from '../../content.types';
+import { ContentSchema } from '../../services/content';
 
 export type ContentModel = ContentSchema;
 

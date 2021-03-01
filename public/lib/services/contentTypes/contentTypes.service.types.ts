@@ -1,5 +1,7 @@
 import { Operator, Preset, Validation, Validator } from '@redactie/form-renderer-module';
 
+import { PagingSchema } from '../../content.types';
+
 export interface GeneralConfig {
 	guideline: string;
 	hidden: boolean;
@@ -91,16 +93,9 @@ export interface ContentTypeSchema {
 	errorMessages: ErrorMessagesSchema;
 }
 
-export interface ContentTypePaging {
-	total: number;
-	moreResults: boolean;
-	limit: number;
-	skip: number;
-}
-
 export interface ContentTypesSchema {
 	data: ContentTypeSchema[];
-	paging: ContentTypePaging;
+	paging: PagingSchema;
 }
 
 export interface ValidateSchema {

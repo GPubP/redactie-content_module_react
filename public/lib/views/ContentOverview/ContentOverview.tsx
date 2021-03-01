@@ -6,12 +6,11 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { LoadingState, OrderBy, SearchParams } from '@redactie/utils';
+import { DataLoader, LoadingState, OrderBy, SearchParams, useNavigate } from '@redactie/utils';
 import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import {
-	DataLoader,
 	FILTER_STATUS_OPTIONS,
 	FilterForm,
 	FilterFormState,
@@ -20,9 +19,9 @@ import {
 } from '../../components';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
-import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
-import { ContentRouteProps, FilterItemSchema } from '../../content.types';
-import { useContent, useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
+import { DATE_FORMATS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
+import { ContentRouteProps, OverviewFilterItem } from '../../content.types';
+import { useContent, useContentTypes, useRoutesBreadcrumbs } from '../../hooks';
 import {
 	CONTENT_STATUS_TRANSLATION_MAP,
 	ContentStatus,
@@ -46,8 +45,8 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	 * Hooks
 	 */
 	const [, contentTypes] = useContentTypes();
-	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
-	const [contentTypeList, setContentTypeList] = useState<FilterItemSchema[]>([]);
+	const [filterItems, setFilterItems] = useState<OverviewFilterItem[]>([]);
+	const [contentTypeList, setContentTypeList] = useState<OverviewFilterItem[]>([]);
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
 		CONTENT_INITIAL_FILTER_STATE
 	);
@@ -58,7 +57,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		siteUuid: siteId,
 		onlyKeys: true,
 	});
-	const { generatePath, navigate } = useNavigate();
+	const { generatePath, navigate } = useNavigate(SITES_ROOT);
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const [contentSearchParams, setContentSearchParams] = useState<SearchParams>(
 		DEFAULT_CONTENT_SEARCH_PARAMS
@@ -99,8 +98,8 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		published,
 		creator,
 	}: FilterFormState): {
-		filters: FilterItemSchema[];
-		contentTypeFilters: FilterItemSchema[];
+		filters: OverviewFilterItem[];
+		contentTypeFilters: OverviewFilterItem[];
 	} => {
 		const filters = [
 			{
@@ -183,7 +182,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		setFilterFormState(CONTENT_INITIAL_FILTER_STATE);
 	};
 
-	const deleteFilter = (item: FilterItemSchema): void => {
+	const deleteFilter = (item: OverviewFilterItem): void => {
 		let updatedSearchParams: Partial<SearchParams> = {};
 		let updatedFormState: Partial<FilterFormState> = {};
 		// Delete item from filterItems

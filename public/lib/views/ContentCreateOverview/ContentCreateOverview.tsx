@@ -4,14 +4,13 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { LoadingState, OrderBy } from '@redactie/utils';
+import { DataLoader, LoadingState, OrderBy, useNavigate } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { DataLoader } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
-import { MODULE_PATHS } from '../../content.const';
+import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
-import { useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
+import { useContentTypes, useRoutesBreadcrumbs } from '../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../services/contentTypes';
 import { contentTypesFacade } from '../../store/contentTypes';
 
@@ -23,7 +22,7 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 	/**
 	 * Hooks
 	 */
-	const { navigate, generatePath } = useNavigate();
+	const { navigate, generatePath } = useNavigate(SITES_ROOT);
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
 			name: 'Content Overzicht',

@@ -1,14 +1,20 @@
-import { AlertContainer, HasChangesWorkerData, LoadingState, useWorker } from '@redactie/utils';
+import {
+	AlertContainer,
+	DataLoader,
+	HasChangesWorkerData,
+	LoadingState,
+	RenderChildRoutes,
+	useNavigate,
+	useWorker,
+} from '@redactie/utils';
 import { equals } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { ContentSchema } from '../../api/api.types';
-import { RenderChildRoutes } from '../../components';
-import DataLoader from '../../components/DataLoader/DataLoader';
-import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
+import { ALERT_CONTAINER_IDS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { getInitialContentValues, runAllSubmitHooks } from '../../helpers';
 import { getTimeUntilLockExpires } from '../../helpers/getTimeUntilLockExpires';
-import { useLock, useNavigate } from '../../hooks';
+import { useLock } from '../../hooks';
 import { ContentStatus } from '../../services/content';
 import { contentFacade } from '../../store/content';
 import { LockModel, locksFacade } from '../../store/locks';
@@ -30,7 +36,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	/**
 	 * Hooks
 	 */
-	const { navigate } = useNavigate();
+	const { navigate } = useNavigate(SITES_ROOT);
 	const [, , externalLock, userLock] = useLock(contentId);
 	const [initialLoadingState, setInitialLoadingState] = useState(LoadingState.Loading);
 	const hasChangesWorkerData = useMemo(

@@ -1,9 +1,8 @@
 // import { akitaDevtools } from '@datorama/akita';
-import { SiteContext, TenantContext } from '@redactie/utils';
+import { RenderChildRoutes, SiteContext, TenantContext } from '@redactie/utils';
 import React, { FC, useMemo } from 'react';
 
 import { registerContentAPI } from './lib/api/index';
-import { RenderChildRoutes } from './lib/components';
 import { registerCCViews } from './lib/components/CCViews';
 import { registerCCFields } from './lib/components/Fields/index';
 import rolesRightsConnector from './lib/connectors/rolesRights';
