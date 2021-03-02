@@ -5,25 +5,26 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import {
 	AlertContainer,
+	DataLoader,
 	LoadingState,
+	RenderChildRoutes,
 	TenantContext,
 	useDetectValueChangesWorker,
+	useNavigate,
 	useWillUnmount,
 } from '@redactie/utils';
 import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { DataLoader, RenderChildRoutes } from '../../components';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
-import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../content.const';
+import { ALERT_CONTAINER_IDS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { getInitialContentValues, runAllSubmitHooks } from '../../helpers';
 import {
 	useContentItem,
 	useContentType,
 	useMyContentTypeRights,
-	useNavigate,
 	useRoutesBreadcrumbs,
 } from '../../hooks';
 import { ContentCreateSchema, ContentSchema, ContentStatus } from '../../services/content';
@@ -39,7 +40,8 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 	/**
 	 * Hooks
 	 */
-	const { generatePath, navigate } = useNavigate();
+
+	const { generatePath, navigate } = useNavigate(SITES_ROOT);
 	const [contentTypeLoading, contentType] = useContentType();
 	const { push } = useHistory();
 	const [t] = useCoreTranslation();

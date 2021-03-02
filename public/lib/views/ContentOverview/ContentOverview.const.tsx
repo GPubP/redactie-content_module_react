@@ -1,6 +1,7 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
 import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module/public/lib/i18next/useTranslation';
+import { TableColumn } from '@redactie/utils';
 import classnames from 'classnames';
 import moment from 'moment';
 import React from 'react';
@@ -27,14 +28,14 @@ export const CONTENT_INITIAL_FILTER_STATE = {
 	creator: '',
 };
 
-export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
+export const CONTENT_OVERVIEW_COLUMNS = (
+	t: TranslateFunc
+): TableColumn<ContentOverviewTableRow>[] => [
 	{
 		label: 'Titel',
 		value: 'label',
 		width: '27%',
-		component(label: string, rowData: ContentOverviewTableRow) {
-			const { viewPath, description } = rowData;
-
+		component(label: string, { viewPath, description }) {
 			return (
 				<>
 					<AUILink to={viewPath} component={Link}>
@@ -72,7 +73,7 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'lastEditor',
 		disableSorting: true,
 		width: '15%',
-		component(value: any, rowData: ContentOverviewTableRow) {
+		component(value, rowData) {
 			return (
 				<p>
 					{rowData.lastEditor?.firstname ? (
@@ -95,11 +96,11 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		label: 'Online',
 		value: 'published',
 		width: '5%',
-		component(value: unknown, rowData: ContentOverviewTableRow) {
+		component(value, { published }) {
 			return (
 				<span
 					className={classnames('fa fa-circle', [
-						rowData.published ? 'u-text-success' : 'u-text-danger',
+						published ? 'u-text-success' : 'u-text-danger',
 					])}
 				/>
 			);
@@ -110,9 +111,7 @@ export const CONTENT_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 		classList: ['u-text-right'],
 		disableSorting: true,
 		width: '10%',
-		component(value: unknown, rowData: ContentOverviewTableRow) {
-			const { navigate, securityRights } = rowData;
-
+		component(value, { navigate, securityRights }) {
 			return (
 				<>
 					{securityRights.update ? (

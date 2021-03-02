@@ -1,7 +1,5 @@
 import Core from '@redactie/redactie-core';
-import { SearchParams } from '@redactie/utils';
 import ky from 'ky';
-import { stringify } from 'query-string';
 
 export type KyInstance = typeof ky;
 
@@ -15,9 +13,5 @@ const api: KyInstance = ky.create({
 		'x-tenant-id': CoreConfig.tenantId,
 	},
 });
-
-export const parseSearchParams = (searchParams: SearchParams): string => {
-	return stringify(searchParams, { arrayFormat: 'comma', skipNull: true, skipEmptyString: true });
-};
 
 export default api;

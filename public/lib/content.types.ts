@@ -1,6 +1,5 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
-import { ContextHeaderTab } from '@redactie/utils';
-import { NavLinkProps } from 'react-router-dom';
+import { ContextHeaderTab, FilterItem } from '@redactie/utils';
 
 export interface ContentRouteProps<
 	Params extends {
@@ -11,7 +10,14 @@ export interface ContentRouteProps<
 	tenantId: string;
 }
 
-export interface FilterItemSchema {
+export interface PagingSchema {
+	total: number;
+	moreResults: boolean;
+	limit: number;
+	skip: number;
+}
+
+export interface OverviewFilterItem extends FilterItem {
 	key?: string;
 	value: string;
 	valuePrefix?: string;
@@ -21,21 +27,6 @@ export interface FilterItemSchema {
 
 export interface Tab extends ContextHeaderTab {
 	id?: string;
-}
-
-export interface FilterItemsSchema {
-	data: FilterItemSchema[];
-}
-
-export interface ContextHeaderBadge {
-	name: string;
-	type: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
-}
-
-export interface NavListItem extends NavLinkProps {
-	description?: string;
-	label: string;
-	hasError?: boolean;
 }
 
 export interface AlertMessage {

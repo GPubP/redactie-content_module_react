@@ -1,6 +1,6 @@
 import { Card } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
-import { alertService, LeavePrompt, LoadingState, useNavigate } from '@redactie/utils';
+import { alertService, LeavePrompt, LoadingState, NavListItem, useNavigate } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { equals, isEmpty, lensPath, set } from 'ramda';
@@ -15,7 +15,6 @@ import {
 	SITES_ROOT,
 	WORKING_TITLE_KEY,
 } from '../../content.const';
-import { NavListItem } from '../../content.types';
 import {
 	filterExternalCompartments,
 	getCompartmentValue,

@@ -1,7 +1,7 @@
 import { useObservable } from '@mindspace-io/react';
 import { LoadingState } from '@redactie/utils';
 
-import { PagingSchema } from '../../services/content';
+import { PagingSchema } from '../../content.types';
 import { contentFacade, ContentModel } from '../../store/content';
 
 const useContent = (): [LoadingState, ContentModel[], PagingSchema | null | undefined] => {
