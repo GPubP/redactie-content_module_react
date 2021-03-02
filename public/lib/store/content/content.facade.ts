@@ -71,6 +71,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 			.then(response => {
 				if (response) {
 					this.store.update({
+						error: null,
 						contentItem: response,
 						isFetchingOne: false,
 					});
@@ -78,7 +79,10 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 			})
 			.catch(error => {
 				this.store.update({
-					error,
+					error: {
+						...error,
+						actionType: 'fetchingOne',
+					},
 					isFetchingOne: false,
 				});
 			});
@@ -232,6 +236,12 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 				},
 			},
 		}));
+	}
+
+	public clearError(): void {
+		this.store.update({
+			error: null,
+		});
 	}
 }
 

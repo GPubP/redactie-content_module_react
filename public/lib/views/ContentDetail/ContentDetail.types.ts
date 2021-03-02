@@ -1,5 +1,5 @@
 import { ContentSchema, ContentTypeSchema } from '../../api/api.types';
-import { ContentRouteProps } from '../../content.types';
+import { ContentRouteProps, CRUDSecurityRights } from '../../content.types';
 
 export interface ContentDetailMatchProps {
 	siteId: string;
@@ -11,4 +11,5 @@ export interface ContentDetailChildRouteProps<T = ContentDetailMatchProps>
 	contentType: ContentTypeSchema;
 	contentItemDraft: ContentSchema;
 	contentItem: ContentSchema;
+	contentTypeRights: CRUDSecurityRights;
 }
