@@ -125,11 +125,11 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 			>
 				{currentValueLabel}
 			</Tooltip>
-			{/* {config.description ? (
+			{config.description ? (
 				<div className="a-input a-input__wrapper">
 					<small>{config.description}</small>
 				</div>
-			) : null} */}
+			) : null}
 			<ErrorMessage name={field.name} />
 		</>
 	);
