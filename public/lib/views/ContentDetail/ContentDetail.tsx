@@ -11,9 +11,10 @@ import {
 	useWillUnmount,
 } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { LockMessage } from '../../components';
+import rolesRightsConnector from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
@@ -23,12 +24,13 @@ import {
 	useContentItem,
 	useContentType,
 	useLock,
+	useMyContentTypeRights,
 	useRoutesBreadcrumbs,
 } from '../../hooks';
 import { contentFacade } from '../../store/content';
 import { contentTypesFacade } from '../../store/contentTypes';
 
-import { CONTENT_UPDATE_TABS } from './ContentDetail.const';
+import { CONTENT_UPDATE_TAB_MAP, CONTENT_UPDATE_TABS } from './ContentDetail.const';
 import { ContentDetailMatchProps } from './ContentDetail.types';
 
 import './ContentDetail.scss';
@@ -46,9 +48,18 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	 */
 	const { generatePath } = useNavigate(SITES_ROOT);
 	const [t] = useCoreTranslation();
-	const activeTabs = useActiveTabs(CONTENT_UPDATE_TABS, location.pathname);
-	const [contentItemLoading, contentItem, contentItemDraft] = useContentItem();
+	const { push } = useHistory();
+	const [contentItemLoading, contentItem, contentItemDraft, contentItemError] = useContentItem();
 	const [contentTypeLoading, contentType] = useContentType();
+	const [
+		mySecurityRightsLoadingState,
+		mySecurityrights,
+	] = rolesRightsConnector.api.hooks.useMySecurityRightsForSite({
+		siteUuid: siteId,
+		onlyKeys: false,
+	});
+	const contentTypeRights = useMyContentTypeRights(contentType?._id, mySecurityrights);
+	const activeTabs = useActiveTabs(CONTENT_UPDATE_TABS, location.pathname);
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
 			name: 'Content Overzicht',
@@ -74,12 +85,47 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		if (
 			contentTypeLoading !== LoadingState.Loading &&
 			contentItemLoading !== LoadingState.Loading &&
+			mySecurityRightsLoadingState !== LoadingState.Loading &&
 			contentType &&
 			contentItem
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [contentTypeLoading, contentItemLoading, contentType, contentItem]);
+	}, [
+		contentTypeLoading,
+		contentItemLoading,
+		contentType,
+		contentItem,
+		mySecurityRightsLoadingState,
+	]);
+
+	const pageTabs = useMemo(() => {
+		// filter tabs based on user security rights
+		return activeTabs.filter(tab => {
+			if (tab.name === CONTENT_UPDATE_TAB_MAP.edit.name) {
+				return contentTypeRights?.update;
+			}
+			return true;
+		});
+	}, [activeTabs, contentTypeRights]);
+
+	useEffect(() => {
+		// Redirect user to 403 page when we get a 403 error from
+		// the server when fetching the latest content item
+		if (
+			contentItemError?.actionType === 'fetchingOne' &&
+			contentItemError?.response?.status === 403
+		) {
+			contentFacade.clearError();
+			push(
+				`/${tenantId}${
+					rolesRightsConnector.api.consts.forbidden403Path
+				}?redirect=${generatePath(MODULE_PATHS.overview, {
+					siteId,
+				})}`
+			);
+		}
+	}, [contentItemError, generatePath, push, siteId, tenantId]);
 
 	useEffect(() => {
 		if (contentItem?.meta.contentType.uuid && siteId) {
@@ -110,6 +156,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 			contentItem: contentItem,
 			contentItemDraft,
 			tenantId,
+			contentTypeRights,
 		};
 
 		return (
@@ -132,29 +179,31 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	);
 	const badges = generateDetailBadges(contentItem);
 
-	return (
-		<>
-			<ContextHeader
-				className="v-content-detail__header"
-				title={pageTitle}
-				tabs={activeTabs}
-				linkProps={(props: any) => ({
-					...props,
-					to: generatePath(`${MODULE_PATHS.detail}/${props.href}`, {
-						siteId,
-						contentId,
-					}),
-					component: Link,
-				})}
-				badges={badges}
-			>
-				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
-			</ContextHeader>
-			<Container>
-				<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
-			</Container>
-		</>
-	);
+	const render = (): ReactElement => {
+		return (
+			<>
+				<ContextHeader
+					className="v-content-detail__header"
+					title={pageTitle}
+					tabs={pageTabs}
+					linkProps={(props: any) => ({
+						...props,
+						to: generatePath(`${MODULE_PATHS.detail}/${props.href}`, {
+							siteId,
+							contentId,
+						}),
+						component: Link,
+					})}
+					badges={badges}
+				>
+					<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
+				</ContextHeader>
+				<Container>{renderChildRoutes()}</Container>
+			</>
+		);
+	};
+
+	return <DataLoader loadingState={initialLoading} render={render} />;
 };
 
 export default ContentDetail;

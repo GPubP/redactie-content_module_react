@@ -111,15 +111,19 @@ export const CONTENT_OVERVIEW_COLUMNS = (
 		classList: ['u-text-right'],
 		disableSorting: true,
 		width: '10%',
-		component(value, { navigate }) {
+		component(value, { navigate, securityRights }) {
 			return (
-				<Button
-					ariaLabel="Edit"
-					icon="edit"
-					onClick={() => navigate(MODULE_PATHS.detailEdit)}
-					type="primary"
-					transparent
-				/>
+				<>
+					{securityRights.update ? (
+						<Button
+							ariaLabel="Edit"
+							icon="edit"
+							onClick={() => navigate(MODULE_PATHS.detailEdit)}
+							type="primary"
+							transparent
+						/>
+					) : null}
+				</>
 			);
 		},
 	},

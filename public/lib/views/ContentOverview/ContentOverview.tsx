@@ -8,7 +8,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { DataLoader, LoadingState, OrderBy, SearchParams, useNavigate } from '@redactie/utils';
 import moment from 'moment';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import {
 	FILTER_STATUS_OPTIONS,
@@ -19,9 +19,14 @@ import {
 } from '../../components';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
-import { DATE_FORMATS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
+import { DATE_FORMATS, DEFAULT_CRUD_RIGHTS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ContentRouteProps, OverviewFilterItem } from '../../content.types';
-import { useContent, useContentTypes, useRoutesBreadcrumbs } from '../../hooks';
+import {
+	useContent,
+	useContentTypes,
+	useMyContentTypesRights,
+	useRoutesBreadcrumbs,
+} from '../../hooks';
 import {
 	CONTENT_STATUS_TRANSLATION_MAP,
 	ContentStatus,
@@ -55,14 +60,19 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		mySecurityrights,
 	] = rolesRightsConnector.api.hooks.useMySecurityRightsForSite({
 		siteUuid: siteId,
-		onlyKeys: true,
+		onlyKeys: false,
 	});
+	const mySecurityrightsKeys = useMemo(
+		() => mySecurityrights.map(right => right.attributes.key),
+		[mySecurityrights]
+	);
 	const { generatePath, navigate } = useNavigate(SITES_ROOT);
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const [contentSearchParams, setContentSearchParams] = useState<SearchParams>(
 		DEFAULT_CONTENT_SEARCH_PARAMS
 	);
 	const [loadingState, contents, contentsPaging] = useContent();
+	const contentTypesSecurityRightsMap = useMyContentTypesRights(contents, mySecurityrights);
 	const [initialLoading, setInitialLoading] = useState<LoadingState>(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 	const [t] = useCoreTranslation();
@@ -264,6 +274,9 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				contentId: content.uuid,
 				siteId,
 			}),
+			securityRights: content._id
+				? contentTypesSecurityRightsMap[content._id]
+				: DEFAULT_CRUD_RIGHTS,
 		}));
 
 		return (
@@ -304,7 +317,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
 					<rolesRightsConnector.api.components.SecurableRender
-						userSecurityRights={mySecurityrights}
+						userSecurityRights={mySecurityrightsKeys}
 						requiredSecurityRights={[rolesRightsConnector.securityRights.create]}
 					>
 						<Button
