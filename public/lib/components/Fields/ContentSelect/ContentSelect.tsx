@@ -2,6 +2,7 @@ import { Autocomplete } from '@acpaas-ui/react-components';
 import { Tooltip } from '@acpaas-ui/react-editorial-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
 import { LoadingState, useSiteContext } from '@redactie/utils';
+import classNames from 'classnames';
 import { getIn } from 'formik';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { first } from 'rxjs/operators';
@@ -27,6 +28,10 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	const error = getIn(form.errors, field.name);
 
 	const state = !!error && !!touch ? 'error' : '';
+
+	const fieldClass = classNames('a-input', {
+		'is-required': config.required,
+	});
 
 	const { siteId } = useSiteContext();
 	const [contentLoadingState] = useCcContent('search');
@@ -66,6 +71,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 		<>
 			<div
 				ref={autoCompleteRef}
+				className={fieldClass}
 				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
 			>
@@ -119,11 +125,11 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 			>
 				{currentValueLabel}
 			</Tooltip>
-			{config.description ? (
+			{/* {config.description ? (
 				<div className="a-input a-input__wrapper">
 					<small>{config.description}</small>
 				</div>
-			) : null}
+			) : null} */}
 			<ErrorMessage name={field.name} />
 		</>
 	);
