@@ -4,12 +4,12 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { DataLoader, LoadingState, OrderBy, useNavigate } from '@redactie/utils';
+import { DataLoader, LoadingState, OrderBy, SearchParams, useNavigate } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
-import { ContentRouteProps } from '../../content.types';
+import { ContentRouteProps, CRUDActions } from '../../content.types';
 import { useContentTypes, useRoutesBreadcrumbs } from '../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../services/contentTypes';
 import { contentTypesFacade } from '../../store/contentTypes';
@@ -29,9 +29,10 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 			target: generatePath(`${MODULE_PATHS.overview}`, { siteId }),
 		},
 	]);
-	const [contentTypesSearchParams, setContentTypesSearchParams] = useState(
-		DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
-	);
+	const [contentTypesSearchParams, setContentTypesSearchParams] = useState({
+		...DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
+		context: CRUDActions.create,
+	} as SearchParams);
 	const [loadingState, contentTypes, meta] = useContentTypes();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
@@ -45,7 +46,7 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 
 	useEffect(() => {
 		if (contentTypesSearchParams && siteId) {
-			contentTypesFacade.getContentTypes(siteId, contentTypesSearchParams);
+			contentTypesFacade.getActiveContentTypes(siteId, contentTypesSearchParams);
 		}
 	}, [contentTypesSearchParams, siteId]);
 
