@@ -14,7 +14,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	public readonly contentTypes$ = this.query.contentTypes$;
 	public readonly contentType$ = this.query.contentType$;
 
-	public getContentTypes(siteId: string, searchParams: SearchParams): void {
+	public getActiveContentTypes(siteId: string, searchParams: SearchParams): void {
 		const { isFetching } = this.query.getValue();
 		if (isFetching) {
 			return;
@@ -23,7 +23,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 		this.store.setIsFetching(true);
 
 		this.service
-			.getContentTypes(siteId, searchParams)
+			.getActiveContentTypes(siteId, searchParams)
 			.then(response => {
 				if (response) {
 					this.store.set(response.data);

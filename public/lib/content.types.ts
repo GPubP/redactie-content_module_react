@@ -58,3 +58,10 @@ export interface CRUDSecurityRights {
 	update: boolean;
 	delete: boolean;
 }
+
+export enum CRUDActions {
+	create = 'create',
+	read = 'read',
+	update = 'update',
+	delete = 'delete',
+}
