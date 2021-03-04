@@ -14,3 +14,6 @@ export const getCustomValidator = (): typeof CustomValidator | undefined =>
 	formsAPI?.CustomValidator as typeof CustomValidator | undefined;
 export const parseFields: FormsAPI['parseFields'] = fields =>
 	formsAPI?.parseFields ? formsAPI.parseFields(fields) : [];
+export const getFormRendererFieldTitle = (): FormsAPI['FormRendererFieldTitle'] =>
+	formsAPI?.FormRendererFieldTitle as FormsAPI['FormRendererFieldTitle'];
+export const useFormContext = formsAPI?.useFormContext as FormsAPI['useFormContext'];
