@@ -88,7 +88,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 
 	useEffect(() => {
 		if (siteId) {
-			contentTypesFacade.getContentTypes(siteId, CONTENT_TYPES_SEARCH_OPTIONS);
+			contentTypesFacade.getActiveContentTypes(siteId, CONTENT_TYPES_SEARCH_OPTIONS);
 		}
 	}, [siteId]);
 
