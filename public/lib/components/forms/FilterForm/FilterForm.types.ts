@@ -1,5 +1,7 @@
 import { FormikState } from 'formik';
 
+import { OverviewFilterItem } from '../../../content.types';
+
 export type ResetForm = (nextState?: Partial<FormikState<FilterFormState>> | undefined) => void;
 
 export interface FilterFormProps {
@@ -7,7 +9,7 @@ export interface FilterFormProps {
 	initialState: FilterFormState;
 	onCancel: () => void;
 	onSubmit: (values: FilterFormState) => void;
-	deleteActiveFilter: (item: any) => void;
+	deleteActiveFilter: (item: OverviewFilterItem) => void;
 	activeFilters: Array<object>;
 }
 

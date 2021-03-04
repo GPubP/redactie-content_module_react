@@ -6,7 +6,16 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { DataLoader, LoadingState, OrderBy, SearchParams, useNavigate } from '@redactie/utils';
+import {
+	DataLoader,
+	LoadingState,
+	OrderBy,
+	parseObjToOrderBy,
+	parseOrderByToObj,
+	SearchParams,
+	useAPIQueryParams,
+	useNavigate,
+} from '@redactie/utils';
 import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
@@ -21,6 +30,7 @@ import rolesRightsConnector from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { DATE_FORMATS, DEFAULT_CRUD_RIGHTS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ContentRouteProps, OverviewFilterItem } from '../../content.types';
+import { generateActiveFilters, getFilterStateFromParams } from '../../helpers';
 import {
 	useContent,
 	useContentTypes,
@@ -36,9 +46,10 @@ import { contentFacade } from '../../store/content';
 import { contentTypesFacade } from '../../store/contentTypes';
 
 import {
-	CONTENT_INITIAL_FILTER_STATE,
 	CONTENT_OVERVIEW_COLUMNS,
 	CONTENT_TYPES_SEARCH_OPTIONS,
+	DEFAULT_OVERVIEW_QUERY_PARAMS,
+	OVERVIEW_QUERY_PARAMS_CONFIG,
 } from './ContentOverview.const';
 import { ContentOverviewTableRow, FilterKeys } from './ContentOverview.types';
 
@@ -46,15 +57,12 @@ import './ContentOverview.scss';
 
 const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) => {
 	const { siteId } = match.params;
+
 	/**
 	 * Hooks
 	 */
+
 	const [, contentTypes] = useContentTypes();
-	const [filterItems, setFilterItems] = useState<OverviewFilterItem[]>([]);
-	const [contentTypeList, setContentTypeList] = useState<OverviewFilterItem[]>([]);
-	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
-		CONTENT_INITIAL_FILTER_STATE
-	);
 	const [
 		mySecurityRightsLoadingState,
 		mySecurityrights,
@@ -63,20 +71,29 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		onlyKeys: false,
 	});
 	const mySecurityrightsKeys = useMemo(
-		() => mySecurityrights.map(right => right.attributes.key),
+		() => mySecurityrights.map(right => right.attributes?.key),
 		[mySecurityrights]
 	);
 	const { generatePath, navigate } = useNavigate(SITES_ROOT);
 	const breadcrumbs = useRoutesBreadcrumbs();
-	const [contentSearchParams, setContentSearchParams] = useState<SearchParams>(
-		DEFAULT_CONTENT_SEARCH_PARAMS
-	);
+	const [query, setQuery] = useAPIQueryParams(OVERVIEW_QUERY_PARAMS_CONFIG, false);
 	const [loadingState, contents, contentsPaging] = useContent();
 	const contentTypesSecurityRightsMap = useMyContentTypesRights(contents, mySecurityrights);
 	const [initialLoading, setInitialLoading] = useState<LoadingState>(LoadingState.Loading);
-	const [activeSorting, setActiveSorting] = useState<OrderBy>();
+	const filterFormState = useMemo(() => getFilterStateFromParams(query as SearchParams), [query]);
+	const activeFilters = useMemo(
+		() =>
+			generateActiveFilters(
+				filterFormState,
+				FILTER_STATUS_OPTIONS,
+				PUBLISHED_OPTIONS,
+				contentTypes
+			),
+		[contentTypes, filterFormState]
+	);
 	const [t] = useCoreTranslation();
 
+	// Set initial loading state
 	useEffect(() => {
 		if (
 			loadingState !== LoadingState.Loading &&
@@ -86,170 +103,103 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		}
 	}, [loadingState, mySecurityRightsLoadingState]);
 
+	// Fetch content types for filtering
 	useEffect(() => {
 		if (siteId) {
 			contentTypesFacade.getContentTypes(siteId, CONTENT_TYPES_SEARCH_OPTIONS);
 		}
 	}, [siteId]);
 
+	// Fetch content based on query params
 	useEffect(() => {
-		contentFacade.getContent(siteId, contentSearchParams);
-	}, [siteId, contentSearchParams]);
+		contentFacade.getContent(siteId, query as SearchParams);
+	}, [siteId, query]);
 
 	/**
 	 * Methods
 	 */
-	const createFilterItems = ({
-		search,
-		contentType,
-		publishedFrom,
-		publishedTo,
-		status,
-		published,
-		creator,
-	}: FilterFormState): {
-		filters: OverviewFilterItem[];
-		contentTypeFilters: OverviewFilterItem[];
-	} => {
-		const filters = [
-			{
-				filterKey: FilterKeys.SEARCH,
-				valuePrefix: 'Zoekterm',
-				value: search,
-			},
-			{
-				filterKey: FilterKeys.DATE,
-				valuePrefix: 'Gepubliceerd tussen',
-				value: publishedFrom && publishedTo ? `${publishedFrom} - ${publishedTo}` : '',
-			},
-			{
-				filterKey: FilterKeys.STATUS,
-				valuePrefix: 'Status',
-				value: FILTER_STATUS_OPTIONS.find(option => option.value === status)?.label || '',
-			},
-			{
-				filterKey: FilterKeys.PUBLISHED,
-				valuePrefix: 'Status',
-				value: PUBLISHED_OPTIONS.find(option => option.value === published)?.label || '',
-			},
-			{
-				filterKey: FilterKeys.CREATOR,
-				valuePrefix: 'Persoon',
-				value: creator,
-			},
-		];
-
-		const newContentTypeList = contentType.map(ctId => ({
-			valuePrefix: 'Content type',
-			formvalue: ctId,
-			filterKey: FilterKeys.CONTENT_TYPE,
-			value: contentTypes?.find(ct => ct._id === ctId)?.meta.label || ctId,
-		}));
-
-		setContentTypeList(newContentTypeList);
-
-		return {
-			filters: [...filters, ...newContentTypeList].filter(item => !!item.value),
-			contentTypeFilters: newContentTypeList,
-		};
-	};
 
 	const onSubmit = (filterFormState: FilterFormState): void => {
-		setFilterFormState(filterFormState);
-		const filterItems = createFilterItems(filterFormState);
+		console.log(filterFormState);
 
-		// Get value array from filterItems
-		const contentTypesString = filterItems.contentTypeFilters.map(item => item.formvalue);
-
-		setFilterItems(filterItems.filters);
-
-		// Add array to searchParams
-		setContentSearchParams({
-			...contentSearchParams,
+		setQuery({
 			skip: 0,
-			search: filterFormState.search,
-			contentTypes: contentTypesString,
+			search: filterFormState.search || undefined,
+			contentTypes: filterFormState.contentType.length
+				? filterFormState.contentType
+				: undefined,
 			published: filterFormState.published
 				? filterFormState.published === PublishedStatuses.ONLINE
 				: undefined,
 			publishedFrom:
 				filterFormState.publishedFrom && filterFormState.publishedTo
 					? moment(filterFormState.publishedFrom, DATE_FORMATS.date).toISOString()
-					: '',
+					: undefined,
 			publishedTo:
 				filterFormState.publishedTo && filterFormState.publishedFrom
 					? moment(filterFormState.publishedTo, DATE_FORMATS.date).toISOString()
-					: '',
-			status: filterFormState.status,
-			creator: filterFormState.creator,
+					: undefined,
+			status: filterFormState.status || undefined,
+			creator: filterFormState.creator || undefined,
 		});
 	};
 
 	const deleteAllFilters = (): void => {
-		setFilterItems([]);
-		setContentTypeList([]);
-		setContentSearchParams(DEFAULT_CONTENT_SEARCH_PARAMS);
-		setFilterFormState(CONTENT_INITIAL_FILTER_STATE);
+		setQuery(DEFAULT_OVERVIEW_QUERY_PARAMS);
 	};
 
 	const deleteFilter = (item: OverviewFilterItem): void => {
-		let updatedSearchParams: Partial<SearchParams> = {};
-		let updatedFormState: Partial<FilterFormState> = {};
-		// Delete item from filterItems
-		const updatedFilters = filterItems?.filter(filter => filter.value !== item.value);
-		setFilterItems(updatedFilters);
+		let updatedQuery: Partial<SearchParams> = {};
 
-		// Update contentSearchParams
 		switch (item.filterKey) {
 			case FilterKeys.DATE: {
-				const dateValues = {
-					publishedFrom: '',
-					publishedTo: '',
+				updatedQuery = {
+					publishedFrom: undefined,
+					publishedTo: undefined,
 				};
-				updatedSearchParams = dateValues;
-				updatedFormState = dateValues;
 				break;
 			}
 			case FilterKeys.CONTENT_TYPE: {
-				const newContentTypeList = contentTypeList.filter(ct => ct.value !== item.value);
-				setContentTypeList(newContentTypeList);
-				updatedSearchParams = {
-					contentTypes: newContentTypeList.map(item => item.formvalue),
+				const newContentTypeList = activeFilters.contentTypeFilters.filter(
+					ct => ct.formvalue !== item.formvalue
+				);
+				updatedQuery = {
+					contentTypes: newContentTypeList.length
+						? newContentTypeList.map(item => item.formvalue)
+						: undefined,
 				};
-				updatedFormState = { contentType: [] };
 				break;
 			}
 			default:
-				updatedSearchParams = { [item.filterKey]: undefined };
-				updatedFormState = { [item.filterKey]: '' };
+				updatedQuery = { [item.filterKey]: undefined };
 		}
 
-		setContentSearchParams({
-			...contentSearchParams,
+		setQuery({
 			skip: 0,
-			...updatedSearchParams,
-		});
-		setFilterFormState({
-			...filterFormState,
-			...updatedFormState,
+			...updatedQuery,
 		});
 	};
 
 	const handlePageChange = (page: number): void => {
-		setContentSearchParams({
-			...contentSearchParams,
+		setQuery({
 			skip: (page - 1) * DEFAULT_CONTENT_SEARCH_PARAMS.limit,
 		});
 	};
 
 	const handleOrderBy = (orderBy: OrderBy): void => {
-		setContentSearchParams({
-			...contentSearchParams,
-			sort: `meta.${orderBy.key}`,
-			direction: orderBy.order === 'desc' ? 1 : -1,
+		setQuery({
+			skip: 0,
+			...parseOrderByToObj({
+				...orderBy,
+				key: `meta.${orderBy.key}`,
+			}),
 		});
-		setActiveSorting(orderBy);
 	};
+
+	const activeSorting = parseObjToOrderBy({
+		sort: query.sort ? query.sort.split('.')[1] : '',
+		direction: query.direction ?? 1,
+	});
 
 	/**
 	 * Render
@@ -288,7 +238,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 						onCancel={deleteAllFilters}
 						onSubmit={onSubmit}
 						deleteActiveFilter={deleteFilter}
-						activeFilters={filterItems}
+						activeFilters={activeFilters.filters}
 					/>
 				</div>
 				<PaginatedTable
@@ -298,6 +248,8 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 					columns={CONTENT_OVERVIEW_COLUMNS(t)}
 					rows={contentsRows}
 					loading={loadingState === LoadingState.Loading}
+					loadDataMessage="Content ophalen"
+					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 					currentPage={
 						Math.ceil(contentsPaging.skip / DEFAULT_CONTENT_SEARCH_PARAMS.limit) + 1
 					}
