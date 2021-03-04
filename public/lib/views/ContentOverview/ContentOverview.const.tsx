@@ -9,23 +9,42 @@ import { Link } from 'react-router-dom';
 
 import { CORE_TRANSLATIONS } from '../../connectors/translations';
 import { DATE_FORMATS, MODULE_PATHS } from '../../content.const';
+import { DEFAULT_CONTENT_SEARCH_PARAMS } from '../../services/content';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../services/contentTypes';
 
 import { ContentOverviewTableRow } from './ContentOverview.types';
 
+export const OVERVIEW_QUERY_PARAMS_CONFIG = {
+	skip: { defaultValue: DEFAULT_CONTENT_SEARCH_PARAMS.skip, type: 'number' },
+	limit: { defaultValue: DEFAULT_CONTENT_SEARCH_PARAMS.limit, type: 'number' },
+	sparse: { defaultValue: DEFAULT_CONTENT_SEARCH_PARAMS.sparse, type: 'boolean' },
+	sort: { type: 'string' },
+	direction: { type: 'number' },
+	search: { type: 'string' },
+	contentTypes: { type: 'array' },
+	publishedFrom: { type: 'string' },
+	publishedTo: { type: 'string' },
+	status: { type: 'string' },
+	published: { type: 'boolean' },
+	creator: { type: 'string' },
+} as const;
+
+export const DEFAULT_OVERVIEW_QUERY_PARAMS = {
+	...DEFAULT_CONTENT_SEARCH_PARAMS,
+	sort: undefined,
+	direction: undefined,
+	search: undefined,
+	contentTypes: undefined,
+	publishedFrom: undefined,
+	publishedTo: undefined,
+	status: undefined,
+	published: undefined,
+	creator: undefined,
+};
+
 export const CONTENT_TYPES_SEARCH_OPTIONS = {
 	...DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
 	limit: -1,
-};
-
-export const CONTENT_INITIAL_FILTER_STATE = {
-	search: '',
-	contentType: [],
-	publishedFrom: '',
-	publishedTo: '',
-	status: '',
-	published: '',
-	creator: '',
 };
 
 export const CONTENT_OVERVIEW_COLUMNS = (

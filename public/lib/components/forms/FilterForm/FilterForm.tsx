@@ -47,7 +47,7 @@ const FilterForm: FC<FilterFormProps> = ({
 		}
 
 		return (
-			<Formik enableReinitialize={true} initialValues={initialState} onSubmit={onSubmit}>
+			<Formik enableReinitialize initialValues={initialState} onSubmit={onSubmit}>
 				{({ submitForm, setFieldValue, values }) => {
 					return (
 						<Filter
@@ -75,16 +75,18 @@ const FilterForm: FC<FilterFormProps> = ({
 									<div className="col-xs-12 col-sm-6 u-margin-top">
 										<Field name="contentType">
 											{() => (
-												<Autocomplete
-													label="Content type"
-													id="contentType"
-													defaultValue={values.contentType}
-													items={contentTypeOptions}
-													multipleSelect
-													onSelection={(selected: string[]) =>
-														setFieldValue('contentType', selected)
-													}
-												/>
+												<div className="m-flyout--scrollable">
+													<Autocomplete
+														label="Content type"
+														id="contentType"
+														defaultValue={values.contentType}
+														items={contentTypeOptions}
+														multipleSelect
+														onSelection={(selected: string[]) =>
+															setFieldValue('contentType', selected)
+														}
+													/>
+												</div>
 											)}
 										</Field>
 									</div>

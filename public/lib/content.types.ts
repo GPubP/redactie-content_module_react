@@ -1,6 +1,9 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { ContextHeaderTab, FilterItem } from '@redactie/utils';
 
+import { ContentStatus } from './api/api.types';
+import { PublishedStatuses } from './components';
+
 export interface ContentRouteProps<
 	Params extends {
 		[K in keyof Params]?: string;
@@ -23,6 +26,21 @@ export interface OverviewFilterItem extends FilterItem {
 	valuePrefix?: string;
 	filterKey: string;
 	formvalue?: any;
+}
+
+export interface OverviewQueryParams {
+	skip: number | null | undefined;
+	limit: number | null | undefined;
+	sparse: boolean | null | undefined;
+	sort: string | null | undefined;
+	direction: number | null | undefined;
+	search: string | null | undefined;
+	contentTypes: string[] | null | undefined;
+	publishedFrom: string | null | undefined;
+	publishedTo: string | null | undefined;
+	status: ContentStatus | null | undefined;
+	published: PublishedStatuses | null | undefined;
+	creator: string | null | undefined;
 }
 
 export interface Tab extends ContextHeaderTab {

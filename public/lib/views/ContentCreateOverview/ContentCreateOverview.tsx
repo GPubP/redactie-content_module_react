@@ -4,24 +4,38 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { DataLoader, LoadingState, OrderBy, SearchParams, useNavigate } from '@redactie/utils';
+import {
+	DataLoader,
+	LoadingState,
+	OrderBy,
+	parseObjToOrderBy,
+	parseOrderByToObj,
+	SearchParams,
+	useAPIQueryParams,
+	useNavigate,
+} from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { useCoreTranslation } from '../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
-import { ContentRouteProps, CRUDActions } from '../../content.types';
+import { ContentRouteProps } from '../../content.types';
 import { useContentTypes, useRoutesBreadcrumbs } from '../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../services/contentTypes';
 import { contentTypesFacade } from '../../store/contentTypes';
 
-import { CONTENT_CREATE_OVERVIEW_COLUMNS } from './ContentCreateOverview.const';
+import {
+	CONTENT_CREATE_OVERVIEW_COLUMNS,
+	CREATE_OVERVIEW_QUERY_PARAMS_CONFIG,
+} from './ContentCreateOverview.const';
 import { ContentCreateOverviewTableRow } from './ContentCreateOverview.types';
 
 const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) => {
 	const { siteId } = match.params;
+
 	/**
 	 * Hooks
 	 */
+
 	const { navigate, generatePath } = useNavigate(SITES_ROOT);
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
@@ -29,13 +43,9 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 			target: generatePath(`${MODULE_PATHS.overview}`, { siteId }),
 		},
 	]);
-	const [contentTypesSearchParams, setContentTypesSearchParams] = useState({
-		...DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
-		context: CRUDActions.create,
-	} as SearchParams);
+	const [query, setQuery] = useAPIQueryParams(CREATE_OVERVIEW_QUERY_PARAMS_CONFIG, false);
 	const [loadingState, contentTypes, meta] = useContentTypes();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 	const [t] = useCoreTranslation();
 
 	useEffect(() => {
@@ -45,29 +55,34 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 	}, [loadingState]);
 
 	useEffect(() => {
-		if (contentTypesSearchParams && siteId) {
-			contentTypesFacade.getActiveContentTypes(siteId, contentTypesSearchParams);
+		if (query && siteId) {
+			contentTypesFacade.getActiveContentTypes(siteId, query as SearchParams);
 		}
-	}, [contentTypesSearchParams, siteId]);
+	}, [query, siteId]);
 
 	/**
-	 * Handlers
+	 * Methods
 	 */
+
 	const handlePageChange = (page: number): void => {
-		setContentTypesSearchParams({
-			...contentTypesSearchParams,
+		setQuery({
 			skip: (page - 1) * DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit,
 		});
 	};
 
 	const handleOrderBy = (orderBy: OrderBy): void => {
-		setContentTypesSearchParams({
-			...contentTypesSearchParams,
-			sort: `meta.${orderBy.key}`,
-			direction: orderBy.order === 'desc' ? 1 : -1,
-		});
-		setActiveSorting(orderBy);
+		setQuery(
+			parseOrderByToObj({
+				...orderBy,
+				key: `meta.${orderBy.key}`,
+			})
+		);
 	};
+
+	const activeSorting = parseObjToOrderBy({
+		sort: query.sort ? query.sort.split('.')[1] : '',
+		direction: query.direction ?? 1,
+	});
 
 	/**
 	 * Render
@@ -98,6 +113,8 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 				activeSorting={activeSorting}
 				totalValues={meta.total || 0}
 				loading={loadingState === LoadingState.Loading}
+				loadDataMessage="Content types ophalen"
+				noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 				hideResultsMessage
 			/>
 		);
