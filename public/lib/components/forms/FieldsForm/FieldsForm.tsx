@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useMemo } from 'react';
 
 import { CompartmentProps } from '../../../api/api.types';
 import { getForm } from '../../../connectors/formRenderer';
@@ -14,6 +14,7 @@ const FieldsForm: FC<CompartmentProps & { settings: CtTypeSettings }> = ({
 	settings,
 }): ReactElement | null => {
 	const Form = getForm();
+	const contentFormContext = useMemo(() => ({ contentType }), [contentType]);
 
 	/**
 	 * Render
@@ -30,7 +31,7 @@ const FieldsForm: FC<CompartmentProps & { settings: CtTypeSettings }> = ({
 
 	return (
 		<div className="u-margin-top-lg u-margin-bottom-lg">
-			<ContentFormContext.Provider value={{ contentType }}>
+			<ContentFormContext.Provider value={contentFormContext}>
 				<Form
 					{...formProps}
 					formikRef={instance => {
