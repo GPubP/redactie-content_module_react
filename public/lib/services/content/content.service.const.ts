@@ -4,7 +4,7 @@ import { ContentStatus } from './content.service.types';
 
 export const DEFAULT_CONTENT_SEARCH_PARAMS: SearchParams & { limit: number } = {
 	skip: 0,
-	limit: 10,
+	limit: 20,
 	sparse: true,
 };
 
