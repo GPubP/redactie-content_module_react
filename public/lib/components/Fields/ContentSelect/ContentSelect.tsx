@@ -1,15 +1,17 @@
 import { Autocomplete } from '@acpaas-ui/react-components';
 import { Tooltip } from '@acpaas-ui/react-editorial-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
-import { LoadingState, useSiteContext } from '@redactie/utils';
+import { LoadingState, useNavigate, useSiteContext } from '@redactie/utils';
 import classNames from 'classnames';
 import { getIn } from 'formik';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { first } from 'rxjs/operators';
 
 import './ContentSelect.scss';
 
 import { ErrorMessage } from '../../../connectors/formRenderer';
+import { MODULE_PATHS, SITES_ROOT } from '../../../content.const';
 import { useCcContent } from '../../../hooks';
 import { ccContentFacade } from '../../../store/ccContent';
 import { ContentModel } from '../../../store/content';
@@ -34,15 +36,18 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	});
 
 	const { siteId } = useSiteContext();
+	const { generatePath } = useNavigate(SITES_ROOT);
 	const [contentLoadingState] = useCcContent('search');
 	const autoCompleteRef = useRef(null);
 	const [isVisible, setVisibility] = useState(false);
+	const [isHoveringTooltip, setHoveringTooltip] = useState(false);
 	const [delayShowLoop, setDelayShowLoop] = useState<NodeJS.Timeout>();
+	const [delayHideLoop, setDelayHideLoop] = useState<NodeJS.Timeout>();
 	const [items, setItems] = useState<{ value: string | undefined; label: string }[]>([]);
-	const currentValueLabel = useMemo(() => {
+	const currentItem = useMemo(() => {
 		const item = items.find(i => i.value === field.value);
 
-		return item?.label;
+		return item;
 	}, [field.value, items]);
 
 	/**
@@ -50,6 +55,9 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	 */
 
 	const handleMouseEnter = (): void => {
+		if (delayHideLoop) {
+			clearTimeout(delayHideLoop);
+		}
 		setDelayShowLoop(
 			setTimeout(() => {
 				setVisibility(true);
@@ -61,12 +69,30 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 		if (delayShowLoop) {
 			clearTimeout(delayShowLoop);
 		}
-		setVisibility(false);
-	}, [delayShowLoop]);
+		setDelayHideLoop(
+			setTimeout(() => {
+				!isHoveringTooltip && setVisibility(false);
+			}, CONTENT_SELECT_TOOLTIP_DELAY)
+		);
+	}, [delayShowLoop, isHoveringTooltip]);
+
+	const handleTooltipMouseEnter = (): void => {
+		setHoveringTooltip(true);
+	};
+
+	const handleTooltipMouseLeave = (): void => {
+		setDelayHideLoop(
+			setTimeout(() => {
+				setVisibility(false);
+				setHoveringTooltip(false);
+			}, CONTENT_SELECT_TOOLTIP_DELAY)
+		);
+	};
 
 	/**
 	 * RENDER
 	 */
+
 	return (
 		<>
 			<div
@@ -120,10 +146,26 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 			</div>
 			<Tooltip
 				type={CONTENT_SELECT_TOOLTIP_TYPE}
-				isVisible={!!currentValueLabel && isVisible}
+				isVisible={!!currentItem?.label && (isVisible || isHoveringTooltip)}
 				targetRef={autoCompleteRef}
 			>
-				{currentValueLabel}
+				<Link
+					id={currentItem?.value}
+					title={currentItem?.label}
+					to={
+						currentItem?.value
+							? generatePath(MODULE_PATHS.detailView, {
+									contentId: currentItem?.value,
+									siteId,
+							  })
+							: '#'
+					}
+					target="_blank"
+					onMouseEnter={handleTooltipMouseEnter}
+					onMouseLeave={handleTooltipMouseLeave}
+				>
+					{currentItem?.label}
+				</Link>
 			</Tooltip>
 			{config.description ? (
 				<div className="a-input a-input__wrapper">
