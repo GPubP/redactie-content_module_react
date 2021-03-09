@@ -103,11 +103,17 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		// filter tabs based on user security rights
 		return activeTabs.filter(tab => {
 			if (tab.name === CONTENT_UPDATE_TAB_MAP.edit.name) {
-				return contentTypeRights?.update;
+				return (
+					contentTypeRights?.update &&
+					rolesRightsConnector.api.helpers.checkSecurityRights(
+						mySecurityrights.map(right => right.attributes.key),
+						[rolesRightsConnector.securityRights.update]
+					)
+				);
 			}
 			return true;
 		});
-	}, [activeTabs, contentTypeRights]);
+	}, [activeTabs, contentTypeRights, mySecurityrights]);
 
 	useEffect(() => {
 		// Redirect user to 403 page when we get a 403 error from

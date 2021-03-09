@@ -73,9 +73,16 @@ if (rolesRightsConnector.api) {
 			order: 0,
 			label: 'Content',
 			canShown: [
-				rolesRightsConnector.api.canShowns.securityRightsSiteCanShown(urlSiteParam, [
-					rolesRightsConnector.securityRights.read,
-				]),
+				rolesRightsConnector.api.canShowns.securityRightsSiteCanShown(
+					urlSiteParam,
+					// The top menu item is visible when the user has one of the following
+					// permissions
+					[
+						rolesRightsConnector.securityRights.read,
+						rolesRightsConnector.securityRights.create,
+					],
+					true
+				),
 			],
 		},
 		redirect: MODULE_PATHS.overview,
@@ -89,6 +96,12 @@ if (rolesRightsConnector.api) {
 					order: 0,
 					label: 'Content overzicht',
 					parentPath: MODULE_PATHS.root,
+					canShown: [
+						rolesRightsConnector.api.canShowns.securityRightsSiteCanShown(
+							urlSiteParam,
+							[rolesRightsConnector.securityRights.read]
+						),
+					],
 				},
 			},
 			{
@@ -140,6 +153,13 @@ if (rolesRightsConnector.api) {
 				breadcrumb: false,
 				component: ContentDetail,
 				redirect: MODULE_PATHS.detailView,
+				guardOptions: {
+					guards: [
+						rolesRightsConnector.api.guards.securityRightsSiteGuard(urlSiteParam, [
+							rolesRightsConnector.securityRights.read,
+						]),
+					],
+				},
 				routes: [
 					{
 						path: MODULE_PATHS.detailView,
@@ -151,6 +171,14 @@ if (rolesRightsConnector.api) {
 						breadcrumb: false,
 						component: ContentDetailEdit,
 						redirect: `${MODULE_PATHS.detailEdit}/default`,
+						guardOptions: {
+							guards: [
+								rolesRightsConnector.api.guards.securityRightsSiteGuard(
+									urlSiteParam,
+									[rolesRightsConnector.securityRights.update]
+								),
+							],
+						},
 						routes: [
 							{
 								path: MODULE_PATHS.detailEditCompartment,
