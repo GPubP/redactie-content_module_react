@@ -8,14 +8,14 @@ import { ContentTypeSchema, ContentTypesSchema } from './contentTypes.service.ty
 
 // TODO: This data should come from the content type module API
 export class ContentTypesApiService {
-	public async getActiveContentTypes(
+	public async getSiteContentTypes(
 		siteId: string,
 		searchParams: SearchParams = DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
 	): Promise<ContentTypesSchema | null> {
 		try {
 			const response: ContentTypesSchema = await api
 				.get(
-					`${SITE_REQUEST_PREFIX_URL}/${siteId}/content-types/active?${parseSearchParams(
+					`${SITE_REQUEST_PREFIX_URL}/${siteId}/content-types?${parseSearchParams(
 						searchParams
 					)}`
 				)

@@ -56,7 +56,7 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 
 	useEffect(() => {
 		if (query && siteId) {
-			contentTypesFacade.getActiveContentTypes(siteId, query as SearchParams);
+			contentTypesFacade.getSiteContentTypes(siteId, query as SearchParams);
 		}
 	}, [query, siteId]);
 
