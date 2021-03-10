@@ -39,6 +39,9 @@ export interface ExternalCompartmentOptions<M = ModuleValue> {
 	beforeSubmit?: ExternalCompartmentBeforeSubmitFn<M>;
 	afterSubmit?: ExternalCompartmentAfterSubmitFn<M>;
 	show?: (
+		context: {
+			isCreating: boolean;
+		},
 		settings: ModuleSettings,
 		value: M,
 		content: ContentSchema,

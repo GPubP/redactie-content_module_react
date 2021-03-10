@@ -48,9 +48,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	contentItem,
 	contentItemDraft,
 	hasChanges,
-	isCreating,
 	match,
 	showPublishedStatus,
+	isCreating = false,
 	onSubmit = () => null,
 	onCancel = () => null,
 	onStatusClick = () => null,
@@ -91,7 +91,12 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			[
 				...(getContentTypeCompartments(contentType) as ContentCompartmentModel[]),
 				...internalCompartments,
-				...filterExternalCompartments(contentItemDraft, contentType, externalCompartments),
+				...filterExternalCompartments(
+					contentItemDraft,
+					contentType,
+					externalCompartments,
+					isCreating
+				),
 			],
 			{ replace: true }
 		);
@@ -313,6 +318,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							contentType={contentType}
 							contentValue={contentItemDraft}
 							contentItem={contentItem}
+							isCreating={isCreating}
 							isValid
 							settings={getSettings(contentType, activeCompartment)}
 							onChange={values => handleChange(activeCompartment, values)}
