@@ -30,7 +30,7 @@ const FieldsForm: FC<CompartmentProps & { settings: CtTypeSettings }> = ({
 	const formProps = getCompartmentFormProps(contentType, settings);
 
 	return (
-		<div className="u-margin-top-lg u-margin-bottom-lg">
+		<>
 			<ContentFormContext.Provider value={contentFormContext}>
 				<Form
 					{...formProps}
@@ -45,7 +45,7 @@ const FieldsForm: FC<CompartmentProps & { settings: CtTypeSettings }> = ({
 					useDividers={true}
 				/>
 			</ContentFormContext.Provider>
-		</div>
+		</>
 	);
 };
 
