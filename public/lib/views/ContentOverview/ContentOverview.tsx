@@ -118,6 +118,13 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	/**
 	 * Methods
 	 */
+	const canUpdateContent = useMemo(
+		() =>
+			rolesRightsConnector.api.helpers.checkSecurityRights(mySecurityrightsKeys, [
+				rolesRightsConnector.securityRights.update,
+			]),
+		[mySecurityrightsKeys]
+	);
 
 	const onSubmit = (filterFormState: FilterFormState): void => {
 		console.log(filterFormState);
@@ -224,9 +231,10 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				contentId: content.uuid,
 				siteId,
 			}),
-			securityRights: content._id
-				? contentTypesSecurityRightsMap[content._id]
-				: DEFAULT_CRUD_RIGHTS,
+			canUpdate:
+				canUpdateContent &&
+				(content._id ? contentTypesSecurityRightsMap[content._id] : DEFAULT_CRUD_RIGHTS)
+					.update,
 		}));
 
 		return (

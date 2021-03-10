@@ -56,6 +56,7 @@ export interface CompartmentProps<
 	settings: S;
 	value: M; // module data section
 	isValid: boolean;
+	isCreating: boolean;
 	formikRef?: (instance: FormikProps<FormikValues> | null) => void;
 	onChange: (e: M) => void; // Boolean for validation result (maybe?)
 	updateContent: (e: ContentSchema) => void; // For edge cases where content item must be changed. Boolean for validation

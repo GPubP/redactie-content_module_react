@@ -1,5 +1,3 @@
-import { CRUDSecurityRights } from '../../content.types';
-
 export interface ContentOverviewTableRow {
 	label?: string;
 	description?: string;
@@ -13,7 +11,7 @@ export interface ContentOverviewTableRow {
 	published?: boolean;
 	navigate: (path: string) => void;
 	viewPath: string;
-	securityRights: CRUDSecurityRights;
+	canUpdate: boolean;
 }
 
 export enum FilterKeys {

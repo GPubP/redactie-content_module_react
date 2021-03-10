@@ -130,10 +130,10 @@ export const CONTENT_OVERVIEW_COLUMNS = (
 		classList: ['u-text-right'],
 		disableSorting: true,
 		width: '10%',
-		component(value, { navigate, securityRights }) {
+		component(value, { navigate, canUpdate }) {
 			return (
 				<>
-					{securityRights.update ? (
+					{canUpdate ? (
 						<Button
 							ariaLabel="Edit"
 							icon="edit"

@@ -113,8 +113,12 @@ export const mapExternalCompartmentToContentCompartment = (
 export const filterExternalCompartments = (
 	content: ContentSchema | undefined,
 	contentType: ContentTypeSchema,
-	externalCompartments: ExternalCompartmentModel[]
+	externalCompartments: ExternalCompartmentModel[],
+	isCreating: boolean
 ): ContentCompartmentModel[] => {
+	const context = {
+		isCreating,
+	};
 	return externalCompartments.reduce(
 		(acc: ContentCompartmentModel[], ec): ContentCompartmentModel[] => {
 			const contentCompartment = mapExternalCompartmentToContentCompartment(ec);
@@ -123,6 +127,7 @@ export const filterExternalCompartments = (
 				content &&
 				typeof ec.show === 'function' &&
 				!ec.show(
+					context,
 					getSettings(contentType, contentCompartment, content) as ModuleSettings,
 					getCompartmentValue(content, contentCompartment, contentType),
 					content,
