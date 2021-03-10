@@ -77,6 +77,8 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	}, [delayShowLoop, isHoveringTooltip]);
 
 	const handleTooltipMouseEnter = (): void => {
+		if (isHoveringTooltip) return;
+
 		setHoveringTooltip(true);
 	};
 
