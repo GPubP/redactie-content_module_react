@@ -106,7 +106,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	// Fetch content types for filtering
 	useEffect(() => {
 		if (siteId) {
-			contentTypesFacade.getActiveContentTypes(siteId, CONTENT_TYPES_SEARCH_OPTIONS);
+			contentTypesFacade.getSiteContentTypes(siteId, CONTENT_TYPES_SEARCH_OPTIONS);
 		}
 	}, [siteId]);
 
