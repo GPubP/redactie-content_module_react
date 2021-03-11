@@ -9,3 +9,4 @@ export * from './getViewPropsByCT';
 export * from './onEmit';
 export * from './getInitialContentValues';
 export * from './getMySecurityRightsByContentTypeId/getMySecurityRightsByContentTypeId';
+export * from './contentType';

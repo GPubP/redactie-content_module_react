@@ -4,16 +4,19 @@ import { FormikValues } from 'formik';
 import { parseFields } from '../connectors/formRenderer';
 import { ContentTypeSchema } from '../services/contentTypes';
 
+import { contentTypeHelpers } from './contentType';
 import { getInitialContentValues } from './getInitialContentValues';
 
 export const getViewPropsByCT = (
 	contentType: ContentTypeSchema,
 	values: FormikValues
 ): { schema: FormSchema; values: FormikValues } => {
+	const compartments = contentTypeHelpers.getCompartments(contentType);
+	const fields = contentTypeHelpers.getFieldsByCompartments(contentType.fields, compartments);
 	return {
 		schema: {
-			fields: parseFields(contentType.fields),
+			fields: parseFields(fields),
 		},
-		values: getInitialContentValues(contentType?.fields, values),
+		values: getInitialContentValues(fields, values),
 	};
 };
