@@ -358,6 +358,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 					isCreating ? CONTENT_CREATE_ALLOWED_PATHS : CONTENT_EDIT_ALLOWED_PATHS
 				}
 				when={hasChanges}
+				shouldBlockNavigationOnConfirm
 				onConfirm={() => onFormSubmit(contentItemDraft)}
 			/>
 		</>
