@@ -26,12 +26,12 @@ import { ContentDetailChildRouteProps } from '../ContentDetail/ContentDetail.typ
 import './ContentDetailView.scss';
 
 const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
-	contentItemDraft,
+	contentItem,
 	contentType,
 	match,
 	tenantId,
 }) => {
-	const { meta } = contentItemDraft;
+	const { meta } = contentItem;
 	const { siteId, contentId } = match.params;
 	const View = getView();
 
@@ -40,12 +40,12 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 	 */
 	const { navigate, generatePath } = useNavigate(SITES_ROOT);
 	const [, , externalLock, userLock] = useLock(contentId);
-	const viewProps = useMemo(() => getViewPropsByCT(contentType, contentItemDraft.fields), [
+	const viewProps = useMemo(() => getViewPropsByCT(contentType, contentItem.fields), [
 		contentType,
-		contentItemDraft.fields,
+		contentItem.fields,
 	]);
-	const contentItemIsEmpty = useMemo(() => isEmpty(contentItemDraft.fields || {}), [
-		contentItemDraft.fields,
+	const contentItemIsEmpty = useMemo(() => isEmpty(contentItem.fields || {}), [
+		contentItem.fields,
 	]);
 	const workerData = useMemo(
 		() =>
