@@ -34,9 +34,9 @@ import {
 } from '../store/ui/contentCompartments';
 import { CtTypeSettings } from '../views/ContentForm/ContentForm.types';
 
+import { contentTypeHelpers } from './contentType';
 import { getCompartmentFormProps } from './getCompartmentFormProps';
 import { getInitialContentValues } from './getInitialContentValues';
-
 export const getSettings = (
 	contentType: ContentTypeSchema,
 	compartment: ContentCompartmentModel,
@@ -219,28 +219,13 @@ const validateCTCompartment = (contentType: ContentTypeSchema, settings: CtTypeS
 export const getContentTypeCompartments = (
 	contentType: ContentTypeSchema
 ): ContentCompartmentModel<ModuleValue, CtTypeSettings>[] => {
-	const compartments = contentType.compartments?.length
-		? contentType.compartments
-		: [{ uuid: 'default', label: 'Inhoud', removable: false }];
+	const compartments = contentTypeHelpers.getCompartments(contentType);
 
 	return compartments.reduce((acc, compartment) => {
-		const compartmentFields = compose<
-			ContentTypeFieldSchema[],
-			ContentTypeFieldSchema[],
-			ContentTypeFieldSchema[]
-		>(
-			filter<ContentTypeFieldSchema>(
-				field =>
-					field.compartment?.uuid === compartment.uuid ||
-					(compartment.removable === false && !field.compartment)
-			),
-			sort<ContentTypeFieldSchema>(
-				(fieldA, fieldB) =>
-					(fieldA.compartment?.position ?? Number.MAX_VALUE) -
-					(fieldB.compartment?.position ?? Number.MAX_VALUE)
-			)
-		)(contentType.fields);
-
+		const compartmentFields = contentTypeHelpers.getFieldsByCompartment(
+			contentType.fields,
+			compartment
+		);
 		const slug = kebabCase(compartment.label);
 		const defaultCompartment = {
 			slug,
