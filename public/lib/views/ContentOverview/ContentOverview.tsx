@@ -127,8 +127,6 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	);
 
 	const onSubmit = (filterFormState: FilterFormState): void => {
-		console.log(filterFormState);
-
 		setQuery({
 			skip: 0,
 			search: filterFormState.search || undefined,
@@ -233,8 +231,10 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			}),
 			canUpdate:
 				canUpdateContent &&
-				(content._id ? contentTypesSecurityRightsMap[content._id] : DEFAULT_CRUD_RIGHTS)
-					.update,
+				(content._id
+					? contentTypesSecurityRightsMap[content._id] || {}
+					: DEFAULT_CRUD_RIGHTS
+				).update,
 		}));
 
 		return (
