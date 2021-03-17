@@ -41,7 +41,7 @@ const handlePreset = (field: FieldSchemaForAnchorlink, values: FormikValues): Se
 		}
 
 		if (
-			!subField.config?.textType?.isAnchorlink &&
+			!subField.config?.isAnchorlink &&
 			is(Object)(value) &&
 			!Array.isArray(value) &&
 			Array.isArray(subField?.config?.fields)
@@ -58,7 +58,7 @@ const handlePreset = (field: FieldSchemaForAnchorlink, values: FormikValues): Se
 			];
 		}
 
-		if (value?.text && !!subField.config?.textType?.isAnchorlink) {
+		if (value?.text && !!subField.config?.isAnchorlink) {
 			return [
 				...acc,
 				generateAnchorlinkOption([...parseFieldNameToPath(field), `${key}`], value.text),
@@ -107,7 +107,7 @@ const handleParagraph = (field: FieldSchemaForAnchorlink, values: FormikValues):
 		}
 
 		if (
-			!subField.config?.textType?.isAnchorlink &&
+			!subField.config?.isAnchorlink &&
 			is(Object)(value?.value) &&
 			!Array.isArray(value?.value) &&
 			Array.isArray(subField.config?.fields)
@@ -124,7 +124,7 @@ const handleParagraph = (field: FieldSchemaForAnchorlink, values: FormikValues):
 			];
 		}
 
-		if (value?.value?.text && !!subField.config?.textType?.isAnchorlink) {
+		if (value?.value?.text && !!subField.config?.isAnchorlink) {
 			return [
 				...acc,
 				generateAnchorlinkOption(
@@ -152,7 +152,7 @@ function parseFieldToAnchorLink(
 
 	// Field is a preset
 	if (
-		!field.config?.textType?.isAnchorlink &&
+		!field.config?.isAnchorlink &&
 		is(Object)(value) &&
 		!Array.isArray(value) &&
 		Array.isArray(field.config?.fields)
@@ -162,7 +162,7 @@ function parseFieldToAnchorLink(
 
 	// Field is a paragraph
 	if (
-		!field.config?.textType?.isAnchorlink &&
+		!field.config?.isAnchorlink &&
 		Array.isArray(value) &&
 		Array.isArray(field.config?.fields)
 	) {
@@ -170,7 +170,7 @@ function parseFieldToAnchorLink(
 	}
 
 	// Field is not a text field or is not marked as possible anchorlink
-	if (!value?.text || !field.config?.textType?.isAnchorlink) {
+	if (!value?.text || !field.config?.isAnchorlink) {
 		return [];
 	}
 
