@@ -44,6 +44,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	const [delayShowLoop, setDelayShowLoop] = useState<NodeJS.Timeout>();
 	const [delayHideLoop, setDelayHideLoop] = useState<NodeJS.Timeout>();
 	const [items, setItems] = useState<{ value: string | undefined; label: string }[]>([]);
+	const [originalItems, setOriginalItems] = useState<ContentModel[]>([]);
 	const currentItem = useMemo(() => {
 		const item = items.find(i => i.value === field.value);
 
@@ -91,10 +92,27 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 		);
 	};
 
+	const setValue = (uuid: string): void => {
+		if (!config.returnByValue) {
+			return fieldHelperProps.setValue(uuid);
+		}
+
+		const originalItem = originalItems.find(item => item.uuid === uuid);
+
+		if (originalItem) {
+			return fieldHelperProps.setValue(originalItem);
+		}
+
+		const item = items.find(item => item.value === uuid);
+
+		if (item) {
+			return fieldHelperProps.setValue(item);
+		}
+	};
+
 	/**
 	 * RENDER
 	 */
-
 	return (
 		<>
 			<div
@@ -113,9 +131,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					showSearchIcon={true}
 					disabled={!!config.disabled}
 					loading={contentLoadingState === LoadingState.Loading}
-					onSelection={(selected: string) => {
-						fieldHelperProps.setValue(selected);
-					}}
+					onSelection={setValue}
 					asyncItems={async (query: string, cb: (options: any[]) => void) => {
 						await ccContentFacade.getContent(
 							'search',
@@ -140,7 +156,10 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 										''}] - ID ${c.uuid}`,
 									value: c.uuid,
 								}));
+
+								setOriginalItems((content as ContentModel[]) || []);
 								setItems(newItems);
+
 								cb(newItems);
 							});
 					}}
