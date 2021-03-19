@@ -175,12 +175,6 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				};
 				break;
 			}
-			case FilterKeys.STATUS: {
-				updatedQuery = {
-					['latest-status']: undefined,
-				};
-				break;
-			}
 			default:
 				updatedQuery = { [item.filterKey]: undefined };
 		}
