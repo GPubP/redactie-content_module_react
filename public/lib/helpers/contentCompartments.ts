@@ -4,14 +4,12 @@ import {
 	assocPath,
 	clone,
 	compose,
-	filter,
 	find,
 	identity,
 	ifElse,
 	isEmpty,
 	omit,
 	pick,
-	sort,
 } from 'ramda';
 
 import {
@@ -23,7 +21,6 @@ import {
 import { FieldsForm } from '../components';
 import { getCustomValidator } from '../connectors/formRenderer';
 import { WORKING_TITLE_KEY } from '../content.const';
-import { ContentTypeFieldSchema } from '../services/contentTypes/contentTypes.service.types';
 import { ExternalCompartmentModel } from '../store/api/externalCompartments';
 import { contentFacade } from '../store/content';
 import {

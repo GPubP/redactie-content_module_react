@@ -24,7 +24,7 @@ export const OVERVIEW_QUERY_PARAMS_CONFIG = {
 	contentTypes: { type: 'array' },
 	publishedFrom: { type: 'string' },
 	publishedTo: { type: 'string' },
-	status: { type: 'string' },
+	['latest-status']: { type: 'string' },
 	published: { type: 'boolean' },
 	creator: { type: 'string' },
 } as const;
@@ -37,7 +37,7 @@ export const DEFAULT_OVERVIEW_QUERY_PARAMS = {
 	contentTypes: undefined,
 	publishedFrom: undefined,
 	publishedTo: undefined,
-	status: undefined,
+	['latest-status']: undefined,
 	published: undefined,
 	creator: undefined,
 };

@@ -19,6 +19,6 @@ export const getFilterStateFromParams = (query?: SearchParams): FilterFormState 
 			: '',
 		publishedTo: query?.publishedTo ? moment(query.publishedTo).format(DATE_FORMATS.date) : '',
 		search: query?.search ?? '',
-		status: query?.status ?? '',
+		status: query?.['latest-status'] ?? '',
 	};
 };

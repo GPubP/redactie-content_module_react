@@ -10,3 +10,4 @@ export * from './onEmit';
 export * from './getInitialContentValues';
 export * from './getMySecurityRightsByContentTypeId/getMySecurityRightsByContentTypeId';
 export * from './contentType';
+export * from './getLatestStatus';

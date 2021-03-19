@@ -4,13 +4,13 @@ import { getFilterStateFromParams } from './getFilterStateFromParams';
 
 const MOCK_QUERY_PARAMS = {
 	search: 'search',
-	status: 'active',
+	['latest-status']: 'active',
 };
 
 const MOCK_RESULT = {
 	...MOCK_FILTER_FORM_STATE,
 	search: MOCK_QUERY_PARAMS.search,
-	status: MOCK_QUERY_PARAMS.status,
+	status: MOCK_QUERY_PARAMS['latest-status'],
 };
 
 describe('Helpers: getFilterStateFromParams', () => {
