@@ -140,6 +140,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 								skip: 0,
 								limit: 10,
 								search: query,
+								sparse: true,
 								...(config.contentTypes?.length
 									? { contentTypes: config.contentTypes.join(',') }
 									: {}),
