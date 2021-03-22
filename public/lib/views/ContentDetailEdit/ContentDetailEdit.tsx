@@ -32,7 +32,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	contentItemDraft,
 	match,
 	tenantId,
-	contentTypeRights,
+	canUpdate,
 }) => {
 	const { siteId, contentId } = match.params;
 	/**
@@ -75,7 +75,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	);
 
 	useEffect(() => {
-		if (contentTypeRights && !contentTypeRights.update) {
+		if (!canUpdate) {
 			push(
 				`/${tenantId}${
 					rolesRightsConnector.api.consts.forbidden403Path
@@ -84,7 +84,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 				})}`
 			);
 		}
-	}, [contentTypeRights, generatePath, push, siteId, tenantId]);
+	}, [canUpdate, generatePath, push, siteId, tenantId]);
 
 	useEffect(() => {
 		if (userLock || externalLock) {

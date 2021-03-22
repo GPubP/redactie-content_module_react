@@ -30,6 +30,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 	contentType,
 	match,
 	tenantId,
+	canUpdate,
 }) => {
 	const { meta } = contentItem;
 	const { siteId, contentId } = match.params;
@@ -162,8 +163,9 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 				<ActionBarContentSection>
 					<div className="u-wrapper row end-xs">
 						<div className="button-group">
-							<Button onClick={goToDetailEdit}>Bewerken</Button>
+							{canUpdate && <Button onClick={goToDetailEdit}>Bewerken</Button>}
 						</div>
+
 						<PublishedStatus published={!!meta.historySummary?.published} />
 					</div>
 				</ActionBarContentSection>

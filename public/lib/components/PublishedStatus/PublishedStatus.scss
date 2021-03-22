@@ -4,6 +4,7 @@
 	border-left: 1px solid $grey-light;
 	margin: -12px 0 -12px $spacer;
 	padding-left: $spacer;
+	min-height: $spacer * 3;
 
 	&__dot {
 		height: $spacer / 2;
