@@ -1,9 +1,13 @@
-import { Button } from '@acpaas-ui/react-components';
+import { Link as AUILink } from '@acpaas-ui/react-components';
 import { ViewFieldProps } from '@redactie/form-renderer-module';
+import classnames from 'classnames';
 import React, { FC, useMemo } from 'react';
 
+import { LinkPropsObject } from './Link.types';
+
 const CCLinkView: FC<ViewFieldProps> = ({ value = {} }) => {
-	const { text, url } = value;
+	const { text, url, target, className } = value;
+	const style = value.style || '';
 	const isExternal = useMemo(
 		() =>
 			/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/.test(
@@ -11,23 +15,49 @@ const CCLinkView: FC<ViewFieldProps> = ({ value = {} }) => {
 			),
 		[url]
 	);
-	const buttonProps = useMemo(() => {
-		if (isExternal) {
-			return {
-				iconLeft: 'external-link',
-				type: 'primary',
-			};
-		}
-		return {
+
+	const linkProps = useMemo(() => {
+		// TODO: add types for the props
+		const linkPropsObject: LinkPropsObject = {
 			type: 'primary',
+			target,
+			href: url,
+			className,
 		};
-	}, [isExternal]);
+
+		if (style === 'button') {
+			linkPropsObject.className = classnames(linkPropsObject.className, 'a-button');
+		}
+
+		if (isExternal) {
+			linkPropsObject.className = classnames(linkPropsObject.className, 'has-icon-left');
+		}
+
+		return linkPropsObject;
+	}, [className, isExternal, style, target, url]);
 
 	if (!url) {
 		return null;
 	}
 
-	return <div className="u-margin-bottom">{<Button {...buttonProps}>{text || url}</Button>}</div>;
+	switch (style) {
+		case 'button':
+			return (
+				<AUILink {...linkProps}>
+					{isExternal && <span className="fa fa-external-link" aria-hidden="true" />}
+					{text || url}
+				</AUILink>
+			);
+		case 'link':
+			return (
+				<AUILink {...linkProps}>
+					{isExternal && <span className="fa fa-external-link" aria-hidden="true" />}
+					{text || url}
+				</AUILink>
+			);
+		default:
+			return <span>{text || url}</span>;
+	}
 };
 
 export default CCLinkView;
