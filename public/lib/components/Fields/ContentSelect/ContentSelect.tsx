@@ -37,7 +37,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 
 	const { siteId } = useSiteContext();
 	const { generatePath } = useNavigate(SITES_ROOT);
-	const [contentLoadingState] = useCcContent('search');
+	const [contentLoadingState] = useCcContent(field.value);
 	const autoCompleteRef = useRef(null);
 	const [isVisible, setVisibility] = useState(false);
 	const [isHoveringTooltip, setHoveringTooltip] = useState(false);
