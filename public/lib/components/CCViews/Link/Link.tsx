@@ -21,16 +21,11 @@ const CCLinkView: FC<ViewFieldProps> = ({ value = {} }) => {
 			type: 'primary',
 			target,
 			href: url,
-			className,
+			className: classnames(className, {
+				['a-button']: style === 'button',
+				['has-icon-left']: isExternal,
+			}),
 		};
-
-		if (style === 'button') {
-			linkPropsObject.className = classnames(linkPropsObject.className, 'a-button');
-		}
-
-		if (isExternal) {
-			linkPropsObject.className = classnames(linkPropsObject.className, 'has-icon-left');
-		}
 
 		return linkPropsObject;
 	}, [className, isExternal, style, target, url]);
@@ -39,24 +34,16 @@ const CCLinkView: FC<ViewFieldProps> = ({ value = {} }) => {
 		return null;
 	}
 
-	switch (style) {
-		case 'button':
-			return (
-				<AUILink {...linkProps}>
-					{isExternal && <span className="fa fa-external-link" aria-hidden="true" />}
-					{text || url}
-				</AUILink>
-			);
-		case 'link':
-			return (
-				<AUILink {...linkProps}>
-					{isExternal && <span className="fa fa-external-link" aria-hidden="true" />}
-					{text || url}
-				</AUILink>
-			);
-		default:
-			return <span>{text || url}</span>;
+	if (style === 'button' || style === 'link') {
+		return (
+			<AUILink {...linkProps}>
+				{isExternal && <span className="fa fa-external-link" aria-hidden="true" />}
+				{text || url}
+			</AUILink>
+		);
 	}
+
+	return <span>{text || url}</span>;
 };
 
 export default CCLinkView;
