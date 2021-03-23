@@ -76,6 +76,22 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		[tenantId]
 	);
 
+	const mySecurityrightKeys = useMemo(() => {
+		if (!Array.isArray(mySecurityrights)) {
+			return [];
+		}
+		return mySecurityrights.map(mySecurityRight => mySecurityRight.attributes.key);
+	}, [mySecurityrights]);
+
+	const canUpdate = useMemo(() => {
+		return (
+			!!contentTypeRights?.update &&
+			rolesRightsConnector.api.helpers.checkSecurityRights(mySecurityrightKeys, [
+				rolesRightsConnector.securityRights.update,
+			])
+		);
+	}, [mySecurityrightKeys, contentTypeRights]);
+
 	useWillUnmount(() => {
 		contentFacade.clearContentItemDraft();
 		contentFacade.clearContentItem();
@@ -103,17 +119,11 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		// filter tabs based on user security rights
 		return activeTabs.filter(tab => {
 			if (tab.name === CONTENT_UPDATE_TAB_MAP.edit.name) {
-				return (
-					contentTypeRights?.update &&
-					rolesRightsConnector.api.helpers.checkSecurityRights(
-						mySecurityrights.map(right => right.attributes.key),
-						[rolesRightsConnector.securityRights.update]
-					)
-				);
+				return canUpdate;
 			}
 			return true;
 		});
-	}, [activeTabs, contentTypeRights, mySecurityrights]);
+	}, [activeTabs, canUpdate]);
 
 	useEffect(() => {
 		// Redirect user to 403 page when we get a 403 error from
@@ -162,7 +172,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 			contentItem: contentItem,
 			contentItemDraft,
 			tenantId,
-			contentTypeRights,
+			canUpdate,
 		};
 
 		return (
