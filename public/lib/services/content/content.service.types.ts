@@ -3,6 +3,19 @@ import { ContentTypeSchema } from '../contentTypes';
 
 export type ModuleValue = Record<string, any>;
 
+export interface ContentHistorySummaryStatus {
+	uuid: string;
+	isLatestVersion: boolean;
+	type?: ContentStatusKeys;
+}
+export interface ContentHistorySummary {
+	draft: ContentHistorySummaryStatus;
+	pending: ContentHistorySummaryStatus;
+	scheduled: ContentHistorySummaryStatus;
+	scheduledUnpublish: ContentHistorySummaryStatus;
+	published: boolean;
+}
+
 export interface ContentSchema {
 	_id?: string;
 	uuid?: string;
@@ -12,9 +25,7 @@ export interface ContentSchema {
 		site: string;
 		description?: string;
 		contentType: ContentTypeSchema;
-		historySummary?: {
-			published: boolean;
-		};
+		historySummary?: ContentHistorySummary;
 		theme?: string;
 		lastEditor?: {
 			firstname?: string;
@@ -57,6 +68,13 @@ export enum ContentStatus {
 	PUBLISHED = 'PUBLISHED',
 	UNPUBLISHED = 'UNPUBLISHED',
 }
+
+export type ContentStatusKeys =
+	| ContentStatus.DRAFT
+	| ContentStatus.SCHEDULED
+	| ContentStatus.PENDING
+	| ContentStatus.PUBLISHED
+	| ContentStatus.UNPUBLISHED;
 
 export interface ValidateSlugPayload {
 	id?: string;

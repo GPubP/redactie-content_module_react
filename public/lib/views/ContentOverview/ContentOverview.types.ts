@@ -17,7 +17,7 @@ export interface ContentOverviewTableRow {
 export enum FilterKeys {
 	SEARCH = 'search',
 	DATE = 'date',
-	STATUS = 'status',
+	STATUS = 'latest-status',
 	PUBLISHED = 'published',
 	CREATOR = 'creator',
 	CONTENT_TYPE = 'contentType',

@@ -30,7 +30,7 @@ import rolesRightsConnector from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { DATE_FORMATS, DEFAULT_CRUD_RIGHTS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ContentRouteProps, OverviewFilterItem } from '../../content.types';
-import { generateActiveFilters, getFilterStateFromParams } from '../../helpers';
+import { generateActiveFilters, getFilterStateFromParams, getLatestStatus } from '../../helpers';
 import {
 	useContent,
 	useContentTypes,
@@ -39,7 +39,7 @@ import {
 } from '../../hooks';
 import {
 	CONTENT_STATUS_TRANSLATION_MAP,
-	ContentStatus,
+	ContentHistorySummary,
 	DEFAULT_CONTENT_SEARCH_PARAMS,
 } from '../../services/content';
 import { contentFacade } from '../../store/content';
@@ -144,7 +144,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				filterFormState.publishedTo && filterFormState.publishedFrom
 					? moment(filterFormState.publishedTo, DATE_FORMATS.date).toISOString()
 					: undefined,
-			status: filterFormState.status || undefined,
+			['latest-status']: filterFormState.status || undefined,
 			creator: filterFormState.creator || undefined,
 		});
 	};
@@ -219,8 +219,10 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			contentType: content.meta?.contentType?.meta?.label,
 			lastModified: content.meta?.lastModified,
 			lastEditor: content.meta?.lastEditor,
-			status: content.meta?.status
-				? CONTENT_STATUS_TRANSLATION_MAP[content.meta?.status as ContentStatus]
+			status: content.meta?.historySummary
+				? CONTENT_STATUS_TRANSLATION_MAP[
+						getLatestStatus(content.meta.historySummary as ContentHistorySummary)
+				  ]
 				: '',
 			published: content.meta?.published,
 			description: content.meta?.description,
