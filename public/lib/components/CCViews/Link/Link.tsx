@@ -17,7 +17,6 @@ const CCLinkView: FC<ViewFieldProps> = ({ value = {} }) => {
 	);
 
 	const linkProps = useMemo(() => {
-		// TODO: add types for the props
 		const linkPropsObject: LinkPropsObject = {
 			type: 'primary',
 			target,
