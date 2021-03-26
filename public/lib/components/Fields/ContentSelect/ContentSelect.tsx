@@ -37,7 +37,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 
 	const { siteId } = useSiteContext();
 	const { generatePath } = useNavigate(SITES_ROOT);
-	const [contentLoadingState] = useCcContent('search');
+	const [contentLoadingState] = useCcContent(`search_${fieldSchema.name}`);
 	const autoCompleteRef = useRef(null);
 	const [isVisible, setVisibility] = useState(false);
 	const [isHoveringTooltip, setHoveringTooltip] = useState(false);
@@ -134,7 +134,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					onSelection={setValue}
 					asyncItems={async (query: string, cb: (options: any[]) => void) => {
 						await ccContentFacade.getContent(
-							'search',
+							`search_${fieldSchema.name}`,
 							siteId,
 							{
 								skip: 0,
@@ -149,7 +149,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 						);
 
 						ccContentFacade
-							.selectItemValue('search')
+							.selectItemValue(`search_${fieldSchema.name}`)
 							.pipe(first())
 							.subscribe(content => {
 								const newItems = ((content as ContentModel[]) || []).map(c => ({
