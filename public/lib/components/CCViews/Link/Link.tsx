@@ -3,8 +3,6 @@ import { ViewFieldProps } from '@redactie/form-renderer-module';
 import classnames from 'classnames';
 import React, { FC, useMemo } from 'react';
 
-import { LinkPropsObject } from './Link.types';
-
 const CCLinkView: FC<ViewFieldProps> = ({ value = {} }) => {
 	const { text, url, target, className } = value;
 	const style = value.style || '';
@@ -16,8 +14,8 @@ const CCLinkView: FC<ViewFieldProps> = ({ value = {} }) => {
 		[url]
 	);
 
-	const linkProps = useMemo(() => {
-		const linkPropsObject: LinkPropsObject = {
+	const linkProps = useMemo(
+		() => ({
 			type: 'primary',
 			target,
 			href: url,
@@ -25,10 +23,9 @@ const CCLinkView: FC<ViewFieldProps> = ({ value = {} }) => {
 				['a-button']: style === 'button',
 				['has-icon-left']: isExternal,
 			}),
-		};
-
-		return linkPropsObject;
-	}, [className, isExternal, style, target, url]);
+		}),
+		[className, isExternal, style, target, url]
+	);
 
 	if (!url) {
 		return null;
