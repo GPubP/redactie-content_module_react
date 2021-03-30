@@ -13,14 +13,15 @@ export const getInitialContentValues = (
 
 	return fields.reduce((values, field) => {
 		if (
-			field?.preset?.data.fields.length &&
+			field?.preset &&
+			field.config?.fields?.length &&
 			field.generalConfig.max &&
 			field.generalConfig.max <= 1
 		) {
 			values[field.name] =
 				field.generalConfig.required || data[field.name] || field.defaultValue
 					? getInitialContentValues(
-							field.preset.data.fields.map(f => f.field),
+							field.config?.fields,
 							setFieldValue(data[field.name], field.defaultValue, {})
 					  )
 					: '';

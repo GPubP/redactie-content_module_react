@@ -35,7 +35,7 @@ export class ContentTypesApiService {
 	public async getContentType(siteId: string, uuid: string): Promise<ContentTypeSchema | null> {
 		try {
 			const response: ContentTypeSchema = await api
-				.get(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content-types/${uuid}`)
+				.get(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content-types/${uuid}?form=true`)
 				.json();
 
 			if (!response.fields) {
