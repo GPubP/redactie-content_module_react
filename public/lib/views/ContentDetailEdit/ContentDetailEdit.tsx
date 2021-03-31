@@ -1,9 +1,9 @@
 import {
 	AlertContainer,
 	DataLoader,
-	HasChangesWorkerData,
 	LoadingState,
 	RenderChildRoutes,
+	useDetectValueChangesWorker,
 	useNavigate,
 	useWorker,
 } from '@redactie/utils';
@@ -42,18 +42,10 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	const { push } = useHistory();
 	const [, , externalLock, userLock] = useLock(contentId);
 	const [initialLoadingState, setInitialLoadingState] = useState(LoadingState.Loading);
-	const hasChangesWorkerData = useMemo(
-		() => ({
-			currentValue: contentItem,
-			nextValue: contentItemDraft,
-		}),
-		[contentItem, contentItemDraft]
-	);
-	const [hasChanges] = useWorker<HasChangesWorkerData, boolean>(
-		BFF_MODULE_PUBLIC_PATH,
-		'hasChanges.worker',
-		hasChangesWorkerData,
-		false
+	const [hasChanges, resetDetectValueChanges] = useDetectValueChangesWorker(
+		!!contentItemDraft && initialLoadingState === LoadingState.Loaded,
+		contentItemDraft,
+		BFF_MODULE_PUBLIC_PATH
 	);
 
 	const workerData = useMemo(
@@ -150,6 +142,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 			.then(() =>
 				runAllSubmitHooks(compartments, contentType, data, contentItem, 'afterSubmit')
 			)
+			.then(() => resetDetectValueChanges())
 			.catch(error =>
 				runAllSubmitHooks(
 					compartments,
