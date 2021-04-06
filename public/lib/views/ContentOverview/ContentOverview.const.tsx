@@ -18,8 +18,8 @@ export const OVERVIEW_QUERY_PARAMS_CONFIG = {
 	skip: { defaultValue: DEFAULT_CONTENT_SEARCH_PARAMS.skip, type: 'number' },
 	limit: { defaultValue: DEFAULT_CONTENT_SEARCH_PARAMS.limit, type: 'number' },
 	sparse: { defaultValue: DEFAULT_CONTENT_SEARCH_PARAMS.sparse, type: 'boolean' },
-	sort: { type: 'string' },
-	direction: { type: 'number' },
+	sort: { defaultValue: DEFAULT_CONTENT_SEARCH_PARAMS.sort, type: 'string' },
+	direction: { defaultValue: DEFAULT_CONTENT_SEARCH_PARAMS.direction, type: 'number' },
 	search: { type: 'string' },
 	contentTypes: { type: 'array' },
 	publishedFrom: { type: 'string' },
@@ -31,8 +31,6 @@ export const OVERVIEW_QUERY_PARAMS_CONFIG = {
 
 export const DEFAULT_OVERVIEW_QUERY_PARAMS = {
 	...DEFAULT_CONTENT_SEARCH_PARAMS,
-	sort: undefined,
-	direction: undefined,
 	search: undefined,
 	contentTypes: undefined,
 	publishedFrom: undefined,
@@ -83,7 +81,7 @@ export const CONTENT_OVERVIEW_COLUMNS = (
 	},
 	{
 		label: t(CORE_TRANSLATIONS['TABLE_LAST-MODIFIED']),
-		value: 'lastModified',
+		value: 'lastEdit',
 		width: '18%',
 		format: (data: string) => moment(data).format(DATE_FORMATS.dateAndTime),
 	},
@@ -147,3 +145,7 @@ export const CONTENT_OVERVIEW_COLUMNS = (
 		},
 	},
 ];
+
+export const ORDER_BY_KEYMAP: Record<string, string> = {
+	lastEdit: 'meta.historySummary.lastEdit',
+};

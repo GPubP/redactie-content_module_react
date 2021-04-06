@@ -6,6 +6,8 @@ export const DEFAULT_CONTENT_SEARCH_PARAMS: SearchParams & { limit: number } = {
 	skip: 0,
 	limit: 20,
 	sparse: true,
+	sort: 'meta.historySummary.lastEdit',
+	direction: -1,
 };
 
 export const CONTENT_STATUS_TRANSLATION_MAP = {

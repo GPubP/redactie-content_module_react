@@ -14,6 +14,7 @@ export interface ContentHistorySummary {
 	scheduled: ContentHistorySummaryStatus;
 	scheduledUnpublish: ContentHistorySummaryStatus;
 	published: boolean;
+	lastEdit: string;
 }
 
 export interface ContentSchema {
@@ -36,6 +37,7 @@ export interface ContentSchema {
 		created?: string;
 		lastModified?: string;
 		activeLanguages: string[];
+		firstPublished?: string;
 	};
 	modulesData?: Record<string, ModuleValue>;
 	fields: Record<string, any>;
