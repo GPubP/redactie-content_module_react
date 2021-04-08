@@ -145,7 +145,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 					// will cause our components to destroy, this is not something that we want
 					// TODO: Delete this code and update the contentItem directly from the response data
 					// when the API is fixed
-					this.service
+					return this.service
 						.getContentItem(siteId, uuid)
 						.then(response => {
 							if (response) {
