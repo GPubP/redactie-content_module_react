@@ -52,7 +52,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	const [contentItemLoading, contentItem, contentItemDraft, contentItemError] = useContentItem();
 	const [contentTypeLoading, contentType] = useContentType();
 	const [
-		mySecurityRightsLoadingState,
+		mySecurityRightsLoading,
 		mySecurityrights,
 	] = rolesRightsConnector.api.hooks.useMySecurityRightsForSite({
 		siteUuid: siteId,
@@ -66,7 +66,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 			target: generatePath(`${MODULE_PATHS.overview}`, { siteId }),
 		},
 	]);
-	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [initialLoading, setInitialLoading] = useState(true);
 	const [, , externalLock] = useLock(contentId);
 
 	const guardsMeta = useMemo(
@@ -99,20 +99,24 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 
 	useEffect(() => {
 		if (
+			initialLoading &&
 			contentTypeLoading !== LoadingState.Loading &&
 			contentItemLoading !== LoadingState.Loading &&
-			mySecurityRightsLoadingState !== LoadingState.Loading &&
+			mySecurityRightsLoading !== LoadingState.Loading &&
 			contentType &&
-			contentItem
+			contentItem &&
+			contentTypeRights
 		) {
-			setInitialLoading(LoadingState.Loaded);
+			setInitialLoading(false);
 		}
 	}, [
 		contentTypeLoading,
 		contentItemLoading,
 		contentType,
 		contentItem,
-		mySecurityRightsLoadingState,
+		mySecurityRightsLoading,
+		initialLoading,
+		contentTypeRights,
 	]);
 
 	const pageTabs = useMemo(() => {

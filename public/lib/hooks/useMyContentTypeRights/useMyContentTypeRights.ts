@@ -11,7 +11,11 @@ const useMyContentTypeRights = (
 	const [contentTypeRights, setContentTypeRights] = useState<CRUDSecurityRights | null>(null);
 
 	useEffect(() => {
-		if (Array.isArray(mySecurityRights) && typeof contentTypeId === 'string') {
+		if (
+			Array.isArray(mySecurityRights) &&
+			mySecurityRights.length > 0 &&
+			typeof contentTypeId === 'string'
+		) {
 			setContentTypeRights(
 				getMySecurityRightsByContentTypeId(contentTypeId, mySecurityRights)
 			);
