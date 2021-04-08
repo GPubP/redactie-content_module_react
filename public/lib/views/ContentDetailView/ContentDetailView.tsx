@@ -110,6 +110,14 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 										{moment(meta.lastModified).format(DATE_FORMATS.dateAndTime)}
 									</div>
 								)}
+								{meta.historySummary?.published && meta.firstPublished && (
+									<div>
+										<b>Gepubliceerd op: </b>
+										{moment(meta.firstPublished).format(
+											DATE_FORMATS.dateAndTime
+										)}
+									</div>
+								)}
 								{meta.lastEditor && (
 									<div>
 										<b>Door: </b>

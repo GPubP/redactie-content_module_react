@@ -49,6 +49,7 @@ import {
 	CONTENT_OVERVIEW_COLUMNS,
 	CONTENT_TYPES_SEARCH_OPTIONS,
 	DEFAULT_OVERVIEW_QUERY_PARAMS,
+	ORDER_BY_KEYMAP,
 	OVERVIEW_QUERY_PARAMS_CONFIG,
 } from './ContentOverview.const';
 import { ContentOverviewTableRow, FilterKeys } from './ContentOverview.types';
@@ -196,13 +197,25 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			skip: 0,
 			...parseOrderByToObj({
 				...orderBy,
-				key: `meta.${orderBy.key}`,
+				key: ORDER_BY_KEYMAP[orderBy.key] || `meta.${orderBy.key}`,
 			}),
 		});
 	};
 
+	const getSortFromQuery = (sort: string | null | undefined): string => {
+		if (!sort) {
+			return '';
+		}
+
+		const findFromOrderByMap = Object.keys(ORDER_BY_KEYMAP).find(
+			key => ORDER_BY_KEYMAP[key] === sort
+		);
+
+		return findFromOrderByMap || sort.split('.')[1];
+	};
+
 	const activeSorting = parseObjToOrderBy({
-		sort: query.sort ? query.sort.split('.')[1] : '',
+		sort: getSortFromQuery(query.sort),
 		direction: query.direction ?? 1,
 	});
 
@@ -217,7 +230,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		const contentsRows: ContentOverviewTableRow[] = contents.map(content => ({
 			label: content.meta?.label,
 			contentType: content.meta?.contentType?.meta?.label,
-			lastModified: content.meta?.lastModified,
+			lastEdit: content.meta?.historySummary?.lastEdit || content.meta?.lastModified,
 			lastEditor: content.meta?.lastEditor,
 			status: content.meta?.historySummary
 				? CONTENT_STATUS_TRANSLATION_MAP[

@@ -10,6 +10,7 @@ describe('getLatestStatus', () => {
 			scheduled: { uuid: '3', isLatestVersion: false },
 			scheduledUnpublish: { uuid: '4', isLatestVersion: false },
 			published: false,
+			lastEdit: new Date().toISOString(),
 		});
 		expect(latestStatus).toBe(ContentStatus.DRAFT);
 	});
@@ -21,6 +22,7 @@ describe('getLatestStatus', () => {
 			scheduled: { uuid: '3', isLatestVersion: false },
 			scheduledUnpublish: { uuid: '4', isLatestVersion: false },
 			published: false,
+			lastEdit: new Date().toISOString(),
 		});
 		expect(latestStatus).toBe(ContentStatus.PENDING);
 	});
@@ -32,6 +34,7 @@ describe('getLatestStatus', () => {
 			scheduled: { uuid: '3', isLatestVersion: true, type: ContentStatus.SCHEDULED },
 			scheduledUnpublish: { uuid: '4', isLatestVersion: false },
 			published: false,
+			lastEdit: new Date().toISOString(),
 		});
 		expect(latestStatus).toBe(ContentStatus.SCHEDULED);
 	});
@@ -43,6 +46,7 @@ describe('getLatestStatus', () => {
 			scheduled: { uuid: '3', isLatestVersion: false },
 			scheduledUnpublish: { uuid: '4', isLatestVersion: false },
 			published: true,
+			lastEdit: new Date().toISOString(),
 		});
 		expect(latestStatus).toBe(ContentStatus.PUBLISHED);
 	});
@@ -54,6 +58,7 @@ describe('getLatestStatus', () => {
 			scheduled: { uuid: '3', isLatestVersion: false },
 			scheduledUnpublish: { uuid: '4', isLatestVersion: false },
 			published: false,
+			lastEdit: new Date().toISOString(),
 		});
 		expect(latestStatus).toBe(ContentStatus.UNPUBLISHED);
 	});
