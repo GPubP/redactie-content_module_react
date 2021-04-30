@@ -97,7 +97,7 @@
     "yup": "^0.28.3"
   },
   "dependencies": {
-    "@mindspace-io/react": "^1.1.6",
+    "@mindspace-io/react": "1.1.6",
     "@redactie/schema-to-yup": "^1.9.25",
     "json-pointer": "^0.6.1",
     "lodash.debounce": "^4.0.8",
