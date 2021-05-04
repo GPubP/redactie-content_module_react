@@ -157,12 +157,15 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		switch (compartment.type) {
 			case CompartmentType.CT: {
 				const fieldValues = values as ContentSchema['fields'];
+
 				if (isCreating && !slugFieldTouched) {
 					contentFacade.updateContentMetaDraft({
 						slug: { nl: kebabCase(fieldValues[WORKING_TITLE_KEY]) },
 					});
 				}
+
 				contentFacade.updateContentFieldsDraft(fieldValues);
+
 				break;
 			}
 			case CompartmentType.INTERNAL: {
@@ -173,6 +176,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				}
 
 				contentFacade.updateContentMetaDraft(metaValues);
+
 				break;
 			}
 			case CompartmentType.MODULE:

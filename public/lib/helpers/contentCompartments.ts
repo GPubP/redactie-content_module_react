@@ -4,11 +4,13 @@ import {
 	assocPath,
 	clone,
 	compose,
+	equals,
 	find,
 	identity,
 	ifElse,
 	isEmpty,
 	omit,
+	pathOr,
 	pick,
 } from 'ramda';
 
@@ -21,6 +23,7 @@ import {
 import { FieldsForm } from '../components';
 import { getCustomValidator } from '../connectors/formRenderer';
 import { WORKING_TITLE_KEY } from '../content.const';
+import { MapValueToContentItemPath } from '../services/contentTypes';
 import { ExternalCompartmentModel } from '../store/api/externalCompartments';
 import { contentFacade } from '../store/content';
 import {
@@ -213,6 +216,18 @@ const validateCTCompartment = (contentType: ContentTypeSchema, settings: CtTypeS
 	return true;
 };
 
+const hasWorkTitleMapper = (contentType: ContentTypeSchema): boolean => {
+	return !!contentType.fields.find(
+		field =>
+			!!pathOr(
+				[],
+				['fieldType', 'data', 'generalConfig', 'mapValueToContentItemPath']
+			)(field).find((mapper: MapValueToContentItemPath) =>
+				equals(mapper.destPath, ['meta', 'label'])
+			)
+	);
+};
+
 export const getContentTypeCompartments = (
 	contentType: ContentTypeSchema
 ): ContentCompartmentModel<ModuleValue, CtTypeSettings>[] => {
@@ -232,12 +247,14 @@ export const getContentTypeCompartments = (
 				fields: compartmentFields,
 				validateSchema: getCTCompartmentErrorMessages(contentType, []),
 				errorMessages: getCTCompartmentValidationSchema(contentType, []),
-				includeWorkingTitle: true,
+				includeWorkingTitle: !hasWorkTitleMapper(contentType),
 			},
 			component: FieldsForm,
 			type: CompartmentType.CT,
 			isValid: false,
 		};
+
+		console.log(defaultCompartment);
 
 		if (!compartmentFields.length) {
 			// Always show working title field
@@ -262,7 +279,7 @@ export const getContentTypeCompartments = (
 			fields: compartmentFields,
 			validateSchema: compartmentValidateSchema,
 			errorMessages: compartmentErrorMessages,
-			includeWorkingTitle: acc.length === 0, // Is first compartment
+			includeWorkingTitle: defaultCompartment.context.includeWorkingTitle && acc.length === 0, // Is first compartment
 		};
 
 		return acc.concat([
@@ -353,6 +370,7 @@ export const runAllSubmitHooks = (
 		const newContentItemDraft = allValues.reduce(
 			(newContentItem, moduleValue, index) => {
 				const compartment = compartments.find((comp, compIndex) => compIndex === index);
+
 				if (moduleValue && compartment && compartment.type === CompartmentType.MODULE) {
 					return {
 						...newContentItem,
@@ -362,6 +380,7 @@ export const runAllSubmitHooks = (
 						},
 					};
 				}
+
 				return newContentItem;
 			},
 			{ ...contentItemDraft }

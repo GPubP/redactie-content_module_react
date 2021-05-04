@@ -27,6 +27,7 @@ export const getInitialContentValues = (
 					: '';
 			return values;
 		}
+
 		values[field.name] = setFieldValue(data[field.name], field.defaultValue, '');
 
 		return values;
