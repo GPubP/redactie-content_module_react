@@ -254,8 +254,6 @@ export const getContentTypeCompartments = (
 			isValid: false,
 		};
 
-		console.log(defaultCompartment);
-
 		if (!compartmentFields.length) {
 			// Always show working title field
 			return acc.concat([
