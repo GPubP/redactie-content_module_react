@@ -11,6 +11,12 @@ export interface GeneralConfig {
 	required: boolean;
 }
 
+export interface MapValueToContentItemPath {
+	type: 'BE';
+	sourcePath: string[];
+	destPath: string[];
+}
+
 export interface FieldType {
 	_id: string;
 	uuid: string;
@@ -20,6 +26,7 @@ export interface FieldType {
 		generalConfig: {
 			defaultGuideline?: string;
 			defaultLabel?: string;
+			mapValueToContentItemPath?: MapValueToContentItemPath[];
 		};
 	};
 }

@@ -126,42 +126,50 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		uuid: string,
 		data: ContentSchema,
 		publish = false
-	): Promise<void> {
+	): Promise<ContentSchema | null> {
 		if (publish) {
 			this.store.setIsPublishing(true);
 		} else {
 			this.store.setIsUpdating(true);
 		}
+
 		const alertProps = publish ? getAlertMessages(data).publish : getAlertMessages(data).update;
+
 		alertService.dismiss();
 
 		return this.service
 			.updateContentItem(siteId, uuid, data)
 			.then(response => {
-				if (response) {
-					// Since the response data is not always right we need to fetch the latest content item
-					// after each update
-					// We can not call the getContentItem function because the loading states
-					// will cause our components to destroy, this is not something that we want
-					// TODO: Delete this code and update the contentItem directly from the response data
-					// when the API is fixed
-					return this.service
-						.getContentItem(siteId, uuid)
-						.then(response => {
-							if (response) {
-								this.store.update({
-									contentItem: response,
-									isUpdating: false,
-									isPublishing: false,
-								});
-								alertService.success(
-									alertProps.success,
-									this.alertContainerProps.update
-								);
-							}
-						})
-						.catch(error => this.store.setError(error));
+				if (!response) {
+					return null;
 				}
+				// Since the response data is not always right we need to fetch the latest content item
+				// after each update
+				// We can not call the getContentItem function because the loading states
+				// will cause our components to destroy, this is not something that we want
+				// TODO: Delete this code and update the contentItem directly from the response data
+				// when the API is fixed
+				return this.service
+					.getContentItem(siteId, uuid)
+					.then(response => {
+						if (!response) {
+							return null;
+						}
+
+						this.store.update({
+							contentItem: response,
+							contentItemDraft: response,
+							isUpdating: false,
+							isPublishing: false,
+						});
+						alertService.success(alertProps.success, this.alertContainerProps.update);
+
+						return response;
+					})
+					.catch(error => {
+						this.store.setError(error);
+						return null;
+					});
 			})
 			.catch(error => {
 				this.store.update({

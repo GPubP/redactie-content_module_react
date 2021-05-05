@@ -65,29 +65,23 @@ const MetaForm: FC<CompartmentProps> = ({
 					</div>
 					<div className="row">
 						<div className="col-xs-12 col-md-6 u-margin-bottom">
-							<Field
-								type="text"
-								label="Slug"
-								name="slug.nl"
-								id="slug"
-								placeholder="Typ een slug"
-								required
-							>
-								{(fieldProps: FieldProps<any, {}>) => {
-									return (
-										<>
-											<TextField
-												loading={fieldProps.form.isValidating}
-												{...fieldProps.field}
-											/>
-											{!fieldProps.form.isValidating ? (
-												<ErrorMessage name="slug.nl" />
-											) : null}
-										</>
-									);
-								}}
+							<Field type="text" name="slug.nl" required>
+								{(fieldProps: FieldProps<any, {}>) => (
+									<>
+										<TextField
+											loading={fieldProps.form.isValidating}
+											placeholder="Typ een slug"
+											label="Slug"
+											id="slug"
+											required
+											{...fieldProps.field}
+										/>
+										{!fieldProps.form.isValidating ? (
+											<ErrorMessage name="slug.nl" />
+										) : null}
+									</>
+								)}
 							</Field>
-
 							<div className="u-text-light u-margin-top-xs">
 								Bepaal de &apos;slug&apos; voor dit content item. Deze wordt onder
 								andere gebruikt in de URL.

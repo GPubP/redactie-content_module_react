@@ -19,11 +19,7 @@ const FieldsForm: FC<CompartmentProps & { settings: CtTypeSettings }> = ({
 	/**
 	 * Render
 	 */
-	if (!contentType) {
-		return null;
-	}
-
-	if (!Form) {
+	if (!contentType || !Form) {
 		return null;
 	}
 

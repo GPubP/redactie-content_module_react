@@ -139,8 +139,14 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 
 		contentFacade
 			.updateContentItem(siteId, contentId, data)
-			.then(() =>
-				runAllSubmitHooks(compartments, contentType, data, contentItem, 'afterSubmit')
+			.then(newContent =>
+				runAllSubmitHooks(
+					compartments,
+					contentType,
+					newContent || contentItemDraft,
+					contentItem,
+					'afterSubmit'
+				)
 			)
 			.then(() => resetDetectValueChanges())
 			.catch(error =>
