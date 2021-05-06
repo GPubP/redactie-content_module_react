@@ -217,15 +217,16 @@ const validateCTCompartment = (contentType: ContentTypeSchema, settings: CtTypeS
 };
 
 const hasWorkTitleMapper = (contentType: ContentTypeSchema): boolean => {
-	return !!contentType.fields.find(
-		field =>
-			!!pathOr(
-				[],
-				['fieldType', 'data', 'generalConfig', 'mapValueToContentItemPath']
-			)(field).find((mapper: MapValueToContentItemPath) =>
-				equals(mapper.destPath, ['meta', 'label'])
-			)
-	);
+	return !!contentType.fields.find(field => {
+		const mapValueToContentItemPath = pathOr(
+			pathOr([], ['fieldType', 'data', 'generalConfig', 'mapValueToContentItemPath'])(field),
+			['preset', 'data', 'generalConfig', 'mapValueToContentItemPath']
+		)(field);
+
+		return mapValueToContentItemPath.find((mapper: MapValueToContentItemPath) =>
+			equals(mapper.destPath, ['meta', 'label'])
+		);
+	});
 };
 
 export const getContentTypeCompartments = (
