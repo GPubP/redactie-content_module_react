@@ -107,6 +107,7 @@ export const CONTENT_OVERVIEW_COLUMNS = (
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 		value: 'status',
+		disableSorting: true,
 		width: '10%',
 	},
 	{
