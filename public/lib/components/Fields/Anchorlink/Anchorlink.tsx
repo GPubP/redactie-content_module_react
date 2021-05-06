@@ -56,9 +56,13 @@ const Anchorlink: React.FC<AnchorlinkFieldProps> = ({
 
 	return (
 		<>
-			<FormRendererFieldTitle isRequired={!!config.required} className="u-margin-bottom">
-				{fieldSchema.label}
-			</FormRendererFieldTitle>
+			{
+				(config?.max && config.max === 1) && (
+					<FormRendererFieldTitle isRequired={!!config.required} className="u-margin-bottom">
+						{fieldSchema.label}
+					</FormRendererFieldTitle>
+				)
+			}
 			{config.description && <p className="u-margin-bottom">{config.description}</p>}
 			<div className="u-margin-bottom">
 				<Select
@@ -92,7 +96,7 @@ const Anchorlink: React.FC<AnchorlinkFieldProps> = ({
 							label: event.target.value,
 						})
 					}
-					{...omit(['multiLanguage', 'min', 'max'])(config)}
+					{...omit(['multiLanguage', 'min', 'max', 'description'])(config)}
 				/>
 				<ErrorMessage name={`${field.name}.label`} />
 			</div>
