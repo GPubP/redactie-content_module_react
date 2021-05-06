@@ -221,11 +221,9 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 	};
 
 	const contentTypeLabel = contentType?.meta.label;
-	const pageTitle = (
-		<>
-			<i>{contentTypeLabel ?? 'Content'}</i> {t(CORE_TRANSLATIONS.ROUTING_CREATE)}
-		</>
-	);
+	const pageTitle = `${contentTypeLabel ? `'${contentTypeLabel}'` : 'Content'} ${t(
+		CORE_TRANSLATIONS.ROUTING_CREATE
+	)}`;
 
 	return (
 		<>

@@ -192,11 +192,9 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	};
 
 	const contentItemLabel = contentItem?.meta.label;
-	const pageTitle = (
-		<>
-			<i>{contentItemLabel ?? 'Content'}</i> {t(CORE_TRANSLATIONS.ROUTING_UPDATE)}
-		</>
-	);
+	const pageTitle = `${contentItemLabel ? `'${contentItemLabel}'` : 'Content'} ${t(
+		CORE_TRANSLATIONS.ROUTING_UPDATE
+	)}`;
 	const badges = generateDetailBadges(contentItem);
 
 	const render = (): ReactElement => {
