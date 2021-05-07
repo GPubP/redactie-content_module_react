@@ -1,3 +1,4 @@
+import { ContentTypeFieldSchema } from '@redactie/form-renderer-module';
 import kebabCase from 'lodash.kebabcase';
 import {
 	always,
@@ -216,17 +217,29 @@ const validateCTCompartment = (contentType: ContentTypeSchema, settings: CtTypeS
 	return true;
 };
 
-const hasWorkTitleMapper = (contentType: ContentTypeSchema): boolean => {
-	return !!contentType.fields.find(field => {
+export const getWorkTitleMapper = (
+	contentType: ContentTypeSchema
+): { field: ContentTypeFieldSchema; mapper: MapValueToContentItemPath } | null => {
+	return contentType.fields.reduce((acc, field) => {
+		if (acc) {
+			return acc;
+		}
+
 		const mapValueToContentItemPath = pathOr(
 			pathOr([], ['fieldType', 'data', 'generalConfig', 'mapValueToContentItemPath'])(field),
 			['preset', 'data', 'generalConfig', 'mapValueToContentItemPath']
 		)(field);
-
-		return mapValueToContentItemPath.find((mapper: MapValueToContentItemPath) =>
-			equals(mapper.destPath, ['meta', 'label'])
+		const mapper = mapValueToContentItemPath.find((fieldMapper: MapValueToContentItemPath) =>
+			equals(fieldMapper.destPath, ['meta', 'label'])
 		);
-	});
+
+		return mapper
+			? {
+					field,
+					mapper,
+			  }
+			: null;
+	}, null as { field: ContentTypeFieldSchema; mapper: MapValueToContentItemPath } | null);
 };
 
 export const getContentTypeCompartments = (
@@ -248,7 +261,7 @@ export const getContentTypeCompartments = (
 				fields: compartmentFields,
 				validateSchema: getCTCompartmentErrorMessages(contentType, []),
 				errorMessages: getCTCompartmentValidationSchema(contentType, []),
-				includeWorkingTitle: !hasWorkTitleMapper(contentType),
+				includeWorkingTitle: !getWorkTitleMapper(contentType),
 			},
 			component: FieldsForm,
 			type: CompartmentType.CT,

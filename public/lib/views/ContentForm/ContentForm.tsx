@@ -3,7 +3,7 @@ import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-ed
 import { alertService, LeavePrompt, LoadingState, NavListItem, useNavigate } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import { equals, isEmpty, lensPath, set } from 'ramda';
+import { equals, isEmpty, lensPath, path, set } from 'ramda';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -20,6 +20,7 @@ import {
 	getCompartmentValue,
 	getContentTypeCompartments,
 	getSettings,
+	getWorkTitleMapper,
 	runAllSubmitHooks,
 	validateCompartments,
 } from '../../helpers/contentCompartments';
@@ -81,6 +82,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	] = useContentLoadingStates();
 	const { navigate } = useNavigate(SITES_ROOT);
 	const internalCompartments = useMemo(() => INTERNAL_COMPARTMENTS(siteId), [siteId]);
+	const workingTitleMapper = useMemo(() => getWorkTitleMapper(contentType), [contentType]);
 
 	useEffect(() => {
 		if (!contentType) {
@@ -159,8 +161,12 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				const fieldValues = values as ContentSchema['fields'];
 
 				if (isCreating && !slugFieldTouched) {
+					const workingTitlePath = workingTitleMapper
+						? [workingTitleMapper.field.name, ...workingTitleMapper.mapper.sourcePath]
+						: [WORKING_TITLE_KEY];
+
 					contentFacade.updateContentMetaDraft({
-						slug: { nl: kebabCase(fieldValues[WORKING_TITLE_KEY]) },
+						slug: { nl: kebabCase(path(workingTitlePath, fieldValues)) },
 					});
 				}
 
