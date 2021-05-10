@@ -7,7 +7,7 @@ import {
 	useNavigate,
 	useWorker,
 } from '@redactie/utils';
-import { equals, omit } from 'ramda';
+import { equals } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -44,7 +44,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	const [initialLoadingState, setInitialLoadingState] = useState(LoadingState.Loading);
 	const [hasChanges, resetDetectValueChanges] = useDetectValueChangesWorker(
 		!!contentItemDraft && initialLoadingState === LoadingState.Loaded,
-		omit(['meta', 'versions'])(contentItemDraft),
+		contentItemDraft,
 		BFF_MODULE_PUBLIC_PATH
 	);
 
@@ -176,7 +176,10 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 				status: ContentStatus.PUBLISHED,
 			},
 		};
-		contentFacade.updateContentItem(siteId, contentId, data, true).catch();
+		contentFacade
+			.updateContentItem(siteId, contentId, data, true)
+			.then(() => resetDetectValueChanges())
+			.catch();
 	};
 
 	/**
