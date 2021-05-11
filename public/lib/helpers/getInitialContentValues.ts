@@ -34,7 +34,7 @@ export const getInitialContentValues = (
 		// Try to pick the first object of the array and cast it down
 		if (
 			Array.isArray(data[field.name]) &&
-			['object', 'string'].includes(field.dataType.data.type) &&
+			['object', 'string', 'number'].includes(field.dataType.data.type) &&
 			field.generalConfig.max <= 1
 		) {
 			values[field.name] = setFieldValue(
