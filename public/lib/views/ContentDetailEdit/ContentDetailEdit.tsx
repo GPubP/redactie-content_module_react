@@ -176,7 +176,10 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 				status: ContentStatus.PUBLISHED,
 			},
 		};
-		contentFacade.updateContentItem(siteId, contentId, data, true).catch();
+		contentFacade
+			.updateContentItem(siteId, contentId, data, true)
+			.then(() => resetDetectValueChanges())
+			.catch();
 	};
 
 	/**
