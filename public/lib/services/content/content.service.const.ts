@@ -1,6 +1,6 @@
 import { SearchParams } from '@redactie/utils';
 
-import { ContentStatus } from './content.service.types';
+import { ContentExtraFilterStatus, ContentStatus } from './content.service.types';
 
 export const DEFAULT_CONTENT_SEARCH_PARAMS: SearchParams & { limit: number } = {
 	skip: 0,
@@ -25,3 +25,7 @@ export const CONTENT_STATUS_API_MAP = {
 	[ContentStatus.PUBLISHED]: 'published',
 	[ContentStatus.UNPUBLISHED]: 'unpublish',
 };
+
+export const CONTENT_EXTRA_FILTER_TRANSLATION_MAP = {
+	[ContentExtraFilterStatus.ALL]: 'Alle'
+}

@@ -25,7 +25,7 @@ export const OVERVIEW_QUERY_PARAMS_CONFIG = {
 	publishedFrom: { type: 'string' },
 	publishedTo: { type: 'string' },
 	['latest-status']: { type: 'string' },
-	published: { type: 'boolean' },
+	published: { type: 'string' },
 	creator: { type: 'string' },
 } as const;
 

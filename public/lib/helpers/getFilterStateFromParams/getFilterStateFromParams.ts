@@ -3,16 +3,19 @@ import moment from 'moment';
 
 import { FilterFormState, PublishedStatuses } from '../../components';
 import { DATE_FORMATS } from '../../content.const';
+import { ContentExtraFilterStatus } from '../../services/content';
 
 export const getFilterStateFromParams = (query?: SearchParams): FilterFormState => {
 	return {
 		contentType: query?.contentTypes?.length ? query.contentTypes : [],
 		creator: query?.creator ?? '',
 		published:
-			typeof query?.published === 'boolean'
-				? query.published
-					? PublishedStatuses.ONLINE
-					: PublishedStatuses.OFFLINE
+			query?.published
+				? query?.published === 'true' || query?.published === 'false'
+					? query?.published === 'true'
+						? PublishedStatuses.ONLINE
+						: PublishedStatuses.OFFLINE
+					: ContentExtraFilterStatus.ALL
 				: '',
 		publishedFrom: query?.publishedFrom
 			? moment(query.publishedFrom).format(DATE_FORMATS.date)

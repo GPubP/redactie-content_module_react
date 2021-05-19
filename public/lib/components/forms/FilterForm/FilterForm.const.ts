@@ -1,6 +1,6 @@
 import { object, string } from 'yup';
 
-import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../../services/content';
+import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus, ContentExtraFilterStatus, CONTENT_EXTRA_FILTER_TRANSLATION_MAP } from '../../../services/content';
 
 import { PublishedStatuses } from './FilterForm.types';
 
@@ -52,9 +52,14 @@ export const FILTER_STATUS_OPTIONS = [
 		label: CONTENT_STATUS_TRANSLATION_MAP.PENDING,
 	},
 	{
-		key: '3',
+		key: '4',
 		value: ContentStatus.UNPUBLISHED,
 		label: CONTENT_STATUS_TRANSLATION_MAP.UNPUBLISHED,
+	},
+	{
+		key: '5',
+		value: ContentExtraFilterStatus.ALL,
+		label: CONTENT_EXTRA_FILTER_TRANSLATION_MAP.ALL,
 	},
 ];
 
@@ -68,5 +73,10 @@ export const PUBLISHED_OPTIONS = [
 		key: '1',
 		value: PublishedStatuses.OFFLINE,
 		label: 'Offline',
+	},
+	{
+		key: '2',
+		value: ContentExtraFilterStatus.ALL,
+		label: CONTENT_EXTRA_FILTER_TRANSLATION_MAP.ALL,
 	},
 ];
