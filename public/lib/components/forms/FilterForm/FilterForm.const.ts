@@ -33,50 +33,50 @@ export const PUBLISHED_DEFAULT_OPTION = {
 export const FILTER_STATUS_OPTIONS = [
 	{
 		key: '0',
+		value: ContentExtraFilterStatus.ALL,
+		label: CONTENT_EXTRA_FILTER_TRANSLATION_MAP.ALL,
+	},
+	{
+		key: '1',
 		value: ContentStatus.PUBLISHED,
 		label: CONTENT_STATUS_TRANSLATION_MAP.PUBLISHED,
 	},
 	{
-		key: '1',
+		key: '2',
 		value: ContentStatus.DRAFT,
 		label: CONTENT_STATUS_TRANSLATION_MAP.DRAFT,
 	},
 	{
-		key: '2',
+		key: '3',
 		value: ContentStatus.SCHEDULED,
 		label: CONTENT_STATUS_TRANSLATION_MAP.SCHEDULED,
 	},
 	{
-		key: '3',
+		key: '4',
 		value: ContentStatus.PENDING,
 		label: CONTENT_STATUS_TRANSLATION_MAP.PENDING,
 	},
 	{
-		key: '4',
+		key: '5',
 		value: ContentStatus.UNPUBLISHED,
 		label: CONTENT_STATUS_TRANSLATION_MAP.UNPUBLISHED,
-	},
-	{
-		key: '5',
-		value: ContentExtraFilterStatus.ALL,
-		label: CONTENT_EXTRA_FILTER_TRANSLATION_MAP.ALL,
 	},
 ];
 
 export const PUBLISHED_OPTIONS = [
 	{
 		key: '0',
+		value: ContentExtraFilterStatus.ALL,
+		label: CONTENT_EXTRA_FILTER_TRANSLATION_MAP.ALL,
+	},
+	{
+		key: '1',
 		value: PublishedStatuses.ONLINE,
 		label: 'Online',
 	},
 	{
-		key: '1',
+		key: '2',
 		value: PublishedStatuses.OFFLINE,
 		label: 'Offline',
-	},
-	{
-		key: '2',
-		value: ContentExtraFilterStatus.ALL,
-		label: CONTENT_EXTRA_FILTER_TRANSLATION_MAP.ALL,
 	},
 ];
