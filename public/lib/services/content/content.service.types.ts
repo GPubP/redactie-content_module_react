@@ -71,6 +71,10 @@ export enum ContentStatus {
 	UNPUBLISHED = 'UNPUBLISHED',
 }
 
+export enum ContentExtraFilterStatus {
+	ALL = 'ALL',
+}
+
 export type ContentStatusKeys =
 	| ContentStatus.DRAFT
 	| ContentStatus.SCHEDULED

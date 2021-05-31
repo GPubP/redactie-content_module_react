@@ -41,6 +41,7 @@ import {
 	CONTENT_STATUS_TRANSLATION_MAP,
 	ContentHistorySummary,
 	DEFAULT_CONTENT_SEARCH_PARAMS,
+	ContentExtraFilterStatus,
 } from '../../services/content';
 import { contentFacade } from '../../store/content';
 import { contentTypesFacade } from '../../store/contentTypes';
@@ -113,7 +114,17 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 
 	// Fetch content based on query params
 	useEffect(() => {
-		contentFacade.getContent(siteId, query as SearchParams);
+		const getContentQuery = { ...query };
+
+		if (query['latest-status'] === ContentExtraFilterStatus.ALL) {
+			getContentQuery['latest-status'] = undefined;
+		}
+
+		if (query.published === ContentExtraFilterStatus.ALL) {
+			getContentQuery.published = undefined;
+		}
+
+		contentFacade.getContent(siteId, getContentQuery as SearchParams);
 	}, [siteId, query]);
 
 	/**
@@ -135,7 +146,9 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				? filterFormState.contentType
 				: undefined,
 			published: filterFormState.published
-				? filterFormState.published === PublishedStatuses.ONLINE
+				? filterFormState.published === ContentExtraFilterStatus.ALL
+					? ContentExtraFilterStatus.ALL
+					: `${filterFormState.published === PublishedStatuses.ONLINE}`
 				: undefined,
 			publishedFrom:
 				filterFormState.publishedFrom && filterFormState.publishedTo
