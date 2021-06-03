@@ -58,6 +58,25 @@ const handlePreset = (field: FieldSchemaForAnchorlink, values: FormikValues): Se
 			];
 		}
 
+		// Field is a paragraph
+		if (
+			!field.config?.isAnchorlink &&
+			Array.isArray(value) &&
+			Array.isArray(field.config?.fields)
+		) {
+			return [
+				...acc,
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				...handleParagraph(
+					{
+						...subField,
+						_jsonPointerName: [...parseFieldNameToPath(field), subField.name],
+					},
+					value
+				),
+			];
+		}
+
 		if (value?.text && !!subField.config?.isAnchorlink) {
 			return [
 				...acc,
