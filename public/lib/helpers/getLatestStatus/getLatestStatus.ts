@@ -1,18 +1,17 @@
 import {
+	CONTENT_STATUS_API_MAP,
 	ContentHistorySummary,
 	ContentHistorySummaryStatus,
 	ContentStatus,
 	ContentStatusKeys,
 } from '../../services/content';
 
-import { STATUS_KEYS } from './getLatestStatus.const';
-
 export const getLatestStatus = (historySummary: ContentHistorySummary): ContentStatusKeys => {
 	let latestStatus: ContentStatusKeys | undefined;
 
-	STATUS_KEYS.some(statusKey => {
+	Object.values(CONTENT_STATUS_API_MAP).some(statusKey => {
 		const status = (historySummary as any)[statusKey] as ContentHistorySummaryStatus;
-		if (status.isLatestVersion) {
+		if (status && status.isLatestVersion) {
 			latestStatus = status.type;
 			return true;
 		}
