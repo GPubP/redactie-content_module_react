@@ -1,6 +1,6 @@
 {
   "name": "@redactie/content-module",
-  "version": "0.24.1",
+  "version": "0.24.2",
   "description": "redactie content module",
   "main": "dist/redactie-content-module.umd.js",
   "module": "dist/redactie-content-module.umd.js",
