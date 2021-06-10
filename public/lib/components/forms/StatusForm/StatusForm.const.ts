@@ -22,16 +22,21 @@ export const STATUS_OPTIONS: StatusFormOption[] = [
 	},
 	{
 		key: '1',
-		value: ContentStatus.PENDING,
+		value: ContentStatus.PENDING_REVIEW,
 		label: 'Klaar voor nakijken',
 	},
 	{
 		key: '2',
+		value: ContentStatus.PENDING_PUBLISH,
+		label: 'Klaar voor publicatie',
+	},
+	{
+		key: '3',
 		value: ContentStatus.PUBLISHED,
 		label: 'Gepubliceerd',
 	},
 	{
-		key: '3',
+		key: '4',
 		value: ContentStatus.UNPUBLISHED,
 		label: 'Depubliceer',
 	},

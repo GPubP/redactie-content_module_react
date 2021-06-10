@@ -18,13 +18,13 @@ describe('getLatestStatus', () => {
 	it('should return PENDING when the latest version is a pending version', () => {
 		const latestStatus = getLatestStatus({
 			draft: { uuid: '1', isLatestVersion: false },
-			pending: { uuid: '2', isLatestVersion: true, type: ContentStatus.PENDING },
+			pending: { uuid: '2', isLatestVersion: true, type: ContentStatus.PENDING_REVIEW },
 			scheduled: { uuid: '3', isLatestVersion: false },
 			scheduledUnpublish: { uuid: '4', isLatestVersion: false },
 			published: false,
 			lastEdit: new Date().toISOString(),
 		});
-		expect(latestStatus).toBe(ContentStatus.PENDING);
+		expect(latestStatus).toBe(ContentStatus.PENDING_REVIEW);
 	});
 
 	it('should return SCHEDULED when the latest version is a sheduled version', () => {

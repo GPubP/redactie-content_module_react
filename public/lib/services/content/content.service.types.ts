@@ -38,6 +38,8 @@ export interface ContentSchema {
 		lastModified?: string;
 		activeLanguages: string[];
 		firstPublished?: string;
+		publishTime?: string;
+		unpublishTime?: string;
 	};
 	modulesData?: Record<string, ModuleValue>;
 	fields: Record<string, any>;
@@ -65,7 +67,8 @@ export interface ContentCreateSchema {
 
 export enum ContentStatus {
 	DRAFT = 'DRAFT',
-	PENDING = 'PENDING',
+	PENDING_REVIEW = 'PENDING_REVIEW',
+	PENDING_PUBLISH = 'PENDING_PUBLISH',
 	SCHEDULED = 'SCHEDULED',
 	PUBLISHED = 'PUBLISHED',
 	UNPUBLISHED = 'UNPUBLISHED',
@@ -78,7 +81,8 @@ export enum ContentExtraFilterStatus {
 export type ContentStatusKeys =
 	| ContentStatus.DRAFT
 	| ContentStatus.SCHEDULED
-	| ContentStatus.PENDING
+	| ContentStatus.PENDING_PUBLISH
+	| ContentStatus.PENDING_REVIEW
 	| ContentStatus.PUBLISHED
 	| ContentStatus.UNPUBLISHED;
 

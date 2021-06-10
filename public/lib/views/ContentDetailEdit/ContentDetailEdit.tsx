@@ -1,5 +1,6 @@
 import {
 	AlertContainer,
+	alertService,
 	DataLoader,
 	LoadingState,
 	RenderChildRoutes,
@@ -97,6 +98,21 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 
 		contentFacade.setContentItemDraft(defaultValue);
 	}, [contentType]); // eslint-disable-line
+
+	useEffect(() => {
+		if (contentItem.meta.publishTime || contentItem.meta.unpublishTime) {
+			// TODO: Add alert copy
+			alertService.warning(
+				{
+					title: 'Planningsinformatie titel',
+					message: 'Planningsinformatie beschrijving',
+				},
+				{
+					containerId: ALERT_CONTAINER_IDS.contentEdit,
+				}
+			);
+		}
+	}, [contentItem]);
 
 	useEffect(() => locksFacade.setLockValue(contentId, refreshedLock), [contentId, refreshedLock]);
 

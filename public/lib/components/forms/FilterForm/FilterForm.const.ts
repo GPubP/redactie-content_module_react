@@ -1,6 +1,11 @@
 import { object, string } from 'yup';
 
-import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus, ContentExtraFilterStatus, CONTENT_EXTRA_FILTER_TRANSLATION_MAP } from '../../../services/content';
+import {
+	CONTENT_EXTRA_FILTER_TRANSLATION_MAP,
+	CONTENT_STATUS_TRANSLATION_MAP,
+	ContentExtraFilterStatus,
+	ContentStatus,
+} from '../../../services/content';
 
 import { PublishedStatuses } from './FilterForm.types';
 
@@ -53,11 +58,16 @@ export const FILTER_STATUS_OPTIONS = [
 	},
 	{
 		key: '4',
-		value: ContentStatus.PENDING,
-		label: CONTENT_STATUS_TRANSLATION_MAP.PENDING,
+		value: ContentStatus.PENDING_REVIEW,
+		label: CONTENT_STATUS_TRANSLATION_MAP.PENDING_REVIEW,
 	},
 	{
 		key: '5',
+		value: ContentStatus.PENDING_PUBLISH,
+		label: CONTENT_STATUS_TRANSLATION_MAP.PENDING_PUBLISH,
+	},
+	{
+		key: '6',
 		value: ContentStatus.UNPUBLISHED,
 		label: CONTENT_STATUS_TRANSLATION_MAP.UNPUBLISHED,
 	},

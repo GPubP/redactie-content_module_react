@@ -5,9 +5,11 @@ import {
 	META_VALIDATION_SCHEMA,
 	MetaForm,
 	MetaFormHelper,
+	PlanningForm,
 	STATUS_VALIDATION_SCHEMA,
 	StatusForm,
 } from '../../components';
+import { PLANNING_VALIDATION_SCHEMA } from '../../components/forms/PlanningForm/PlanningForm.const';
 import { DATE_FORMATS, MODULE_PATHS, TENANT_ROOT } from '../../content.const';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
@@ -45,16 +47,32 @@ export const INTERNAL_COMPARTMENTS = (siteId: string): ContentCompartmentModel[]
 		isValid: false,
 		validate: (values: ContentSchema) => STATUS_VALIDATION_SCHEMA.isValidSync(values.meta),
 	},
-	// TODO: Implement planning when the workflow engine is implemented
-	// {
-	// 	label: 'Planning',
-	// 	name: 'planning',
-	// 	slug: 'planning',
-	// 	component: PlanningForm,
-	// 	type: CompartmentType.INTERNAL,
-	// 	isValid: false,
-	// 	validate: (values: ContentSchema) => PLANNING_VALIDATION_SCHEMA.isValidSync(values),
-	// },
+	{
+		label: 'Planning',
+		getDescription: contentItem => {
+			if (!contentItem?.meta.publishTime && !contentItem?.meta.unpublishTime) {
+				return;
+			}
+
+			const formattedDate = moment(
+				contentItem?.meta.publishTime || contentItem?.meta.unpublishTime
+			).format(DATE_FORMATS.date);
+
+			if (contentItem?.meta.publishTime) {
+				return `Publicatie op ${formattedDate}`;
+			}
+
+			if (contentItem?.meta.unpublishTime) {
+				return `Archivering op ${formattedDate}`;
+			}
+		},
+		name: 'planning',
+		slug: 'planning',
+		component: PlanningForm,
+		type: CompartmentType.INTERNAL,
+		isValid: false,
+		validate: (values: ContentSchema) => PLANNING_VALIDATION_SCHEMA.isValidSync(values),
+	},
 ];
 
 export const CONTENT_CREATE_ALLOWED_PATHS = [
