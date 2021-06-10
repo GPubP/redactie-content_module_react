@@ -10,7 +10,8 @@ export interface ContentHistorySummaryStatus {
 }
 export interface ContentHistorySummary {
 	draft: ContentHistorySummaryStatus;
-	pending: ContentHistorySummaryStatus;
+	pendingReview: ContentHistorySummaryStatus;
+	pendingPublish: ContentHistorySummaryStatus;
 	scheduled: ContentHistorySummaryStatus;
 	scheduledUnpublish: ContentHistorySummaryStatus;
 	published: boolean;
