@@ -1,14 +1,8 @@
-import { Button, CardBody, RadioGroup } from '@acpaas-ui/react-components';
-import {
-	ControlledModal,
-	ControlledModalBody,
-	ControlledModalFooter,
-	ControlledModalHeader,
-} from '@acpaas-ui/react-editorial-components';
-import { Field, Formik, FormikProps, FormikValues } from 'formik';
-import React, { FC, useMemo, useState } from 'react';
+import { CardBody, RadioGroup } from '@acpaas-ui/react-components';
+import { Field, Formik, FormikValues } from 'formik';
+import React, { FC, useMemo } from 'react';
 
-import { CompartmentProps, ContentStatus } from '../../../api/api.types';
+import { CompartmentProps } from '../../../api/api.types';
 import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandler';
 
 import { STATUS_OPTIONS, STATUS_VALIDATION_SCHEMA } from './StatusForm.const';
@@ -20,18 +14,7 @@ const StatusForm: FC<CompartmentProps> = ({
 	formikRef,
 	contentItem,
 }) => {
-	const [showPlanningWarningModal, setShowPlanningWarningModal] = useState<boolean>(false);
-
 	const onFormChange = (values: FormikValues, submitForm: () => Promise<void>): void => {
-		if (
-			values.status === ContentStatus.PENDING_PUBLISH &&
-			(values.publishTime < new Date().toISOString() ||
-				values.unpublishTime < new Date().toISOString())
-		) {
-			setShowPlanningWarningModal(true);
-			return;
-		}
-
 		submitForm();
 		onChange(values);
 	};
@@ -48,24 +31,6 @@ const StatusForm: FC<CompartmentProps> = ({
 		[contentItem?.meta.status]
 	);
 
-	const closeModal = (setFieldValue: FormikProps<FormikValues>['setFieldValue']): void => {
-		setFieldValue('status', value.status);
-		setShowPlanningWarningModal(false);
-	};
-
-	const publish = (setFieldValue: FormikProps<FormikValues>['setFieldValue']): void => {
-		if (value.publishTime < new Date().toISOString()) {
-			setFieldValue('publishTime', null);
-		}
-
-		if (value.unpublishTime < new Date().toISOString()) {
-			setFieldValue('archiveTime', null);
-		}
-
-		setFieldValue('status', ContentStatus.PUBLISHED);
-		setShowPlanningWarningModal(false);
-	};
-
 	/**
 	 * RENDER
 	 */
@@ -77,7 +42,7 @@ const StatusForm: FC<CompartmentProps> = ({
 			onSubmit={onChange}
 			validationSchema={STATUS_VALIDATION_SCHEMA}
 		>
-			{({ submitForm, setFieldValue, values }) => (
+			{({ submitForm, values }) => (
 				<CardBody>
 					<FormikOnChangeHandler onChange={values => onFormChange(values, submitForm)} />
 					<h2 className="h3 u-margin-bottom">Status</h2>
@@ -95,30 +60,6 @@ const StatusForm: FC<CompartmentProps> = ({
 							/>
 						</div>
 					</div>
-					<ControlledModal
-						show={showPlanningWarningModal}
-						onClose={() => closeModal(setFieldValue)}
-						size="large"
-					>
-						<ControlledModalHeader>
-							{/* TODO: Add modal header copy */}
-							<h4>Planningsconflict</h4>
-						</ControlledModalHeader>
-						<ControlledModalBody>
-							{/* TODO: Add modal body copy */}
-							<div>Data ligt in het verleden.</div>
-						</ControlledModalBody>
-						<ControlledModalFooter>
-							<div className="u-flex u-flex-item u-flex-justify-end">
-								<Button onClick={() => closeModal(setFieldValue)} negative>
-									Annuleer
-								</Button>
-								<Button onClick={() => publish(setFieldValue)} type="warning">
-									Publiceren
-								</Button>
-							</div>
-						</ControlledModalFooter>
-					</ControlledModal>
 				</CardBody>
 			)}
 		</Formik>

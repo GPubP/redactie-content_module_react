@@ -1,16 +1,26 @@
-import { Card } from '@acpaas-ui/react-components';
-import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
+import { Button, Card } from '@acpaas-ui/react-components';
+import {
+	ActionBar,
+	ActionBarContentSection,
+	ControlledModal,
+	ControlledModalBody,
+	ControlledModalFooter,
+	ControlledModalHeader,
+	NavList,
+} from '@acpaas-ui/react-editorial-components';
 import { alertService, LeavePrompt, LoadingState, NavListItem, useNavigate } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
+import moment from 'moment';
 import { equals, isEmpty, lensPath, path, set } from 'ramda';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { ContentSchema } from '../../api/api.types';
+import { ContentSchema, ContentStatus } from '../../api/api.types';
 import { ContentFormActions } from '../../components';
 import {
 	ALERT_CONTAINER_IDS,
+	DATE_FORMATS,
 	MODULE_PATHS,
 	SITES_ROOT,
 	WORKING_TITLE_KEY,
@@ -83,6 +93,16 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	const { navigate } = useNavigate(SITES_ROOT);
 	const internalCompartments = useMemo(() => INTERNAL_COMPARTMENTS(siteId), [siteId]);
 	const workingTitleMapper = useMemo(() => getWorkTitleMapper(contentType), [contentType]);
+	const [showConfirmModal, setShowConfirmModal] = useState(false);
+	const [confirmModalState, setConfirmModalState] = useState(ContentStatus.PUBLISHED);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const navigateToPlanning = (): void => {
+		navigate(`${MODULE_PATHS.detailEdit}/planning`, {
+			siteId,
+			contentId,
+		});
+	};
 
 	useEffect(() => {
 		if (!contentType) {
@@ -141,6 +161,113 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			});
 		}
 	}, [activeCompartment, activeCompartmentFormikRef, hasSubmit]);
+
+	useEffect(() => {
+		alertService.dismiss();
+
+		if (!contentItem.meta.publishTime && !contentItem.meta.unpublishTime) {
+			return;
+		}
+
+		const formattedDate = moment(
+			contentItem?.meta.publishTime || contentItem?.meta.unpublishTime
+		).format(DATE_FORMATS.date);
+
+		const formattedTime = moment(
+			contentItem?.meta.publishTime || contentItem?.meta.unpublishTime
+		).format(DATE_FORMATS.time);
+
+		if (
+			(contentItem?.meta.publishTime &&
+				contentItem?.meta.publishTime < new Date().toISOString()) ||
+			(contentItem?.meta.unpublishTime &&
+				contentItem?.meta.unpublishTime < new Date().toISOString())
+		) {
+			const isInvalidPublishTime =
+				contentItem?.meta.publishTime &&
+				contentItem?.meta.publishTime < new Date().toISOString();
+
+			alertService.danger(
+				{
+					title: `Opgelet, de ${
+						isInvalidPublishTime ? 'publicatiedatum' : 'archiveringsdatum'
+					} ligt in het verleden`,
+					message: (
+						<>
+							De {isInvalidPublishTime ? 'publicatiedatum' : 'archiveringsdatum'} van
+							dit content item staat ingesteld op <strong>{formattedDate}</strong> om{' '}
+							<strong>{formattedTime}</strong>. Dat is een datum die in het verleden
+							ligt. Je kan het item nu meteen{' '}
+							{isInvalidPublishTime ? 'publiceren' : 'archiveren'} of de{' '}
+							{isInvalidPublishTime ? 'publicatiedatum' : 'archiveringsdatum'}
+							aanpassen naar een datum in de toekomst.
+							<div className="row end-xs u-margin-top">
+								<Button
+									outline
+									type="danger"
+									className="u-margin-right-xs"
+									onClick={navigateToPlanning}
+								>
+									Herbekijk planning
+								</Button>
+								<Button
+									type="danger"
+									onClick={() => {
+										setConfirmModalState(
+											isInvalidPublishTime
+												? ContentStatus.PUBLISHED
+												: ContentStatus.UNPUBLISHED
+										);
+										setShowConfirmModal(true);
+									}}
+								>
+									{isInvalidPublishTime ? 'Publiceer nu' : 'Archiveer nu'}
+								</Button>
+							</div>
+						</>
+					),
+				},
+				{
+					containerId: ALERT_CONTAINER_IDS.contentEdit,
+				}
+			);
+			return;
+		}
+
+		const isValidPublishTime = !!contentItem?.meta.publishTime;
+
+		alertService.warning(
+			{
+				title: `${isValidPublishTime ? 'Publicatiedatum' : 'Archiveringsdatum'} ingesteld`,
+				message: (
+					<>
+						Dit content item wordt binnenkort automatisch{' '}
+						{isValidPublishTime ? 'gepubliceerd' : 'gearchiveerd'}. De{' '}
+						{isValidPublishTime ? 'publicatiedatum' : 'archiveringsdatum'} staat
+						ingesteld op <strong>{formattedDate}</strong> om{' '}
+						<strong>{formattedTime}</strong>. Bekijk de planning indien deze datum niet
+						correct is.
+						<div className="row end-xs u-margin-top">
+							<Button
+								outline
+								type="warning"
+								className="u-margin-right-xs"
+								onClick={() => alertService.dismiss()}
+							>
+								Behoud datum
+							</Button>
+							<Button type="warning" onClick={navigateToPlanning}>
+								Bekijk planning
+							</Button>
+						</div>
+					</>
+				),
+			},
+			{
+				containerId: ALERT_CONTAINER_IDS.contentEdit,
+			}
+		);
+	}, [contentItem]); // eslint-disable-line
 
 	/**
 	 * Methods
@@ -295,6 +422,67 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		setHasSubmit(true);
 	};
 
+	const onPublishPromptCancel = (): void => {
+		setShowConfirmModal(false);
+	};
+
+	const onPublishPromptConfirm = async (): Promise<void> => {
+		setIsSubmitting(true);
+
+		let data = contentItemDraft;
+
+		if (confirmModalState === ContentStatus.PUBLISHED) {
+			data = {
+				...data,
+				meta: {
+					...data.meta,
+					publishTime: undefined,
+					status:
+						contentItemDraft.meta.unpublishTime &&
+						contentItemDraft.meta.unpublishTime < new Date().toISOString()
+							? ContentStatus.UNPUBLISHED
+							: ContentStatus.PUBLISHED,
+				},
+			};
+		}
+
+		if (confirmModalState === ContentStatus.UNPUBLISHED) {
+			data = {
+				...data,
+				meta: {
+					...data.meta,
+					publishTime: undefined,
+					unpublishTime: undefined,
+					status: ContentStatus.UNPUBLISHED,
+				},
+			};
+		}
+
+		await onFormSubmit(data);
+		setIsSubmitting(false);
+		setShowConfirmModal(false);
+	};
+
+	const getContentTitle = (title: string): string => {
+		return title ? `'${title}'` : 'Content';
+	};
+
+	const onSave = (): void => {
+		if (contentItemDraft?.meta.status !== ContentStatus.PUBLISHED) {
+			onFormSubmit(contentItemDraft);
+			return;
+		}
+
+		if (
+			contentItemDraft?.meta.unpublishTime &&
+			contentItemDraft?.meta.unpublishTime < new Date().toISOString()
+		) {
+			setConfirmModalState(ContentStatus.UNPUBLISHED);
+		}
+
+		setShowConfirmModal(true);
+	};
+
 	if (!activeCompartment && compartment !== 'default') {
 		if (isCreating) {
 			navigate(`${MODULE_PATHS.create}/default`, { siteId, contentTypeId });
@@ -351,7 +539,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						isSaved={!hasChanges}
 						status={contentItem?.meta?.status}
 						onStatusClick={onStatusClick}
-						onSave={() => onFormSubmit(contentItemDraft)}
+						onSave={onSave}
 						showPublishedStatus={showPublishedStatus}
 						isSaving={
 							updateContentItemLoadingState === LoadingState.Loading ||
@@ -363,6 +551,43 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 					/>
 				</ActionBarContentSection>
 			</ActionBar>
+			<ControlledModal show={showConfirmModal} onClose={onPublishPromptCancel} size="large">
+				<ControlledModalHeader>
+					<h4>
+						{getContentTitle(contentItemDraft?.meta.label)} nu{' '}
+						{confirmModalState === ContentStatus.PUBLISHED
+							? 'publiceren'
+							: 'archiveren'}
+					</h4>
+				</ControlledModalHeader>
+				<ControlledModalBody>
+					<div>
+						Je staat op het punt om dit content item te{' '}
+						{confirmModalState === ContentStatus.PUBLISHED
+							? 'publiceren'
+							: 'archiveren'}
+						. Weet je het zeker?
+					</div>
+				</ControlledModalBody>
+				<ControlledModalFooter>
+					<div className="u-flex u-flex-item u-flex-justify-end">
+						<Button onClick={onPublishPromptCancel} negative>
+							Annuleer
+						</Button>
+						<Button
+							iconLeft={isSubmitting ? 'circle-o-notch fa-spin' : ''}
+							disabled={isSubmitting}
+							onClick={onPublishPromptConfirm}
+							type="success"
+						>
+							Ok,{' '}
+							{confirmModalState === ContentStatus.PUBLISHED
+								? 'publiceer'
+								: 'archiveer'}
+						</Button>
+					</div>
+				</ControlledModalFooter>
+			</ControlledModal>
 			<LeavePrompt
 				allowedPaths={
 					isCreating ? CONTENT_CREATE_ALLOWED_PATHS : CONTENT_EDIT_ALLOWED_PATHS
