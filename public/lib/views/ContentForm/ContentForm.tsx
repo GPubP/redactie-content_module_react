@@ -165,7 +165,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	useEffect(() => {
 		alertService.dismiss();
 
-		if (!contentItem.meta.publishTime && !contentItem.meta.unpublishTime) {
+		if (!contentItem?.meta.publishTime && !contentItem?.meta.unpublishTime) {
 			return;
 		}
 
