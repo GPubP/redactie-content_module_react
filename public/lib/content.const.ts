@@ -46,6 +46,7 @@ export const WORKING_TITLE_KEY = 'working-title';
 export const DATE_FORMATS = {
 	date: 'DD/MM/YYYY',
 	dateAndTime: 'DD/MM/YYYY [-] HH[u]mm',
+	time: 'HH[u]mm',
 };
 
 export const DEFAULT_CRUD_RIGHTS = {

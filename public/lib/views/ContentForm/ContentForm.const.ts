@@ -56,22 +56,29 @@ export const INTERNAL_COMPARTMENTS = (siteId: string): ContentCompartmentModel[]
 
 			const formattedDate = moment(
 				contentItem?.meta.publishTime || contentItem?.meta.unpublishTime
-			).format(DATE_FORMATS.date);
+			).format(DATE_FORMATS.dateAndTime);
+
+			let description = '';
 
 			if (contentItem?.meta.publishTime) {
-				return `Publicatie op ${formattedDate}`;
+				description = `Publicatie op ${formattedDate}`;
 			}
 
 			if (contentItem?.meta.unpublishTime) {
-				return `Archivering op ${formattedDate}`;
+				description = `
+					${description ? description + '<br>' : ''}Archivering op ${formattedDate}
+				`;
 			}
+
+			return description;
 		},
 		name: 'planning',
 		slug: 'planning',
 		component: PlanningForm,
 		type: CompartmentType.INTERNAL,
 		isValid: false,
-		validate: (values: ContentSchema) => PLANNING_VALIDATION_SCHEMA.isValidSync(values),
+		validate: (values: ContentSchema) =>
+			PLANNING_VALIDATION_SCHEMA(values.meta.publishTime as string).isValidSync(values.meta),
 	},
 ];
 

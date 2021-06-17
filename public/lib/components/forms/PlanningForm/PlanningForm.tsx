@@ -48,6 +48,8 @@ const PlanningForm: FC<CompartmentProps> = ({
 											type: 'string',
 											config: {
 												minDate: new Date(),
+												inputDescription:
+													'Geef een datum in. Deze datum moet in de toekomst liggen.',
 											},
 											dataType: '',
 											label: 'Publicatie op',
@@ -67,6 +69,8 @@ const PlanningForm: FC<CompartmentProps> = ({
 											type: 'string',
 											config: {
 												minDate: new Date(),
+												inputDescription:
+													'Geef een datum in. Deze datum moet na de publicatiedatum liggen.',
 											},
 											dataType: '',
 											label: 'Archivering op',
