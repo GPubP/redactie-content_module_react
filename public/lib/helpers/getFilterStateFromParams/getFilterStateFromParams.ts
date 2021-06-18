@@ -9,14 +9,13 @@ export const getFilterStateFromParams = (query?: SearchParams): FilterFormState 
 	return {
 		contentType: query?.contentTypes?.length ? query.contentTypes : [],
 		creator: query?.creator ?? '',
-		published:
-			query?.published
-				? query?.published === 'true' || query?.published === 'false'
-					? query?.published === 'true'
-						? PublishedStatuses.ONLINE
-						: PublishedStatuses.OFFLINE
-					: ContentExtraFilterStatus.ALL
-				: '',
+		published: query?.published
+			? query?.published === 'true' || query?.published === 'false'
+				? query?.published === 'true'
+					? PublishedStatuses.ONLINE
+					: PublishedStatuses.OFFLINE
+				: ContentExtraFilterStatus.ALL
+			: '',
 		publishedFrom: query?.publishedFrom
 			? moment(query.publishedFrom).format(DATE_FORMATS.date)
 			: '',
