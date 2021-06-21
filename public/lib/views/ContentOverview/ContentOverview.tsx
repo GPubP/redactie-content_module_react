@@ -39,9 +39,9 @@ import {
 } from '../../hooks';
 import {
 	CONTENT_STATUS_TRANSLATION_MAP,
+	ContentExtraFilterStatus,
 	ContentHistorySummary,
 	DEFAULT_CONTENT_SEARCH_PARAMS,
-	ContentExtraFilterStatus,
 } from '../../services/content';
 import { contentFacade } from '../../store/content';
 import { contentTypesFacade } from '../../store/contentTypes';
@@ -138,28 +138,26 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		[mySecurityrightsKeys]
 	);
 
-	const onSubmit = (filterFormState: FilterFormState): void => {
+	const onSubmit = (newFormState: FilterFormState): void => {
 		setQuery({
 			skip: 0,
-			search: filterFormState.search || undefined,
-			contentTypes: filterFormState.contentType.length
-				? filterFormState.contentType
-				: undefined,
-			published: filterFormState.published
-				? filterFormState.published === ContentExtraFilterStatus.ALL
+			search: newFormState.search || undefined,
+			contentTypes: newFormState.contentType.length ? newFormState.contentType : undefined,
+			published: newFormState.published
+				? newFormState.published === ContentExtraFilterStatus.ALL
 					? ContentExtraFilterStatus.ALL
-					: `${filterFormState.published === PublishedStatuses.ONLINE}`
+					: `${newFormState.published === PublishedStatuses.ONLINE}`
 				: undefined,
 			publishedFrom:
-				filterFormState.publishedFrom && filterFormState.publishedTo
-					? moment(filterFormState.publishedFrom, DATE_FORMATS.date).toISOString()
+				newFormState.publishedFrom && newFormState.publishedTo
+					? moment(newFormState.publishedFrom, DATE_FORMATS.date).toISOString()
 					: undefined,
 			publishedTo:
-				filterFormState.publishedTo && filterFormState.publishedFrom
-					? moment(filterFormState.publishedTo, DATE_FORMATS.date).toISOString()
+				newFormState.publishedTo && newFormState.publishedFrom
+					? moment(newFormState.publishedTo, DATE_FORMATS.date).toISOString()
 					: undefined,
-			['latest-status']: filterFormState.status || undefined,
-			creator: filterFormState.creator || undefined,
+			['latest-status']: newFormState.status || undefined,
+			creator: newFormState.creator || undefined,
 		});
 	};
 
