@@ -38,6 +38,6 @@ export const STATUS_OPTIONS: StatusFormOption[] = [
 	{
 		key: '4',
 		value: ContentStatus.UNPUBLISHED,
-		label: 'Depubliceer',
+		label: 'Gearchiveerd',
 	},
 ];
