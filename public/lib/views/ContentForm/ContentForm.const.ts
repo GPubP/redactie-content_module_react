@@ -54,17 +54,21 @@ export const INTERNAL_COMPARTMENTS = (siteId: string): ContentCompartmentModel[]
 				return;
 			}
 
-			const formattedDate = moment(
-				contentItem?.meta.publishTime || contentItem?.meta.unpublishTime
-			).format(DATE_FORMATS.dateAndTime);
-
 			let description = '';
 
 			if (contentItem?.meta.publishTime) {
+				const formattedDate = moment(contentItem?.meta.publishTime).format(
+					DATE_FORMATS.dateAndTime
+				);
+
 				description = `Publicatie op ${formattedDate}`;
 			}
 
 			if (contentItem?.meta.unpublishTime) {
+				const formattedDate = moment(contentItem?.meta.unpublishTime).format(
+					DATE_FORMATS.dateAndTime
+				);
+
 				description = `
 					${description ? description + '<br>' : ''}Archivering op ${formattedDate}
 				`;
