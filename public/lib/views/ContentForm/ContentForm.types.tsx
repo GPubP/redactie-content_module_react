@@ -43,7 +43,7 @@ export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 
 export type CtTypeSettings = Pick<
 	ContentTypeSchema,
-	'fields' | 'validateSchema' | 'errorMessages'
+	'valueSyncMap' | 'fields' | 'validateSchema' | 'errorMessages'
 > & { includeWorkingTitle: boolean };
 
 export interface CompartmentProps<

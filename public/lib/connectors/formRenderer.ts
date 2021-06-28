@@ -12,8 +12,10 @@ export const getView: () => FormsAPI['View'] | undefined = () => formsAPI?.View;
 export const ErrorMessage = formsAPI?.ErrorMessage as FormsAPI['ErrorMessage'];
 export const getCustomValidator = (): typeof CustomValidator | undefined =>
 	formsAPI?.CustomValidator as typeof CustomValidator | undefined;
-export const parseFields: FormsAPI['parseFields'] = fields =>
-	formsAPI?.parseFields ? formsAPI.parseFields(fields) : [];
+export const parseFields: FormsAPI['parseFields'] = (fields, options) =>
+	formsAPI?.parseFields ? formsAPI.parseFields(fields, options) : [];
+export const getValueSyncMap: FormsAPI['getValueSyncMap'] = fields =>
+	formsAPI?.getValueSyncMap ? formsAPI.getValueSyncMap(fields) : {};
 export const getFormRendererFieldTitle = (): FormsAPI['FormRendererFieldTitle'] =>
 	formsAPI?.FormRendererFieldTitle as FormsAPI['FormRendererFieldTitle'];
 export const useFormContext = formsAPI?.useFormContext as FormsAPI['useFormContext'];
