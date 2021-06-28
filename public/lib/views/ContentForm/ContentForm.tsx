@@ -439,7 +439,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				...data,
 				meta: {
 					...data.meta,
-					publishTime: undefined,
+					publishTime: null,
 					status:
 						contentItemDraft.meta.unpublishTime &&
 						contentItemDraft.meta.unpublishTime < new Date().toISOString()
@@ -454,8 +454,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				...data,
 				meta: {
 					...data.meta,
-					publishTime: undefined,
-					unpublishTime: undefined,
+					publishTime: null,
+					unpublishTime: null,
 					status: ContentStatus.UNPUBLISHED,
 				},
 			};
@@ -471,18 +471,25 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	};
 
 	const onSave = (): void => {
-		if (contentItemDraft?.meta.status !== ContentStatus.PUBLISHED) {
+		if (
+			contentItemDraft?.meta.status !== ContentStatus.PUBLISHED &&
+			contentItemDraft?.meta.status !== ContentStatus.UNPUBLISHED
+		) {
 			onFormSubmit(contentItemDraft);
 			return;
 		}
 
 		if (
-			contentItemDraft?.meta.unpublishTime &&
-			contentItemDraft?.meta.unpublishTime < new Date().toISOString()
+			(contentItemDraft?.meta.unpublishTime &&
+				contentItemDraft?.meta.unpublishTime < new Date().toISOString()) ||
+			contentItemDraft?.meta.status === ContentStatus.UNPUBLISHED
 		) {
 			setConfirmModalState(ContentStatus.UNPUBLISHED);
+			setShowConfirmModal(true);
+			return;
 		}
 
+		setConfirmModalState(ContentStatus.PUBLISHED);
 		setShowConfirmModal(true);
 	};
 
@@ -569,7 +576,28 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						{confirmModalState === ContentStatus.PUBLISHED
 							? 'publiceren'
 							: 'archiveren'}
-						. Weet je het zeker?
+						. Weet je het zeker?{' '}
+						{contentItemDraft.meta?.unpublishTime &&
+							contentItemDraft.meta.status === ContentStatus.PUBLISHED && (
+								<>
+									Dit content item wordt binnenkort automatisch gearchiveerd. De
+									archiveringsdatum staat ingesteld op{' '}
+									<strong>
+										{moment(
+											contentItemDraft?.meta.publishTime ||
+												contentItemDraft?.meta.unpublishTime
+										).format(DATE_FORMATS.date)}
+									</strong>{' '}
+									om{' '}
+									<strong>
+										{moment(
+											contentItemDraft?.meta.publishTime ||
+												contentItemDraft?.meta.unpublishTime
+										).format(DATE_FORMATS.time)}
+									</strong>
+									. Bekijk de planning indien deze datum niet correct is.
+								</>
+							)}
 					</div>
 				</ControlledModalBody>
 				<ControlledModalFooter>
@@ -577,6 +605,18 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						<Button onClick={onPublishPromptCancel} negative>
 							Annuleer
 						</Button>
+						{contentItemDraft.meta?.unpublishTime &&
+							contentItemDraft.meta.status === ContentStatus.PUBLISHED && (
+								<Button
+									type="warning"
+									onClick={() => {
+										setShowConfirmModal(false);
+										navigateToPlanning();
+									}}
+								>
+									Bekijk planning
+								</Button>
+							)}
 						<Button
 							iconLeft={isSubmitting ? 'circle-o-notch fa-spin' : ''}
 							disabled={isSubmitting}

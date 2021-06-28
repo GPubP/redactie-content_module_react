@@ -39,8 +39,8 @@ export interface ContentSchema {
 		lastModified?: string;
 		activeLanguages: string[];
 		firstPublished?: string;
-		publishTime?: string;
-		unpublishTime?: string;
+		publishTime?: string | null;
+		unpublishTime?: string | null;
 	};
 	modulesData?: Record<string, ModuleValue>;
 	fields: Record<string, any>;
@@ -61,6 +61,8 @@ export interface ContentCreateSchema {
 		status: ContentStatus;
 		published: boolean;
 		site: string;
+		publishTime?: string | null;
+		unpublishTime?: string | null;
 	};
 	modulesData?: Record<string, ModuleValue>;
 	fields: Record<string, any>;
