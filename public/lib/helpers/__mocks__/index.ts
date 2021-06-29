@@ -17,6 +17,7 @@ const generateMockContentTypes = (amount = 4): ContentTypeSchema[] => {
 		uuid: `${i}`,
 		compartments: [],
 		fields: [],
+		valueSyncMap: {},
 		meta: {
 			label: `ct-${i}`,
 			description: `ct-${i} description`,

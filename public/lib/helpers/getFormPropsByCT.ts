@@ -6,7 +6,7 @@ import { FormRendererProps } from '../views/ContentForm/ContentForm.types';
 export const getFormPropsByCT = (contentType: ContentTypeSchema): FormRendererProps => {
 	return {
 		schema: {
-			fields: parseFields(contentType.fields),
+			fields: parseFields(contentType.fields, { valueSyncMap: contentType.valueSyncMap }),
 		},
 		validationSchema: contentType.validateSchema,
 		errorMessages: contentType.errorMessages || {},

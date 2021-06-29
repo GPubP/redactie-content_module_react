@@ -22,7 +22,7 @@ import {
 	ModuleSettings,
 } from '../api/api.types';
 import { FieldsForm } from '../components';
-import { getCustomValidator } from '../connectors/formRenderer';
+import { getCustomValidator, getValueSyncMap } from '../connectors/formRenderer';
 import { WORKING_TITLE_KEY } from '../content.const';
 import { MapValueToContentItemPath } from '../services/contentTypes';
 import { ExternalCompartmentModel } from '../store/api/externalCompartments';
@@ -247,6 +247,9 @@ export const getContentTypeCompartments = (
 ): ContentCompartmentModel<ModuleValue, CtTypeSettings>[] => {
 	const compartments = contentTypeHelpers.getCompartments(contentType);
 
+	const allFields = contentTypeHelpers.getFieldsByCompartments(contentType.fields, compartments);
+	const valueSyncMap = getValueSyncMap(allFields);
+
 	return compartments.reduce((acc, compartment) => {
 		const compartmentFields = contentTypeHelpers.getFieldsByCompartment(
 			contentType.fields,
@@ -258,6 +261,7 @@ export const getContentTypeCompartments = (
 			label: compartment.label,
 			name: `fields_${slug}`,
 			context: {
+				valueSyncMap,
 				fields: compartmentFields,
 				validateSchema: getCTCompartmentErrorMessages(contentType, []),
 				errorMessages: getCTCompartmentValidationSchema(contentType, []),
@@ -288,6 +292,7 @@ export const getContentTypeCompartments = (
 			compartmentFieldNames
 		);
 		const context = {
+			valueSyncMap,
 			fields: compartmentFields,
 			validateSchema: compartmentValidateSchema,
 			errorMessages: compartmentErrorMessages,

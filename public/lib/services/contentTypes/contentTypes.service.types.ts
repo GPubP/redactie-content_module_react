@@ -1,4 +1,10 @@
-import { Operator, Preset, Validation, Validator } from '@redactie/form-renderer-module';
+import {
+	Operator,
+	Preset,
+	Validation,
+	Validator,
+	ValueSyncMap,
+} from '@redactie/form-renderer-module';
 
 import { PagingSchema } from '../../content.types';
 
@@ -93,6 +99,7 @@ export interface ContentTypeSchema {
 		label: string;
 		description: string;
 	};
+	valueSyncMap: ValueSyncMap;
 	fields: ContentTypeFieldSchema[];
 	compartments: ContentTypeCompartment[];
 	modulesConfig?: ModuleSettings[];

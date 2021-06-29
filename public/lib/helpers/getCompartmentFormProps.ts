@@ -9,6 +9,7 @@ export const getCompartmentFormProps = (
 ): FormRendererProps => {
 	const formProps = getFormPropsByCT({
 		...contentType,
+		valueSyncMap: settings.valueSyncMap,
 		fields: settings.fields,
 		validateSchema: settings.validateSchema,
 		errorMessages: settings.errorMessages,
