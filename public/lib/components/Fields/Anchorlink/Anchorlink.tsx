@@ -80,6 +80,7 @@ const Anchorlink: React.FC<AnchorlinkFieldProps> = ({
 					}
 					{...omit(['multiLanguage', 'min', 'max', 'options'])(config)}
 				/>
+				<small>Selecteer de tekstlijn waar je naar wil linken.</small>
 				<ErrorMessage name={`${field.name}.link`} />
 			</div>
 			<div>
@@ -96,6 +97,7 @@ const Anchorlink: React.FC<AnchorlinkFieldProps> = ({
 					}
 					{...omit(['multiLanguage', 'min', 'max', 'description'])(config)}
 				/>
+				<small>Geef de link een kort en krachtig label.</small>
 				<ErrorMessage name={`${field.name}.label`} />
 			</div>
 			<ErrorMessage name={field.name} />
