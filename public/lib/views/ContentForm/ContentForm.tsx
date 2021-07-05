@@ -577,7 +577,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							? 'publiceren'
 							: 'archiveren'}
 						. Weet je het zeker?{' '}
-						{contentItemDraft.meta?.unpublishTime &&
+						{contentItem?.meta.unpublishTime &&
+							contentItemDraft?.meta.unpublishTime &&
 							contentItemDraft.meta.status === ContentStatus.PUBLISHED && (
 								<>
 									Dit content item wordt binnenkort automatisch gearchiveerd. De
@@ -605,7 +606,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						<Button onClick={onPublishPromptCancel} negative>
 							Annuleer
 						</Button>
-						{contentItemDraft.meta?.unpublishTime &&
+						{contentItem?.meta.unpublishTime &&
+							contentItemDraft?.meta.unpublishTime &&
 							contentItemDraft.meta.status === ContentStatus.PUBLISHED && (
 								<Button
 									type="warning"
