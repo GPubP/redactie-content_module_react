@@ -140,7 +140,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		}
 	};
 
-	const getModalState = (status: string, unpublishTime: string | undefined): void => {
+	const getModalState = (status: string, unpublishTime?: string): void => {
 		const title = getContentTitle(contentItemDraft?.meta.label);
 
 		if (status === ContentStatus.UNPUBLISHED) {
@@ -155,6 +155,14 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		if (unpublishTime) {
 			setModalState(CONTENT_MODAL_MAP(title, unpublishTime).publishWithUnpublishTime);
+			return;
+		}
+
+		if (
+			contentItem?.meta?.status === ContentStatus.DRAFT &&
+			!!contentItem?.meta?.historySummary?.published
+		) {
+			setModalState(CONTENT_MODAL_MAP(title, undefined).updatePublication);
 			return;
 		}
 
@@ -467,6 +475,16 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	const onPublishPromptConfirm = async (): Promise<void> => {
 		setIsSubmitting(true);
 
+		if (
+			contentItem?.meta?.status === ContentStatus.DRAFT &&
+			!!contentItem?.meta?.historySummary?.published
+		) {
+			onUpdatePublication(contentItemDraft);
+			setIsSubmitting(false);
+			setShowConfirmModal(false);
+			return;
+		}
+
 		let data = contentItemDraft;
 
 		if (
@@ -505,13 +523,24 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 	const onSave = (): void => {
 		if (
-			contentItemDraft?.meta.status !== ContentStatus.PUBLISHED &&
-			contentItemDraft?.meta.status !== ContentStatus.UNPUBLISHED
+			(contentItemDraft?.meta.status !== ContentStatus.PUBLISHED &&
+				contentItemDraft?.meta.status !== ContentStatus.UNPUBLISHED) ||
+			(contentItemDraft?.meta.status === ContentStatus.PUBLISHED &&
+				contentItem?.meta.status === ContentStatus.PUBLISHED)
 		) {
 			onFormSubmit(contentItemDraft);
 			return;
 		}
 
+		getModalState(
+			contentItemDraft?.meta.status,
+			contentItemDraft?.meta.unpublishTime ?? undefined
+		);
+
+		setShowConfirmModal(true);
+	};
+
+	const updatePublication = (): void => {
 		getModalState(
 			contentItemDraft?.meta.status,
 			contentItemDraft?.meta.unpublishTime ?? undefined
@@ -583,7 +612,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							createContentItemLoadingState === LoadingState.Loading
 						}
 						isPublishing={publishContentItemLoadingState === LoadingState.Loading}
-						onUpdatePublication={() => onUpdatePublication(contentItemDraft)}
+						onUpdatePublication={updatePublication}
 						onCancel={handleCancel}
 					/>
 				</ActionBarContentSection>
