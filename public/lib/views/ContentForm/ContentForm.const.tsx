@@ -120,7 +120,7 @@ export const CONTENT_MODAL_MAP = (
 		message: (
 			<>
 				Je staat op het punt om de publicatie van dit content item bij te werken. Deze
-				aanpassingen worden niet rechtsreeks gepubliceerd.
+				aanpassingen worden niet rechtstreeks gepubliceerd.
 			</>
 		),
 		confirm: 'Ok, bewaar',
