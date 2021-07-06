@@ -140,15 +140,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		}
 	};
 
-	const getModalState = ({
-		status,
-		previousStatus,
-		unpublishTime,
-	}: {
-		status?: string;
-		previousStatus?: string;
-		unpublishTime?: string;
-	}): void => {
+	const getModalState = (status: string, unpublishTime?: string): void => {
 		const title = getContentTitle(contentItemDraft?.meta.label);
 
 		if (status === ContentStatus.UNPUBLISHED) {
@@ -166,7 +158,10 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			return;
 		}
 
-		if (status === ContentStatus.PUBLISHED && previousStatus === ContentStatus.PUBLISHED) {
+		if (
+			contentItem?.meta?.status === ContentStatus.DRAFT &&
+			!!contentItem?.meta?.historySummary?.published
+		) {
 			setModalState(CONTENT_MODAL_MAP(title, undefined).updatePublication);
 			return;
 		}
@@ -258,11 +253,10 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 								<Button
 									type="danger"
 									onClick={() => {
-										getModalState({
-											status: ContentStatus.UNPUBLISHED,
-											unpublishTime:
-												contentItem?.meta.unpublishTime ?? undefined,
-										});
+										getModalState(
+											ContentStatus.UNPUBLISHED,
+											contentItem?.meta.unpublishTime ?? undefined
+										);
 										setShowConfirmModal(true);
 									}}
 								>
@@ -481,6 +475,16 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	const onPublishPromptConfirm = async (): Promise<void> => {
 		setIsSubmitting(true);
 
+		if (
+			contentItem?.meta?.status === ContentStatus.DRAFT &&
+			!!contentItem?.meta?.historySummary?.published
+		) {
+			onUpdatePublication(contentItemDraft);
+			setIsSubmitting(false);
+			setShowConfirmModal(false);
+			return;
+		}
+
 		let data = contentItemDraft;
 
 		if (
@@ -519,18 +523,28 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 	const onSave = (): void => {
 		if (
-			contentItemDraft?.meta.status !== ContentStatus.PUBLISHED &&
-			contentItemDraft?.meta.status !== ContentStatus.UNPUBLISHED
+			(contentItemDraft?.meta.status !== ContentStatus.PUBLISHED &&
+				contentItemDraft?.meta.status !== ContentStatus.UNPUBLISHED) ||
+			(contentItemDraft?.meta.status === ContentStatus.PUBLISHED &&
+				contentItem?.meta.status === ContentStatus.PUBLISHED)
 		) {
 			onFormSubmit(contentItemDraft);
 			return;
 		}
 
-		getModalState({
-			status: contentItemDraft?.meta.status,
-			previousStatus: contentItem?.meta.status,
-			unpublishTime: contentItemDraft?.meta.unpublishTime ?? undefined,
-		});
+		getModalState(
+			contentItemDraft?.meta.status,
+			contentItemDraft?.meta.unpublishTime ?? undefined
+		);
+
+		setShowConfirmModal(true);
+	};
+
+	const updatePublication = (): void => {
+		getModalState(
+			contentItemDraft?.meta.status,
+			contentItemDraft?.meta.unpublishTime ?? undefined
+		);
 
 		setShowConfirmModal(true);
 	};
@@ -598,7 +612,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							createContentItemLoadingState === LoadingState.Loading
 						}
 						isPublishing={publishContentItemLoadingState === LoadingState.Loading}
-						onUpdatePublication={() => onUpdatePublication(contentItemDraft)}
+						onUpdatePublication={updatePublication}
 						onCancel={handleCancel}
 					/>
 				</ActionBarContentSection>
