@@ -11,16 +11,14 @@ import {
 import { alertService, LeavePrompt, LoadingState, NavListItem, useNavigate } from '@redactie/utils';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import moment from 'moment';
 import { equals, isEmpty, lensPath, path, set } from 'ramda';
-import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { ContentSchema, ContentStatus } from '../../api/api.types';
 import { ContentFormActions } from '../../components';
 import {
 	ALERT_CONTAINER_IDS,
-	DATE_FORMATS,
 	MODULE_PATHS,
 	SITES_ROOT,
 	WORKING_TITLE_KEY,
@@ -47,8 +45,10 @@ import {
 } from '../../store/ui/contentCompartments';
 
 import {
+	CONTENT_ALERT_MAP,
 	CONTENT_CREATE_ALLOWED_PATHS,
 	CONTENT_EDIT_ALLOWED_PATHS,
+	CONTENT_MODAL_MAP,
 	INTERNAL_COMPARTMENTS,
 } from './ContentForm.const';
 import { ContentFormMatchProps, ContentFormRouteProps } from './ContentForm.types';
@@ -94,7 +94,17 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	const internalCompartments = useMemo(() => INTERNAL_COMPARTMENTS(siteId), [siteId]);
 	const workingTitleMapper = useMemo(() => getWorkTitleMapper(contentType), [contentType]);
 	const [showConfirmModal, setShowConfirmModal] = useState(false);
-	const [confirmModalState, setConfirmModalState] = useState(ContentStatus.PUBLISHED);
+	const [modalState, setModalState] = useState<{
+		title: string;
+		message: ReactElement;
+		confirm: string;
+	}>();
+	const [alertState, setAlertState] = useState<{
+		type: 'danger' | 'warning';
+		title: string;
+		message: ReactElement;
+		confirm?: string;
+	}>();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const navigateToPlanning = (): void => {
@@ -102,6 +112,53 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			siteId,
 			contentId,
 		});
+	};
+
+	const getContentTitle = (title: string): string => {
+		return title ? `'${title}'` : 'Content';
+	};
+
+	const getAlertState = (publishTime: string, unpublishTime: string): void => {
+		if (publishTime && publishTime < new Date().toISOString()) {
+			setAlertState(CONTENT_ALERT_MAP(publishTime).invalidPublishTime);
+			return;
+		}
+
+		if (unpublishTime && unpublishTime < new Date().toISOString()) {
+			setAlertState(CONTENT_ALERT_MAP(unpublishTime).invalidUnpublishTime);
+			return;
+		}
+
+		if (publishTime) {
+			setAlertState(CONTENT_ALERT_MAP(publishTime).publishTime);
+			return;
+		}
+
+		if (unpublishTime) {
+			setAlertState(CONTENT_ALERT_MAP(unpublishTime).unpublishTime);
+			return;
+		}
+	};
+
+	const getModalState = (status: string, unpublishTime: string | undefined): void => {
+		const title = getContentTitle(contentItemDraft?.meta.label);
+
+		if (status === ContentStatus.UNPUBLISHED) {
+			setModalState(CONTENT_MODAL_MAP(title, unpublishTime).unpublish);
+			return;
+		}
+
+		if (unpublishTime && unpublishTime < new Date().toISOString()) {
+			setModalState(CONTENT_MODAL_MAP(title, unpublishTime).publishWithInvalidUnpublishTime);
+			return;
+		}
+
+		if (unpublishTime) {
+			setModalState(CONTENT_MODAL_MAP(title, unpublishTime).publishWithUnpublishTime);
+			return;
+		}
+
+		setModalState(CONTENT_MODAL_MAP(title, undefined).publish);
 	};
 
 	useEffect(() => {
@@ -163,47 +220,19 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	}, [activeCompartment, activeCompartmentFormikRef, hasSubmit]);
 
 	useEffect(() => {
-		alertService.dismiss();
-
-		if (
-			(!contentItem?.meta.publishTime && !contentItem?.meta.unpublishTime) ||
-			(contentItem?.meta.status === ContentStatus.PUBLISHED && contentItem?.meta.publishTime)
-		) {
+		if (!alertState) {
 			return;
 		}
 
-		const formattedDate = moment(
-			contentItem?.meta.publishTime || contentItem?.meta.unpublishTime
-		).format(DATE_FORMATS.date);
+		alertService.dismiss();
 
-		const formattedTime = moment(
-			contentItem?.meta.publishTime || contentItem?.meta.unpublishTime
-		).format(DATE_FORMATS.time);
-
-		if (
-			(contentItem?.meta.publishTime &&
-				contentItem?.meta.publishTime < new Date().toISOString()) ||
-			(contentItem?.meta.unpublishTime &&
-				contentItem?.meta.unpublishTime < new Date().toISOString())
-		) {
-			const isInvalidPublishTime =
-				contentItem?.meta.publishTime &&
-				contentItem?.meta.publishTime < new Date().toISOString();
-
+		if (alertState.type === 'danger') {
 			alertService.danger(
 				{
-					title: `Opgelet, de ${
-						isInvalidPublishTime ? 'publicatiedatum' : 'archiveringsdatum'
-					} ligt in het verleden`,
+					title: alertState?.title,
 					message: (
 						<>
-							De {isInvalidPublishTime ? 'publicatiedatum' : 'archiveringsdatum'} van
-							dit content item staat ingesteld op <strong>{formattedDate}</strong> om{' '}
-							<strong>{formattedTime}</strong>. Dat is een datum die in het verleden
-							ligt. Je kan het item nu meteen{' '}
-							{isInvalidPublishTime ? 'publiceren' : 'archiveren'} of de{' '}
-							{isInvalidPublishTime ? 'publicatiedatum' : 'archiveringsdatum'}
-							aanpassen naar een datum in de toekomst.
+							{alertState?.message}
 							<div className="row end-xs u-margin-top">
 								<Button
 									outline
@@ -216,15 +245,14 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 								<Button
 									type="danger"
 									onClick={() => {
-										setConfirmModalState(
-											isInvalidPublishTime
-												? ContentStatus.PUBLISHED
-												: ContentStatus.UNPUBLISHED
+										getModalState(
+											ContentStatus.UNPUBLISHED,
+											contentItem?.meta.unpublishTime ?? undefined
 										);
 										setShowConfirmModal(true);
 									}}
 								>
-									{isInvalidPublishTime ? 'Publiceer nu' : 'Archiveer nu'}
+									{alertState?.confirm}
 								</Button>
 							</div>
 						</>
@@ -237,19 +265,12 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			return;
 		}
 
-		const isValidPublishTime = !!contentItem?.meta.publishTime;
-
 		alertService.warning(
 			{
-				title: `${isValidPublishTime ? 'Publicatiedatum' : 'Archiveringsdatum'} ingesteld`,
+				title: alertState?.title,
 				message: (
 					<>
-						Dit content item wordt binnenkort automatisch{' '}
-						{isValidPublishTime ? 'gepubliceerd' : 'gearchiveerd'}. De{' '}
-						{isValidPublishTime ? 'publicatiedatum' : 'archiveringsdatum'} staat
-						ingesteld op <strong>{formattedDate}</strong> om{' '}
-						<strong>{formattedTime}</strong>. Bekijk de planning indien deze datum niet
-						correct is.
+						{alertState?.message}
 						<div className="row end-xs u-margin-top">
 							<Button
 								outline
@@ -269,6 +290,20 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			{
 				containerId: ALERT_CONTAINER_IDS.contentEdit,
 			}
+		);
+	}, [alertState]); // eslint-disable-line
+
+	useEffect(() => {
+		if (
+			(!contentItem?.meta.publishTime && !contentItem?.meta.unpublishTime) ||
+			(contentItem?.meta.status === ContentStatus.PUBLISHED && contentItem?.meta.publishTime)
+		) {
+			return;
+		}
+
+		getAlertState(
+			contentItem?.meta.publishTime as string,
+			contentItem?.meta.unpublishTime as string
 		);
 	}, [contentItem]); // eslint-disable-line
 
@@ -434,7 +469,21 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		let data = contentItemDraft;
 
-		if (confirmModalState === ContentStatus.PUBLISHED) {
+		if (
+			(contentItemDraft?.meta.unpublishTime &&
+				contentItemDraft?.meta.unpublishTime < new Date().toISOString()) ||
+			contentItemDraft?.meta.status === ContentStatus.UNPUBLISHED
+		) {
+			data = {
+				...data,
+				meta: {
+					...data.meta,
+					publishTime: null,
+					unpublishTime: null,
+					status: ContentStatus.UNPUBLISHED,
+				},
+			};
+		} else {
 			data = {
 				...data,
 				meta: {
@@ -449,25 +498,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			};
 		}
 
-		if (confirmModalState === ContentStatus.UNPUBLISHED) {
-			data = {
-				...data,
-				meta: {
-					...data.meta,
-					publishTime: null,
-					unpublishTime: null,
-					status: ContentStatus.UNPUBLISHED,
-				},
-			};
-		}
-
 		await onFormSubmit(data);
 		setIsSubmitting(false);
 		setShowConfirmModal(false);
-	};
-
-	const getContentTitle = (title: string): string => {
-		return title ? `'${title}'` : 'Content';
 	};
 
 	const onSave = (): void => {
@@ -479,17 +512,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			return;
 		}
 
-		if (
-			(contentItemDraft?.meta.unpublishTime &&
-				contentItemDraft?.meta.unpublishTime < new Date().toISOString()) ||
-			contentItemDraft?.meta.status === ContentStatus.UNPUBLISHED
-		) {
-			setConfirmModalState(ContentStatus.UNPUBLISHED);
-			setShowConfirmModal(true);
-			return;
-		}
+		getModalState(
+			contentItemDraft?.meta.status,
+			contentItemDraft?.meta.unpublishTime ?? undefined
+		);
 
-		setConfirmModalState(ContentStatus.PUBLISHED);
 		setShowConfirmModal(true);
 	};
 
@@ -563,49 +590,15 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			</ActionBar>
 			<ControlledModal show={showConfirmModal} onClose={onPublishPromptCancel} size="large">
 				<ControlledModalHeader>
-					<h4>
-						{getContentTitle(contentItemDraft?.meta.label)} nu{' '}
-						{confirmModalState === ContentStatus.PUBLISHED
-							? 'publiceren'
-							: 'archiveren'}
-					</h4>
+					<h4>{modalState?.title}</h4>
 				</ControlledModalHeader>
-				<ControlledModalBody>
-					<div>
-						Je staat op het punt om dit content item te{' '}
-						{confirmModalState === ContentStatus.PUBLISHED
-							? 'publiceren'
-							: 'archiveren'}
-						. Weet je het zeker?{' '}
-						{contentItemDraft.meta?.unpublishTime &&
-							contentItemDraft.meta.status === ContentStatus.PUBLISHED && (
-								<>
-									Dit content item wordt binnenkort automatisch gearchiveerd. De
-									archiveringsdatum staat ingesteld op{' '}
-									<strong>
-										{moment(
-											contentItemDraft?.meta.publishTime ||
-												contentItemDraft?.meta.unpublishTime
-										).format(DATE_FORMATS.date)}
-									</strong>{' '}
-									om{' '}
-									<strong>
-										{moment(
-											contentItemDraft?.meta.publishTime ||
-												contentItemDraft?.meta.unpublishTime
-										).format(DATE_FORMATS.time)}
-									</strong>
-									. Bekijk de planning indien deze datum niet correct is.
-								</>
-							)}
-					</div>
-				</ControlledModalBody>
+				<ControlledModalBody>{modalState?.message}</ControlledModalBody>
 				<ControlledModalFooter>
 					<div className="u-flex u-flex-item u-flex-justify-end">
 						<Button onClick={onPublishPromptCancel} negative>
 							Annuleer
 						</Button>
-						{contentItemDraft.meta?.unpublishTime &&
+						{contentItemDraft?.meta.unpublishTime &&
 							contentItemDraft.meta.status === ContentStatus.PUBLISHED && (
 								<Button
 									type="warning"
@@ -623,10 +616,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							onClick={onPublishPromptConfirm}
 							type="success"
 						>
-							Ok,{' '}
-							{confirmModalState === ContentStatus.PUBLISHED
-								? 'publiceer'
-								: 'archiveer'}
+							{modalState?.confirm}
 						</Button>
 					</div>
 				</ControlledModalFooter>
