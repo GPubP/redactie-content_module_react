@@ -158,6 +158,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			return;
 		}
 
+		if (status === ContentStatus.PUBLISHED) {
+			setModalState(CONTENT_MODAL_MAP(title, undefined).updatePublication);
+			return;
+		}
+
 		setModalState(CONTENT_MODAL_MAP(title, undefined).publish);
 	};
 

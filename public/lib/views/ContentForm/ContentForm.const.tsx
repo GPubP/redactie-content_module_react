@@ -116,14 +116,14 @@ export const CONTENT_MODAL_MAP = (
 		confirm: 'Ok, archiveer',
 	},
 	updatePublication: {
-		title: `Publicatie van ${title} bijwerken`,
+		title: `${title} bijwerken`,
 		message: (
 			<>
-				Je staat op het punt om de publicatie van dit content item bij te werken. Weet je
-				het zeker?
+				Je staat op het punt om de publicatie van dit content item bij te werken. Deze
+				aanpassingen worden niet rechtsreeks gepubliceerd.
 			</>
 		),
-		confirm: 'Ok, werk bij',
+		confirm: 'Ok, bewaar',
 	},
 	publishWithUnpublishTime: {
 		title: `${title} nu publiceren`,
