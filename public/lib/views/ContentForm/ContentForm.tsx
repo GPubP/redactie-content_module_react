@@ -140,7 +140,15 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		}
 	};
 
-	const getModalState = (status: string, unpublishTime: string | undefined): void => {
+	const getModalState = ({
+		status,
+		previousStatus,
+		unpublishTime,
+	}: {
+		status?: string;
+		previousStatus?: string;
+		unpublishTime?: string;
+	}): void => {
 		const title = getContentTitle(contentItemDraft?.meta.label);
 
 		if (status === ContentStatus.UNPUBLISHED) {
@@ -158,7 +166,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			return;
 		}
 
-		if (status === ContentStatus.PUBLISHED) {
+		if (status === ContentStatus.PUBLISHED && previousStatus === ContentStatus.PUBLISHED) {
 			setModalState(CONTENT_MODAL_MAP(title, undefined).updatePublication);
 			return;
 		}
@@ -250,10 +258,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 								<Button
 									type="danger"
 									onClick={() => {
-										getModalState(
-											ContentStatus.UNPUBLISHED,
-											contentItem?.meta.unpublishTime ?? undefined
-										);
+										getModalState({
+											status: ContentStatus.UNPUBLISHED,
+											unpublishTime:
+												contentItem?.meta.unpublishTime ?? undefined,
+										});
 										setShowConfirmModal(true);
 									}}
 								>
@@ -517,10 +526,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			return;
 		}
 
-		getModalState(
-			contentItemDraft?.meta.status,
-			contentItemDraft?.meta.unpublishTime ?? undefined
-		);
+		getModalState({
+			status: contentItemDraft?.meta.status,
+			previousStatus: contentItem?.meta.status,
+			unpublishTime: contentItemDraft?.meta.unpublishTime ?? undefined,
+		});
 
 		setShowConfirmModal(true);
 	};
