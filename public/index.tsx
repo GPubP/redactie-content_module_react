@@ -6,7 +6,7 @@ import { registerContentAPI } from './lib/api/index';
 import { registerCCViews } from './lib/components/CCViews';
 import { registerCCFields } from './lib/components/Fields/index';
 import rolesRightsConnector from './lib/connectors/rolesRights';
-import { registerRoutes } from './lib/connectors/sites';
+import sitesConnector from './lib/connectors/sites';
 import { MODULE_PATHS, urlSiteParam } from './lib/content.const';
 import { ContentRouteProps } from './lib/content.types';
 import {
@@ -56,7 +56,7 @@ const ContentComponent: FC<ContentRouteProps<{ siteId: string }>> = ({
 };
 
 if (rolesRightsConnector.api) {
-	registerRoutes({
+	sitesConnector.registerRoutes({
 		path: MODULE_PATHS.root,
 		breadcrumb: false,
 		component: ContentComponent,

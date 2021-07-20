@@ -12,5 +12,7 @@
 }
 
 .button-group {
+	display: flex;
+	flex-direction: row;
 	padding-right: $spacer;
 }

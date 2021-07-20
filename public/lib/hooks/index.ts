@@ -12,3 +12,5 @@ export { default as useLock } from './useLock/useLock';
 export { default as useContentLoadingStates } from './useContentLoadingStates/useContentLoadingStates';
 export { default as useMyContentTypeRights } from './useMyContentTypeRights/useMyContentTypeRights';
 export { default as useMyContentTypesRights } from './useMyContentTypesRights/useMyContentTypesRights';
+export { default as useExternalAction } from './useExternalAction/useExternalAction';
+export { default as useContentAction } from './useContentAction/useContentAction';
