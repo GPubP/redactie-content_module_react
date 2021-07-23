@@ -148,16 +148,6 @@ const FilterForm: FC<FilterFormProps> = ({
 												]}
 											/>
 										</div>
-										<div className="col-xs-12 col-sm-6 u-margin-top">
-											<Field
-												as={TextField}
-												label="Aanmaker"
-												name="creator"
-												id="creator"
-												placeholder="Zoek een persoon"
-												iconright="search"
-											/>
-										</div>
 									</div>
 								</FilterBody>
 							</Filter>
