@@ -269,7 +269,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				<AlertContainer
 					toastClassName="u-margin-top"
 					containerId={ALERT_CONTAINER_IDS.contentRemove}
-				></AlertContainer>
+				/>
 				<div className="u-margin-top">
 					<FilterForm
 						siteId={siteId}
