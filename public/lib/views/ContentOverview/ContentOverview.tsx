@@ -7,6 +7,7 @@ import {
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import {
+	AlertContainer,
 	DataLoader,
 	LoadingState,
 	OrderBy,
@@ -28,7 +29,7 @@ import {
 } from '../../components';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
-import { DATE_FORMATS, DEFAULT_CRUD_RIGHTS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
+import { ALERT_CONTAINER_IDS, DATE_FORMATS, DEFAULT_CRUD_RIGHTS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ContentRouteProps, OverviewFilterItem } from '../../content.types';
 import { generateActiveFilters, getFilterStateFromParams, getLatestStatus } from '../../helpers';
 import {
@@ -265,6 +266,10 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 
 		return (
 			<>
+				<AlertContainer
+					toastClassName="u-margin-top"
+					containerId={ALERT_CONTAINER_IDS.contentRemove}
+				></AlertContainer>
 				<div className="u-margin-top">
 					<FilterForm
 						siteId={siteId}

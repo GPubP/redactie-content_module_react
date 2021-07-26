@@ -101,58 +101,6 @@ export enum ContentModalStatus {
 	updatePublication = 'updatePublication',
 }
 
-export const CONTENT_MODAL_MAP = (
-	title: string,
-	date: string | undefined
-): { [key: string]: { title: string; message: ReactElement; confirm: string } } => ({
-	publish: {
-		title: `${title} nu publiceren`,
-		message: <>Je staat op het punt om dit content item te publiceren. Weet je het zeker?</>,
-		confirm: 'Ok, publiceer',
-	},
-	unpublish: {
-		title: `${title} nu archiveren`,
-		message: <>Je staat op het punt om dit content item te archiveren. Weet je het zeker?</>,
-		confirm: 'Ok, archiveer',
-	},
-	updatePublication: {
-		title: `Publicatie van ${title} bijwerken`,
-		message: (
-			<>
-				Je staat op het punt om de publicatie van dit content item bij te werken. Weet je
-				het zeker?
-			</>
-		),
-		confirm: 'Ok, werk bij',
-	},
-	publishWithUnpublishTime: {
-		title: `${title} nu publiceren`,
-		message: (
-			<>
-				Je staat op het punt om dit content item te publiceren. Weet je het zeker? Dit
-				content item wordt binnenkort automatisch gearchiveerd. De archiveringsdatum staat
-				ingesteld op <strong>{moment(date).format(DATE_FORMATS.date)}</strong> om{' '}
-				<strong>{moment(date).format(DATE_FORMATS.time)}</strong>. Bekijk de planning indien
-				deze datum niet correct is.
-			</>
-		),
-		confirm: 'Ok, publiceer',
-	},
-	publishWithInvalidUnpublishTime: {
-		title: `${title} publiceren is niet mogelijk`,
-		message: (
-			<>
-				Dit content item kan niet gepubliceerd worden. De archiveringsdatum van dit content
-				item staat ingesteld op <strong>{moment(date).format(DATE_FORMATS.date)}</strong> om{' '}
-				<strong>{moment(date).format(DATE_FORMATS.time)}</strong>. Dat is een datum die in
-				het verleden ligt. Bekijk de planning indien deze datum niet correct is. Wanneer u
-				verder gaat wordt dit content item meteen gearchiveerd.
-			</>
-		),
-		confirm: 'Ok, archiveer',
-	},
-});
-
 export const CONTENT_ALERT_MAP = (
 	date: string
 ): {

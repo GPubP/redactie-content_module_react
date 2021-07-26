@@ -27,6 +27,10 @@ export interface ContentFormActionsProps {
 	 */
 	showPublishedStatus?: boolean;
 	/**
+	 * Show delete button
+	 */
+	showDeleteButton?: boolean;
+	/**
 	 * Callback function onCancel
 	 */
 	onCancel?: () => void;
@@ -42,4 +46,8 @@ export interface ContentFormActionsProps {
 	 * Callback function onStatusClick
 	 */
 	onStatusClick?: () => void;
+	/**
+	 * Callback function onDelete
+	 */
+	onDelete?: () => void;
 }

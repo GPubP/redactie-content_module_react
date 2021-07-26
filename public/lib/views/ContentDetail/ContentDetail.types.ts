@@ -12,4 +12,5 @@ export interface ContentDetailChildRouteProps<T = ContentDetailMatchProps>
 	contentItemDraft: ContentSchema;
 	contentItem: ContentSchema;
 	canUpdate: boolean;
+	canDelete: boolean;
 }

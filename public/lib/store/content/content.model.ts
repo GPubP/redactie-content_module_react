@@ -10,4 +10,5 @@ export interface ContentState extends BaseEntityState<ContentModel, string> {
 	contentItem?: ContentModel;
 	contentItemDraft?: ContentModel;
 	isPublishing: boolean;
+	isRemoving: boolean;
 }

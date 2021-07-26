@@ -33,6 +33,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	match,
 	tenantId,
 	canUpdate,
+	canDelete,
 }) => {
 	const { siteId, contentId } = match.params;
 	/**
@@ -166,6 +167,11 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 			);
 	};
 
+	const onDelete = (): Promise<void> => {
+		return contentFacade
+			.removeContentItem(siteId, contentItem?.uuid!, contentItem);
+	}
+
 	const onStatusClick = (): void => {
 		navigate(`${MODULE_PATHS.detailEdit}/status`, {
 			siteId,
@@ -198,9 +204,11 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 			hasChanges,
 			onSubmit,
 			onCancel,
+			onDelete,
 			onStatusClick,
 			onUpdatePublication,
 			showPublishedStatus: true,
+			showDeleteButton: canDelete,
 		};
 
 		return (
