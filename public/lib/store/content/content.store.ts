@@ -14,8 +14,15 @@ export class ContentStore extends BaseEntityStore<ContentState, ContentModel> {
 			isPublishing,
 		});
 	}
+
+	public setIsRemoving(isRemoving = false): void {
+		this.update({
+			isRemoving,
+		});
+	}
 }
 
 export const contentStore = new ContentStore({
 	isPublishing: false,
+	isRemoving: false,
 });

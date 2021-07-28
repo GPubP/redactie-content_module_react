@@ -22,6 +22,9 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		update: {
 			containerId: ALERT_CONTAINER_IDS.contentEdit,
 		},
+		remove: {
+			containerId: ALERT_CONTAINER_IDS.contentRemove,
+		},
 	};
 
 	public readonly meta$ = this.query.meta$;
@@ -117,6 +120,27 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 					isCreating: false,
 				});
 				alertService.danger(alertProps.create.error, this.alertContainerProps.create);
+				throw error;
+			});
+	}
+
+	public removeContentItem(siteId: string, contentId: string, data: ContentSchema): Promise<void> {
+		const alertProps = getAlertMessages((data as unknown) as ContentSchema);
+		this.store.setIsRemoving(true);
+
+		return this.service
+			.removeContentItem(siteId, contentId)
+			.then(response => {
+				setTimeout(() => alertService.success(alertProps.remove.success, this.alertContainerProps.remove), 100);
+
+				return response;
+			})
+			.catch(error => {
+				this.store.update({
+					error,
+					isRemoving: false,
+				});
+				alertService.danger(alertProps.remove.error, this.alertContainerProps.update);
 				throw error;
 			});
 	}

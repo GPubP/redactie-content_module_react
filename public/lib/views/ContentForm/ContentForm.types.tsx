@@ -31,7 +31,9 @@ export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 	hasChanges: boolean;
 	isCreating?: boolean;
 	showPublishedStatus?: boolean;
+	showDeleteButton?: boolean;
 	onCancel: () => void;
+	onDelete: () => Promise<void>;
 	onSubmit: (
 		content: ContentSchema,
 		activeCompartment: ContentCompartmentModel,
