@@ -66,7 +66,6 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 	);
 	const [{ actions }, register] = useContentAction();
 	const [externalActions] = useExternalAction();
-
 	const [site] = sitesConnector.hooks.useSite(siteId);
 
 	useEffect(() => {
@@ -76,7 +75,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 
 		register(
 			externalActions.filter(action => {
-				return action.show && action.show(contentType, site);
+				return action.show && action.show(contentType, site, contentItem);
 			}),
 			{ replace: true }
 		);
@@ -192,7 +191,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 							{canUpdate && <Button onClick={goToDetailEdit}>Bewerken</Button>}
 							{actions.map((action, index) => (
 								<div className="u-margin-left" key={index}>
-									<action.component />
+									<action.component site={site} contentItem={contentItem} />
 								</div>
 							))}
 						</div>

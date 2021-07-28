@@ -1,4 +1,6 @@
-import { ContentSchema, ContentTypeSchema } from '../../api/api.types';
+import { SiteDetailModel } from '@redactie/sites-module';
+
+import { ContentModel, ContentSchema, ContentTypeSchema } from '../../api/api.types';
 import { ContentRouteProps } from '../../content.types';
 
 export interface ContentDetailMatchProps {
@@ -12,4 +14,10 @@ export interface ContentDetailChildRouteProps<T = ContentDetailMatchProps>
 	contentItemDraft: ContentSchema;
 	contentItem: ContentSchema;
 	canUpdate: boolean;
+}
+
+export interface ExternalActionProps {
+	site: SiteDetailModel;
+	contentItem: ContentModel;
+	isLoading: boolean;
 }
