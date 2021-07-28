@@ -250,7 +250,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 					<div className="u-wrapper row end-xs">
 						{canUpdate && <Button onClick={goToDetailEdit}>Bewerken</Button>}
 						{actions.map((action, index) => (
-							<div className="u-margin-left" key={index}>
+							<div className="u-margin-lef-xs" key={index}>
 								<action.component site={site} contentItem={contentItem} />
 							</div>
 						))}
