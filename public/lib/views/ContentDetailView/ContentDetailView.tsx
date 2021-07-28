@@ -12,7 +12,7 @@ import {
 	ControlledModal,
 	ControlledModalBody,
 	ControlledModalFooter,
-	ControlledModalHeader
+	ControlledModalHeader,
 } from '@acpaas-ui/react-editorial-components';
 import { AlertContainer, useNavigate, useWorker } from '@redactie/utils';
 import moment from 'moment';
@@ -22,12 +22,18 @@ import { Link } from 'react-router-dom';
 
 import { PublishedStatus } from '../../components';
 import { getView } from '../../connectors/formRenderer';
-import { contentFacade } from '../../store/content';
 import sitesConnector from '../../connectors/sites';
-import { ALERT_CONTAINER_IDS, CONTENT_MODAL_MAP, DATE_FORMATS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
+import {
+	ALERT_CONTAINER_IDS,
+	CONTENT_MODAL_MAP,
+	DATE_FORMATS,
+	MODULE_PATHS,
+	SITES_ROOT,
+} from '../../content.const';
 import { getViewPropsByCT } from '../../helpers';
 import { useContentAction, useExternalAction, useLock } from '../../hooks';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
+import { contentFacade } from '../../store/content';
 import { LockModel, locksFacade } from '../../store/locks';
 import { LockWorkerData } from '../../workers/pollGetLock/pollGetLock.types';
 import { ContentDetailChildRouteProps } from '../ContentDetail/ContentDetail.types';
@@ -95,7 +101,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 
 		register(
 			externalActions.filter(action => {
-				return action.show && action.show(contentType, site);
+				return action.show && action.show(contentType, site, contentItem);
 			}),
 			{ replace: true }
 		);
@@ -127,11 +133,11 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 		const title = getContentTitle(contentItem?.meta.label);
 		setModalState(CONTENT_MODAL_MAP(title, undefined).remove);
 		setShowConfirmModal(true);
-	}
+	};
 
 	const onConfirm = (): void => {
 		setIsSubmitting(true);
-		
+
 		contentFacade
 			.removeContentItem(siteId, contentItem?.uuid!, contentItem)
 			.then(() => {
@@ -144,7 +150,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 				setIsSubmitting(false);
 				setShowConfirmModal(false);
 			});
-	}
+	};
 
 	return (
 		<>
@@ -244,8 +250,8 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 					<div className="u-wrapper row end-xs">
 						{canUpdate && <Button onClick={goToDetailEdit}>Bewerken</Button>}
 						{actions.map((action, index) => (
-							<div className="u-margin-left-xs" key={index}>
-								<action.component />
+							<div className="u-margin-lef-xs" key={index}>
+								<action.component site={site} contentItem={contentItem} />
 							</div>
 						))}
 						{canDelete && (
@@ -277,7 +283,11 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 							Annuleer
 						</Button>
 						<Button
-							iconLeft={isSubmitting ? 'circle-o-notch fa-spin' : modalState?.confirmButtonIcon}
+							iconLeft={
+								isSubmitting
+									? 'circle-o-notch fa-spin'
+									: modalState?.confirmButtonIcon
+							}
 							disabled={isSubmitting}
 							onClick={onConfirm}
 							type={modalState?.confirmButtonType || 'success'}

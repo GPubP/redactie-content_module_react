@@ -2,12 +2,14 @@ import { EntityState } from '@datorama/akita';
 import { SiteDetailModel } from '@redactie/sites-module';
 import { FC } from 'react';
 
+import { ExternalActionProps } from '../../../views/ContentDetail/ContentDetail.types';
+import { ContentModel } from '../../content';
 import { ContentTypeModel } from '../../contentTypes';
 
 export interface ExternalActionOptions {
 	module: string;
-	component: FC;
-	show?: (contentType: ContentTypeModel, site: SiteDetailModel) => boolean | boolean;
+	component: FC<ExternalActionProps>;
+	show?: (contentType: ContentTypeModel, site: SiteDetailModel, content: ContentModel) => boolean;
 	replace?: boolean; // only replace existing if this is true (safety)
 }
 
