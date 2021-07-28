@@ -254,7 +254,8 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 									onClick={onDeleteModal}
 									icon="trash-o"
 									ariaLabel="Delete"
-									type="warning"
+									// Temporary button is "secondary", because no danger
+									type="secondary"
 									htmlType="button"
 									negative
 								/>
