@@ -30,6 +30,7 @@ module.exports = {
 		}],
 		'@typescript-eslint/no-var-requires': 0,
 		'@typescript-eslint/no-explicit-any': 0,
+		'@typescript-eslint/no-non-null-assertion': 0,
 		'react/self-closing-comp': 'warn',
 		'react-hooks/rules-of-hooks': 'error',
 		'react-hooks/exhaustive-deps': 'warn',

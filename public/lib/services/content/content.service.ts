@@ -37,13 +37,8 @@ export class ContentApiService {
 			.json();
 	}
 
-	public removeContentItem(
-		siteId: string,
-		contentId: string
-	): Promise<void> {
-		return api
-			.delete(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${contentId}`)
-			.json();
+	public removeContentItem(siteId: string, contentId: string): Promise<void> {
+		return api.delete(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${contentId}`).json();
 	}
 
 	public updateContentItem(

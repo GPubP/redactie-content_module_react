@@ -124,14 +124,25 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 			});
 	}
 
-	public removeContentItem(siteId: string, contentId: string, data: ContentSchema): Promise<void> {
+	public removeContentItem(
+		siteId: string,
+		contentId: string,
+		data: ContentSchema
+	): Promise<void> {
 		const alertProps = getAlertMessages((data as unknown) as ContentSchema);
 		this.store.setIsRemoving(true);
 
 		return this.service
 			.removeContentItem(siteId, contentId)
 			.then(response => {
-				setTimeout(() => alertService.success(alertProps.remove.success, this.alertContainerProps.remove), 100);
+				setTimeout(
+					() =>
+						alertService.success(
+							alertProps.remove.success,
+							this.alertContainerProps.remove
+						),
+					100
+				);
 
 				return response;
 			})

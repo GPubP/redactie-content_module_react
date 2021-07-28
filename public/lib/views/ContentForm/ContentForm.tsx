@@ -477,7 +477,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		const title = getContentTitle(contentItemDraft?.meta.label);
 		setModalState(CONTENT_MODAL_MAP(title, undefined).remove);
 		setShowConfirmModal(true);
-	}
+	};
 
 	const onPublishPromptCancel = (): void => {
 		setShowConfirmModal(false);
@@ -493,7 +493,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						siteId,
 					});
 				})
-				.catch(() => {})
 				.finally(() => {
 					setIsSubmitting(false);
 					setShowConfirmModal(false);
@@ -669,7 +668,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 								</Button>
 							)}
 						<Button
-							iconLeft={isSubmitting ? 'circle-o-notch fa-spin' : modalState?.confirmButtonIcon}
+							iconLeft={
+								isSubmitting
+									? 'circle-o-notch fa-spin'
+									: modalState?.confirmButtonIcon
+							}
 							disabled={isSubmitting}
 							onClick={onPublishPromptConfirm}
 							type={modalState?.confirmButtonType || 'success'}

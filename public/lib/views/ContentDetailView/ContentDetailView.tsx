@@ -145,7 +145,6 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 					siteId,
 				});
 			})
-			.catch(() => {})
 			.finally(() => {
 				setIsSubmitting(false);
 				setShowConfirmModal(false);
