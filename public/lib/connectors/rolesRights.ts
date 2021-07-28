@@ -7,6 +7,7 @@ class RolesRightsConnector {
 		read: 'content_read',
 		create: 'content_create',
 		update: 'content_update',
+		remove: 'content_remove',
 	};
 	public api: RolesRightsModuleAPI;
 

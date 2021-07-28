@@ -19,6 +19,7 @@ import { ContentSchema, ContentStatus } from '../../api/api.types';
 import { ContentFormActions } from '../../components';
 import {
 	ALERT_CONTAINER_IDS,
+	CONTENT_MODAL_MAP,
 	MODULE_PATHS,
 	SITES_ROOT,
 	WORKING_TITLE_KEY,
@@ -48,7 +49,6 @@ import {
 	CONTENT_ALERT_MAP,
 	CONTENT_CREATE_ALLOWED_PATHS,
 	CONTENT_EDIT_ALLOWED_PATHS,
-	CONTENT_MODAL_MAP,
 	INTERNAL_COMPARTMENTS,
 } from './ContentForm.const';
 import { ContentFormMatchProps, ContentFormRouteProps } from './ContentForm.types';
@@ -61,9 +61,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	hasChanges,
 	match,
 	showPublishedStatus,
+	showDeleteButton,
 	isCreating = false,
 	onSubmit = () => null,
 	onCancel = () => null,
+	onDelete,
 	onStatusClick = () => null,
 	onUpdatePublication = () => null,
 }) => {
@@ -98,6 +100,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		title: string;
 		message: ReactElement;
 		confirm: string;
+		confirmButtonType?: string;
+		confirmButtonIcon?: string;
+		action?: string;
 	}>();
 	const [alertState, setAlertState] = useState<{
 		type: 'danger' | 'warning';
@@ -468,12 +473,34 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		setHasSubmit(true);
 	};
 
+	const onDeleteModal = (): void => {
+		const title = getContentTitle(contentItemDraft?.meta.label);
+		setModalState(CONTENT_MODAL_MAP(title, undefined).remove);
+		setShowConfirmModal(true);
+	}
+
 	const onPublishPromptCancel = (): void => {
 		setShowConfirmModal(false);
 	};
 
 	const onPublishPromptConfirm = async (): Promise<void> => {
 		setIsSubmitting(true);
+
+		if (modalState?.action === 'remove') {
+			onDelete()
+				.then(() => {
+					navigate(MODULE_PATHS.overview, {
+						siteId,
+					});
+				})
+				.catch(() => {})
+				.finally(() => {
+					setIsSubmitting(false);
+					setShowConfirmModal(false);
+				});
+
+			return;
+		}
 
 		if (
 			contentItem?.meta?.status === ContentStatus.DRAFT &&
@@ -606,7 +633,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						status={contentItem?.meta?.status}
 						onStatusClick={onStatusClick}
 						onSave={onSave}
+						onDelete={onDeleteModal}
 						showPublishedStatus={showPublishedStatus}
+						showDeleteButton={showDeleteButton}
 						isSaving={
 							updateContentItemLoadingState === LoadingState.Loading ||
 							createContentItemLoadingState === LoadingState.Loading
@@ -640,10 +669,10 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 								</Button>
 							)}
 						<Button
-							iconLeft={isSubmitting ? 'circle-o-notch fa-spin' : ''}
+							iconLeft={isSubmitting ? 'circle-o-notch fa-spin' : modalState?.confirmButtonIcon}
 							disabled={isSubmitting}
 							onClick={onPublishPromptConfirm}
-							type="success"
+							type={modalState?.confirmButtonType || 'success'}
 						>
 							{modalState?.confirm}
 						</Button>

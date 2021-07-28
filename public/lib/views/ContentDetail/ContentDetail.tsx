@@ -83,13 +83,17 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		return mySecurityrights.map(mySecurityRight => mySecurityRight.attributes.key);
 	}, [mySecurityrights]);
 
-	const canUpdate = useMemo(() => {
-		return (
+	const [canUpdate, canDelete] = useMemo(() => {
+		return [
 			!!contentTypeRights?.update &&
 			rolesRightsConnector.api.helpers.checkSecurityRights(mySecurityrightKeys, [
 				rolesRightsConnector.securityRights.update,
+			]),
+			!!contentTypeRights?.delete &&
+			rolesRightsConnector.api.helpers.checkSecurityRights(mySecurityrightKeys, [
+				rolesRightsConnector.securityRights.remove,
 			])
-		);
+		];
 	}, [mySecurityrightKeys, contentTypeRights]);
 
 	useWillUnmount(() => {
@@ -177,6 +181,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 			contentItemDraft,
 			tenantId,
 			canUpdate,
+			canDelete,
 		};
 
 		return (

@@ -42,4 +42,14 @@ export const getAlertMessages = (
 			message: `Publiceren nieuwe revisie van '${data.meta.label}' is mislukt`,
 		},
 	},
+	remove: {
+		success: {
+			title: 'Content is verwijderd',
+			message: `U hebt '${data.meta.label}' verwijderd`,
+		},
+		error: {
+			title: 'Content verwijderen mislukt',
+			message: `Verwijderen van '${data.meta.label}' is mislukt`,
+		},
+	},
 });

@@ -14,10 +14,12 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 	isSaving = false,
 	isPublishing = false,
 	showPublishedStatus = false,
+	showDeleteButton = false,
 	onCancel = () => null,
 	onSave = () => null,
 	onUpdatePublication = () => null,
 	onStatusClick = () => null,
+	onDelete = () => null,
 }) => {
 	/**
 	 * Hooks
@@ -73,6 +75,7 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 			)}
 			{showUpdatePublicationButton && (
 				<Button
+					className="u-margin-right-xs"
 					iconLeft={isPublishing ? 'circle-o-notch fa-spin' : null}
 					disabled={isPublishing}
 					onClick={onUpdatePublication}
@@ -82,6 +85,17 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 					{/* TODO: Add to translations */}
 					Publicatie bijwerken
 				</Button>
+			)}
+			{showDeleteButton && (
+				<Button
+					onClick={onDelete}
+					icon="trash-o"
+					ariaLabel="Delete"
+					// Temporary button is "secondary", because no danger
+					type="secondary"
+					htmlType="button"
+					negative
+				/>
 			)}
 			{showPublishedStatus && <PublishedStatus published={isPublished} />}
 		</div>
