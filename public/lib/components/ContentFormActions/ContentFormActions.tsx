@@ -8,6 +8,9 @@ import { PublishedStatus } from '../PublishedStatus';
 import { ContentFormActionsProps } from './ContenFormActions.types';
 
 const ContentFormActions: FC<ContentFormActionsProps> = ({
+	contentItem,
+	site,
+	actions,
 	status = ContentStatus.DRAFT,
 	isSaved = false,
 	isPublished = false,
@@ -86,6 +89,11 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 					Publicatie bijwerken
 				</Button>
 			)}
+			{actions?.map((action, index) => (
+				<div className="u-margin-left-xs" key={index}>
+					<action.component site={site} contentItem={contentItem} />
+				</div>
+			))}
 			{showDeleteButton && (
 				<Button
 					onClick={onDelete}

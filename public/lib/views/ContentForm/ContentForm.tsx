@@ -17,6 +17,7 @@ import { NavLink } from 'react-router-dom';
 
 import { ContentSchema, ContentStatus } from '../../api/api.types';
 import { ContentFormActions } from '../../components';
+import sitesConnector from '../../connectors/sites';
 import {
 	ALERT_CONTAINER_IDS,
 	CONTENT_MODAL_MAP,
@@ -34,8 +35,10 @@ import {
 	validateCompartments,
 } from '../../helpers/contentCompartments';
 import {
+	useContentAction,
 	useContentCompartment,
 	useContentLoadingStates,
+	useExternalAction,
 	useExternalCompartment,
 } from '../../hooks';
 import { contentFacade } from '../../store/content';
@@ -111,6 +114,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		confirm?: string;
 	}>();
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [site] = sitesConnector.hooks.useSite(siteId);
+	const [{ actions }, registerAction] = useContentAction();
+	const [externalActions] = useExternalAction();
 
 	const navigateToPlanning = (): void => {
 		navigate(`${MODULE_PATHS.detailEdit}/planning`, {
@@ -173,6 +179,19 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		setModalState(CONTENT_MODAL_MAP(title, undefined).publish);
 	};
+
+	useEffect(() => {
+		if (!contentType || !site) {
+			return;
+		}
+
+		registerAction(
+			externalActions.filter(action => {
+				return action.show && action.show(contentType, site, contentItem);
+			}),
+			{ replace: true }
+		);
+	}, [contentType, externalActions]); // eslint-disable-line
 
 	useEffect(() => {
 		if (!contentType) {
@@ -628,6 +647,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			<ActionBar className="o-action-bar--fixed" isOpen>
 				<ActionBarContentSection>
 					<ContentFormActions
+						actions={actions}
+						contentItem={contentItemDraft || contentItem}
+						site={site}
 						isPublished={!!contentItem?.meta?.historySummary?.published}
 						isSaved={!hasChanges}
 						status={contentItem?.meta?.status}
