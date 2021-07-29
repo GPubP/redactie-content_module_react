@@ -1,4 +1,21 @@
+import { SiteDetailModel } from '@redactie/sites-module';
+
+import { ContentModel } from '../../store/content';
+import { ContentActionModel } from '../../store/ui/contentActions';
+
 export interface ContentFormActionsProps {
+	/**
+	 * The current content item
+	 */
+	contentItem?: ContentModel;
+	/**
+	 * The current site
+	 */
+	site?: SiteDetailModel;
+	/**
+	 * The registered content actions
+	 */
+	actions?: ContentActionModel[];
 	/**
 	 * The current status of the content item
 	 * Default: DRAFT
