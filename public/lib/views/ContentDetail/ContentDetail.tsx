@@ -86,13 +86,13 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	const [canUpdate, canDelete] = useMemo(() => {
 		return [
 			!!contentTypeRights?.update &&
-			rolesRightsConnector.api.helpers.checkSecurityRights(mySecurityrightKeys, [
-				rolesRightsConnector.securityRights.update,
-			]),
+				rolesRightsConnector.api.helpers.checkSecurityRights(mySecurityrightKeys, [
+					rolesRightsConnector.securityRights.update,
+				]),
 			!!contentTypeRights?.delete &&
-			rolesRightsConnector.api.helpers.checkSecurityRights(mySecurityrightKeys, [
-				rolesRightsConnector.securityRights.remove,
-			])
+				rolesRightsConnector.api.helpers.checkSecurityRights(mySecurityrightKeys, [
+					rolesRightsConnector.securityRights.remove,
+				]),
 		];
 	}, [mySecurityrightKeys, contentTypeRights]);
 

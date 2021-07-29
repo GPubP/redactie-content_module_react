@@ -1,5 +1,5 @@
-import moment from "moment";
-import React, { ReactElement } from "react";
+import moment from 'moment';
+import React, { ReactElement } from 'react';
 
 export const TENANT_ROOT = '/:tenantId';
 export const SITES_ROOT = 'sites';
@@ -26,10 +26,25 @@ const detailView = `${detail}/bekijk`;
 const detailEdit = `${detail}/bewerk`;
 const detailEditCompartment = `${detailEdit}/:compartment`;
 
+export const DATE_FORMATS = {
+	date: 'DD/MM/YYYY',
+	dateAndTime: 'DD/MM/YYYY [-] HH[u]mm',
+	time: 'HH[u]mm',
+};
+
 export const CONTENT_MODAL_MAP = (
 	title: string,
 	date: string | undefined
-): { [key: string]: { title: string; message: ReactElement; confirm: string, confirmButtonIcon?: string; confirmButtonType?: string; action?: string } } => ({
+): {
+	[key: string]: {
+		title: string;
+		message: ReactElement;
+		confirm: string;
+		confirmButtonIcon?: string;
+		confirmButtonType?: string;
+		action?: string;
+	};
+} => ({
 	publish: {
 		title: `${title} nu publiceren`,
 		message: <>Je staat op het punt om dit content item te publiceren. Weet je het zeker?</>,
@@ -42,11 +57,13 @@ export const CONTENT_MODAL_MAP = (
 	},
 	remove: {
 		title: `Verwijderen?`,
-		message: <>Ben je zeker dat je dit item wil verwijderen? Dit kan niet ongedaan gemaakt worden.</>,
+		message: (
+			<>Ben je zeker dat je dit item wil verwijderen? Dit kan niet ongedaan gemaakt worden.</>
+		),
 		confirm: 'Ja, verwijder',
 		confirmButtonType: 'danger',
 		confirmButtonIcon: 'trash-o',
-		action: 'remove'
+		action: 'remove',
 	},
 	updatePublication: {
 		title: `Publicatie van ${title} bijwerken`,
@@ -106,12 +123,6 @@ export const ALERT_CONTAINER_IDS = {
 };
 
 export const WORKING_TITLE_KEY = 'working-title';
-
-export const DATE_FORMATS = {
-	date: 'DD/MM/YYYY',
-	dateAndTime: 'DD/MM/YYYY [-] HH[u]mm',
-	time: 'HH[u]mm',
-};
 
 export const DEFAULT_CRUD_RIGHTS = {
 	read: false,

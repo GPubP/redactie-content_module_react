@@ -168,9 +168,8 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	};
 
 	const onDelete = (): Promise<void> => {
-		return contentFacade
-			.removeContentItem(siteId, contentItem?.uuid!, contentItem);
-	}
+		return contentFacade.removeContentItem(siteId, contentItem?.uuid!, contentItem);
+	};
 
 	const onStatusClick = (): void => {
 		navigate(`${MODULE_PATHS.detailEdit}/status`, {

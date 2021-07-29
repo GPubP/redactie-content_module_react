@@ -145,6 +145,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 					siteId,
 				});
 			})
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			.catch(() => {})
 			.finally(() => {
 				setIsSubmitting(false);
