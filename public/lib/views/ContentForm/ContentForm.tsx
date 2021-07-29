@@ -493,6 +493,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						siteId,
 					});
 				})
+				// eslint-disable-next-line @typescript-eslint/no-empty-function
+				.catch(() => {})
 				.finally(() => {
 					setIsSubmitting(false);
 					setShowConfirmModal(false);
