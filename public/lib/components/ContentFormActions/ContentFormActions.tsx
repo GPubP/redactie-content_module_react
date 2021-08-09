@@ -95,6 +95,7 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 			))}
 			{showDeleteButton && (
 				<Button
+					className={!actions || !actions.length ? 'u-margin-left-xs' : ''}
 					onClick={onDelete}
 					icon="trash-o"
 					ariaLabel="Delete"

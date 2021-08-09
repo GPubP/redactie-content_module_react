@@ -257,6 +257,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 						))}
 						{canDelete && (
 							<Button
+								className={!actions || !actions.length ? 'u-margin-left-xs' : ''}
 								onClick={onDeleteModal}
 								icon="trash-o"
 								ariaLabel="Delete"
