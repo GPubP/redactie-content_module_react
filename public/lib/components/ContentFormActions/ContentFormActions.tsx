@@ -78,7 +78,6 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 			)}
 			{showUpdatePublicationButton && (
 				<Button
-					className="u-margin-right-xs"
 					iconLeft={isPublishing ? 'circle-o-notch fa-spin' : null}
 					disabled={isPublishing}
 					onClick={onUpdatePublication}
