@@ -256,17 +256,15 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 							</div>
 						))}
 						{canDelete && (
-							<div className="u-margin-left-xs">
-								<Button
-									onClick={onDeleteModal}
-									icon="trash-o"
-									ariaLabel="Delete"
-									// Temporary button is "secondary", because no danger
-									type="secondary"
-									htmlType="button"
-									negative
-								/>
-							</div>
+							<Button
+								onClick={onDeleteModal}
+								icon="trash-o"
+								ariaLabel="Delete"
+								// Temporary button is "secondary", because no danger
+								type="secondary"
+								htmlType="button"
+								negative
+							/>
 						)}
 
 						<PublishedStatus published={!!meta.historySummary?.published} />
