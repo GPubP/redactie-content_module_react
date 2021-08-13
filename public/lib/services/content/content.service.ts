@@ -9,6 +9,7 @@ import {
 	ContentSchema,
 	ContentsSchema,
 	ContentStatus,
+	ContentUpdateSchema,
 	ValidateSlugPayload,
 } from './content.service.types';
 
@@ -44,7 +45,7 @@ export class ContentApiService {
 	public updateContentItem(
 		siteId: string,
 		uuid: string,
-		data: ContentSchema
+		data: ContentUpdateSchema
 	): Promise<ContentSchema | null> {
 		const type =
 			CONTENT_STATUS_API_MAP[data.meta.status as ContentStatus] ||

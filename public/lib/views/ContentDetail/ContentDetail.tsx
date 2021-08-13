@@ -41,7 +41,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	route,
 	tenantId,
 }) => {
-	const { siteId, contentId } = match.params;
+	const { siteId, contentId, contentTypeId } = match.params;
 
 	/**
 	 * Hooks
@@ -152,18 +152,13 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	}, [contentItemError, generatePath, push, siteId, tenantId]);
 
 	useEffect(() => {
-		if (contentItem?.meta.contentType.uuid && siteId) {
-			contentTypesFacade.getContentType(siteId, contentItem?.meta.contentType.uuid);
-		}
-	}, [siteId, contentItem]);
-
-	useEffect(() => {
-		if (!siteId || !contentId) {
+		if (!siteId || !contentId || !contentTypeId) {
 			return;
 		}
 
 		contentFacade.getContentItem(siteId, contentId);
-	}, [siteId, contentId]);
+		contentTypesFacade.getContentType(siteId, contentTypeId);
+	}, [siteId, contentId, contentTypeId]);
 
 	useEffect(() => {
 		if (contentItem) {
@@ -214,6 +209,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 						to: generatePath(`${MODULE_PATHS.detail}/${props.href}`, {
 							siteId,
 							contentId,
+							contentTypeId,
 						}),
 						component: Link,
 					})}

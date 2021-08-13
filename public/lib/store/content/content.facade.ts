@@ -1,5 +1,5 @@
 import { alertService, BaseEntityFacade, SearchParams } from '@redactie/utils';
-import { omit } from 'ramda';
+import { omit, pick } from 'ramda';
 
 import { ALERT_CONTAINER_IDS, WORKING_TITLE_KEY } from '../../content.const';
 import {
@@ -173,38 +173,27 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		alertService.dismiss();
 
 		return this.service
-			.updateContentItem(siteId, uuid, data)
+			.updateContentItem(siteId, uuid, {
+				...data,
+				meta: {
+					...data.meta,
+					contentType: pick(['uuid', '_id'], data.meta.contentType),
+				},
+			})
 			.then(response => {
 				if (!response) {
 					return null;
 				}
-				// Since the response data is not always right we need to fetch the latest content item
-				// after each update
-				// We can not call the getContentItem function because the loading states
-				// will cause our components to destroy, this is not something that we want
-				// TODO: Delete this code and update the contentItem directly from the response data
-				// when the API is fixed
-				return this.service
-					.getContentItem(siteId, uuid)
-					.then(response => {
-						if (!response) {
-							return null;
-						}
 
-						this.store.update({
-							contentItem: response,
-							contentItemDraft: response,
-							isUpdating: false,
-							isPublishing: false,
-						});
-						alertService.success(alertProps.success, this.alertContainerProps.update);
+				this.store.update({
+					contentItem: response,
+					contentItemDraft: response,
+					isUpdating: false,
+					isPublishing: false,
+				});
+				alertService.success(alertProps.success, this.alertContainerProps.update);
 
-						return response;
-					})
-					.catch(error => {
-						this.store.setError(error);
-						return null;
-					});
+				return response;
 			})
 			.catch(error => {
 				this.store.update({
