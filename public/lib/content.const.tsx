@@ -10,6 +10,8 @@ export const BREADCRUMB_OPTIONS = {
 		`${TENANT_ROOT}`,
 		`${TENANT_ROOT}/sites`,
 		`${TENANT_ROOT}/sites/:siteId`,
+		`${TENANT_ROOT}/sites/:siteId/content/:contentId([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})`,
+		`${TENANT_ROOT}/sites/:siteId/content/:contentId([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})/content-type`,
 		`${TENANT_ROOT}/sites/:siteId/content/content-type/:contentTypeId([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})`,
 	],
 };
@@ -21,7 +23,7 @@ const overview = `${root}/overzicht`;
 const createOverview = `${root}/aanmaak-overzicht`;
 const create = `${root}/content-type/:contentTypeId/aanmaken`;
 const createCompartment = `${create}/:compartment`;
-const detail = `${root}/:contentId`;
+const detail = `${root}/:contentId/content-type/:contentTypeId`;
 const detailView = `${detail}/bekijk`;
 const detailEdit = `${detail}/bewerk`;
 const detailEditCompartment = `${detailEdit}/:compartment`;

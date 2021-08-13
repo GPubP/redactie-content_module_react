@@ -257,10 +257,16 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				: '',
 			published: content.meta?.published,
 			description: content.meta?.description,
-			navigate: path => navigate(path, { contentId: content.uuid, siteId }),
+			navigate: path =>
+				navigate(path, {
+					contentId: content.uuid,
+					siteId,
+					contentTypeId: content.meta?.contentType?.uuid,
+				}),
 			viewPath: generatePath(MODULE_PATHS.detailView, {
 				contentId: content.uuid,
 				siteId,
+				contentTypeId: content.meta?.contentType?.uuid,
 			}),
 			canUpdate:
 				canUpdateContent &&

@@ -6,6 +6,7 @@ import { ContentRouteProps } from '../../content.types';
 export interface ContentDetailMatchProps {
 	siteId: string;
 	contentId: string;
+	contentTypeId: string;
 }
 
 export interface ContentDetailChildRouteProps<T = ContentDetailMatchProps>

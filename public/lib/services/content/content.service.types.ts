@@ -46,6 +46,15 @@ export interface ContentSchema {
 	fields: Record<string, any>;
 }
 
+export interface ContentUpdateSchema extends Omit<ContentSchema, 'meta'> {
+	meta: Omit<ContentSchema['meta'], 'contentType'> & {
+		contentType: {
+			_id: string;
+			uuid: string;
+		};
+	};
+}
+
 export interface ContentsSchema {
 	data: ContentSchema[];
 	paging: PagingSchema;
