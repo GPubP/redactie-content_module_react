@@ -43,7 +43,9 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	const [isHoveringTooltip, setHoveringTooltip] = useState(false);
 	const [delayShowLoop, setDelayShowLoop] = useState<NodeJS.Timeout>();
 	const [delayHideLoop, setDelayHideLoop] = useState<NodeJS.Timeout>();
-	const [items, setItems] = useState<{ value: string | undefined; label: string }[]>([]);
+	const [items, setItems] = useState<
+		{ value: string | undefined; label: string; contentTypeId: string }[]
+	>([]);
 	const [originalItems, setOriginalItems] = useState<ContentModel[]>([]);
 	const currentItem = useMemo(() => {
 		const item = items.find(i => i.value === field.value);
@@ -156,6 +158,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 									label: `${c.meta.label} [${c.meta.contentType?.meta?.label ||
 										''}] - ID ${c.uuid}`,
 									value: c.uuid,
+									contentTypeId: c.meta.contentType.uuid,
 								}));
 
 								setOriginalItems((content as ContentModel[]) || []);
@@ -178,6 +181,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 						currentItem?.value
 							? generatePath(MODULE_PATHS.detailView, {
 									contentId: currentItem?.value,
+									contentTypeId: currentItem?.contentTypeId,
 									siteId,
 							  })
 							: '#'
