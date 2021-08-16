@@ -143,7 +143,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 				siteId,
 				contentId,
 				data,
-				contentItemDraft.meta.status === ContentStatus.PUBLISHED
+				data.meta.status === ContentStatus.PUBLISHED
 			)
 			.then(newContent =>
 				runAllSubmitHooks(
