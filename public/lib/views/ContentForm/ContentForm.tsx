@@ -524,6 +524,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		if (
 			contentItem?.meta?.status === ContentStatus.DRAFT &&
+			contentItemDraft?.meta?.status !== ContentStatus.UNPUBLISHED &&
 			!!contentItem?.meta?.historySummary?.published
 		) {
 			onUpdatePublication(contentItemDraft);
