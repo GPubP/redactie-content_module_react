@@ -35,7 +35,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	canUpdate,
 	canDelete,
 }) => {
-	const { siteId, contentId } = match.params;
+	const { siteId, contentId, contentTypeId } = match.params;
 	/**
 	 * Hooks
 	 */
@@ -175,6 +175,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		navigate(`${MODULE_PATHS.detailEdit}/status`, {
 			siteId,
 			contentId,
+			contentTypeId,
 		});
 	};
 
