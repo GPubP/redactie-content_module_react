@@ -43,6 +43,7 @@ const CCContentSelectView: React.FC<ViewFieldProps> = ({ value, fieldSchema }: V
 					title={ccContentItem?.meta.label}
 					to={generatePath(MODULE_PATHS.detailView, {
 						contentId: ccContentItem?.uuid,
+						contentTypeId: ccContentItem?.meta?.contentType.uuid,
 						siteId,
 					})}
 					target="_blank"
