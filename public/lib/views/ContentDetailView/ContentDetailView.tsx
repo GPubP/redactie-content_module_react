@@ -49,7 +49,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 	canDelete,
 }) => {
 	const { meta } = contentItem;
-	const { siteId, contentId } = match.params;
+	const { siteId, contentId, contentTypeId } = match.params;
 	const View = getView();
 
 	/**
@@ -118,6 +118,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 		navigate(`${MODULE_PATHS.detailEdit}/default`, {
 			siteId,
 			contentId,
+			contentTypeId,
 		});
 	};
 
@@ -230,6 +231,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 									to={generatePath(`${MODULE_PATHS.detailEdit}/default`, {
 										siteId,
 										contentId,
+										contentTypeId,
 									})}
 									component={Link}
 								>

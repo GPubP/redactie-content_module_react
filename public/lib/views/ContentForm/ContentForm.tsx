@@ -122,6 +122,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		navigate(`${MODULE_PATHS.detailEdit}/planning`, {
 			siteId,
 			contentId,
+			contentTypeId,
 		});
 	};
 

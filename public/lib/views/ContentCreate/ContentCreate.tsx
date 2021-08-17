@@ -176,6 +176,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 						navigate(`${MODULE_PATHS.detailEdit}/default`, {
 							siteId,
 							contentId: response.uuid,
+							contentTypeId,
 						});
 					}
 				});
