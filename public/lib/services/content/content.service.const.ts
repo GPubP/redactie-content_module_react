@@ -13,10 +13,10 @@ export const DEFAULT_CONTENT_SEARCH_PARAMS: SearchParams & { limit: number } = {
 export const CONTENT_STATUS_TRANSLATION_MAP = {
 	[ContentStatus.DRAFT]: 'Werkversie',
 	[ContentStatus.PUBLISHED]: 'Gepubliceerd',
-	[ContentStatus.SCHEDULED]: 'Gepland',
-	[ContentStatus.PENDING_REVIEW]: 'In wacht',
-	[ContentStatus.PENDING_PUBLISH]: 'In wacht',
-	[ContentStatus.UNPUBLISHED]: 'Niet Gepubliceerd',
+	[ContentStatus.SCHEDULED]: 'In wacht',
+	[ContentStatus.PENDING_REVIEW]: 'Klaar voor nakijken',
+	[ContentStatus.PENDING_PUBLISH]: 'Klaar voor publicatie',
+	[ContentStatus.UNPUBLISHED]: 'Gearchiveerd',
 };
 
 export const CONTENT_STATUS_API_MAP = {
