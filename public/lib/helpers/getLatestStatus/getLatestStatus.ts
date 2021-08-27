@@ -19,7 +19,7 @@ export const getLatestStatus = (historySummary: ContentHistorySummary): ContentS
 	});
 
 	if (!latestStatus) {
-		return historySummary.published ? ContentStatus.PUBLISHED : ContentStatus.UNPUBLISHED;
+		return historySummary.published ? ContentStatus.PUBLISHED : ContentStatus.DRAFT;
 	}
 
 	return latestStatus;
