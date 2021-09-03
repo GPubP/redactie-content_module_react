@@ -1,7 +1,7 @@
 import moment from 'moment';
 import React, { ReactElement } from 'react';
 
-import { ContentSchema } from '../../api/api.types';
+import { ContentSchema, ContentTypeSchema } from '../../api/api.types';
 import {
 	META_VALIDATION_SCHEMA,
 	MetaForm,
@@ -15,7 +15,10 @@ import { DATE_FORMATS, MODULE_PATHS, TENANT_ROOT } from '../../content.const';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
-export const INTERNAL_COMPARTMENTS = (siteId: string): ContentCompartmentModel[] => [
+export const INTERNAL_COMPARTMENTS = (
+	siteId: string,
+	contentType?: ContentTypeSchema
+): ContentCompartmentModel[] => [
 	{
 		label: 'Info',
 		getDescription: contentItem => {
@@ -33,7 +36,12 @@ export const INTERNAL_COMPARTMENTS = (siteId: string): ContentCompartmentModel[]
 		type: CompartmentType.INTERNAL,
 		isValid: false,
 		validate: (values, ac, options) =>
-			META_VALIDATION_SCHEMA(siteId, values.uuid, options).isValid(values.meta),
+			META_VALIDATION_SCHEMA(
+				siteId,
+				values.uuid,
+				options,
+				contentType?.meta?.canBeFiltered
+			).isValid(values.meta),
 		afterSubmit: MetaFormHelper.afterSubmitMeta,
 	},
 	{

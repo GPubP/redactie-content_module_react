@@ -96,7 +96,10 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		publishContentItemLoadingState,
 	] = useContentLoadingStates();
 	const { navigate } = useNavigate(SITES_ROOT);
-	const internalCompartments = useMemo(() => INTERNAL_COMPARTMENTS(siteId), [siteId]);
+	const internalCompartments = useMemo(() => INTERNAL_COMPARTMENTS(siteId, contentType), [
+		contentType,
+		siteId,
+	]);
 	const workingTitleMapper = useMemo(() => getWorkTitleMapper(contentType), [contentType]);
 	const [showConfirmModal, setShowConfirmModal] = useState(false);
 	const [modalState, setModalState] = useState<{
@@ -358,7 +361,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			case CompartmentType.CT: {
 				const fieldValues = values as ContentSchema['fields'];
 
-				if (isCreating && !slugFieldTouched) {
+				if (isCreating && !slugFieldTouched && contentType?.meta?.canBeFiltered) {
 					const workingTitlePath = workingTitleMapper
 						? [workingTitleMapper.field.name, ...workingTitleMapper.mapper.sourcePath]
 						: [WORKING_TITLE_KEY];

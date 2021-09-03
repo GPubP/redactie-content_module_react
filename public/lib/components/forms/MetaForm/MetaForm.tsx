@@ -19,6 +19,7 @@ import { META_VALIDATION_SCHEMA } from './MetaForm.const';
 
 const MetaForm: FC<CompartmentProps> = ({
 	contentValue,
+	contentType,
 	value,
 	onChange = () => undefined,
 	formikRef,
@@ -29,7 +30,12 @@ const MetaForm: FC<CompartmentProps> = ({
 	};
 	const { siteId } = useSiteContext();
 	const metaValidationSchema = useMemo(() => {
-		return META_VALIDATION_SCHEMA(siteId, contentValue?.uuid);
+		return META_VALIDATION_SCHEMA(
+			siteId,
+			contentValue?.uuid,
+			undefined,
+			contentType?.meta.canBeFiltered
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [contentValue?.uuid, siteId]);
 	const [t] = useCoreTranslation();
@@ -63,31 +69,35 @@ const MetaForm: FC<CompartmentProps> = ({
 							/>
 						) : null}
 					</div>
-					<div className="row">
-						<div className="col-xs-12 col-md-6 u-margin-bottom">
-							<Field type="text" name="slug.nl" required>
-								{(fieldProps: FieldProps<any, {}>) => (
-									<>
-										<TextField
-											loading={fieldProps.form.isValidating}
-											placeholder="Typ een slug"
-											label="Slug"
-											id="slug"
-											required
-											{...fieldProps.field}
-										/>
-										{!fieldProps.form.isValidating ? (
-											<ErrorMessage name="slug.nl" />
-										) : null}
-									</>
-								)}
-							</Field>
-							<div className="u-text-light u-margin-top-xs">
-								Bepaal de &apos;slug&apos; voor dit content item. Deze wordt onder
-								andere gebruikt in de URL.
+					{contentType?.meta?.canBeFiltered ? (
+						<div className="row">
+							<div className="col-xs-12 col-md-6 u-margin-bottom">
+								<Field type="text" name="slug.nl" required>
+									{(fieldProps: FieldProps<any, {}>) => (
+										<>
+											<TextField
+												loading={fieldProps.form.isValidating}
+												placeholder="Typ een slug"
+												label="Slug"
+												id="slug"
+												required
+												{...fieldProps.field}
+											/>
+											{!fieldProps.form.isValidating ? (
+												<ErrorMessage name="slug.nl" />
+											) : null}
+										</>
+									)}
+								</Field>
+								<div className="u-text-light u-margin-top-xs">
+									Bepaal de &apos;slug&apos; voor dit content item. Deze wordt
+									onder andere gebruikt in de URL.
+								</div>
 							</div>
 						</div>
-					</div>
+					) : (
+						''
+					)}
 					<div className="row">
 						<div className="col-xs-12">
 							<Field

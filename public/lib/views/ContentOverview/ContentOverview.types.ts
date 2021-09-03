@@ -12,6 +12,7 @@ export interface ContentOverviewTableRow {
 	navigate: (path: string) => void;
 	viewPath: string;
 	canUpdate: boolean;
+	type: string;
 }
 
 export enum FilterKeys {
