@@ -11,6 +11,7 @@ export const getLatestStatus = (historySummary: ContentHistorySummary): ContentS
 
 	Object.values(CONTENT_STATUS_API_MAP).some(statusKey => {
 		const status = (historySummary as any)[statusKey] as ContentHistorySummaryStatus;
+
 		if (status && status.isLatestVersion) {
 			latestStatus = status.type;
 			return true;
