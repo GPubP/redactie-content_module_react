@@ -82,6 +82,6 @@ describe('getLatestStatus', () => {
 			published: false,
 			lastEdit: new Date().toISOString(),
 		});
-		expect(latestStatus).toBe(ContentStatus.UNPUBLISHED);
+		expect(latestStatus).toBe(ContentStatus.DRAFT);
 	});
 });
