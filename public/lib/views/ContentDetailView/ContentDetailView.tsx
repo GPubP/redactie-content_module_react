@@ -172,7 +172,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 										{meta.description}
 									</div>
 								)}
-								{meta.slug && (
+								{contentType?.meta?.canBeFiltered && meta.slug && (
 									<div>
 										<b>Slug: </b>
 										{meta.slug.nl}

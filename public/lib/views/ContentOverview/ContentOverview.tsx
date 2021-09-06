@@ -257,6 +257,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				: '',
 			published: content.meta?.published,
 			description: content.meta?.description,
+			type: content.meta?.contentType?.meta?.canBeFiltered ? 'Pagina' : 'Blok',
 			navigate: path =>
 				navigate(path, {
 					contentId: content.uuid,

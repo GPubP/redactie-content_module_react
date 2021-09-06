@@ -78,6 +78,16 @@ export const CONTENT_OVERVIEW_COLUMNS = (
 		width: '15%',
 		// Temporary fix until sorting on referenced fields is supported by the backend
 		disableSorting: true,
+		component(label: string, { type }) {
+			return (
+				<>
+					<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
+					<p className="small">
+						{type ? <EllipsisWithTooltip>{type}</EllipsisWithTooltip> : ''}
+					</p>
+				</>
+			);
+		},
 	},
 	{
 		label: t(CORE_TRANSLATIONS['TABLE_LAST-MODIFIED']),

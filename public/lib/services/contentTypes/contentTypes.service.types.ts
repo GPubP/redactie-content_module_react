@@ -98,6 +98,7 @@ export interface ContentTypeSchema {
 	meta: {
 		label: string;
 		description: string;
+		canBeFiltered: boolean;
 	};
 	valueSyncMap: ValueSyncMap;
 	fields: ContentTypeFieldSchema[];

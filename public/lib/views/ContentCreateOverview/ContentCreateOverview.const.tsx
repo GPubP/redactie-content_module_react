@@ -14,8 +14,8 @@ export const CREATE_OVERVIEW_QUERY_PARAMS_CONFIG = {
 	skip: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.skip, type: 'number' },
 	limit: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit, type: 'number' },
 	sparse: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.sparse, type: 'boolean' },
-	sort: { type: 'string' },
-	direction: { type: 'number' },
+	sort: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.sort, type: 'string' },
+	direction: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.direction, type: 'number' },
 	context: {
 		defaultValue: CRUDActions.create,
 		type: 'string',
@@ -28,7 +28,7 @@ export const CONTENT_CREATE_OVERVIEW_COLUMNS = (
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
-		width: '65%',
+		width: '50%',
 		component(value, { label, description }) {
 			return (
 				<>
@@ -45,6 +45,11 @@ export const CONTENT_CREATE_OVERVIEW_COLUMNS = (
 				</>
 			);
 		},
+	},
+	{
+		label: t(CORE_TRANSLATIONS.TABLE_TYPE),
+		value: 'type',
+		width: '15%',
 	},
 	{
 		label: '',

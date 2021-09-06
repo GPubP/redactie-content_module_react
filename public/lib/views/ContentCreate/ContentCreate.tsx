@@ -5,6 +5,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import {
 	AlertContainer,
+	ContextHeaderBadge,
 	DataLoader,
 	LoadingState,
 	RenderChildRoutes,
@@ -227,10 +228,18 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 	const pageTitle = `${contentTypeLabel ? `'${contentTypeLabel}'` : 'Content'} ${t(
 		CORE_TRANSLATIONS.ROUTING_CREATE
 	)}`;
+	const badges: ContextHeaderBadge[] = contentType
+		? [
+				{
+					type: 'primary',
+					name: contentType?.meta.canBeFiltered ? 'Pagina' : 'Blok',
+				},
+		  ]
+		: [];
 
 	return (
 		<>
-			<ContextHeader title={pageTitle}>
+			<ContextHeader title={pageTitle} badges={badges}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>

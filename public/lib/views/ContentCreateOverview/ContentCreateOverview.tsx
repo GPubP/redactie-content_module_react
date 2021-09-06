@@ -96,6 +96,7 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 			uuid: contentType.uuid,
 			label: contentType.meta.label,
 			description: contentType.meta.description,
+			type: contentType.meta.canBeFiltered ? 'Pagina' : 'Blok',
 			navigate: contentTypeId => navigate(MODULE_PATHS.create, { contentTypeId, siteId }),
 		}));
 
@@ -106,8 +107,16 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 				tableClassName="a-table--fixed--xs"
 				columns={CONTENT_CREATE_OVERVIEW_COLUMNS(t)}
 				rows={contentTypesRows}
-				currentPage={Math.ceil(meta.skip / DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit) + 1}
-				itemsPerPage={DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit}
+				currentPage={
+					DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit !== -1
+						? Math.ceil(meta.skip / DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit) + 1
+						: 1
+				}
+				itemsPerPage={
+					DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit !== -1
+						? DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit
+						: contentTypesRows.length
+				}
 				onPageChange={handlePageChange}
 				orderBy={handleOrderBy}
 				activeSorting={activeSorting}
