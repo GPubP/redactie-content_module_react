@@ -1,3 +1,5 @@
+import { path, pathOr } from 'ramda';
+
 import { ContentTypeFieldSchema } from '../api/api.types';
 
 const setFieldValue = (dataValue: any, defaultValue: any, fallback: any): any =>
@@ -25,6 +27,22 @@ export const getInitialContentValues = (
 							setFieldValue(data[field.name], field.defaultValue, {})
 					  )
 					: '';
+			return values;
+		}
+
+		// If our data is an array and the config is set to singular + we have checked it SHOULDN'T be an array:
+		// Try to pick the first object of the array and cast it down
+		if (
+			Array.isArray(data[field.name]) &&
+			['object', 'string', 'number'].includes(field.dataType.data.type) &&
+			field.generalConfig.max <= 1
+		) {
+			values[field.name] = setFieldValue(
+				pathOr(path([field.name, 0])(data), [field.name, 0, 'value'])(data),
+				field.defaultValue,
+				{}
+			);
+
 			return values;
 		}
 
