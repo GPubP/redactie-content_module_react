@@ -18,7 +18,7 @@ const CCLinkView: FC<ViewFieldProps> = ({ value = {} }) => {
 		() => ({
 			type: 'primary',
 			target,
-			href: url.startsWith('http') ? url : `https://${url}`,
+			href: typeof url !== 'string' || url.startsWith('http') ? url : `https://${url}`,
 			className: classnames(className, {
 				['a-button']: style === 'button',
 				['has-icon-left']: isExternal,
