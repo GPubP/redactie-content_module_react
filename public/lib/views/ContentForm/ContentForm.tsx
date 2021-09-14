@@ -163,7 +163,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			publishTime < new Date().toISOString() &&
 			status !== ContentStatus.PUBLISHED
 		) {
-			setModalState(CONTENT_MODAL_MAP(title, unpublishTime).publish);
+			setModalState(CONTENT_MODAL_MAP(title, publishTime).publish);
 			return;
 		}
 
