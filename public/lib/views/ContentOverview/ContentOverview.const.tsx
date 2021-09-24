@@ -76,8 +76,6 @@ export const CONTENT_OVERVIEW_COLUMNS = (
 		value: 'contentType',
 		ellipsis: true,
 		width: '15%',
-		// Temporary fix until sorting on referenced fields is supported by the backend
-		disableSorting: true,
 		component(label: string, { type }) {
 			return (
 				<>
@@ -117,7 +115,6 @@ export const CONTENT_OVERVIEW_COLUMNS = (
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 		value: 'status',
-		disableSorting: true,
 		width: '10%',
 	},
 	{
@@ -159,4 +156,6 @@ export const CONTENT_OVERVIEW_COLUMNS = (
 
 export const ORDER_BY_KEYMAP: Record<string, string> = {
 	lastEdit: 'meta.historySummary.lastEdit',
+	contentType: 'meta.contentType.meta.label',
+	status: 'meta.historySummary.latestStatus',
 };
