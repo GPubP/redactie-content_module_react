@@ -7,7 +7,6 @@ import {
 	useNavigate,
 	useWorker,
 } from '@redactie/utils';
-import { equals } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -16,7 +15,7 @@ import rolesRightsConnector from '../../connectors/rolesRights';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { getInitialContentValues, getTimeUntilLockExpires, runAllSubmitHooks } from '../../helpers';
 import { useLock } from '../../hooks';
-import { ContentStatus } from '../../services/content';
+import { ContentStatus, ContentSystemNames } from '../../services/content';
 import { contentFacade } from '../../store/content';
 import { LockModel, locksFacade } from '../../store/locks';
 import { ContentCompartmentModel } from '../../store/ui/contentCompartments';
@@ -125,25 +124,12 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		activeCompartment: ContentCompartmentModel,
 		compartments: ContentCompartmentModel[]
 	): void => {
-		// Every change with current status published should be saved as a draft version unless the status has changed
-		const data =
-			contentItem.meta.status === ContentStatus.PUBLISHED &&
-			equals(contentItemDraft.meta.status, contentItem.meta.status)
-				? {
-						...contentItemDraft,
-						meta: {
-							...contentItemDraft.meta,
-							status: ContentStatus.DRAFT,
-						},
-				  }
-				: contentItemDraft;
-
 		contentFacade
 			.updateContentItem(
 				siteId,
 				contentId,
-				data,
-				data.meta.status === ContentStatus.PUBLISHED
+				contentItemDraft,
+				contentItemDraft.meta.status === ContentStatus.PUBLISHED
 			)
 			.then(newContent =>
 				runAllSubmitHooks(
@@ -159,7 +145,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 				runAllSubmitHooks(
 					compartments,
 					contentType,
-					data,
+					contentItemDraft,
 					contentItem,
 					'afterSubmit',
 					error
@@ -185,6 +171,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 			meta: {
 				...content.meta,
 				status: ContentStatus.PUBLISHED,
+				workflowState: ContentSystemNames.PUBLISHED,
 			},
 		};
 		contentFacade

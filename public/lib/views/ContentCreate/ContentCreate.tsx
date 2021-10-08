@@ -28,7 +28,12 @@ import {
 	useMyContentTypeRights,
 	useRoutesBreadcrumbs,
 } from '../../hooks';
-import { ContentCreateSchema, ContentSchema, ContentStatus } from '../../services/content';
+import {
+	ContentCreateSchema,
+	ContentSchema,
+	ContentStatus,
+	ContentSystemNames,
+} from '../../services/content';
 import { contentFacade } from '../../store/content/content.facade';
 import { contentTypesFacade } from '../../store/contentTypes';
 import { ContentCompartmentModel } from '../../store/ui/contentCompartments';
@@ -112,7 +117,8 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 					nl: '',
 				},
 				contentType: contentType,
-				status: ContentStatus.DRAFT,
+				status: '',
+				workflowState: ContentSystemNames.NEW,
 				site: siteId,
 			},
 		};
@@ -150,6 +156,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 				slug: content.meta?.slug,
 				contentType: contentType._id,
 				status: content.meta.status as ContentStatus,
+				workflowState: content.meta.workflowState,
 				published: content.meta.status === ContentStatus.PUBLISHED,
 				publishTime: content.meta?.publishTime,
 				unpublishTime: content.meta?.unpublishTime,

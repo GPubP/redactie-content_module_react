@@ -34,6 +34,7 @@ export interface ContentSchema {
 			lastname?: string;
 		};
 		status: string;
+		workflowState: string;
 		published?: boolean;
 		created?: string;
 		lastModified?: string;
@@ -67,7 +68,8 @@ export interface ContentCreateSchema {
 		label: string;
 		slug: Record<string, string>;
 		contentType: string;
-		status: ContentStatus;
+		status: string;
+		workflowState: string;
 		published: boolean;
 		site: string;
 		publishTime?: string | null;
@@ -78,12 +80,22 @@ export interface ContentCreateSchema {
 }
 
 export enum ContentStatus {
+	NEW = 'NEW',
 	DRAFT = 'DRAFT',
 	PENDING_REVIEW = 'PENDING_REVIEW',
 	PENDING_PUBLISH = 'PENDING_PUBLISH',
 	SCHEDULED = 'SCHEDULED',
 	PUBLISHED = 'PUBLISHED',
 	UNPUBLISHED = 'UNPUBLISHED',
+}
+
+export enum ContentSystemNames {
+	NEW = 'nieuw',
+	DRAFT = 'werkversie',
+	PENDING_REVIEW = 'klaar-voor-nakijken',
+	PENDING_PUBLISH = 'klaar-voor-publicatie',
+	PUBLISHED = 'gepubliceerd',
+	UNPUBLISHED = 'gearchiveerd',
 }
 
 export enum ContentExtraFilterStatus {

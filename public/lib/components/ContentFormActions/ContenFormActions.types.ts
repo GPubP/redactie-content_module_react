@@ -48,6 +48,14 @@ export interface ContentFormActionsProps {
 	 */
 	showDeleteButton?: boolean;
 	/**
+	 * Disable save
+	 */
+	disableSave?: boolean;
+	/**
+	 * Disable save
+	 */
+	disableUpdatePublication?: boolean;
+	/**
 	 * Callback function onCancel
 	 */
 	onCancel?: () => void;

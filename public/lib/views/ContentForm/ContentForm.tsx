@@ -8,16 +8,25 @@ import {
 	ControlledModalHeader,
 	NavList,
 } from '@acpaas-ui/react-editorial-components';
+import {
+	StateMachineContext,
+	StateMachineEvent,
+	StateMachineHelper,
+} from '@redactie/redactie-workflows';
 import { alertService, LeavePrompt, LoadingState, NavListItem, useNavigate } from '@redactie/utils';
+import { WorkflowPopulatedTransition } from '@redactie/workflows-module';
 import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { equals, isEmpty, lensPath, path, set } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { createMachine, StateMachine } from 'xstate';
 
 import { ContentSchema, ContentStatus } from '../../api/api.types';
 import { ContentFormActions } from '../../components';
+import rolesRightsConnector from '../../connectors/rolesRights';
 import sitesConnector from '../../connectors/sites';
+import workflowsConnector from '../../connectors/workflows';
 import {
 	ALERT_CONTAINER_IDS,
 	CONTENT_MODAL_MAP,
@@ -34,6 +43,7 @@ import {
 	runAllSubmitHooks,
 	validateCompartments,
 } from '../../helpers/contentCompartments';
+import { setValidity } from '../../helpers/setValidity';
 import {
 	useContentAction,
 	useContentCompartment,
@@ -41,6 +51,7 @@ import {
 	useExternalAction,
 	useExternalCompartment,
 } from '../../hooks';
+import { ContentSystemNames } from '../../services/content';
 import { contentFacade } from '../../store/content';
 import {
 	CompartmentType,
@@ -96,10 +107,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		publishContentItemLoadingState,
 	] = useContentLoadingStates();
 	const { navigate } = useNavigate(SITES_ROOT);
-	const internalCompartments = useMemo(() => INTERNAL_COMPARTMENTS(siteId, contentType), [
-		contentType,
-		siteId,
-	]);
 	const workingTitleMapper = useMemo(() => getWorkTitleMapper(contentType), [contentType]);
 	const [showConfirmModal, setShowConfirmModal] = useState(false);
 	const [modalState, setModalState] = useState<{
@@ -120,6 +127,65 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	const [site] = sitesConnector.hooks.useSite(siteId);
 	const [{ actions }, registerAction] = useContentAction();
 	const [externalActions] = useExternalAction();
+	const workflowId = useMemo(() => {
+		if (!contentType || !siteId) {
+			return;
+		}
+
+		return contentType.modulesConfig?.find(
+			config => config.name === 'workflow' && config.site === siteId
+		)?.config.workflow;
+	}, [contentType, siteId]);
+	const [workflow] = workflowsConnector.hooks.useWorkflow(workflowId, siteId);
+	const [, roles] = rolesRightsConnector.api.hooks.useSiteRoles();
+	const [initialStatus, setInitialStatus] = useState<string | undefined>();
+
+	const machine = useMemo<
+		StateMachine<StateMachineContext, any, StateMachineEvent> | undefined
+	>(() => {
+		if (!workflow || !roles || (!contentItem && !contentItemDraft) || !initialStatus) {
+			return undefined;
+		}
+
+		const config = StateMachineHelper.getConfig(
+			{
+				...workflow,
+				data: {
+					...workflow.data,
+					transitions: workflow.data.transitions as WorkflowPopulatedTransition[],
+				},
+			},
+			initialStatus,
+			roles.reduce(
+				(acc: string[], role) => [...acc, role.id, role.attributes.displayName],
+				[]
+			)
+		);
+
+		return createMachine(config.value, config.options);
+	}, [contentItem, contentItemDraft, initialStatus, roles, workflow]);
+
+	const allowedTransitions = useMemo(() => {
+		if (!machine) {
+			return [];
+		}
+
+		return machine.initialState.nextEvents.filter(nextEvent => {
+			return (
+				machine.transition(machine.initialState, nextEvent).changed ||
+				`to-${machine.initialState.value}` === nextEvent
+			);
+		});
+	}, [machine]);
+
+	const internalCompartments = useMemo(() => {
+		return INTERNAL_COMPARTMENTS(
+			siteId,
+			contentType,
+			workflow,
+			(allowedTransitions || []).map(transition => transition.replace('to-', ''))
+		);
+	}, [allowedTransitions, contentType, siteId, workflow]);
 
 	const navigateToPlanning = (): void => {
 		navigate(`${MODULE_PATHS.detailEdit}/planning`, {
@@ -194,6 +260,10 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	};
 
 	useEffect(() => {
+		rolesRightsConnector.api.store.roles.service.getSiteRoles(siteId);
+	}, [siteId]);
+
+	useEffect(() => {
 		if (!contentType || !site) {
 			return;
 		}
@@ -213,13 +283,19 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		register(
 			[
-				...(getContentTypeCompartments(contentType) as ContentCompartmentModel[]),
-				...internalCompartments,
-				...filterExternalCompartments(
-					contentItemDraft,
-					contentType,
-					externalCompartments,
-					isCreating
+				...setValidity(
+					compartments,
+					getContentTypeCompartments(contentType) as ContentCompartmentModel[]
+				),
+				...setValidity(compartments, internalCompartments),
+				...setValidity(
+					compartments,
+					filterExternalCompartments(
+						contentItemDraft,
+						contentType,
+						externalCompartments,
+						isCreating
+					)
 				),
 			],
 			{ replace: true }
@@ -352,6 +428,14 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			contentItem?.meta.unpublishTime as string
 		);
 	}, [contentItem]); // eslint-disable-line
+
+	useEffect(() => {
+		if (!contentItemDraft || (initialStatus && hasChanges)) {
+			return;
+		}
+
+		setInitialStatus(contentItem?.meta.workflowState || contentItemDraft?.meta.workflowState);
+	}, [contentItem, contentItemDraft, initialStatus]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/**
 	 * Methods
@@ -646,10 +730,13 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							contentType={contentType}
 							contentValue={contentItemDraft}
 							contentItem={contentItem}
+							machine={machine}
+							allowedTransitions={allowedTransitions}
 							isCreating={isCreating}
 							isValid
 							settings={getSettings(contentType, activeCompartment)}
 							onChange={values => handleChange(activeCompartment, values)}
+							workflow={workflow}
 							value={getCompartmentValue(
 								contentItemDraft,
 								activeCompartment,
@@ -683,6 +770,23 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						isPublishing={publishContentItemLoadingState === LoadingState.Loading}
 						onUpdatePublication={updatePublication}
 						onCancel={handleCancel}
+						disableSave={
+							(!hasChanges &&
+								contentItem?.meta.workflowState === ContentSystemNames.PUBLISHED &&
+								contentItemDraft?.meta.workflowState ===
+									ContentSystemNames.PUBLISHED) ||
+							(contentItemDraft?.meta.workflowState ===
+								ContentSystemNames.PUBLISHED &&
+								!!contentItem?.meta?.historySummary?.published)
+						}
+						disableUpdatePublication={
+							(!hasChanges &&
+								allowedTransitions.includes(
+									`to-${ContentSystemNames.PUBLISHED}`
+								)) ||
+							!allowedTransitions.includes(`to-${ContentSystemNames.PUBLISHED}`) ||
+							contentItemDraft?.meta.workflowState !== ContentSystemNames.PUBLISHED
+						}
 					/>
 				</ActionBarContentSection>
 			</ActionBar>
