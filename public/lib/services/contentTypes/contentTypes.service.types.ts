@@ -60,6 +60,7 @@ interface ModuleSettings {
 	module?: string;
 	config: any;
 	validationSchema?: any;
+	site?: string;
 }
 
 export interface ContentTypeFieldCompartmentRef {
@@ -99,6 +100,7 @@ export interface ContentTypeSchema {
 		label: string;
 		description: string;
 		canBeFiltered: boolean;
+		status: string;
 	};
 	valueSyncMap: ValueSyncMap;
 	fields: ContentTypeFieldSchema[];

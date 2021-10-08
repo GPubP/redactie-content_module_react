@@ -1,5 +1,8 @@
 import { FormSchema } from '@redactie/form-renderer-module';
+import { StateMachineContext, StateMachineEvent } from '@redactie/redactie-workflows';
+import { WorkflowDetailModel } from '@redactie/workflows-module';
 import { FormikProps, FormikValues } from 'formik';
+import { StateMachine } from 'xstate';
 
 import { ModuleSettings, ModuleValue } from '../../api/api.types';
 import { ContentRouteProps } from '../../content.types';
@@ -62,4 +65,7 @@ export interface CompartmentProps<
 	formikRef?: (instance: FormikProps<FormikValues> | null) => void;
 	onChange: (e: M) => void; // Boolean for validation result (maybe?)
 	updateContent: (e: ContentSchema) => void; // For edge cases where content item must be changed. Boolean for validation
+	workflow?: WorkflowDetailModel;
+	machine?: StateMachine<StateMachineContext, any, StateMachineEvent> | undefined;
+	allowedTransitions?: string[];
 }

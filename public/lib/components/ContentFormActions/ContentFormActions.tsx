@@ -18,6 +18,8 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 	isPublishing = false,
 	showPublishedStatus = false,
 	showDeleteButton = false,
+	disableSave = false,
+	disableUpdatePublication = false,
 	onCancel = () => null,
 	onSave = () => null,
 	onUpdatePublication = () => null,
@@ -28,9 +30,6 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 	 * Hooks
 	 */
 	const [t] = useCoreTranslation();
-	const showUpdatePublicationButton = useMemo(() => {
-		return status === ContentStatus.DRAFT && isPublished;
-	}, [isPublished, status]);
 	const statusButtonType = useMemo(
 		() => (status === ContentStatus.PUBLISHED ? 'success' : 'primary'),
 		[status]
@@ -55,7 +54,7 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 					</Button>
 					<Button
 						iconLeft={isSaving ? 'circle-o-notch fa-spin' : null}
-						disabled={isSaving}
+						disabled={disableSave || isSaving}
 						className="u-margin-right-xs"
 						onClick={onSave}
 						htmlType="submit"
@@ -76,10 +75,10 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 					{CONTENT_STATUS_TRANSLATION_MAP[status as ContentStatus]}
 				</Button>
 			)}
-			{showUpdatePublicationButton && (
+			{isPublished && (
 				<Button
 					iconLeft={isPublishing ? 'circle-o-notch fa-spin' : null}
-					disabled={isPublishing}
+					disabled={disableUpdatePublication || isPublishing}
 					onClick={onUpdatePublication}
 					htmlType="submit"
 					type="success"

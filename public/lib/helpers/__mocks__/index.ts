@@ -22,6 +22,7 @@ const generateMockContentTypes = (amount = 4): ContentTypeSchema[] => {
 			label: `ct-${i}`,
 			description: `ct-${i} description`,
 			canBeFiltered: true,
+			status: 'DRAFT',
 		},
 		errorMessages: {},
 		validateSchema: {},

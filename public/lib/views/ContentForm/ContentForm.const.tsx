@@ -1,3 +1,4 @@
+import { WorkflowDetailModel, WorkflowPopulatedTransition } from '@redactie/workflows-module';
 import moment from 'moment';
 import React, { ReactElement } from 'react';
 
@@ -12,12 +13,13 @@ import {
 } from '../../components';
 import { PLANNING_VALIDATION_SCHEMA } from '../../components/forms/PlanningForm/PlanningForm.const';
 import { DATE_FORMATS, MODULE_PATHS, TENANT_ROOT } from '../../content.const';
-import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
 
 export const INTERNAL_COMPARTMENTS = (
 	siteId: string,
-	contentType?: ContentTypeSchema
+	contentType?: ContentTypeSchema,
+	workflow?: WorkflowDetailModel,
+	allowedWorkflowStates?: string[]
 ): ContentCompartmentModel[] => [
 	{
 		label: 'Info',
@@ -46,15 +48,34 @@ export const INTERNAL_COMPARTMENTS = (
 	},
 	{
 		label: 'Status',
-		getDescription: contentItem =>
-			contentItem?.meta.status &&
-			CONTENT_STATUS_TRANSLATION_MAP[contentItem.meta.status as ContentStatus],
+		getDescription: contentItem => {
+			if (!contentItem?.meta.workflowState || !workflow) {
+				return;
+			}
+
+			let status = '';
+
+			for (const transition of workflow?.data.transitions as WorkflowPopulatedTransition[]) {
+				if (transition.from.data.systemName === contentItem?.meta.workflowState) {
+					status = transition.from.data.name;
+					break;
+				}
+
+				if (transition.to.data.systemName === contentItem?.meta.workflowState) {
+					status = transition.to.data.name;
+					break;
+				}
+			}
+
+			return status;
+		},
 		name: 'status',
 		slug: 'status',
 		component: StatusForm,
 		type: CompartmentType.INTERNAL,
 		isValid: false,
-		validate: (values: ContentSchema) => STATUS_VALIDATION_SCHEMA.isValidSync(values.meta),
+		validate: (values: ContentSchema) =>
+			STATUS_VALIDATION_SCHEMA(allowedWorkflowStates as string[]).isValidSync(values.meta),
 	},
 	{
 		label: 'Planning',
