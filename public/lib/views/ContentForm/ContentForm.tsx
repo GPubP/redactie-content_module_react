@@ -434,7 +434,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			return;
 		}
 
-		setInitialStatus(contentItem?.meta.workflowState || contentItemDraft?.meta.workflowState);
+		setInitialStatus(
+			contentItem?.meta.workflowState ||
+				contentItemDraft?.meta.workflowState ||
+				(ContentSystemNames as Record<string, string>)[contentItem?.meta.status]
+		);
 	}, [contentItem, contentItemDraft, initialStatus]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/**

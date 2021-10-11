@@ -36,7 +36,7 @@ const StatusForm: FC<CompartmentProps> = ({
 			return [];
 		}
 
-		return (workflow?.data.transitions as WorkflowPopulatedTransition[]).reduce(
+		const options = (workflow?.data.transitions as WorkflowPopulatedTransition[]).reduce(
 			(acc: StatusFormOption[], transition: WorkflowPopulatedTransition) => {
 				const optionFrom = {
 					value: transition.from.data.systemName,
@@ -72,6 +72,8 @@ const StatusForm: FC<CompartmentProps> = ({
 			},
 			[]
 		);
+
+		return options.sort((a, b) => a.value.toLowerCase().localeCompare(b.value.toLowerCase()));
 	}, [workflow, machine, contentItem, contentValue, allowedTransitions]);
 
 	const onFormChange = (values: FormikValues, submitForm: () => Promise<void>): void => {
