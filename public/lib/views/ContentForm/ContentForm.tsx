@@ -137,7 +137,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		)?.config.workflow;
 	}, [contentType, siteId]);
 	const [workflow] = workflowsConnector.hooks.useWorkflow(workflowId, siteId);
-	const [, roles] = rolesRightsConnector.api.hooks.useSiteRoles();
+	const [, roles] = rolesRightsConnector.api.hooks.useUserRolesForSite();
 	const [initialStatus, setInitialStatus] = useState<string | undefined>();
 
 	const machine = useMemo<
@@ -260,7 +260,10 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	};
 
 	useEffect(() => {
-		rolesRightsConnector.api.store.roles.service.getSiteRoles(siteId);
+		rolesRightsConnector.api.store.users.service.getUserRolesForSite({
+			siteUuid: siteId,
+			userUuid: 'me',
+		});
 	}, [siteId]);
 
 	useEffect(() => {
