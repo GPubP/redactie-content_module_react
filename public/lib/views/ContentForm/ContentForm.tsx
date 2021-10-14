@@ -28,12 +28,12 @@ import rolesRightsConnector from '../../connectors/rolesRights';
 import sitesConnector from '../../connectors/sites';
 import workflowsConnector from '../../connectors/workflows';
 import {
+	ALERT_CONTAINER_IDS,
 	CONTENT_MODAL_MAP,
 	MODULE_PATHS,
 	SITES_ROOT,
 	WORKING_TITLE_KEY,
 } from '../../content.const';
-import { ALERT_CONTAINER_IDS } from '../../content.types';
 import {
 	filterExternalCompartments,
 	getCompartmentValue,
@@ -137,7 +137,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		)?.config.workflow;
 	}, [contentType, siteId]);
 	const [workflow] = workflowsConnector.hooks.useWorkflow(workflowId, siteId);
-	const [, roles] = rolesRightsConnector.api.hooks.useUserRolesForSite();
+	const [, roles] = rolesRightsConnector.api.hooks.useSiteRoles();
 	const [initialStatus, setInitialStatus] = useState<string | undefined>();
 
 	const machine = useMemo<
@@ -260,10 +260,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	};
 
 	useEffect(() => {
-		rolesRightsConnector.api.store.users.service.getUserRolesForSite({
-			siteUuid: siteId,
-			userUuid: 'me',
-		});
+		rolesRightsConnector.api.store.roles.service.getSiteRoles(siteId);
 	}, [siteId]);
 
 	useEffect(() => {
