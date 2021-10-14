@@ -23,7 +23,9 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "jsx": "react",
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "outDir": "dist",
+    "declaration": true,
   },
   "include": [
     "public",

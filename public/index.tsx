@@ -17,6 +17,7 @@ import {
 	ContentDetailView,
 	ContentOverview,
 } from './lib/views';
+import { ContentDetailExternal } from './lib/views/ContentDetailExternal';
 import ContentForm from './lib/views/ContentForm/ContentForm';
 
 // akitaDevtools();
@@ -186,6 +187,19 @@ if (rolesRightsConnector.api) {
 								component: ContentForm,
 							},
 						],
+					},
+					{
+						path: MODULE_PATHS.detailExternal,
+						breadcrumb: false,
+						component: ContentDetailExternal,
+						guardOptions: {
+							guards: [
+								rolesRightsConnector.api.guards.securityRightsSiteGuard(
+									urlSiteParam,
+									[rolesRightsConnector.securityRights.update]
+								),
+							],
+						},
 					},
 				],
 			},

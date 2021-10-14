@@ -12,7 +12,8 @@ import { useHistory } from 'react-router-dom';
 
 import { ContentSchema } from '../../api/api.types';
 import rolesRightsConnector from '../../connectors/rolesRights';
-import { ALERT_CONTAINER_IDS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
+import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
+import { ALERT_CONTAINER_IDS } from '../../content.types';
 import { getInitialContentValues, getTimeUntilLockExpires, runAllSubmitHooks } from '../../helpers';
 import { useLock } from '../../hooks';
 import { ContentStatus, ContentSystemNames } from '../../services/content';

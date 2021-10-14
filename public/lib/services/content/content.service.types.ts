@@ -115,3 +115,14 @@ export interface ValidateSlugPayload {
 	slug: string;
 	language: string;
 }
+
+export type ValidationSchema = Record<string, any>;
+
+export interface ModuleSettings {
+	uuid?: string;
+	label: string;
+	name: string;
+	module?: string;
+	config: Record<string, any>;
+	validationSchema?: ValidationSchema;
+}

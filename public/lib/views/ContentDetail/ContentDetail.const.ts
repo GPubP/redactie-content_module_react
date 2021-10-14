@@ -1,4 +1,4 @@
-import { Tab } from '../../content.types';
+import { ALERT_CONTAINER_IDS, Tab, TabTypes } from '../../content.types';
 
 export const CONTENT_UPDATE_TAB_MAP: {
 	[key in 'view' | 'edit']: Tab;
@@ -8,12 +8,16 @@ export const CONTENT_UPDATE_TAB_MAP: {
 		target: 'bekijk',
 		active: true,
 		disabled: false,
+		type: TabTypes.INTERNAL,
+		containerId: ALERT_CONTAINER_IDS.contentEdit,
 	},
 	edit: {
 		name: 'Bewerk',
 		target: 'bewerk',
 		active: false,
 		disabled: false,
+		type: TabTypes.INTERNAL,
+		containerId: ALERT_CONTAINER_IDS.contentEdit,
 	},
 };
 

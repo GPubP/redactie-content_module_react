@@ -8,9 +8,13 @@ import {
 	ExternalCompartmentBeforeSubmitFn,
 	ExternalCompartmentOptions,
 } from '../store/api/externalCompartments';
+import { ExternalTabOptions } from '../store/api/externalTabs';
 import { ContentModel } from '../store/content';
 import { ContentTypeModel } from '../store/contentTypes';
 import { ExternalActionProps } from '../views/ContentDetail/ContentDetail.types';
+import { ExternalTabProps } from '../views/ContentDetailExternal/ContentDetailExternal.types';
+
+import { registerContentDetailTab } from './registerContentDetailTab';
 export { CompartmentProps } from '../views/ContentForm/ContentForm.types';
 export {
 	ModuleSettings,
@@ -31,6 +35,8 @@ export {
 	ExternalCompartmentAfterSubmitFn,
 	ExternalCompartmentBeforeSubmitFn,
 	CONTENT_STATUS_API_MAP,
+	ExternalTabProps,
+	ExternalTabOptions,
 };
 export interface ContentAPI {
 	registerContentDetailCompartment: <M = ModuleValue>(
@@ -38,5 +44,6 @@ export interface ContentAPI {
 		options: ExternalCompartmentOptions<M>
 	) => void;
 	registerContentDetailAction: (name: string, options: ExternalActionOptions) => void;
+	registerContentDetailTab: typeof registerContentDetailTab;
 	contentTenantContext: Context<TenantContextValue>;
 }

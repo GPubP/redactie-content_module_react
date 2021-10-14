@@ -23,13 +23,8 @@ import { Link } from 'react-router-dom';
 import { PublishedStatus } from '../../components';
 import { getView } from '../../connectors/formRenderer';
 import sitesConnector from '../../connectors/sites';
-import {
-	ALERT_CONTAINER_IDS,
-	CONTENT_MODAL_MAP,
-	DATE_FORMATS,
-	MODULE_PATHS,
-	SITES_ROOT,
-} from '../../content.const';
+import { CONTENT_MODAL_MAP, DATE_FORMATS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
+import { ALERT_CONTAINER_IDS } from '../../content.types';
 import { getViewPropsByCT } from '../../helpers';
 import { useContentAction, useExternalAction, useLock } from '../../hooks';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';

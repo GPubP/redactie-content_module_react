@@ -27,6 +27,7 @@ import {
 	useMyContentTypeRights,
 	useRoutesBreadcrumbs,
 } from '../../hooks';
+import { useExternalTabsFacade } from '../../store/api/externalTabs';
 import { contentFacade } from '../../store/content';
 import { contentTypesFacade } from '../../store/contentTypes';
 
@@ -59,7 +60,6 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		onlyKeys: false,
 	});
 	const contentTypeRights = useMyContentTypeRights(contentType?._id, mySecurityrights);
-	const activeTabs = useActiveTabs(CONTENT_UPDATE_TABS, location.pathname);
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
 			name: 'Content Overzicht',
@@ -68,6 +68,8 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	]);
 	const [initialLoading, setInitialLoading] = useState(true);
 	const [, , externalLock] = useLock(contentId);
+	const [{ all: externalTabs }] = useExternalTabsFacade();
+	const activeTabs = useActiveTabs(CONTENT_UPDATE_TABS, externalTabs, location.pathname);
 
 	const guardsMeta = useMemo(
 		() => ({

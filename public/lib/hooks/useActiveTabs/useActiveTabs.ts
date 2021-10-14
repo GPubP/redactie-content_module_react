@@ -1,14 +1,20 @@
 import { useMemo } from 'react';
 
 import { Tab } from '../../content.types';
+import { mapExternalTabToTab } from '../../helpers';
+import { ExternalTabModel } from '../../store/api/externalTabs';
 
-const useActiveTabs = (tabs: Tab[], pathname: string): Tab[] => {
+const useActiveTabs = (tabs: Tab[], externalTabs: ExternalTabModel[], pathname: string): Tab[] => {
 	const activeTabs = useMemo(() => {
-		return [...tabs].map(tab => ({
+		const externalMappedTabs = externalTabs.map(externalTab =>
+			mapExternalTabToTab(externalTab)
+		);
+
+		return [...tabs, ...externalMappedTabs].map(tab => ({
 			...tab,
 			active: new RegExp(`/${tab.target}/?`).test(pathname),
 		}));
-	}, [pathname, tabs]);
+	}, [externalTabs, pathname, tabs]);
 
 	return activeTabs;
 };

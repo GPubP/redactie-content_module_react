@@ -27,6 +27,7 @@ const detail = `${root}/content-types/:contentTypeId/content/:contentId`;
 const detailView = `${detail}/bekijk`;
 const detailEdit = `${detail}/bewerk`;
 const detailEditCompartment = `${detailEdit}/:compartment`;
+const detailExternal = `${detail}/:tab`;
 
 export const DATE_FORMATS = {
 	date: 'DD/MM/YYYY',
@@ -116,12 +117,7 @@ export const MODULE_PATHS = {
 	detailView,
 	detailEdit,
 	detailEditCompartment,
-};
-
-export const ALERT_CONTAINER_IDS = {
-	contentEdit: 'content-edit',
-	contentCreate: 'content-create',
-	contentRemove: 'content-remove',
+	detailExternal,
 };
 
 export const WORKING_TITLE_KEY = 'working-title';
