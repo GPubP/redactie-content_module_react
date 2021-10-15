@@ -19,8 +19,8 @@ import { useHistory } from 'react-router-dom';
 
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
-import { ALERT_CONTAINER_IDS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
-import { ContentRouteProps } from '../../content.types';
+import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
+import { ALERT_CONTAINER_IDS, ContentRouteProps } from '../../content.types';
 import { getInitialContentValues, runAllSubmitHooks } from '../../helpers';
 import {
 	useContentItem,

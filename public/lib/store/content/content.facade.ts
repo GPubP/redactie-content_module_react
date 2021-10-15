@@ -1,7 +1,8 @@
 import { alertService, BaseEntityFacade, SearchParams } from '@redactie/utils';
 import { omit, pick } from 'ramda';
 
-import { ALERT_CONTAINER_IDS, WORKING_TITLE_KEY } from '../../content.const';
+import { WORKING_TITLE_KEY } from '../../content.const';
+import { ALERT_CONTAINER_IDS } from '../../content.types';
 import {
 	contentApiService,
 	ContentApiService,

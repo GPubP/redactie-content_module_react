@@ -28,12 +28,12 @@ import rolesRightsConnector from '../../connectors/rolesRights';
 import sitesConnector from '../../connectors/sites';
 import workflowsConnector from '../../connectors/workflows';
 import {
-	ALERT_CONTAINER_IDS,
 	CONTENT_MODAL_MAP,
 	MODULE_PATHS,
 	SITES_ROOT,
 	WORKING_TITLE_KEY,
 } from '../../content.const';
+import { ALERT_CONTAINER_IDS } from '../../content.types';
 import {
 	filterExternalCompartments,
 	getCompartmentValue,

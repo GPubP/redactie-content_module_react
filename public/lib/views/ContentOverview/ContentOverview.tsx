@@ -29,14 +29,8 @@ import {
 } from '../../components';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
-import {
-	ALERT_CONTAINER_IDS,
-	DATE_FORMATS,
-	DEFAULT_CRUD_RIGHTS,
-	MODULE_PATHS,
-	SITES_ROOT,
-} from '../../content.const';
-import { ContentRouteProps, OverviewFilterItem } from '../../content.types';
+import { DATE_FORMATS, DEFAULT_CRUD_RIGHTS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
+import { ALERT_CONTAINER_IDS, ContentRouteProps, OverviewFilterItem } from '../../content.types';
 import { generateActiveFilters, getFilterStateFromParams, getLatestStatus } from '../../helpers';
 import {
 	useContent,
