@@ -83,7 +83,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 								workflowState: response.meta.workflowState
 									? response.meta.workflowState
 									: (ContentSystemNames as Record<string, string>)[
-											response?.meta.status
+											response.meta.status
 									  ],
 							},
 						},
