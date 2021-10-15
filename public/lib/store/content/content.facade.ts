@@ -8,6 +8,7 @@ import {
 	ContentApiService,
 	ContentCreateSchema,
 	ContentSchema,
+	ContentSystemNames,
 } from '../../services/content';
 
 import { getAlertMessages } from './content.messages';
@@ -76,7 +77,17 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 				if (response) {
 					this.store.update({
 						error: null,
-						contentItem: response,
+						contentItem: {
+							...response,
+							meta: {
+								...response.meta,
+								workflowState: response.meta.workflowState
+									? response.meta.workflowState
+									: (ContentSystemNames as Record<string, string>)[
+											response.meta.status
+									  ],
+							},
+						},
 						isFetchingOne: false,
 					});
 				}
