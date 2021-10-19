@@ -13,6 +13,8 @@ export interface ExternalTabValue {
 }
 
 export interface ExternalTabProps {
+	contentId: string;
+	siteId: string;
 	contentItem: ContentModel;
 	value: ExternalStandaloneTabValue | ExternalTabValue;
 	isLoading: boolean;
@@ -23,4 +25,6 @@ export interface ExternalTabProps {
 
 export interface ContentDetailExternalMatchProps {
 	tab: string;
+	contentId: string;
+	siteId: string;
 }

@@ -12,7 +12,7 @@ import { ExternalStandaloneTabValue } from '.';
 const ContentDetailExternal: FC<ContentDetailExternalRouteProps<
 	ContentDetailExternalMatchProps
 >> = ({ contentItem, contentItemLoading, onCancel, onSubmit, match }) => {
-	const { tab } = match.params;
+	const { tab, contentId, siteId } = match.params;
 
 	/**
 	 * HOOKS
@@ -48,6 +48,8 @@ const ContentDetailExternal: FC<ContentDetailExternalRouteProps<
 	 */
 	return activeTab ? (
 		<activeTab.component
+			contentId={contentId}
+			siteId={siteId}
 			contentItem={contentItem}
 			onSubmit={(values: ExternalTabValue) => onExternalTabSubmit(values)}
 			onCancel={() => onCancel()}
