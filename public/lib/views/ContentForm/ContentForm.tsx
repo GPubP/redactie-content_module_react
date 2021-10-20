@@ -515,6 +515,48 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		}
 	};
 
+	const beforeSubmit = (contentDraft: ContentSchema): Promise<ContentSchema> => {
+		return runAllSubmitHooks(
+			compartments,
+			contentType,
+			contentDraft,
+			contentItem,
+			'beforeSubmit'
+		).then(({ hasRejected, errorMessages, contentItem }) => {
+			if (!hasRejected) {
+				return contentItem;
+			}
+
+			setContentLoading(false);
+
+			errorMessages.forEach(message => {
+				contentCompartmentsFacade.setValid(message.compartmentName, false);
+			});
+
+			alertService.danger(
+				{
+					title: 'Er zijn nog fouten',
+					message: (
+						<>
+							<ul className="a-list">
+								{errorMessages.map((error, index) => (
+									<li key={index}>{error.error.message}</li>
+								))}
+							</ul>
+						</>
+					),
+				},
+				{
+					containerId: isCreating
+						? ALERT_CONTAINER_IDS.contentCreate
+						: ALERT_CONTAINER_IDS.contentEdit,
+				}
+			);
+
+			throw new Error('beforeSubmit error');
+		});
+	};
+
 	const onFormSubmit = async (contentItemDraft: ContentSchema): Promise<void> => {
 		setContentLoading(true);
 		setHasSubmit(true);
@@ -555,44 +597,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		const slugLens = lensPath(['meta', 'slug']);
 		const modifiedContentItemDraft = set(slugLens, kebabCasedSlugs, contentItemDraft);
 
-		runAllSubmitHooks(
-			compartments,
-			contentType,
-			modifiedContentItemDraft,
-			contentItem,
-			'beforeSubmit'
-		).then(({ hasRejected, errorMessages, contentItem }) => {
-			if (!hasRejected) {
+		await beforeSubmit(modifiedContentItemDraft)
+			.then((contentItem: ContentSchema) => {
 				onSubmit(contentItem, activeCompartment, compartments);
-				return;
-			}
-
-			setContentLoading(false);
-
-			errorMessages.forEach(message => {
-				contentCompartmentsFacade.setValid(message.compartmentName, false);
-			});
-
-			alertService.danger(
-				{
-					title: 'Er zijn nog fouten',
-					message: (
-						<>
-							<ul className="a-list">
-								{errorMessages.map((error, index) => (
-									<li key={index}>{error.error.message}</li>
-								))}
-							</ul>
-						</>
-					),
-				},
-				{
-					containerId: isCreating
-						? ALERT_CONTAINER_IDS.contentCreate
-						: ALERT_CONTAINER_IDS.contentEdit,
-				}
-			);
-		});
+			})
+			.catch();
 
 		setHasSubmit(true);
 	};
@@ -632,10 +641,13 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			contentItemDraft?.meta?.status !== ContentStatus.UNPUBLISHED &&
 			!!contentItem?.meta?.historySummary?.published
 		) {
-			onUpdatePublication(contentItemDraft);
-			setIsSubmitting(false);
-			setShowConfirmModal(false);
-			return;
+			return beforeSubmit(contentItemDraft)
+				.then((contentItem: ContentSchema) => {
+					onUpdatePublication(contentItem, compartments);
+					setIsSubmitting(false);
+					setShowConfirmModal(false);
+				})
+				.catch();
 		}
 
 		let data = contentItemDraft;
