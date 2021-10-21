@@ -208,7 +208,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 					...(unsetLoaders
 						? {
 								isUpdating: false,
-								sPublishing: false,
+								isPublishing: false,
 						  }
 						: {}),
 				});
