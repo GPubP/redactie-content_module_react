@@ -1,7 +1,13 @@
+import { FormSchema } from '@redactie/form-renderer-module';
 import { TenantContextValue } from '@redactie/utils';
+import { FormikValues } from 'formik';
 import { Context } from 'react';
 
 import { CONTENT_STATUS_API_MAP, ModuleValue } from '../services/content';
+import {
+	ContentTypeFieldSchema,
+	ContentTypeSchema,
+} from '../services/contentTypes/contentTypes.service.types';
 import { ExternalActionOptions } from '../store/api/externalActions';
 import {
 	ExternalCompartmentAfterSubmitFn,
@@ -21,14 +27,12 @@ export {
 	ModuleValue,
 } from '../store/api/externalCompartments/externalCompartments.model';
 export { ContentSchema, ContentStatus } from '../services/content/content.service.types';
-export {
-	ContentTypeSchema,
-	ContentTypeFieldSchema,
-} from '../services/contentTypes/contentTypes.service.types';
 
 export {
 	ContentModel,
 	ContentTypeModel,
+	ContentTypeSchema,
+	ContentTypeFieldSchema,
 	ExternalActionOptions,
 	ExternalActionProps,
 	ExternalCompartmentOptions,
@@ -48,6 +52,13 @@ export interface ContentAPI {
 		name: string,
 		options: ExternalCompartmentOptions<M>
 	) => void;
+	getViewPropsByCT: (
+		contentType: ContentTypeSchema,
+		values: FormikValues
+	) => {
+		schema: FormSchema;
+		values: FormikValues;
+	};
 	registerContentDetailAction: (name: string, options: ExternalActionOptions) => void;
 	registerContentDetailTab: typeof registerContentDetailTab;
 	contentTenantContext: Context<TenantContextValue>;
