@@ -601,7 +601,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			.then((contentItem: ContentSchema) => {
 				onSubmit(contentItem, activeCompartment, compartments);
 			})
-			.catch();
+			.catch(() => {});
 
 		setHasSubmit(true);
 	};
@@ -647,7 +647,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 					setIsSubmitting(false);
 					setShowConfirmModal(false);
 				})
-				.catch();
+				.catch(() => {});
 		}
 
 		let data = contentItemDraft;
