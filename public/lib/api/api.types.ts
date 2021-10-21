@@ -9,7 +9,7 @@ import {
 	ExternalCompartmentOptions,
 } from '../store/api/externalCompartments';
 import { ExternalTabOptions } from '../store/api/externalTabs';
-import { ContentModel } from '../store/content';
+import { ContentFacade, ContentModel } from '../store/content';
 import { ContentTypeModel } from '../store/contentTypes';
 import { ExternalActionProps } from '../views/ContentDetail/ContentDetail.types';
 import { ExternalTabProps } from '../views/ContentDetailExternal/ContentDetailExternal.types';
@@ -39,6 +39,11 @@ export {
 	ExternalTabOptions,
 };
 export interface ContentAPI {
+	store: {
+		content: {
+			facade: Pick<ContentFacade, 'getContentItem'>;
+		};
+	};
 	registerContentDetailCompartment: <M = ModuleValue>(
 		name: string,
 		options: ExternalCompartmentOptions<M>

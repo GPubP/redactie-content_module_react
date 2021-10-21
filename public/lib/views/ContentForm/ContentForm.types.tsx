@@ -43,7 +43,7 @@ export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 		compartments: ContentCompartmentModel[]
 	) => void;
 	onStatusClick: () => void;
-	onUpdatePublication: (content: ContentSchema) => void;
+	onUpdatePublication: (content: ContentSchema, compartments: ContentCompartmentModel[]) => void;
 }
 
 export type CtTypeSettings = Pick<

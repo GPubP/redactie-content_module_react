@@ -1,7 +1,7 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { ContextHeaderTab, FilterItem, LoadingState } from '@redactie/utils';
 
-import { ContentStatus } from './api/api.types';
+import { ContentStatus, ContentTypeSchema } from './api/api.types';
 import { PublishedStatuses } from './components';
 import { ContentModel } from './store/content';
 import { ExternalTabValue } from './views/ContentDetailExternal';
@@ -73,6 +73,7 @@ export enum CRUDActions {
 
 export enum ALERT_CONTAINER_IDS {
 	contentEdit = 'content-edit',
+	contentDetail = 'content-detail',
 	contentCreate = 'content-create',
 	contentRemove = 'content-remove',
 }
@@ -91,6 +92,7 @@ export interface ContentDetailExternalRouteProps<Params = ContentExternalRoutePa
 	extends RouteConfigComponentProps<Params> {
 	readonly allowedPaths?: string[];
 	readonly contentItem: ContentModel;
+	readonly contentType: ContentTypeSchema;
 	readonly contentItemLoading: LoadingState;
 	onCancel: () => void;
 	onSubmit: (data: ExternalTabValue, tab: Tab, cb?: () => void) => void;
