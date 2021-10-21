@@ -120,38 +120,49 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		contentFacade.setContentItemDraft(contentItem);
 	};
 
+	const updateContentItem = async (
+		contentItemDraft: ContentSchema,
+		compartments: ContentCompartmentModel[]
+	): Promise<void> => {
+		try {
+			const newContent = await contentFacade.updateContentItem(
+				siteId,
+				contentId,
+				contentItemDraft,
+				contentItemDraft.meta.status === ContentStatus.PUBLISHED,
+				false
+			);
+
+			await runAllSubmitHooks(
+				compartments,
+				contentType,
+				newContent || contentItemDraft,
+				contentItem,
+				'afterSubmit'
+			);
+
+			resetDetectValueChanges();
+		} catch (error) {
+			await runAllSubmitHooks(
+				compartments,
+				contentType,
+				contentItemDraft,
+				contentItem,
+				'afterSubmit',
+				error
+			);
+		} finally {
+			contentFacade.setIsUpdating(false);
+			contentFacade.setIsPublishing(false);
+		}
+	};
+
 	const onSubmit = (
 		contentItemDraft: ContentSchema,
 		activeCompartment: ContentCompartmentModel,
 		compartments: ContentCompartmentModel[]
 	): void => {
-		contentFacade
-			.updateContentItem(
-				siteId,
-				contentId,
-				contentItemDraft,
-				contentItemDraft.meta.status === ContentStatus.PUBLISHED
-			)
-			.then(newContent =>
-				runAllSubmitHooks(
-					compartments,
-					contentType,
-					newContent || contentItemDraft,
-					contentItem,
-					'afterSubmit'
-				)
-			)
-			.then(() => resetDetectValueChanges())
-			.catch(error =>
-				runAllSubmitHooks(
-					compartments,
-					contentType,
-					contentItemDraft,
-					contentItem,
-					'afterSubmit',
-					error
-				)
-			);
+		updateContentItem(contentItemDraft, compartments);
 	};
 
 	const onDelete = (): Promise<void> => {
@@ -166,7 +177,10 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		});
 	};
 
-	const onUpdatePublication = (content: ContentSchema): void => {
+	const onUpdatePublication = (
+		content: ContentSchema,
+		compartments: ContentCompartmentModel[]
+	): void => {
 		const data = {
 			...content,
 			meta: {
@@ -175,10 +189,8 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 				workflowState: ContentSystemNames.PUBLISHED,
 			},
 		};
-		contentFacade
-			.updateContentItem(siteId, contentId, data, true)
-			.then(() => resetDetectValueChanges())
-			.catch();
+
+		updateContentItem(data, compartments);
 	};
 
 	/**

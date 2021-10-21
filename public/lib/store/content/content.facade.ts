@@ -39,6 +39,10 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		this.store.setIsUpdating(isUpdating);
 	}
 
+	public setIsPublishing(isPublishing = false): void {
+		this.store.setIsPublishing(isPublishing);
+	}
+
 	public setIsCreating(isCreating = false): void {
 		this.store.setIsCreating(isCreating);
 	}
@@ -172,7 +176,8 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		siteId: string,
 		uuid: string,
 		data: ContentSchema,
-		publish = false
+		publish = false,
+		unsetLoaders = true
 	): Promise<ContentSchema | null> {
 		if (publish) {
 			this.store.setIsPublishing(true);
@@ -200,8 +205,12 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 				this.store.update({
 					contentItem: response,
 					contentItemDraft: response,
-					isUpdating: false,
-					isPublishing: false,
+					...(unsetLoaders
+						? {
+								isUpdating: false,
+								isPublishing: false,
+						  }
+						: {}),
 				});
 				alertService.success(alertProps.success, this.alertContainerProps.update);
 
