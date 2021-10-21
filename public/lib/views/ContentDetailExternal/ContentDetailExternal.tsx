@@ -5,14 +5,16 @@ import { ContentDetailExternalRouteProps, Tab } from '../../content.types';
 import { mapExternalTabToTab } from '../../helpers';
 import { useExternalTabsFacade } from '../../store/api/externalTabs/externalTabs.facade';
 
-import { ContentDetailExternalMatchProps, ExternalTabValue } from './ContentDetailExternal.types';
-
-import { ExternalStandaloneTabValue } from '.';
+import {
+	ContentDetailExternalMatchProps,
+	ExternalStandaloneTabValue,
+	ExternalTabValue,
+} from './ContentDetailExternal.types';
 
 const ContentDetailExternal: FC<ContentDetailExternalRouteProps<
 	ContentDetailExternalMatchProps
->> = ({ contentItem, contentItemLoading, onCancel, onSubmit, match }) => {
-	const { tab } = match.params;
+>> = ({ contentType, contentItem, contentItemLoading, onCancel, onSubmit, match }) => {
+	const { tab, contentId, siteId } = match.params;
 
 	/**
 	 * HOOKS
@@ -48,6 +50,9 @@ const ContentDetailExternal: FC<ContentDetailExternalRouteProps<
 	 */
 	return activeTab ? (
 		<activeTab.component
+			contentId={contentId}
+			siteId={siteId}
+			contentType={contentType}
 			contentItem={contentItem}
 			onSubmit={(values: ExternalTabValue) => onExternalTabSubmit(values)}
 			onCancel={() => onCancel()}

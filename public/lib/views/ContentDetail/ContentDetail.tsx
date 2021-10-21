@@ -4,6 +4,7 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import {
+	AlertContainer,
 	DataLoader,
 	LoadingState,
 	RenderChildRoutes,
@@ -17,7 +18,7 @@ import { LockMessage } from '../../components';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
-import { ContentRouteProps } from '../../content.types';
+import { ALERT_CONTAINER_IDS, ContentRouteProps } from '../../content.types';
 import { generateDetailBadges } from '../../helpers';
 import {
 	useActiveTabs,
@@ -219,7 +220,13 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 				>
 					<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				</ContextHeader>
-				<Container>{renderChildRoutes()}</Container>
+				<Container>
+					<AlertContainer
+						toastClassName="u-margin-bottom"
+						containerId={ALERT_CONTAINER_IDS.contentDetail}
+					/>
+					{renderChildRoutes()}
+				</Container>
 			</>
 		);
 	};
