@@ -1,8 +1,10 @@
 import { alertService, BaseEntityFacade, SearchParams } from '@redactie/utils';
 import { omit, pick } from 'ramda';
 
+import { ContentTypeSchema } from '../../..';
 import { WORKING_TITLE_KEY } from '../../content.const';
 import { ALERT_CONTAINER_IDS } from '../../content.types';
+import { pathJoin } from '../../helpers/pathJoin';
 import {
 	contentApiService,
 	ContentApiService,
@@ -270,11 +272,38 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		}));
 	}
 
-	public updateContentMetaDraft(data: Partial<ContentSchema['meta']>): void {
+	public updateContentMetaDraft(
+		data: Partial<ContentSchema['meta']>,
+		contentType?: ContentTypeSchema
+	): void {
 		this.store.update(state => ({
 			contentItemDraft: {
 				...state.contentItemDraft,
-				meta: { ...state.contentItemDraft?.meta, ...data },
+				meta: {
+					...state.contentItemDraft?.meta,
+					...data,
+					...(contentType?.meta.canBeFiltered
+						? {
+								urlPath: {
+									...state.contentItemDraft?.meta.urlPath,
+									alias: {
+										nl: {
+											value: contentType.meta.urlPath?.pattern
+												? pathJoin([
+														contentType.meta.urlPath?.pattern || '/',
+														data.slug?.nl || '',
+												  ])
+												: `/${data.slug?.nl || ''}`,
+											pattern: pathJoin([
+												contentType.meta.urlPath?.pattern || '/',
+												'[item:slug]',
+											]),
+										},
+									},
+								},
+						  }
+						: {}),
+				},
 			},
 		}));
 	}

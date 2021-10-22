@@ -43,6 +43,7 @@ import {
 	runAllSubmitHooks,
 	validateCompartments,
 } from '../../helpers/contentCompartments';
+import { pathJoin } from '../../helpers/pathJoin';
 import { setValidity } from '../../helpers/setValidity';
 import {
 	useContentAction,
@@ -466,10 +467,14 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 					const workingTitlePath = workingTitleMapper
 						? [workingTitleMapper.field.name, ...workingTitleMapper.mapper.sourcePath]
 						: [WORKING_TITLE_KEY];
+					const slug = kebabCase(path(workingTitlePath, fieldValues));
 
-					contentFacade.updateContentMetaDraft({
-						slug: { nl: kebabCase(path(workingTitlePath, fieldValues)) },
-					});
+					contentFacade.updateContentMetaDraft(
+						{
+							slug: { nl: slug },
+						},
+						contentType
+					);
 				}
 
 				contentFacade.updateContentFieldsDraft(fieldValues);
@@ -483,7 +488,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 					setSlugFieldTouched(true);
 				}
 
-				contentFacade.updateContentMetaDraft(metaValues);
+				contentFacade.updateContentMetaDraft(metaValues, contentType);
 
 				break;
 			}
@@ -601,7 +606,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			.then((contentItem: ContentSchema) => {
 				onSubmit(contentItem, activeCompartment, compartments);
 			})
-			.catch(() => {});
+			.catch(() => {
+				/**/
+			});
 
 		setHasSubmit(true);
 	};
@@ -647,7 +654,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 					setIsSubmitting(false);
 					setShowConfirmModal(false);
 				})
-				.catch(() => {});
+				.catch(() => {
+					/**/
+				});
 		}
 
 		let data = contentItemDraft;
