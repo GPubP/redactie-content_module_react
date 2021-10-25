@@ -101,6 +101,9 @@ export interface ContentTypeSchema {
 		description: string;
 		canBeFiltered: boolean;
 		status: string;
+		urlPath?: {
+			pattern?: string;
+		};
 	};
 	valueSyncMap: ValueSyncMap;
 	fields: ContentTypeFieldSchema[];

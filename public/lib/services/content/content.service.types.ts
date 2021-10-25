@@ -42,6 +42,13 @@ export interface ContentSchema {
 		firstPublished?: string;
 		publishTime?: string | null;
 		unpublishTime?: string | null;
+		urlPath?: {
+			internal?: string;
+			alias: {
+				value: string;
+				pattern: string;
+			};
+		};
 	};
 	modulesData?: Record<string, ModuleValue>;
 	fields: Record<string, any>;
@@ -74,6 +81,13 @@ export interface ContentCreateSchema {
 		site: string;
 		publishTime?: string | null;
 		unpublishTime?: string | null;
+		urlPath?: {
+			internal?: string;
+			alias: {
+				value: string;
+				pattern: string;
+			};
+		};
 	};
 	modulesData?: Record<string, ModuleValue>;
 	fields: Record<string, any>;
