@@ -26,7 +26,6 @@ import { ContentSchema, ContentStatus } from '../../api/api.types';
 import { ContentFormActions } from '../../components';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import sitesConnector from '../../connectors/sites';
-import workflowsConnector from '../../connectors/workflows';
 import {
 	CONTENT_MODAL_MAP,
 	MODULE_PATHS,
@@ -43,7 +42,6 @@ import {
 	runAllSubmitHooks,
 	validateCompartments,
 } from '../../helpers/contentCompartments';
-import { pathJoin } from '../../helpers/pathJoin';
 import { setValidity } from '../../helpers/setValidity';
 import {
 	useContentAction,
@@ -83,6 +81,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	onDelete,
 	onStatusClick = () => null,
 	onUpdatePublication = () => null,
+	workflow,
 }) => {
 	const { compartment, contentTypeId, siteId, contentId } = match.params;
 
@@ -128,16 +127,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	const [site] = sitesConnector.hooks.useSite(siteId);
 	const [{ actions }, registerAction] = useContentAction();
 	const [externalActions] = useExternalAction();
-	const workflowId = useMemo(() => {
-		if (!contentType || !siteId) {
-			return;
-		}
-
-		return contentType.modulesConfig?.find(
-			config => config.name === 'workflow' && config.site === siteId
-		)?.config.workflow;
-	}, [contentType, siteId]);
-	const [workflow] = workflowsConnector.hooks.useWorkflow(workflowId, siteId);
 	const [, roles] = rolesRightsConnector.api.hooks.useUserRolesForSite();
 	const [initialStatus, setInitialStatus] = useState<string | undefined>();
 

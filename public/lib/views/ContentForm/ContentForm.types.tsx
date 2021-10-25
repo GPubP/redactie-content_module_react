@@ -1,6 +1,7 @@
 import { FormSchema } from '@redactie/form-renderer-module';
 import { StateMachineContext, StateMachineEvent } from '@redactie/redactie-workflows';
 import { WorkflowDetailModel } from '@redactie/workflows-module';
+import { WorkflowDetailResponse } from '@redactie/workflows-module/dist/lib/services/workflows';
 import { FormikProps, FormikValues } from 'formik';
 import { StateMachine } from 'xstate';
 
@@ -44,6 +45,7 @@ export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 	) => void;
 	onStatusClick: () => void;
 	onUpdatePublication: (content: ContentSchema, compartments: ContentCompartmentModel[]) => void;
+	workflow: WorkflowDetailResponse;
 }
 
 export type CtTypeSettings = Pick<

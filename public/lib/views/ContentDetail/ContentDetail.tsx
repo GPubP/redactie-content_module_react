@@ -17,6 +17,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { LockMessage } from '../../components';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import workflowsConnector from '../../connectors/workflows';
 import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ALERT_CONTAINER_IDS, ContentRouteProps } from '../../content.types';
 import { generateDetailBadges } from '../../helpers';
@@ -36,6 +37,7 @@ import { CONTENT_UPDATE_TAB_MAP, CONTENT_UPDATE_TABS } from './ContentDetail.con
 import { ContentDetailMatchProps } from './ContentDetail.types';
 
 import './ContentDetail.scss';
+import { useWorkflowState } from '../../hooks/useWorkflowState';
 
 const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	match,
@@ -71,6 +73,17 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	const [, , externalLock] = useLock(contentId);
 	const [{ all: externalTabs }] = useExternalTabsFacade();
 	const activeTabs = useActiveTabs(CONTENT_UPDATE_TABS, externalTabs, location.pathname);
+	const workflowId = useMemo(() => {
+		if (!contentType || !siteId) {
+			return;
+		}
+
+		return contentType.modulesConfig?.find(
+			config => config.name === 'workflow' && config.site === siteId
+		)?.config.workflow;
+	}, [contentType, siteId]);
+	const [workflow] = workflowsConnector.hooks.useWorkflow(workflowId, siteId);
+	const currentWorkflowState = useWorkflowState(contentItem, workflow);
 
 	const guardsMeta = useMemo(
 		() => ({
@@ -180,6 +193,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 			tenantId,
 			canUpdate,
 			canDelete,
+			workflow,
 		};
 
 		return (
@@ -198,7 +212,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	const pageTitle = `${contentItemLabel ? `'${contentItemLabel}'` : 'Content'} ${t(
 		CORE_TRANSLATIONS.ROUTING_UPDATE
 	)}`;
-	const badges = generateDetailBadges(contentItem, contentType);
+	const badges = generateDetailBadges(contentItem, contentType, currentWorkflowState?.data.name);
 
 	const render = (): ReactElement => {
 		return (
