@@ -178,6 +178,13 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			);
 		});
 	}, [machine]);
+	const canTransition = useMemo(
+		() =>
+			machine?.transition(machine?.initialState, {
+				type: `to-${contentItemDraft.meta.workflowState}`,
+			}).changed,
+		[contentItemDraft.meta.workflowState, machine]
+	);
 
 	const internalCompartments = useMemo(() => {
 		return INTERNAL_COMPARTMENTS(
@@ -805,7 +812,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 									ContentSystemNames.PUBLISHED) ||
 							(contentItemDraft?.meta.workflowState ===
 								ContentSystemNames.PUBLISHED &&
-								!!contentItem?.meta?.historySummary?.published)
+								!!contentItem?.meta?.historySummary?.published) ||
+							!canTransition
 						}
 						disableUpdatePublication={
 							(!hasChanges &&
