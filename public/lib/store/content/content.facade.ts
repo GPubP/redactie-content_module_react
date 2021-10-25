@@ -286,19 +286,17 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 						? {
 								urlPath: {
 									...state.contentItemDraft?.meta.urlPath,
-									alias: {
-										nl: {
-											value: contentType.meta.urlPath?.pattern
-												? pathJoin([
-														contentType.meta.urlPath?.pattern || '/',
-														data.slug?.nl || '',
-												  ])
-												: `/${data.slug?.nl || ''}`,
-											pattern: pathJoin([
-												contentType.meta.urlPath?.pattern || '/',
-												'[item:slug]',
-											]),
-										},
+									nl: {
+										value: contentType.meta.urlPath?.pattern
+											? pathJoin([
+													contentType.meta.urlPath?.pattern || '/',
+													data.slug?.nl || '',
+											  ])
+											: `/${data.slug?.nl || ''}`,
+										pattern: pathJoin([
+											contentType.meta.urlPath?.pattern || '/',
+											'[item:slug]',
+										]),
 									},
 								},
 						  }
