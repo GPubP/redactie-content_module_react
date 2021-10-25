@@ -1,4 +1,5 @@
 import { ContentTypeFieldSchema } from '@redactie/form-renderer-module';
+import { SiteDetailModel } from '@redactie/sites-module';
 import kebabCase from 'lodash.kebabcase';
 import {
 	always,
@@ -340,6 +341,7 @@ export const runAllSubmitHooks = (
 	contentType: ContentTypeSchema,
 	contentItemDraft: ContentSchema,
 	contentItem: ContentSchema | undefined,
+	site: SiteDetailModel | undefined,
 	type: 'beforeSubmit' | 'afterSubmit',
 	error?: any
 ): Promise<{
@@ -349,12 +351,14 @@ export const runAllSubmitHooks = (
 }> => {
 	const allPromises = compartments.reduce((acc, compartment) => {
 		if (type === 'beforeSubmit' && typeof compartment.beforeSubmit === 'function') {
-			acc.push(compartment.beforeSubmit(contentItemDraft, contentType, contentItem));
+			acc.push(compartment.beforeSubmit(contentItemDraft, contentType, contentItem, site));
 			return acc;
 		}
 
 		if (type === 'afterSubmit' && typeof compartment.afterSubmit === 'function') {
-			acc.push(compartment.afterSubmit(error, contentItemDraft, contentType, contentItem));
+			acc.push(
+				compartment.afterSubmit(error, contentItemDraft, contentType, contentItem, site)
+			);
 			return acc;
 		}
 

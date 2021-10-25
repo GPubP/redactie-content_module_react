@@ -18,6 +18,7 @@ import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import rolesRightsConnector from '../../connectors/rolesRights';
+import sitesConnector from '../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ALERT_CONTAINER_IDS, ContentRouteProps } from '../../content.types';
@@ -76,6 +77,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [site] = sitesConnector.hooks.useSite(siteId);
 
 	useEffect(() => {
 		if (
@@ -179,6 +181,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 					contentType,
 					response,
 					undefined,
+					site,
 					'afterSubmit'
 				).then(({ hasRejected }) => {
 					if (!hasRejected) {
@@ -197,6 +200,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 					contentType,
 					(request as unknown) as ContentSchema,
 					undefined,
+					site,
 					'afterSubmit',
 					error
 				);
