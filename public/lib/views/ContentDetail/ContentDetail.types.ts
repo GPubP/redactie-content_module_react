@@ -1,4 +1,5 @@
 import { SiteDetailModel } from '@redactie/sites-module';
+import { WorkflowDetailModel } from '@redactie/workflows-module';
 
 import { ContentModel, ContentSchema, ContentTypeSchema } from '../../api/api.types';
 import { ContentRouteProps } from '../../content.types';
@@ -16,6 +17,7 @@ export interface ContentDetailChildRouteProps<T = ContentDetailMatchProps>
 	contentItem: ContentSchema;
 	canUpdate: boolean;
 	canDelete: boolean;
+	workflow: WorkflowDetailModel;
 }
 
 export interface ExternalActionProps {

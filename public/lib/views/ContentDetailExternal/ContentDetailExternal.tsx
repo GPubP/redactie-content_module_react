@@ -13,7 +13,7 @@ import {
 
 const ContentDetailExternal: FC<ContentDetailExternalRouteProps<
 	ContentDetailExternalMatchProps
->> = ({ contentType, contentItem, contentItemLoading, onCancel, onSubmit, match }) => {
+>> = ({ contentType, contentItem, contentItemLoading, onCancel, onSubmit, match, workflow }) => {
 	const { tab, contentId, siteId } = match.params;
 
 	/**
@@ -59,6 +59,7 @@ const ContentDetailExternal: FC<ContentDetailExternalRouteProps<
 			updateContentItem={() => null}
 			value={getExternalTabValue(mapExternalTabToTab(activeTab))}
 			isLoading={contentItemLoading === LoadingState.Loading}
+			workflow={workflow}
 		/>
 	) : null;
 };

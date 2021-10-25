@@ -32,12 +32,12 @@ import {
 import { useExternalTabsFacade } from '../../store/api/externalTabs';
 import { contentFacade } from '../../store/content';
 import { contentTypesFacade } from '../../store/contentTypes';
+import { useWorkflowState } from '../../hooks/useWorkflowState';
 
 import { CONTENT_UPDATE_TAB_MAP, CONTENT_UPDATE_TABS } from './ContentDetail.const';
 import { ContentDetailMatchProps } from './ContentDetail.types';
 
 import './ContentDetail.scss';
-import { useWorkflowState } from '../../hooks/useWorkflowState';
 
 const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	match,
