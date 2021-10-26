@@ -163,10 +163,36 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		return machine.initialState.nextEvents.filter(nextEvent => {
 			return (
 				machine.transition(machine.initialState, nextEvent).changed ||
-				`to-${machine.initialState.value}` === nextEvent
+				(`to-${machine.initialState.value}` === nextEvent &&
+					machine.options.guards.userHasRole(
+						machine.context,
+						nextEvent as any,
+						{
+							cond: path(
+								[
+									'machine',
+									'config',
+									'states',
+									machine.initialState.value.toString(),
+									'on',
+									nextEvent,
+									'cond',
+								],
+								machine
+							),
+						} as any
+					))
 			);
 		});
 	}, [machine]);
+	const canTransition = useMemo(
+		() =>
+			allowedTransitions.includes(
+				`to-${contentItemDraft.meta.workflowState ||
+					(ContentSystemNames as Record<string, string>)[contentItemDraft.meta.status]}`
+			),
+		[allowedTransitions, contentItemDraft.meta.status, contentItemDraft.meta.workflowState]
+	);
 
 	const internalCompartments = useMemo(() => {
 		return INTERNAL_COMPARTMENTS(
@@ -515,6 +541,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			contentType,
 			contentDraft,
 			contentItem,
+			site,
 			'beforeSubmit'
 		).then(({ hasRejected, errorMessages, contentItem }) => {
 			if (!hasRejected) {
@@ -595,9 +622,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			.then((contentItem: ContentSchema) => {
 				onSubmit(contentItem, activeCompartment, compartments);
 			})
-			.catch(() => {
-				/**/
-			});
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			.catch(() => {});
 
 		setHasSubmit(true);
 	};
@@ -637,15 +663,16 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			contentItemDraft?.meta?.status !== ContentStatus.UNPUBLISHED &&
 			!!contentItem?.meta?.historySummary?.published
 		) {
-			return beforeSubmit(contentItemDraft)
-				.then((contentItem: ContentSchema) => {
-					onUpdatePublication(contentItem, compartments);
-					setIsSubmitting(false);
-					setShowConfirmModal(false);
-				})
-				.catch(() => {
-					/**/
-				});
+			return (
+				beforeSubmit(contentItemDraft)
+					.then((contentItem: ContentSchema) => {
+						onUpdatePublication(contentItem, compartments);
+						setIsSubmitting(false);
+						setShowConfirmModal(false);
+					})
+					// eslint-disable-next-line @typescript-eslint/no-empty-function
+					.catch(() => {})
+			);
 		}
 
 		let data = contentItemDraft;
@@ -794,7 +821,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 									ContentSystemNames.PUBLISHED) ||
 							(contentItemDraft?.meta.workflowState ===
 								ContentSystemNames.PUBLISHED &&
-								!!contentItem?.meta?.historySummary?.published)
+								!!contentItem?.meta?.historySummary?.published) ||
+							!canTransition
 						}
 						disableUpdatePublication={
 							(!hasChanges &&

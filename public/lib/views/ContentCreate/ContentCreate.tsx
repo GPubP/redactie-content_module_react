@@ -18,6 +18,7 @@ import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import rolesRightsConnector from '../../connectors/rolesRights';
+import sitesConnector from '../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import workflowsConnector from '../../connectors/workflows';
 import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
@@ -88,6 +89,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		)?.config.workflow;
 	}, [contentType, siteId]);
 	const [workflow] = workflowsConnector.hooks.useWorkflow(workflowId, siteId);
+	const [site] = sitesConnector.hooks.useSite(siteId);
 
 	useEffect(() => {
 		if (
@@ -191,6 +193,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 					contentType,
 					response,
 					undefined,
+					site,
 					'afterSubmit'
 				).then(({ hasRejected }) => {
 					if (!hasRejected) {
@@ -209,6 +212,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 					contentType,
 					(request as unknown) as ContentSchema,
 					undefined,
+					site,
 					'afterSubmit',
 					error
 				);

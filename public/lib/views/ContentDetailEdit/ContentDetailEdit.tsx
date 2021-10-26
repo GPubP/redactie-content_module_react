@@ -12,6 +12,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ContentSchema } from '../../api/api.types';
 import rolesRightsConnector from '../../connectors/rolesRights';
+import sitesConnector from '../../connectors/sites';
 import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ALERT_CONTAINER_IDS } from '../../content.types';
 import { getInitialContentValues, getTimeUntilLockExpires, runAllSubmitHooks } from '../../helpers';
@@ -49,6 +50,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		contentItemDraft,
 		BFF_MODULE_PUBLIC_PATH
 	);
+	const [site] = sitesConnector.hooks.useSite(siteId);
 
 	const workerData = useMemo(
 		() =>
@@ -139,6 +141,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 				contentType,
 				newContent || contentItemDraft,
 				contentItem,
+				site,
 				'afterSubmit'
 			);
 
@@ -149,6 +152,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 				contentType,
 				contentItemDraft,
 				contentItem,
+				site,
 				'afterSubmit',
 				error
 			);
