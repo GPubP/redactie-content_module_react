@@ -43,7 +43,6 @@ import {
 	runAllSubmitHooks,
 	validateCompartments,
 } from '../../helpers/contentCompartments';
-import { pathJoin } from '../../helpers/pathJoin';
 import { setValidity } from '../../helpers/setValidity';
 import {
 	useContentAction,
@@ -526,6 +525,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			contentType,
 			contentDraft,
 			contentItem,
+			site,
 			'beforeSubmit'
 		).then(({ hasRejected, errorMessages, contentItem }) => {
 			if (!hasRejected) {
@@ -606,9 +606,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			.then((contentItem: ContentSchema) => {
 				onSubmit(contentItem, activeCompartment, compartments);
 			})
-			.catch(() => {
-				/**/
-			});
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			.catch(() => {});
 
 		setHasSubmit(true);
 	};
@@ -648,15 +647,16 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			contentItemDraft?.meta?.status !== ContentStatus.UNPUBLISHED &&
 			!!contentItem?.meta?.historySummary?.published
 		) {
-			return beforeSubmit(contentItemDraft)
-				.then((contentItem: ContentSchema) => {
-					onUpdatePublication(contentItem, compartments);
-					setIsSubmitting(false);
-					setShowConfirmModal(false);
-				})
-				.catch(() => {
-					/**/
-				});
+			return (
+				beforeSubmit(contentItemDraft)
+					.then((contentItem: ContentSchema) => {
+						onUpdatePublication(contentItem, compartments);
+						setIsSubmitting(false);
+						setShowConfirmModal(false);
+					})
+					// eslint-disable-next-line @typescript-eslint/no-empty-function
+					.catch(() => {})
+			);
 		}
 
 		let data = contentItemDraft;

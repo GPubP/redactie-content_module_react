@@ -1,4 +1,5 @@
 import { ActiveState, EntityState } from '@datorama/akita';
+import { SiteDetailModel } from '@redactie/sites-module';
 import { FC } from 'react';
 
 import { ContentSchema, ContentTypeSchema, ModuleSettings } from '../../../api/api.types';
@@ -18,7 +19,8 @@ export interface ContentCompartmentRegisterOptions {
 export type ContentCompartmentBeforeSubmitFn<M = ModuleValue> = (
 	contentItemDraft: ContentSchema,
 	contentType: ContentTypeSchema,
-	contentItem: ContentSchema | undefined
+	contentItem: ContentSchema | undefined,
+	site?: SiteDetailModel
 ) => Promise<M | void>;
 
 export interface ResponseError {
@@ -29,7 +31,8 @@ export type ContentCompartmentAfterSubmitFn<M = ModuleValue> = (
 	error: Error | ResponseError | undefined,
 	contentItemDraft: ContentSchema,
 	contentType: ContentTypeSchema,
-	contentItem: ContentSchema | undefined
+	contentItem: ContentSchema | undefined,
+	site?: SiteDetailModel
 ) => Promise<M | void>;
 
 export interface ContentCompartmentsValidateOptions {
