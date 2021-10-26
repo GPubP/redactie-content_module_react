@@ -35,6 +35,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	tenantId,
 	canUpdate,
 	canDelete,
+	workflow,
 }) => {
 	const { siteId, contentId, contentTypeId } = match.params;
 	/**
@@ -213,6 +214,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 			onUpdatePublication,
 			showPublishedStatus: true,
 			showDeleteButton: canDelete,
+			workflow,
 		};
 
 		return (

@@ -1,5 +1,6 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { ContextHeaderTab, FilterItem, LoadingState } from '@redactie/utils';
+import { WorkflowDetailModel } from '@redactie/workflows-module';
 
 import { ContentStatus, ContentTypeSchema } from './api/api.types';
 import { PublishedStatuses } from './components';
@@ -94,6 +95,7 @@ export interface ContentDetailExternalRouteProps<Params = ContentExternalRoutePa
 	readonly contentItem: ContentModel;
 	readonly contentType: ContentTypeSchema;
 	readonly contentItemLoading: LoadingState;
+	readonly workflow: WorkflowDetailModel;
 	onCancel: () => void;
 	onSubmit: (data: ExternalTabValue, tab: Tab, cb?: () => void) => void;
 }

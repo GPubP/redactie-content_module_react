@@ -5,7 +5,8 @@ import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../services/conte
 
 export const generateDetailBadges = (
 	contentItem: ContentSchema | undefined,
-	contentType: ContentTypeSchema | null | undefined
+	contentType: ContentTypeSchema | null | undefined,
+	workflowStateLabel?: string
 ): ContextHeaderBadge[] => {
 	if (!contentItem || !contentType) {
 		return [];
@@ -15,7 +16,11 @@ export const generateDetailBadges = (
 	const status = contentItem.meta.status as ContentStatus;
 
 	const contentTypeLabel = contentType.meta.label;
-	const statusLabel = status ? CONTENT_STATUS_TRANSLATION_MAP[status] : '';
+	const statusLabel = workflowStateLabel
+		? workflowStateLabel
+		: status
+		? CONTENT_STATUS_TRANSLATION_MAP[status]
+		: '';
 
 	const contentTypeBadge: ContextHeaderBadge = { name: contentTypeLabel, type: 'primary' };
 	const contentTypeTypeBadge: ContextHeaderBadge = {

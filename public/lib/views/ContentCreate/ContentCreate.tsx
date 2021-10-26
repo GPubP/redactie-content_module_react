@@ -20,6 +20,7 @@ import { useHistory } from 'react-router-dom';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import sitesConnector from '../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import workflowsConnector from '../../connectors/workflows';
 import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ALERT_CONTAINER_IDS, ContentRouteProps } from '../../content.types';
 import { getInitialContentValues, runAllSubmitHooks } from '../../helpers';
@@ -29,6 +30,7 @@ import {
 	useMyContentTypeRights,
 	useRoutesBreadcrumbs,
 } from '../../hooks';
+import { useWorkflowState } from '../../hooks/useWorkflowState';
 import {
 	ContentCreateSchema,
 	ContentSchema,
@@ -77,6 +79,16 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const workflowId = useMemo(() => {
+		if (!contentType || !siteId) {
+			return;
+		}
+
+		return contentType.modulesConfig?.find(
+			config => config.name === 'workflow' && config.site === siteId
+		)?.config.workflow;
+	}, [contentType, siteId]);
+	const [workflow] = workflowsConnector.hooks.useWorkflow(workflowId, siteId);
 	const [site] = sitesConnector.hooks.useSite(siteId);
 
 	useEffect(() => {
@@ -223,6 +235,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			isCreating: true,
 			onCancel: navigateToOverview,
 			onSubmit,
+			workflow,
 		};
 
 		return (
