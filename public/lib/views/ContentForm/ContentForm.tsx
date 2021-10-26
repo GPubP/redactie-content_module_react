@@ -155,8 +155,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		return createMachine(config.value, config.options);
 	}, [contentItem, contentItemDraft, initialStatus, roles, workflow]);
 
-	console.log(workflow, machine);
-
 	const allowedTransitions = useMemo(() => {
 		if (!machine) {
 			return [];
