@@ -173,10 +173,36 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		return machine.initialState.nextEvents.filter(nextEvent => {
 			return (
 				machine.transition(machine.initialState, nextEvent).changed ||
-				`to-${machine.initialState.value}` === nextEvent
+				(`to-${machine.initialState.value}` === nextEvent &&
+					machine.options.guards.userHasRole(
+						machine.context,
+						nextEvent as any,
+						{
+							cond: path(
+								[
+									'machine',
+									'config',
+									'states',
+									machine.initialState.value.toString(),
+									'on',
+									nextEvent,
+									'cond',
+								],
+								machine
+							),
+						} as any
+					))
 			);
 		});
 	}, [machine]);
+	const canTransition = useMemo(
+		() =>
+			allowedTransitions.includes(
+				`to-${contentItemDraft.meta.workflowState ||
+					(ContentSystemNames as Record<string, string>)[contentItemDraft.meta.status]}`
+			),
+		[allowedTransitions, contentItemDraft.meta.status, contentItemDraft.meta.workflowState]
+	);
 
 	const internalCompartments = useMemo(() => {
 		return INTERNAL_COMPARTMENTS(
@@ -805,7 +831,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 									ContentSystemNames.PUBLISHED) ||
 							(contentItemDraft?.meta.workflowState ===
 								ContentSystemNames.PUBLISHED &&
-								!!contentItem?.meta?.historySummary?.published)
+								!!contentItem?.meta?.historySummary?.published) ||
+							!canTransition
 						}
 						disableUpdatePublication={
 							(!hasChanges &&
