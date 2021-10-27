@@ -6,8 +6,8 @@ import { WORKING_TITLE_KEY } from '../../content.const';
 import { ALERT_CONTAINER_IDS } from '../../content.types';
 import { pathJoin } from '../../helpers/pathJoin';
 import {
-	contentApiService,
 	ContentApiService,
+	contentApiService,
 	ContentCreateSchema,
 	ContentSchema,
 	ContentSystemNames,

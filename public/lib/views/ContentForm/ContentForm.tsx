@@ -128,7 +128,16 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	const [{ actions }, registerAction] = useContentAction();
 	const [externalActions] = useExternalAction();
 	const [, roles] = rolesRightsConnector.api.hooks.useUserRolesForSite();
-	const [initialStatus, setInitialStatus] = useState<string | undefined>();
+
+	const initialStatus = useMemo(
+		() =>
+			isCreating
+				? ContentSystemNames.NEW
+				: contentItem?.meta.workflowState ||
+				  contentItemDraft?.meta.workflowState ||
+				  (ContentSystemNames as Record<string, string>)[contentItem?.meta.status],
+		[contentItem, contentItemDraft, isCreating]
+	);
 
 	const machine = useMemo<
 		StateMachine<StateMachineContext, any, StateMachineEvent> | undefined
@@ -448,18 +457,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		);
 	}, [contentItem]); // eslint-disable-line
 
-	useEffect(() => {
-		if (!contentItemDraft || (initialStatus && hasChanges)) {
-			return;
-		}
-
-		setInitialStatus(
-			contentItem?.meta.workflowState ||
-				contentItemDraft?.meta.workflowState ||
-				(ContentSystemNames as Record<string, string>)[contentItem?.meta.status]
-		);
-	}, [contentItem, contentItemDraft, initialStatus]); // eslint-disable-line react-hooks/exhaustive-deps
-
 	/**
 	 * Methods
 	 */
@@ -504,7 +501,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				}
 
 				contentFacade.updateContentMetaDraft(metaValues, contentType);
-
 				break;
 			}
 			case CompartmentType.MODULE:
@@ -689,6 +685,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 					publishTime: null,
 					unpublishTime: null,
 					status: ContentStatus.UNPUBLISHED,
+					workflowState: ContentSystemNames.UNPUBLISHED,
 				},
 			};
 		} else {
@@ -697,11 +694,16 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				meta: {
 					...data.meta,
 					publishTime: null,
-					status:
-						contentItemDraft.meta.unpublishTime &&
-						contentItemDraft.meta.unpublishTime < new Date().toISOString()
-							? ContentStatus.UNPUBLISHED
-							: ContentStatus.PUBLISHED,
+					...(contentItemDraft.meta.unpublishTime &&
+					contentItemDraft.meta.unpublishTime < new Date().toISOString()
+						? {
+								status: ContentStatus.UNPUBLISHED,
+								workflowState: ContentSystemNames.UNPUBLISHED,
+						  }
+						: {
+								status: ContentStatus.PUBLISHED,
+								workflowState: ContentSystemNames.PUBLISHED,
+						  }),
 				},
 			};
 		}
@@ -718,7 +720,21 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			(contentItemDraft?.meta.status === ContentStatus.PUBLISHED &&
 				contentItem?.meta.status === ContentStatus.PUBLISHED)
 		) {
-			onFormSubmit(contentItemDraft);
+			// Save item as DRAFT when the latest version of the content item is already set to publish
+			const item =
+				contentItemDraft.meta.status === ContentStatus.PUBLISHED
+					? {
+							...contentItemDraft,
+							meta: {
+								...contentItemDraft.meta,
+								status: ContentStatus.DRAFT,
+								workflowState: ContentSystemNames.DRAFT,
+							},
+					  }
+					: contentItemDraft;
+
+			onFormSubmit(item);
+			setIsSubmitting(false);
 			return;
 		}
 
@@ -815,22 +831,18 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						onUpdatePublication={updatePublication}
 						onCancel={handleCancel}
 						disableSave={
-							(!hasChanges &&
-								contentItem?.meta.workflowState === ContentSystemNames.PUBLISHED &&
-								contentItemDraft?.meta.workflowState ===
-									ContentSystemNames.PUBLISHED) ||
+							!hasChanges ||
+							!canTransition ||
 							(contentItemDraft?.meta.workflowState ===
 								ContentSystemNames.PUBLISHED &&
-								!!contentItem?.meta?.historySummary?.published) ||
-							!canTransition
+								!allowedTransitions.includes(`to-${ContentSystemNames.DRAFT}`))
 						}
 						disableUpdatePublication={
-							(!hasChanges &&
-								allowedTransitions.includes(
-									`to-${ContentSystemNames.PUBLISHED}`
-								)) ||
+							!contentItemDraft?.meta.historySummary?.published ||
 							!allowedTransitions.includes(`to-${ContentSystemNames.PUBLISHED}`) ||
-							contentItemDraft?.meta.workflowState !== ContentSystemNames.PUBLISHED
+							(!hasChanges &&
+								contentItemDraft?.meta.workflowState ===
+									ContentSystemNames.PUBLISHED)
 						}
 					/>
 				</ActionBarContentSection>
