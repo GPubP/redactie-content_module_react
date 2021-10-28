@@ -127,7 +127,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 					});
 					alertService.success(
 						alertProps.create.success,
-						this.alertContainerProps.create
+						this.alertContainerProps.update
 					);
 				}
 				return response;
@@ -153,14 +153,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		return this.service
 			.removeContentItem(siteId, contentId)
 			.then(response => {
-				setTimeout(
-					() =>
-						alertService.success(
-							alertProps.remove.success,
-							this.alertContainerProps.remove
-						),
-					100
-				);
+				alertService.success(alertProps.remove.success, this.alertContainerProps.remove);
 
 				return response;
 			})
