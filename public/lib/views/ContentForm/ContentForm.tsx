@@ -64,7 +64,7 @@ import {
 	CONTENT_EDIT_ALLOWED_PATHS,
 	INTERNAL_COMPARTMENTS,
 } from './ContentForm.const';
-import { AlertState, ContentFormMatchProps, ContentFormRouteProps } from './ContentForm.types';
+import { ContentFormMatchProps, ContentFormRouteProps } from './ContentForm.types';
 
 const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	history,
@@ -117,7 +117,12 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		confirmButtonIcon?: string;
 		action?: string;
 	}>();
-	const [alertState, setAlertState] = useState<AlertState>();
+	const [alertState, setAlertState] = useState<{
+		type: 'danger' | 'warning';
+		title: string;
+		message: ReactElement;
+		confirm?: string;
+	}>();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [site] = sitesConnector.hooks.useSite(siteId);
 	const [{ actions }, registerAction] = useContentAction();
@@ -219,12 +224,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		return title ? `'${title}'` : 'Content';
 	};
 
-	const getAlertState = (
-		publishTime: string,
-		unpublishTime: string,
-		status: string,
-		isPublished: boolean
-	): void => {
+	const getAlertState = (publishTime: string, unpublishTime: string): void => {
 		if (publishTime && publishTime < new Date().toISOString()) {
 			setAlertState(CONTENT_ALERT_MAP(publishTime).invalidPublishTime);
 			return;
@@ -235,17 +235,12 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			return;
 		}
 
-		if (publishTime && status === ContentStatus.PENDING_PUBLISH) {
+		if (publishTime) {
 			setAlertState(CONTENT_ALERT_MAP(publishTime).publishTime);
 			return;
 		}
 
-		if (publishTime && status !== ContentStatus.PENDING_PUBLISH) {
-			setAlertState(CONTENT_ALERT_MAP(publishTime).publishTimeNonPending);
-			return;
-		}
-
-		if (unpublishTime && isPublished) {
+		if (unpublishTime) {
 			setAlertState(CONTENT_ALERT_MAP(unpublishTime).unpublishTime);
 			return;
 		}
@@ -388,40 +383,27 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						<>
 							{alertState?.message}
 							<div className="row end-xs u-margin-top">
-								{alertState?.cancel && (
-									<Button
-										outline
-										type="danger"
-										className="u-margin-right-xs"
-										onClick={navigateToPlanning}
-									>
-										{alertState?.cancelLabel}
-									</Button>
-								)}
-								{alertState?.confirm && (
-									<Button
-										type="danger"
-										onClick={() => {
-											getModalState(
-												ContentStatus.UNPUBLISHED,
-												(contentItem?.meta.publishTime as string) ??
-													undefined,
-												(contentItem?.meta.unpublishTime as string) ??
-													undefined
-											);
-											setShowConfirmModal(true);
-										}}
-									>
-										{alertState?.confirmLabel}
-									</Button>
-								)}
-								{alertState.actions &&
-									alertState.actions({
-										navigate,
-										siteId,
-										contentId,
-										contentTypeId,
-									})}
+								<Button
+									outline
+									type="danger"
+									className="u-margin-right-xs"
+									onClick={navigateToPlanning}
+								>
+									Herbekijk planning
+								</Button>
+								<Button
+									type="danger"
+									onClick={() => {
+										getModalState(
+											ContentStatus.UNPUBLISHED,
+											(contentItem?.meta.publishTime as string) ?? undefined,
+											(contentItem?.meta.unpublishTime as string) ?? undefined
+										);
+										setShowConfirmModal(true);
+									}}
+								>
+									{alertState?.confirm}
+								</Button>
 							</div>
 						</>
 					),
@@ -440,18 +422,17 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 					<>
 						{alertState?.message}
 						<div className="row end-xs u-margin-top">
-							{alertState.cancel && (
-								<Button
-									outline
-									type="warning"
-									className="u-margin-right-xs"
-									onClick={() => alertService.dismiss()}
-								>
-									{alertState?.cancelLabel}
-								</Button>
-							)}
-							{alertState.actions &&
-								alertState.actions({ navigate, siteId, contentId, contentTypeId })}
+							<Button
+								outline
+								type="warning"
+								className="u-margin-right-xs"
+								onClick={() => alertService.dismiss()}
+							>
+								Behoud datum
+							</Button>
+							<Button type="warning" onClick={navigateToPlanning}>
+								Bekijk planning
+							</Button>
 						</div>
 					</>
 				),
@@ -472,11 +453,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		getAlertState(
 			contentItem?.meta.publishTime as string,
-			contentItem?.meta.unpublishTime as string,
-			contentItem?.meta.status as string,
-			contentItem?.meta.historySummary?.published as boolean
+			contentItem?.meta.unpublishTime as string
 		);
-	}, [contentItem, canTransition]); // eslint-disable-line
+	}, [contentItem]); // eslint-disable-line
 
 	/**
 	 * Methods

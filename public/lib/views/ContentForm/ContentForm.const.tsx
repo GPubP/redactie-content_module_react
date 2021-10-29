@@ -1,7 +1,6 @@
-import { Button } from '@acpaas-ui/react-components';
 import { WorkflowDetailModel, WorkflowPopulatedTransition } from '@redactie/workflows-module';
 import moment from 'moment';
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import { ContentSchema, ContentTypeSchema } from '../../api/api.types';
 import {
@@ -15,8 +14,6 @@ import {
 import { PLANNING_VALIDATION_SCHEMA } from '../../components/forms/PlanningForm/PlanningForm.const';
 import { DATE_FORMATS, MODULE_PATHS, TENANT_ROOT } from '../../content.const';
 import { CompartmentType, ContentCompartmentModel } from '../../store/ui/contentCompartments';
-
-import { AlertState } from './ContentForm.types';
 
 export const INTERNAL_COMPARTMENTS = (
 	siteId: string,
@@ -133,30 +130,15 @@ export enum ContentModalStatus {
 	updatePublication = 'updatePublication',
 }
 
-const DefaultWarningAlertMessage: AlertState['actions'] = ({
-	navigate,
-	siteId,
-	contentId,
-	contentTypeId,
-}) => (
-	<Button
-		type="warning"
-		onClick={() =>
-			navigate(`${MODULE_PATHS.detailEdit}/planning`, {
-				siteId,
-				contentId,
-				contentTypeId,
-			})
-		}
-	>
-		Bekijk planning
-	</Button>
-);
-
 export const CONTENT_ALERT_MAP = (
 	date: string
 ): {
-	[key: string]: AlertState;
+	[key: string]: {
+		type: 'danger' | 'warning';
+		title: string;
+		message: ReactElement;
+		confirm?: string;
+	};
 } => ({
 	publishTime: {
 		type: 'warning',
@@ -169,9 +151,6 @@ export const CONTENT_ALERT_MAP = (
 				deze datum niet correct is.
 			</>
 		),
-		actions: DefaultWarningAlertMessage,
-		cancel: true,
-		cancelLabel: 'Behoud datum',
 	},
 	unpublishTime: {
 		type: 'warning',
@@ -184,9 +163,6 @@ export const CONTENT_ALERT_MAP = (
 				deze datum niet correct is.
 			</>
 		),
-		actions: DefaultWarningAlertMessage,
-		cancel: true,
-		cancelLabel: 'Behoud datum',
 	},
 	invalidPublishTime: {
 		type: 'danger',
@@ -200,10 +176,7 @@ export const CONTENT_ALERT_MAP = (
 				aanpassen naar een datum in de toekomst.
 			</>
 		),
-		confirm: true,
-		confirmLabel: 'Publiceer nu',
-		cancel: true,
-		cancelLabel: 'Herbekijk planning',
+		confirm: 'Publiceer nu',
 	},
 	invalidUnpublishTime: {
 		type: 'danger',
@@ -217,39 +190,6 @@ export const CONTENT_ALERT_MAP = (
 				aanpassen naar een datum in de toekomst.
 			</>
 		),
-		confirm: true,
-		confirmLabel: 'Archiveer nu',
-		cancel: true,
-		cancelLabel: 'Herbekijk planning',
-	},
-	publishTimeNonPending: {
-		type: 'warning',
-		title: 'De pagina of wijzigingen zullen niet online verschijnen op de publicatiedatum',
-		message: (
-			<>
-				Je hebt de publicatiedatum ingesteld op{' '}
-				<strong>{moment(date).format(DATE_FORMATS.date)}</strong> om{' '}
-				<strong>{moment(date).format(DATE_FORMATS.time)}</strong>. De pagina zal alleen
-				online verschijnen op de gekozen datum als je de status &quot;Klaar voor
-				publicatie&quot; kiest.
-			</>
-		),
-		actions({ navigate, siteId, contentId, contentTypeId }) {
-			return (
-				<Button
-					type="warning"
-					onClick={() =>
-						navigate(`${MODULE_PATHS.detailEdit}/status`, {
-							siteId,
-							contentId,
-							contentTypeId,
-						})
-					}
-				>
-					Bekijk statussen
-				</Button>
-			);
-		},
-		cancel: false,
+		confirm: 'Archiveer nu',
 	},
 });
