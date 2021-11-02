@@ -246,7 +246,10 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			lastEditor: content.meta?.lastEditor,
 			status: content.meta?.historySummary
 				? CONTENT_STATUS_TRANSLATION_MAP[
-						getLatestStatus(content.meta.historySummary as ContentHistorySummary)
+						getLatestStatus(
+							content.meta.historySummary as ContentHistorySummary,
+							content.meta.status
+						)
 				  ]
 				: '',
 			published: content.meta?.published,

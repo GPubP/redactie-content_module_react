@@ -6,7 +6,10 @@ import {
 	ContentStatusKeys,
 } from '../../services/content';
 
-export const getLatestStatus = (historySummary: ContentHistorySummary): ContentStatusKeys => {
+export const getLatestStatus = (
+	historySummary: ContentHistorySummary,
+	status: string
+): ContentStatusKeys => {
 	let latestStatus: ContentStatusKeys | undefined;
 
 	Object.values(CONTENT_STATUS_API_MAP).some(statusKey => {
@@ -16,11 +19,16 @@ export const getLatestStatus = (historySummary: ContentHistorySummary): ContentS
 			latestStatus = status.type;
 			return true;
 		}
+
 		return false;
 	});
 
 	if (!latestStatus) {
-		return historySummary.published ? ContentStatus.PUBLISHED : ContentStatus.DRAFT;
+		return historySummary.published
+			? ContentStatus.PUBLISHED
+			: status === ContentStatus.UNPUBLISHED
+			? ContentStatus.UNPUBLISHED
+			: ContentStatus.DRAFT;
 	}
 
 	return latestStatus;
