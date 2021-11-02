@@ -44,9 +44,12 @@ export interface ContentFormRouteProps<T> extends ContentRouteProps<T> {
 		content: ContentSchema,
 		activeCompartment: ContentCompartmentModel,
 		compartments: ContentCompartmentModel[]
-	) => void;
+	) => Promise<void>;
 	onStatusClick: () => void;
-	onUpdatePublication: (content: ContentSchema, compartments: ContentCompartmentModel[]) => void;
+	onUpdatePublication: (
+		content: ContentSchema,
+		compartments: ContentCompartmentModel[]
+	) => Promise<void>;
 	workflow: WorkflowDetailResponse;
 }
 
@@ -82,6 +85,7 @@ export interface AlertState {
 	confirmLabel?: string;
 	cancel?: boolean;
 	cancelLabel?: string;
+	containerId?: string;
 	actions?: FC<{
 		navigate: NavigateFn;
 		siteId: string;

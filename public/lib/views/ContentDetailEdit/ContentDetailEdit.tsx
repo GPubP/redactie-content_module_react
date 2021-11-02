@@ -166,8 +166,8 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		contentItemDraft: ContentSchema,
 		activeCompartment: ContentCompartmentModel,
 		compartments: ContentCompartmentModel[]
-	): void => {
-		updateContentItem(contentItemDraft, compartments);
+	): Promise<void> => {
+		return updateContentItem(contentItemDraft, compartments);
 	};
 
 	const onDelete = (): Promise<void> => {
@@ -182,10 +182,10 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 		});
 	};
 
-	const onUpdatePublication = (
+	const onUpdatePublication = async (
 		content: ContentSchema,
 		compartments: ContentCompartmentModel[]
-	): void => {
+	): Promise<void> => {
 		const data = {
 			...content,
 			meta: {
@@ -195,7 +195,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 			},
 		};
 
-		updateContentItem(data, compartments);
+		await updateContentItem(data, compartments);
 	};
 
 	/**

@@ -37,6 +37,7 @@ export type ContentCompartmentAfterSubmitFn<M = ModuleValue> = (
 
 export interface ContentCompartmentsValidateOptions {
 	async: boolean;
+	allowedTransitions: string[];
 }
 
 export interface ContentCompartmentModel<

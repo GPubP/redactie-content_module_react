@@ -4,6 +4,6 @@ export const STATUS_VALIDATION_SCHEMA = (allowedWorkflowStates: string[]): Objec
 	object().shape({
 		status: string().required(),
 		workflowState: string()
-			.oneOf(allowedWorkflowStates)
-			.required(),
+			.oneOf(allowedWorkflowStates, 'Selecteer een geldige status')
+			.required('Selecteer een geldige status'),
 	});

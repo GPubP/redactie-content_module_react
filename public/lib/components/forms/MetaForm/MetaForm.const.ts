@@ -7,7 +7,7 @@ import { default as MetaFormHelper } from './MetaForm.helpers';
 export const META_VALIDATION_SCHEMA = (
 	siteId: string,
 	contentId?: string,
-	options: ContentCompartmentsValidateOptions = { async: true },
+	options: ContentCompartmentsValidateOptions = { async: true, allowedTransitions: [] },
 	isPage?: boolean
 ): ObjectSchema<any> =>
 	isPage

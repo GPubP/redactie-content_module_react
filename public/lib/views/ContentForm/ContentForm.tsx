@@ -123,15 +123,16 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	const [{ actions }, registerAction] = useContentAction();
 	const [externalActions] = useExternalAction();
 	const [, roles] = rolesRightsConnector.api.hooks.useUserRolesForSite();
+	const canCallTransitionAlert = useRef(false);
+	const transitionAlertCalled = useRef(false);
 
 	const initialStatus = useMemo(
 		() =>
 			isCreating
 				? ContentSystemNames.NEW
 				: contentItem?.meta.workflowState ||
-				  contentItemDraft?.meta.workflowState ||
 				  (ContentSystemNames as Record<string, string>)[contentItem?.meta.status],
-		[contentItem, contentItemDraft, isCreating]
+		[contentItem, isCreating]
 	);
 
 	const machine = useMemo<
@@ -157,12 +158,16 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		);
 
 		return createMachine(config.value, config.options);
-	}, [contentItem, contentItemDraft, initialStatus, roles, workflow]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [contentItem, initialStatus, roles, workflow]);
 
 	const allowedTransitions = useMemo(() => {
 		if (!machine) {
 			return [];
 		}
+
+		// This is to make sure the the alert is triggered only when all information is present
+		canCallTransitionAlert.current = true;
 
 		return machine.initialState.nextEvents.filter(nextEvent => {
 			return (
@@ -189,14 +194,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			);
 		});
 	}, [machine]);
-	const canTransition = useMemo(
-		() =>
-			allowedTransitions.includes(
-				`to-${contentItemDraft.meta.workflowState ||
-					(ContentSystemNames as Record<string, string>)[contentItemDraft.meta.status]}`
-			),
-		[allowedTransitions, contentItemDraft.meta.status, contentItemDraft.meta.workflowState]
-	);
 
 	const internalCompartments = useMemo(() => {
 		return INTERNAL_COMPARTMENTS(
@@ -226,27 +223,27 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		isPublished: boolean
 	): void => {
 		if (publishTime && publishTime < new Date().toISOString()) {
-			setAlertState(CONTENT_ALERT_MAP(publishTime).invalidPublishTime);
+			setAlertState(CONTENT_ALERT_MAP({ date: publishTime }).invalidPublishTime);
 			return;
 		}
 
 		if (unpublishTime && unpublishTime < new Date().toISOString()) {
-			setAlertState(CONTENT_ALERT_MAP(unpublishTime).invalidUnpublishTime);
+			setAlertState(CONTENT_ALERT_MAP({ date: unpublishTime }).invalidUnpublishTime);
 			return;
 		}
 
 		if (publishTime && status === ContentStatus.PENDING_PUBLISH) {
-			setAlertState(CONTENT_ALERT_MAP(publishTime).publishTime);
+			setAlertState(CONTENT_ALERT_MAP({ date: publishTime }).publishTime);
 			return;
 		}
 
 		if (publishTime && status !== ContentStatus.PENDING_PUBLISH) {
-			setAlertState(CONTENT_ALERT_MAP(publishTime).publishTimeNonPending);
+			setAlertState(CONTENT_ALERT_MAP({ date: publishTime }).publishTimeNonPending);
 			return;
 		}
 
 		if (unpublishTime && isPublished) {
-			setAlertState(CONTENT_ALERT_MAP(unpublishTime).unpublishTime);
+			setAlertState(CONTENT_ALERT_MAP({ date: unpublishTime }).unpublishTime);
 			return;
 		}
 	};
@@ -427,7 +424,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 					),
 				},
 				{
-					containerId: ALERT_CONTAINER_IDS.contentEdit,
+					containerId: alertState.containerId || ALERT_CONTAINER_IDS.contentEdit,
 				}
 			);
 			return;
@@ -457,7 +454,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				),
 			},
 			{
-				containerId: ALERT_CONTAINER_IDS.contentEdit,
+				containerId: alertState.containerId || ALERT_CONTAINER_IDS.contentEdit,
 			}
 		);
 	}, [alertState]); // eslint-disable-line
@@ -476,7 +473,25 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			contentItem?.meta.status as string,
 			contentItem?.meta.historySummary?.published as boolean
 		);
-	}, [contentItem, canTransition]); // eslint-disable-line
+	}, [contentItem]); // eslint-disable-line
+
+	useEffect(() => {
+		if (
+			canCallTransitionAlert.current &&
+			!transitionAlertCalled.current &&
+			allowedTransitions.length === 0
+		) {
+			alertService.clearWaitingQueue();
+			setAlertState(
+				CONTENT_ALERT_MAP({
+					date: '',
+				}).cannotTransition
+			);
+
+			// This is to make extra sure a change in allowedTransitions doesn't trigger the alert again
+			transitionAlertCalled.current = true;
+		}
+	}, [allowedTransitions]);
 
 	/**
 	 * Methods
@@ -605,7 +620,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			compartments,
 			contentItemDraft,
 			validate,
-			{ async: false }
+			{ async: false, allowedTransitions }
 		).catch(() => setContentLoading(false));
 
 		// Validate current form to trigger fields error states
@@ -636,8 +651,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		const modifiedContentItemDraft = set(slugLens, kebabCasedSlugs, contentItemDraft);
 
 		await beforeSubmit(modifiedContentItemDraft)
-			.then((contentItem: ContentSchema) => {
-				onSubmit(contentItem, activeCompartment, compartments);
+			.then(async (contentItem: ContentSchema) => {
+				await onSubmit(contentItem, activeCompartment, compartments);
 			})
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			.catch(() => {});
@@ -682,10 +697,10 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		) {
 			return (
 				beforeSubmit(contentItemDraft)
-					.then((contentItem: ContentSchema) => {
-						onUpdatePublication(contentItem, compartments);
-						setIsSubmitting(false);
+					.then(async (contentItem: ContentSchema) => {
 						setShowConfirmModal(false);
+						await onUpdatePublication(contentItem, compartments);
+						setIsSubmitting(false);
 					})
 					// eslint-disable-next-line @typescript-eslint/no-empty-function
 					.catch(() => {})
@@ -853,7 +868,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						onCancel={handleCancel}
 						disableSave={
 							!hasChanges ||
-							!canTransition ||
 							(contentItemDraft?.meta.workflowState ===
 								ContentSystemNames.PUBLISHED &&
 								!allowedTransitions.includes(`to-${ContentSystemNames.DRAFT}`))
