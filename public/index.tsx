@@ -189,6 +189,19 @@ if (rolesRightsConnector.api) {
 						],
 					},
 					{
+						path: MODULE_PATHS.detailExternalChild,
+						breadcrumb: false,
+						component: ContentDetailExternal,
+						guardOptions: {
+							guards: [
+								rolesRightsConnector.api.guards.securityRightsSiteGuard(
+									urlSiteParam,
+									[rolesRightsConnector.securityRights.update]
+								),
+							],
+						},
+					},
+					{
 						path: MODULE_PATHS.detailExternal,
 						breadcrumb: false,
 						component: ContentDetailExternal,

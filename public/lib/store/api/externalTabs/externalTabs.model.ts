@@ -10,6 +10,10 @@ export interface ExternalTabOptions {
 	component: FC<ExternalTabProps>;
 	replace?: boolean; // only replace existing if this is true (safety)
 	containerId: ALERT_CONTAINER_IDS;
+	children?: {
+		path: string;
+		component: FC<ExternalTabProps>;
+	}[];
 }
 
 export interface ExternalTabModel {
@@ -19,6 +23,10 @@ export interface ExternalTabModel {
 	module?: string;
 	disabled?: boolean;
 	containerId: ALERT_CONTAINER_IDS;
+	children?: {
+		path: string;
+		component: FC<ExternalTabProps>;
+	}[];
 }
 
 export interface ExternalTabsState extends EntityState<ExternalTabModel, string>, ActiveState {}

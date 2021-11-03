@@ -28,6 +28,7 @@ const detailView = `${detail}/bekijk`;
 const detailEdit = `${detail}/bewerk`;
 const detailEditCompartment = `${detailEdit}/:compartment`;
 const detailExternal = `${detail}/:tab`;
+const detailExternalChild = `${detail}/:tab/:child`;
 
 export const DATE_FORMATS = {
 	date: 'DD/MM/YYYY',
@@ -118,6 +119,7 @@ export const MODULE_PATHS = {
 	detailEdit,
 	detailEditCompartment,
 	detailExternal,
+	detailExternalChild,
 };
 
 export const WORKING_TITLE_KEY = 'working-title';

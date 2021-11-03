@@ -33,4 +33,5 @@ export interface ContentDetailExternalMatchProps {
 	contentId: string;
 	siteId: string;
 	contentType: ContentTypeSchema;
+	child: string;
 }
