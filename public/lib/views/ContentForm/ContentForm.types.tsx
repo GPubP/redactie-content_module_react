@@ -1,8 +1,10 @@
 import { FormSchema } from '@redactie/form-renderer-module';
 import { StateMachineContext, StateMachineEvent } from '@redactie/redactie-workflows';
+import { NavigateFn } from '@redactie/utils';
 import { WorkflowDetailModel } from '@redactie/workflows-module';
 import { WorkflowDetailResponse } from '@redactie/workflows-module/dist/lib/services/workflows';
 import { FormikProps, FormikValues } from 'formik';
+import { FC, ReactElement } from 'react';
 import { StateMachine } from 'xstate';
 
 import { ModuleSettings, ModuleValue } from '../../api/api.types';
@@ -70,4 +72,20 @@ export interface CompartmentProps<
 	workflow?: WorkflowDetailModel;
 	machine?: StateMachine<StateMachineContext, any, StateMachineEvent> | undefined;
 	allowedTransitions?: string[];
+}
+
+export interface AlertState {
+	type: 'danger' | 'warning';
+	title: string;
+	message: ReactElement;
+	confirm?: boolean;
+	confirmLabel?: string;
+	cancel?: boolean;
+	cancelLabel?: string;
+	actions?: FC<{
+		navigate: NavigateFn;
+		siteId: string;
+		contentId: string;
+		contentTypeId: string;
+	}>;
 }
