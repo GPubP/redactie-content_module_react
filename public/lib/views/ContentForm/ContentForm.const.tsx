@@ -153,9 +153,11 @@ const DefaultWarningAlertMessage: AlertState['actions'] = ({
 	</Button>
 );
 
-export const CONTENT_ALERT_MAP = (
-	date: string
-): {
+export const CONTENT_ALERT_MAP = ({
+	date = '',
+}: {
+	date: string;
+}): {
 	[key: string]: AlertState;
 } => ({
 	publishTime: {
@@ -250,6 +252,15 @@ export const CONTENT_ALERT_MAP = (
 				</Button>
 			);
 		},
-		cancel: false,
+	},
+	cannotTransition: {
+		type: 'warning',
+		title: 'Content item kan niet bewaard worden',
+		message: (
+			<>
+				Je kan het content item niet bewaren omdat er geen transities meer mogelijk zijn
+				voor jou rol
+			</>
+		),
 	},
 });

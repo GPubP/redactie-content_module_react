@@ -315,7 +315,7 @@ export const validateCompartments = async (
 	compartments: ContentCompartmentModel[],
 	values: ContentSchema,
 	setValidity: (id: string, isValid: boolean) => void,
-	options: ContentCompartmentsValidateOptions = { async: true }
+	options: ContentCompartmentsValidateOptions = { async: true, allowedTransitions: [] }
 ): Promise<boolean> => {
 	// Create array of booleans from compartment validation
 	const validatedCompartments: boolean[] = await Promise.all(

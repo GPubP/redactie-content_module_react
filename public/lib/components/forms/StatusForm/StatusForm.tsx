@@ -1,4 +1,5 @@
 import { CardBody, RadioGroup } from '@acpaas-ui/react-components';
+import { ErrorMessage } from '@redactie/utils';
 import { WorkflowPopulatedTransition } from '@redactie/workflows-module';
 import { Field, Formik, FormikValues } from 'formik';
 import { contains } from 'ramda';
@@ -121,6 +122,7 @@ const StatusForm: FC<CompartmentProps> = ({
 									);
 								}}
 							/>
+							<ErrorMessage name="workflowState" />
 						</div>
 					</div>
 				</CardBody>
