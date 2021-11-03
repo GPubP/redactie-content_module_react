@@ -1,5 +1,5 @@
 import { LoadingState } from '@redactie/utils';
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
 import { ContentDetailExternalRouteProps, Tab } from '../../content.types';
 import { mapExternalTabToTab } from '../../helpers';
@@ -8,18 +8,41 @@ import { useExternalTabsFacade } from '../../store/api/externalTabs/externalTabs
 import {
 	ContentDetailExternalMatchProps,
 	ExternalStandaloneTabValue,
+	ExternalTabProps,
 	ExternalTabValue,
 } from './ContentDetailExternal.types';
 
 const ContentDetailExternal: FC<ContentDetailExternalRouteProps<
 	ContentDetailExternalMatchProps
 >> = ({ contentType, contentItem, contentItemLoading, onCancel, onSubmit, match, workflow }) => {
-	const { tab, contentId, siteId } = match.params;
+	const { tab, contentId, siteId, child } = match.params;
 
 	/**
 	 * HOOKS
 	 */
 	const [{ active: activeTab }, activate] = useExternalTabsFacade();
+	const [routeInfo, setRouteInfo] = useState<{ Component: FC<ExternalTabProps> | undefined }>({
+		Component: undefined,
+	});
+
+	useEffect(() => {
+		if (!activeTab) {
+			return;
+		}
+
+		if (child) {
+			const activeChild = activeTab.children?.find(tabChild => tabChild.path === child);
+
+			setRouteInfo({
+				Component: activeChild?.component as FC<ExternalTabProps>,
+			});
+			return;
+		}
+
+		setRouteInfo({
+			Component: activeTab.component,
+		});
+	}, [activeTab, child, siteId]);
 
 	useEffect(() => {
 		activate(tab);
@@ -48,8 +71,8 @@ const ContentDetailExternal: FC<ContentDetailExternalRouteProps<
 	/**
 	 * RENDER
 	 */
-	return activeTab ? (
-		<activeTab.component
+	return activeTab && routeInfo.Component ? (
+		<routeInfo.Component
 			contentId={contentId}
 			siteId={siteId}
 			contentType={contentType}
