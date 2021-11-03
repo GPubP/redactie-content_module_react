@@ -868,8 +868,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						onCancel={handleCancel}
 						disableSave={
 							!hasChanges ||
-							(contentItemDraft?.meta.workflowState ===
-								ContentSystemNames.PUBLISHED &&
+							(contentItem?.meta.workflowState === ContentSystemNames.PUBLISHED &&
+								contentItemDraft?.meta.workflowState ===
+									ContentSystemNames.PUBLISHED &&
 								!allowedTransitions.includes(`to-${ContentSystemNames.DRAFT}`))
 						}
 						disableUpdatePublication={
