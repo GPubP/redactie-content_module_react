@@ -30,7 +30,6 @@ import {
 	useMyContentTypeRights,
 	useRoutesBreadcrumbs,
 } from '../../hooks';
-import { useWorkflowState } from '../../hooks/useWorkflowState';
 import {
 	ContentCreateSchema,
 	ContentSchema,
