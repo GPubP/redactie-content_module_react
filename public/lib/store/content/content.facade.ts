@@ -4,7 +4,7 @@ import { omit, pick } from 'ramda';
 import { ContentTypeSchema } from '../../..';
 import { WORKING_TITLE_KEY } from '../../content.const';
 import { ALERT_CONTAINER_IDS } from '../../content.types';
-import { pathJoin } from '../../helpers/pathJoin';
+import { applyUrlPattern } from '../../helpers/applyUrlPattern/applyUrlPattern';
 import {
 	ContentApiService,
 	contentApiService,
@@ -280,16 +280,11 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 								urlPath: {
 									...state.contentItemDraft?.meta.urlPath,
 									nl: {
-										value: contentType.meta.urlPath?.pattern
-											? pathJoin([
-													contentType.meta.urlPath?.pattern || '/',
-													data.slug?.nl || '',
-											  ])
-											: `/${data.slug?.nl || ''}`,
-										pattern: pathJoin([
-											contentType.meta.urlPath?.pattern || '/',
-											'[item:slug]',
-										]),
+										value: applyUrlPattern(
+											contentType.meta.urlPath?.pattern || '',
+											{ slug: data.slug?.nl || '' }
+										),
+										pattern: contentType.meta.urlPath?.pattern,
 									},
 								},
 						  }
