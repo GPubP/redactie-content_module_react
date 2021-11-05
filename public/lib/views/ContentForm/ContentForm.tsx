@@ -287,6 +287,21 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	};
 
 	useEffect(() => {
+		if (
+			contentItemDraft?.meta.workflowState === ContentSystemNames.NEW &&
+			allowedTransitions.includes(`to-${ContentSystemNames.DRAFT}`)
+		) {
+			contentFacade.updateContentMetaDraft(
+				{
+					workflowState: ContentSystemNames.DRAFT,
+					status: ContentStatus.DRAFT,
+				},
+				contentType
+			);
+		}
+	}, [allowedTransitions, contentItemDraft, contentType]);
+
+	useEffect(() => {
 		rolesRightsConnector.api.store.users.service.getUserRolesForSite({
 			siteUuid: siteId,
 			userUuid: 'me',
