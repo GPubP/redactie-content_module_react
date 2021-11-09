@@ -43,6 +43,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	const [isHoveringTooltip, setHoveringTooltip] = useState(false);
 	const [delayShowLoop, setDelayShowLoop] = useState<NodeJS.Timeout>();
 	const [delayHideLoop, setDelayHideLoop] = useState<NodeJS.Timeout>();
+	const [keyInteraction, setKeyInteraction] = useState<boolean>(false);
 	const [items, setItems] = useState<
 		{ value: string | undefined; label: string; contentTypeId: string }[]
 	>([]);
@@ -94,7 +95,13 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 		);
 	};
 
+	const handleKeyDown = (): void => {
+		setKeyInteraction(true);
+	};
+
 	const setValue = (uuid: string): void => {
+		setKeyInteraction(false);
+
 		if (!config.returnByValue) {
 			return fieldHelperProps.setValue(uuid);
 		}
@@ -122,6 +129,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 				className={fieldClass}
 				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
+				onKeyDown={handleKeyDown}
 			>
 				<Autocomplete
 					ref={autoCompleteRef}
@@ -135,6 +143,10 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					loading={contentLoadingState === LoadingState.Loading}
 					onSelection={setValue}
 					asyncItems={async (query: string, cb: (options: any[]) => void) => {
+						if (!keyInteraction) {
+							query = field.value;
+						}
+
 						await ccContentFacade.getContent(
 							`search_${fieldSchema.name}`,
 							siteId,
