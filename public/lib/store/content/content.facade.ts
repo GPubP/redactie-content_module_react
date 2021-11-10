@@ -284,7 +284,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 											contentType.meta.urlPath?.pattern || '',
 											{ slug: data.slug?.nl || '' }
 										),
-										pattern: contentType.meta.urlPath?.pattern,
+										pattern: contentType.meta.urlPath?.pattern || '',
 									},
 								},
 						  }
