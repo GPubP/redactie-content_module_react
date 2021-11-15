@@ -97,7 +97,7 @@ const FilterForm: FC<FilterFormProps> = ({
 										<div className="col-xs-6 col-sm-3 u-margin-top">
 											<Field
 												as={Datepicker}
-												label="Publicatiedatum"
+												label="Publicatiedatum van"
 												name="publishedFrom"
 												id="publishedFrom"
 												format={DATE_FORMATS.date}
@@ -108,11 +108,10 @@ const FilterForm: FC<FilterFormProps> = ({
 												}
 											/>
 										</div>
-										<div className="col-xs-6 col-sm-3 u-margin-top-lg">
+										<div className="col-xs-6 col-sm-3 u-margin-top">
 											<Field
 												as={Datepicker}
-												// NOTE: There is no visible label for this element
-												label=""
+												label="Tot"
 												name="publishedTo"
 												id="publishedTo"
 												format={DATE_FORMATS.date}
