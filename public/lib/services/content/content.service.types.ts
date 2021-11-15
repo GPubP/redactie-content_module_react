@@ -16,6 +16,8 @@ export interface ContentHistorySummary {
 	scheduledUnpublish: ContentHistorySummaryStatus;
 	published: boolean;
 	lastEdit: string;
+	workflowState: string;
+	latestStatus: string;
 }
 
 export interface ContentSchema {

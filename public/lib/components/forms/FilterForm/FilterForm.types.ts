@@ -1,3 +1,4 @@
+import { SelectOption } from '@redactie/utils';
 import { FormikState } from 'formik';
 
 import { OverviewFilterItem } from '../../../content.types';
@@ -11,6 +12,7 @@ export interface FilterFormProps {
 	onSubmit: (values: FilterFormState) => void;
 	deleteActiveFilter: (item: OverviewFilterItem) => void;
 	activeFilters: Array<object>;
+	statusOptions: SelectOption[];
 }
 
 export interface FilterFormState {
