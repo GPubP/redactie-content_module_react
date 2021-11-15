@@ -255,12 +255,7 @@ export const CONTENT_ALERT_MAP = ({
 	},
 	cannotTransition: {
 		type: 'warning',
-		title: 'Content item kan niet bewaard worden',
-		message: (
-			<>
-				Je kan het content item niet bewaren omdat er geen transities meer mogelijk zijn
-				voor jou rol
-			</>
-		),
+		title: 'Je kan het content item niet bewerken',
+		message: <>De ingestelde workflow rechten laten dit niet toe voor jouw rol.</>,
 	},
 });
