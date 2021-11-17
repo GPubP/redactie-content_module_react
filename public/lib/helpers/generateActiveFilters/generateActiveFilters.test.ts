@@ -1,5 +1,5 @@
 import { ContentStatus } from '../../api/api.types';
-import { FILTER_STATUS_OPTIONS, FilterFormState, PUBLISHED_OPTIONS } from '../../components';
+import { FilterFormState, PUBLISHED_OPTIONS } from '../../components';
 import { OverviewFilterItem } from '../../content.types';
 import { CONTENT_STATUS_TRANSLATION_MAP } from '../../services/content';
 import { FilterKeys } from '../../views/ContentOverview/ContentOverview.types';
@@ -55,7 +55,7 @@ const MOCK_FILTERS_RESULT: OverviewFilterItem[] = [
 const wrappedGenerateActiveFilters = (
 	formState: FilterFormState = MOCK_FILTER_FORM_STATE
 ): ReturnType<typeof generateActiveFilters> =>
-	generateActiveFilters(formState, FILTER_STATUS_OPTIONS, PUBLISHED_OPTIONS, MOCK_CONTENT_TYPES);
+	generateActiveFilters(formState, [], PUBLISHED_OPTIONS, MOCK_CONTENT_TYPES);
 
 describe('Helpers: generateActiveFilters', () => {
 	it('Should return active filters', () => {

@@ -14,6 +14,7 @@ import {
 	parseObjToOrderBy,
 	parseOrderByToObj,
 	SearchParams,
+	SelectOption,
 	useAPIQueryParams,
 	useNavigate,
 } from '@redactie/utils';
@@ -21,7 +22,6 @@ import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import {
-	FILTER_STATUS_OPTIONS,
 	FilterForm,
 	FilterFormState,
 	PUBLISHED_OPTIONS,
@@ -29,21 +29,17 @@ import {
 } from '../../components';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import workflowsConnector from '../../connectors/workflows';
 import { DATE_FORMATS, DEFAULT_CRUD_RIGHTS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ALERT_CONTAINER_IDS, ContentRouteProps, OverviewFilterItem } from '../../content.types';
-import { generateActiveFilters, getFilterStateFromParams, getLatestStatus } from '../../helpers';
+import { generateActiveFilters, getFilterStateFromParams } from '../../helpers';
 import {
 	useContent,
 	useContentTypes,
 	useMyContentTypesRights,
 	useRoutesBreadcrumbs,
 } from '../../hooks';
-import {
-	CONTENT_STATUS_TRANSLATION_MAP,
-	ContentExtraFilterStatus,
-	ContentHistorySummary,
-	DEFAULT_CONTENT_SEARCH_PARAMS,
-} from '../../services/content';
+import { ContentExtraFilterStatus, DEFAULT_CONTENT_SEARCH_PARAMS } from '../../services/content';
 import { contentFacade } from '../../store/content';
 import { contentTypesFacade } from '../../store/contentTypes';
 
@@ -73,6 +69,13 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		siteUuid: siteId,
 		onlyKeys: false,
 	});
+	const {
+		loading: statusesLoadingState,
+		pagination: statusesPagination,
+	} = workflowsConnector.hooks.usePaginatedWorkflowStatuses({
+		page: 1,
+		pagesize: -1,
+	});
 	const mySecurityrightsKeys = useMemo(
 		() => mySecurityrights.map(right => right.attributes?.key),
 		[mySecurityrights]
@@ -84,15 +87,31 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	const contentTypesSecurityRightsMap = useMyContentTypesRights(contents, mySecurityrights);
 	const [initialLoading, setInitialLoading] = useState<LoadingState>(LoadingState.Loading);
 	const filterFormState = useMemo(() => getFilterStateFromParams(query as SearchParams), [query]);
+	const workflowStatuses = useMemo<Record<string, SelectOption>>(() => {
+		if (!statusesPagination?.data) {
+			return {};
+		}
+
+		return statusesPagination.data.reduce(
+			(acc, status) => ({
+				...acc,
+				[status.data.systemName as string]: {
+					label: status.data.name,
+					value: status.data.systemName,
+				},
+			}),
+			{}
+		);
+	}, [statusesPagination]);
 	const activeFilters = useMemo(
 		() =>
 			generateActiveFilters(
 				filterFormState,
-				FILTER_STATUS_OPTIONS,
+				Object.values(workflowStatuses),
 				PUBLISHED_OPTIONS,
 				contentTypes
 			),
-		[contentTypes, filterFormState]
+		[contentTypes, filterFormState, workflowStatuses]
 	);
 	const [t] = useCoreTranslation();
 
@@ -100,11 +119,12 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	useEffect(() => {
 		if (
 			loadingState !== LoadingState.Loading &&
-			mySecurityRightsLoadingState !== LoadingState.Loading
+			mySecurityRightsLoadingState !== LoadingState.Loading &&
+			!statusesLoadingState
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [loadingState, mySecurityRightsLoadingState]);
+	}, [loadingState, mySecurityRightsLoadingState, statusesLoadingState, statusesPagination]);
 
 	// Fetch content types for filtering
 	useEffect(() => {
@@ -233,7 +253,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	 * Render
 	 */
 	const renderOverview = (): ReactElement | null => {
-		if (!contents || !Array.isArray(contents) || !contentsPaging) {
+		if (!contents || !Array.isArray(contents) || !contentsPaging || !workflowStatuses) {
 			return null;
 		}
 
@@ -242,14 +262,12 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			contentType: content.meta?.contentType?.meta?.label,
 			lastEdit: content.meta?.historySummary?.lastEdit || content.meta?.lastModified,
 			lastEditor: content.meta?.lastEditor,
-			status: content.meta?.historySummary
-				? CONTENT_STATUS_TRANSLATION_MAP[
-						getLatestStatus(
-							content.meta.historySummary as ContentHistorySummary,
-							content.meta.status
-						)
-				  ]
-				: '',
+			status:
+				workflowStatuses[content.meta?.historySummary?.workflowState as string]?.label ||
+				statusesPagination?.data.find(
+					status =>
+						status.data.technicalState === content.meta?.historySummary?.latestStatus
+				)?.data.name,
 			published: content.meta?.published,
 			description: content.meta?.description,
 			type: content.meta?.contentType?.meta?.canBeFiltered ? 'Pagina' : 'Blok',
@@ -286,6 +304,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 						onSubmit={onSubmit}
 						deleteActiveFilter={deleteFilter}
 						activeFilters={activeFilters.filters}
+						statusOptions={Object.values(workflowStatuses)}
 					/>
 				</div>
 				<PaginatedTable

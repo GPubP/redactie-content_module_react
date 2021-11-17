@@ -8,7 +8,6 @@ import { DATE_FORMATS } from '../../../content.const';
 import { useContentTypes } from '../../../hooks';
 
 import {
-	FILTER_STATUS_OPTIONS,
 	PUBLISHED_DEFAULT_OPTION,
 	PUBLISHED_OPTIONS,
 	STATUS_DEFAULT_OPTION,
@@ -21,6 +20,7 @@ const FilterForm: FC<FilterFormProps> = ({
 	onSubmit,
 	activeFilters,
 	deleteActiveFilter,
+	statusOptions,
 }) => {
 	const [loadingState, contentTypes] = useContentTypes();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
@@ -128,10 +128,7 @@ const FilterForm: FC<FilterFormProps> = ({
 												label="Status"
 												name="status"
 												id="status"
-												options={[
-													STATUS_DEFAULT_OPTION,
-													...FILTER_STATUS_OPTIONS,
-												]}
+												options={[STATUS_DEFAULT_OPTION, ...statusOptions]}
 											/>
 										</div>
 										<div className="col-xs-6 col-sm-3 u-margin-top-lg">
