@@ -84,10 +84,25 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const [query, setQuery] = useAPIQueryParams(OVERVIEW_QUERY_PARAMS_CONFIG, false);
 	const [loadingState, contents, contentsPaging] = useContent();
-	const [workflowStatuses, setWorkflowStatuses] = useState<Record<string, SelectOption>>({});
 	const contentTypesSecurityRightsMap = useMyContentTypesRights(contents, mySecurityrights);
 	const [initialLoading, setInitialLoading] = useState<LoadingState>(LoadingState.Loading);
 	const filterFormState = useMemo(() => getFilterStateFromParams(query as SearchParams), [query]);
+	const workflowStatuses = useMemo<Record<string, SelectOption>>(() => {
+		if (!statusesPagination?.data) {
+			return {};
+		}
+
+		return statusesPagination.data.reduce(
+			(acc, status) => ({
+				...acc,
+				[status.data.systemName as string]: {
+					label: status.data.name,
+					value: status.data.systemName,
+				},
+			}),
+			{}
+		);
+	}, [statusesPagination]);
 	const activeFilters = useMemo(
 		() =>
 			generateActiveFilters(
@@ -110,24 +125,6 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			setInitialLoading(LoadingState.Loaded);
 		}
 	}, [loadingState, mySecurityRightsLoadingState, statusesLoadingState, statusesPagination]);
-
-	useEffect(() => {
-		if (!statusesPagination?.data) {
-			return;
-		}
-
-		const statuses = statusesPagination.data.reduce(
-			(acc, status) => ({
-				...acc,
-				[status.data.systemName as string]: {
-					label: status.data.name,
-					value: status.data.systemName,
-				},
-			}),
-			{}
-		);
-		setWorkflowStatuses(statuses);
-	}, [setWorkflowStatuses, statusesPagination]);
 
 	// Fetch content types for filtering
 	useEffect(() => {
