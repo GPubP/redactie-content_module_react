@@ -1,7 +1,11 @@
 import { ContentStatus } from '../../api/api.types';
 import { FilterFormState, PUBLISHED_OPTIONS } from '../../components';
 import { OverviewFilterItem } from '../../content.types';
-import { CONTENT_STATUS_TRANSLATION_MAP } from '../../services/content';
+import {
+	CONTENT_EXTRA_FILTER_TRANSLATION_MAP,
+	CONTENT_STATUS_TRANSLATION_MAP,
+	ContentExtraFilterStatus,
+} from '../../services/content';
 import { FilterKeys } from '../../views/ContentOverview/ContentOverview.types';
 import { MOCK_CONTENT_TYPES, MOCK_FILTER_FORM_STATE } from '../__mocks__';
 
@@ -55,7 +59,41 @@ const MOCK_FILTERS_RESULT: OverviewFilterItem[] = [
 const wrappedGenerateActiveFilters = (
 	formState: FilterFormState = MOCK_FILTER_FORM_STATE
 ): ReturnType<typeof generateActiveFilters> =>
-	generateActiveFilters(formState, [], PUBLISHED_OPTIONS, MOCK_CONTENT_TYPES);
+	generateActiveFilters(
+		formState,
+		[
+			{
+				value: ContentExtraFilterStatus.ALL,
+				label: CONTENT_EXTRA_FILTER_TRANSLATION_MAP.ALL,
+			},
+			{
+				value: ContentStatus.PUBLISHED,
+				label: CONTENT_STATUS_TRANSLATION_MAP.PUBLISHED,
+			},
+			{
+				value: ContentStatus.DRAFT,
+				label: CONTENT_STATUS_TRANSLATION_MAP.DRAFT,
+			},
+			{
+				value: ContentStatus.SCHEDULED,
+				label: CONTENT_STATUS_TRANSLATION_MAP.SCHEDULED,
+			},
+			{
+				value: ContentStatus.PENDING_REVIEW,
+				label: CONTENT_STATUS_TRANSLATION_MAP.PENDING_REVIEW,
+			},
+			{
+				value: ContentStatus.PENDING_PUBLISH,
+				label: CONTENT_STATUS_TRANSLATION_MAP.PENDING_PUBLISH,
+			},
+			{
+				value: ContentStatus.UNPUBLISHED,
+				label: CONTENT_STATUS_TRANSLATION_MAP.UNPUBLISHED,
+			},
+		],
+		PUBLISHED_OPTIONS,
+		MOCK_CONTENT_TYPES
+	);
 
 describe('Helpers: generateActiveFilters', () => {
 	it('Should return active filters', () => {
