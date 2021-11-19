@@ -689,6 +689,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		setIsSubmitting(true);
 
 		if (modalState?.action === 'remove') {
+			const { current: formikRef } = activeCompartmentFormikRef;
+
+			// Reset form before navigate to avoid leave prompt with unsaved data shows up
+			formikRef?.resetForm();
+
 			onDelete()
 				.then(() => {
 					navigate(MODULE_PATHS.overview, {
