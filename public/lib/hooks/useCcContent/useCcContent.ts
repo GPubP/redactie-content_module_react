@@ -1,5 +1,4 @@
-import { useObservable } from '@mindspace-io/react';
-import { LoadingState } from '@redactie/utils';
+import { LoadingState, useObservable } from '@redactie/utils';
 import { useMemo } from 'react';
 
 import { ccContentFacade } from '../../store/ccContent/ccContent.facade';
@@ -10,9 +9,9 @@ const useCcContent = (key: string): [LoadingState, ContentModel[]] => {
 	const content$ = useMemo(() => ccContentFacade.selectItemValue(key), [key]);
 	const error$ = useMemo(() => ccContentFacade.selectItemError(key), [key]);
 
-	const [loading] = useObservable(isFetching$, LoadingState.Loading);
-	const [content] = useObservable(content$, []);
-	const [error] = useObservable(error$, null);
+	const loading = useObservable(isFetching$, LoadingState.Loading);
+	const content = useObservable(content$, []);
+	const error = useObservable(error$, null);
 
 	const loadingState = error ? LoadingState.Error : loading;
 
