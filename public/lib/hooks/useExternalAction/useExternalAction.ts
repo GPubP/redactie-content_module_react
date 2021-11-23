@@ -1,9 +1,9 @@
-import { useObservable } from '@mindspace-io/react';
+import { useObservable } from '@redactie/utils';
 
 import { ExternalActionModel, externalActionsFacade } from '../../store/api/externalActions';
 
 const useExternalActionFacade = (): [ExternalActionModel[]] => {
-	const [externalActions] = useObservable(externalActionsFacade.all$, []);
+	const externalActions = useObservable(externalActionsFacade.all$, []);
 
 	return [externalActions];
 };
