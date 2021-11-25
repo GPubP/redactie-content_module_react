@@ -4,9 +4,12 @@ import { getFieldRegistery } from '../../connectors/formRenderer';
 
 import { Anchorlink } from './Anchorlink';
 import { ContentSelect } from './ContentSelect';
+import { CrossSiteContentSelect } from './CrossSiteContentSelect';
 
 export const registerCCFields = (): void => {
 	const fieldRegistry = getFieldRegistery();
+
+	console.log(fieldRegistry);
 
 	if (fieldRegistry) {
 		fieldRegistry.add([
@@ -14,6 +17,11 @@ export const registerCCFields = (): void => {
 				name: 'contentReference',
 				module: 'content',
 				component: ContentSelect,
+			},
+			{
+				name: 'crossSiteContentReference',
+				module: 'content',
+				component: CrossSiteContentSelect,
 			},
 			{
 				name: 'ankerlink',
