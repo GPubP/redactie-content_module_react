@@ -48,6 +48,7 @@ export const addWorkingTitleField = (formProps: FormRendererProps): FormRenderer
 				module: 'core',
 				name: WORKING_TITLE_KEY,
 				type: 'text',
+				semanticType: 'text',
 			},
 			...formProps.schema.fields,
 		],

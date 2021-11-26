@@ -4,6 +4,7 @@ import { getFieldRegistery } from '../../connectors/formRenderer';
 
 import { Anchorlink } from './Anchorlink';
 import { ContentSelect } from './ContentSelect';
+import { CrossSiteContentSelect } from './CrossSiteContentSelect';
 
 export const registerCCFields = (): void => {
 	const fieldRegistry = getFieldRegistery();
@@ -14,6 +15,12 @@ export const registerCCFields = (): void => {
 				name: 'contentReference',
 				module: 'content',
 				component: ContentSelect,
+			},
+			{
+				name: 'crossSiteContentReference',
+				module: 'content',
+				// Typing of react-form-renderer expects a string but this returns an CrossSiteContentSelect object
+				component: CrossSiteContentSelect as FC<any>,
 			},
 			{
 				name: 'ankerlink',
