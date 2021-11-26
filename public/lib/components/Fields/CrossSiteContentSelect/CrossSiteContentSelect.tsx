@@ -1,15 +1,16 @@
 import { Autocomplete } from '@acpaas-ui/react-components';
 import { Tooltip } from '@acpaas-ui/react-editorial-components';
-import { LoadingState, useNavigate, useSiteContext } from '@redactie/utils';
+import { DataLoader, LoadingState, useNavigate, useSiteContext } from '@redactie/utils';
 import classNames from 'classnames';
 import { getIn } from 'formik';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { first } from 'rxjs/operators';
 
 import './CrossSiteContentSelect.scss';
 
 import { ErrorMessage } from '../../../connectors/formRenderer';
+import sitesConnector from '../../../connectors/sites';
 import { MODULE_PATHS, SITES_ROOT } from '../../../content.const';
 import { useCcContent } from '../../../hooks';
 import { ccContentFacade } from '../../../store/ccContent';
@@ -55,6 +56,10 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 
 		return item;
 	}, [field.value, items]);
+	const { pagination, loading: sitesLoading } = sitesConnector.hooks.usePaginatedSites({
+		page: 1,
+		pagesize: -1,
+	});
 
 	/**
 	 * METHODS
@@ -118,96 +123,109 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 	/**
 	 * RENDER
 	 */
+
+	const renderSelect = (): ReactElement => {
+		return (
+			<>
+				<div
+					ref={autoCompleteRef}
+					className={fieldClass}
+					onMouseEnter={handleMouseEnter}
+					onMouseLeave={handleMouseLeave}
+					onKeyDown={handleKeyDown}
+				>
+					<Autocomplete
+						ref={autoCompleteRef}
+						label={fieldSchema.label}
+						id={fieldSchema.name}
+						state={state}
+						multipleSelect={false}
+						defaultValue={field.value?.contentId}
+						showSearchIcon={true}
+						disabled={!!config.disabled}
+						loading={contentLoadingState === LoadingState.Loading}
+						onSelection={setValue}
+						asyncItems={async (query: string, cb: (options: any[]) => void) => {
+							if (!keyInteraction.current) {
+								query = field.value.contentId;
+							}
+
+							await ccContentFacade.getContent(
+								`search_${fieldSchema.name}`,
+								siteId,
+								{
+									skip: 0,
+									limit: 10,
+									search: query,
+									sparse: true,
+									...(config.contentTypes?.length
+										? { contentTypes: config.contentTypes.join(',') }
+										: {}),
+									...(config.sites?.length
+										? { sites: config.sites.join(',') }
+										: {}),
+								},
+								true
+							);
+
+							ccContentFacade
+								.selectItemValue(`search_${fieldSchema.name}`)
+								.pipe(first())
+								.subscribe(content => {
+									const newItems = ((content as ContentModel[]) || []).map(c => ({
+										label: `${c.meta.label} [${c.meta.contentType?.meta
+											?.label || ''}] - SITE ${
+											pagination?.data.find(site => site.uuid === c.meta.site)
+												?.data.name
+										}`,
+										value: c.uuid,
+										siteId: c.meta.site,
+										contentTypeId: c.meta.contentType.uuid,
+									}));
+
+									setItems(newItems);
+
+									cb(newItems);
+								});
+						}}
+					/>
+				</div>
+				<Tooltip
+					type={CONTENT_SELECT_TOOLTIP_TYPE}
+					isVisible={!!currentItem?.label && (isVisible || isHoveringTooltip)}
+					targetRef={autoCompleteRef}
+				>
+					<Link
+						id={currentItem?.value}
+						title={currentItem?.label}
+						to={
+							currentItem?.value
+								? generatePath(MODULE_PATHS.detailView, {
+										contentId: currentItem?.value,
+										contentTypeId: currentItem?.contentTypeId,
+										siteId: currentItem?.siteId,
+								  })
+								: '#'
+						}
+						target="_blank"
+						onMouseEnter={handleTooltipMouseEnter}
+						onMouseLeave={handleTooltipMouseLeave}
+					>
+						{currentItem?.label}
+					</Link>
+				</Tooltip>
+				{config.description ? (
+					<div className="a-input a-input__wrapper">
+						<small>{config.description}</small>
+					</div>
+				) : null}
+				<ErrorMessage name={field.name} />
+			</>
+		);
+	};
 	return (
 		<>
-			<div
-				ref={autoCompleteRef}
-				className={fieldClass}
-				onMouseEnter={handleMouseEnter}
-				onMouseLeave={handleMouseLeave}
-				onKeyDown={handleKeyDown}
-			>
-				<Autocomplete
-					ref={autoCompleteRef}
-					label={fieldSchema.label}
-					id={fieldSchema.name}
-					state={state}
-					multipleSelect={false}
-					defaultValue={field.value?.contentId}
-					showSearchIcon={true}
-					disabled={!!config.disabled}
-					loading={contentLoadingState === LoadingState.Loading}
-					onSelection={setValue}
-					asyncItems={async (query: string, cb: (options: any[]) => void) => {
-						if (!keyInteraction.current) {
-							query = field.value.contentId;
-						}
-
-						await ccContentFacade.getContent(
-							`search_${fieldSchema.name}`,
-							siteId,
-							{
-								skip: 0,
-								limit: 10,
-								search: query,
-								sparse: true,
-								...(config.contentTypes?.length
-									? { contentTypes: config.contentTypes.join(',') }
-									: {}),
-								...(config.sites?.length ? { sites: config.sites.join(',') } : {}),
-							},
-							true
-						);
-
-						ccContentFacade
-							.selectItemValue(`search_${fieldSchema.name}`)
-							.pipe(first())
-							.subscribe(content => {
-								const newItems = ((content as ContentModel[]) || []).map(c => ({
-									label: `${c.meta.label} [${c.meta.contentType?.meta?.label ||
-										''}]`,
-									value: c.uuid,
-									siteId: c.meta.site,
-									contentTypeId: c.meta.contentType.uuid,
-								}));
-
-								setItems(newItems);
-
-								cb(newItems);
-							});
-					}}
-				/>
-			</div>
-			<Tooltip
-				type={CONTENT_SELECT_TOOLTIP_TYPE}
-				isVisible={!!currentItem?.label && (isVisible || isHoveringTooltip)}
-				targetRef={autoCompleteRef}
-			>
-				<Link
-					id={currentItem?.value}
-					title={currentItem?.label}
-					to={
-						currentItem?.value
-							? generatePath(MODULE_PATHS.detailView, {
-									contentId: currentItem?.value,
-									contentTypeId: currentItem?.contentTypeId,
-									siteId: currentItem?.siteId,
-							  })
-							: '#'
-					}
-					target="_blank"
-					onMouseEnter={handleTooltipMouseEnter}
-					onMouseLeave={handleTooltipMouseLeave}
-				>
-					{currentItem?.label}
-				</Link>
-			</Tooltip>
-			{config.description ? (
-				<div className="a-input a-input__wrapper">
-					<small>{config.description}</small>
-				</div>
-			) : null}
-			<ErrorMessage name={field.name} />
+			<DataLoader loadingState={sitesLoading} render={renderSelect} />
 		</>
 	);
 };
