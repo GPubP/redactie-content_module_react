@@ -1,6 +1,5 @@
 import { Autocomplete } from '@acpaas-ui/react-components';
 import { Tooltip } from '@acpaas-ui/react-editorial-components';
-import { InputFieldProps } from '@redactie/form-renderer-module';
 import { LoadingState, useNavigate, useSiteContext } from '@redactie/utils';
 import classNames from 'classnames';
 import { getIn } from 'formik';
@@ -20,15 +19,14 @@ import {
 	CONTENT_SELECT_TOOLTIP_DELAY,
 	CONTENT_SELECT_TOOLTIP_TYPE,
 } from './CrossSiteContentSelect.const';
+import { CrossSiteContentSelectFieldProps } from './CrossSiteContentSelect.types';
 
-const CrossSiteContentSelect: React.FC<InputFieldProps> = ({
+const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 	fieldProps,
 	fieldSchema,
 	fieldHelperProps,
-}: InputFieldProps) => {
+}: CrossSiteContentSelectFieldProps) => {
 	const config = fieldSchema.config || {};
-	console.log(config);
-
 	const { field, form } = fieldProps;
 
 	const touch = getIn(form.touched, field.name);
@@ -52,9 +50,8 @@ const CrossSiteContentSelect: React.FC<InputFieldProps> = ({
 	const [items, setItems] = useState<
 		{ value: string | undefined; label: string; contentTypeId: string; siteId: string }[]
 	>([]);
-	const [originalItems, setOriginalItems] = useState<ContentModel[]>([]);
 	const currentItem = useMemo(() => {
-		const item = items.find(i => i.value === field.value);
+		const item = items.find(i => i.value === field.value.contentId);
 
 		return item;
 	}, [field.value, items]);
@@ -107,23 +104,13 @@ const CrossSiteContentSelect: React.FC<InputFieldProps> = ({
 	const setValue = (uuid: string): void => {
 		keyInteraction.current = false;
 
-		const originalItem = originalItems.find(item => item.uuid === uuid);
-
-		if (originalItem) {
-			return fieldHelperProps.setValue({
-				siteId: originalItem.meta.site,
-				contentId: originalItem.uuid,
-				isCrossSite: originalItem.meta.site === siteId,
-			});
-		}
-
 		const item = items.find(item => item.value === uuid);
 
 		if (item) {
 			return fieldHelperProps.setValue({
 				siteId: item.siteId,
 				contentId: item.value,
-				isCrossSite: item.siteId === siteId,
+				isCrossSite: item.siteId !== siteId,
 			});
 		}
 	};
@@ -146,14 +133,14 @@ const CrossSiteContentSelect: React.FC<InputFieldProps> = ({
 					id={fieldSchema.name}
 					state={state}
 					multipleSelect={false}
-					defaultValue={field.value}
+					defaultValue={field.value?.contentId}
 					showSearchIcon={true}
 					disabled={!!config.disabled}
 					loading={contentLoadingState === LoadingState.Loading}
 					onSelection={setValue}
 					asyncItems={async (query: string, cb: (options: any[]) => void) => {
 						if (!keyInteraction.current) {
-							query = field.value;
+							query = field.value.contentId;
 						}
 
 						await ccContentFacade.getContent(
@@ -167,6 +154,7 @@ const CrossSiteContentSelect: React.FC<InputFieldProps> = ({
 								...(config.contentTypes?.length
 									? { contentTypes: config.contentTypes.join(',') }
 									: {}),
+								...(config.sites?.length ? { sites: config.sites.join(',') } : {}),
 							},
 							true
 						);
@@ -177,13 +165,12 @@ const CrossSiteContentSelect: React.FC<InputFieldProps> = ({
 							.subscribe(content => {
 								const newItems = ((content as ContentModel[]) || []).map(c => ({
 									label: `${c.meta.label} [${c.meta.contentType?.meta?.label ||
-										''}] - ID ${c.uuid}`,
+										''}]`,
 									value: c.uuid,
 									siteId: c.meta.site,
 									contentTypeId: c.meta.contentType.uuid,
 								}));
 
-								setOriginalItems((content as ContentModel[]) || []);
 								setItems(newItems);
 
 								cb(newItems);
