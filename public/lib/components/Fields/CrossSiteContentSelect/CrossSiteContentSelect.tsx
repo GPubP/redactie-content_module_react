@@ -120,6 +120,46 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 		}
 	};
 
+	const getItems = async (query: string, cb: (options: any[]) => void): Promise<void> => {
+		if (!keyInteraction.current) {
+			query = field.value.contentId;
+		}
+
+		await ccContentFacade.getContent(
+			`search_${fieldSchema.name}`,
+			siteId,
+			{
+				skip: 0,
+				limit: 10,
+				search: query,
+				sparse: true,
+				...(config.contentTypes?.length
+					? { contentTypes: config.contentTypes.join(',') }
+					: {}),
+				...(config.sites?.length ? { sites: config.sites.join(',') } : {}),
+			},
+			true
+		);
+
+		ccContentFacade
+			.selectItemValue(`search_${fieldSchema.name}`)
+			.pipe(first())
+			.subscribe(content => {
+				const newItems = ((content as ContentModel[]) || []).map(c => ({
+					label: `${c.meta.label} [${c.meta.contentType?.meta?.label || ''}] - SITE ${
+						pagination?.data.find(site => site.uuid === c.meta.site)?.data.name
+					}`,
+					value: c.uuid,
+					siteId: c.meta.site,
+					contentTypeId: c.meta.contentType.uuid,
+				}));
+
+				setItems(newItems);
+
+				cb(newItems);
+			});
+	};
+
 	/**
 	 * RENDER
 	 */
@@ -145,49 +185,7 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 						disabled={!!config.disabled}
 						loading={contentLoadingState === LoadingState.Loading}
 						onSelection={setValue}
-						asyncItems={async (query: string, cb: (options: any[]) => void) => {
-							if (!keyInteraction.current) {
-								query = field.value.contentId;
-							}
-
-							await ccContentFacade.getContent(
-								`search_${fieldSchema.name}`,
-								siteId,
-								{
-									skip: 0,
-									limit: 10,
-									search: query,
-									sparse: true,
-									...(config.contentTypes?.length
-										? { contentTypes: config.contentTypes.join(',') }
-										: {}),
-									...(config.sites?.length
-										? { sites: config.sites.join(',') }
-										: {}),
-								},
-								true
-							);
-
-							ccContentFacade
-								.selectItemValue(`search_${fieldSchema.name}`)
-								.pipe(first())
-								.subscribe(content => {
-									const newItems = ((content as ContentModel[]) || []).map(c => ({
-										label: `${c.meta.label} [${c.meta.contentType?.meta
-											?.label || ''}] - SITE ${
-											pagination?.data.find(site => site.uuid === c.meta.site)
-												?.data.name
-										}`,
-										value: c.uuid,
-										siteId: c.meta.site,
-										contentTypeId: c.meta.contentType.uuid,
-									}));
-
-									setItems(newItems);
-
-									cb(newItems);
-								});
-						}}
+						asyncItems={getItems}
 					/>
 				</div>
 				<Tooltip
