@@ -52,7 +52,7 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 		{ value: string | undefined; label: string; contentTypeId: string; siteId: string }[]
 	>([]);
 	const currentItem = useMemo(() => {
-		const item = items.find(i => i.value === field.value.contentId);
+		const item = items.find(i => i.value === field.value?.contentId);
 
 		return item;
 	}, [field.value, items]);
@@ -122,7 +122,7 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 
 	const getItems = async (query: string, cb: (options: any[]) => void): Promise<void> => {
 		if (!keyInteraction.current) {
-			query = field.value.contentId;
+			query = field.value?.contentId;
 		}
 
 		await ccContentFacade.getContent(
