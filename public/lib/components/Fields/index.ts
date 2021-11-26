@@ -9,8 +9,6 @@ import { CrossSiteContentSelect } from './CrossSiteContentSelect';
 export const registerCCFields = (): void => {
 	const fieldRegistry = getFieldRegistery();
 
-	console.log(fieldRegistry);
-
 	if (fieldRegistry) {
 		fieldRegistry.add([
 			{
@@ -21,7 +19,8 @@ export const registerCCFields = (): void => {
 			{
 				name: 'crossSiteContentReference',
 				module: 'content',
-				component: CrossSiteContentSelect,
+				// Typing of react-form-renderer expects a string but this returns an CrossSiteContentSelect object
+				component: CrossSiteContentSelect as FC<any>,
 			},
 			{
 				name: 'ankerlink',
