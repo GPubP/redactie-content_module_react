@@ -39,7 +39,11 @@ import {
 	useMyContentTypesRights,
 	useRoutesBreadcrumbs,
 } from '../../hooks';
-import { ContentExtraFilterStatus, DEFAULT_CONTENT_SEARCH_PARAMS } from '../../services/content';
+import {
+	ContentExtraFilterStatus,
+	ContentSystemNames,
+	DEFAULT_CONTENT_SEARCH_PARAMS,
+} from '../../services/content';
 import { contentFacade } from '../../store/content';
 import { contentTypesFacade } from '../../store/contentTypes';
 
@@ -92,16 +96,18 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			return {};
 		}
 
-		return statusesPagination.data.reduce(
-			(acc, status) => ({
+		return statusesPagination.data.reduce((acc, status) => {
+			if (status.data.systemName === ContentSystemNames.NEW) {
+				return acc;
+			}
+			return {
 				...acc,
 				[status.data.systemName as string]: {
 					label: status.data.name,
 					value: status.data.systemName,
 				},
-			}),
-			{}
-		);
+			};
+		}, {});
 	}, [statusesPagination]);
 	const activeFilters = useMemo(
 		() =>
