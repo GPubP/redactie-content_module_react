@@ -16,10 +16,12 @@ export const getFilterStateFromParams = (query?: SearchParams): FilterFormState 
 					: PublishedStatuses.OFFLINE
 				: ContentExtraFilterStatus.ALL
 			: '',
-		publishedFrom: query?.publishedFrom
-			? moment(query.publishedFrom).format(DATE_FORMATS.date)
+		lastModifiedFrom: query?.lastModifiedFrom
+			? moment(query.lastModifiedFrom).format(DATE_FORMATS.date)
 			: '',
-		publishedTo: query?.publishedTo ? moment(query.publishedTo).format(DATE_FORMATS.date) : '',
+		lastModifiedTo: query?.lastModifiedTo
+			? moment(query.lastModifiedTo).format(DATE_FORMATS.date)
+			: '',
 		search: query?.search ?? '',
 		status: query?.['latest-status'] ?? '',
 	};
