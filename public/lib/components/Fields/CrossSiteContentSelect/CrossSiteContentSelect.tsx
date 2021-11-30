@@ -1,4 +1,4 @@
-import { Autocomplete } from '@acpaas-ui/react-components';
+import { Autocomplete, Checkbox } from '@acpaas-ui/react-components';
 import { Tooltip } from '@acpaas-ui/react-editorial-components';
 import { DataLoader, LoadingState, useNavigate, useSiteContext } from '@redactie/utils';
 import classNames from 'classnames';
@@ -60,6 +60,8 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 		page: 1,
 		pagesize: -1,
 	});
+	const allowCrossSite = useMemo(() => config.sites.length !== 1, [config.sites.length]);
+	const [searchInCurrentSite, setSearchInCurrentSite] = useState<boolean>(false);
 
 	/**
 	 * METHODS
@@ -136,7 +138,8 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 				...(config.contentTypes?.length
 					? { contentTypes: config.contentTypes.join(',') }
 					: {}),
-				...(config.sites?.length ? { sites: config.sites.join(',') } : {}),
+				...(config.sites?.length ? { sites: config.sites.join(',') } : { sites: 'all' }),
+				...(searchInCurrentSite ? { sites: siteId } : {}),
 			},
 			true
 		);
@@ -158,6 +161,10 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 
 				cb(newItems);
 			});
+	};
+
+	const searchInSite = (): void => {
+		setSearchInCurrentSite(!searchInCurrentSite);
 	};
 
 	/**
@@ -188,6 +195,17 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 						asyncItems={getItems}
 					/>
 				</div>
+				{allowCrossSite && (
+					<div className="u-margin-top">
+						<Checkbox
+							id="searchInCurrentSite"
+							name="searchInCurrentSite"
+							label="Zoek in huidige site"
+							checked={searchInCurrentSite}
+							onChange={searchInSite}
+						/>
+					</div>
+				)}
 				<Tooltip
 					type={CONTENT_SELECT_TOOLTIP_TYPE}
 					isVisible={!!currentItem?.label && (isVisible || isHoveringTooltip)}
