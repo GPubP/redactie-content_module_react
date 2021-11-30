@@ -3,7 +3,9 @@ import { path, pathOr } from 'ramda';
 import { ContentTypeFieldSchema } from '../api/api.types';
 
 const setFieldValue = (dataValue: any, defaultValue: any, fallback: any): any =>
-	dataValue && typeof dataValue !== 'function' ? dataValue : defaultValue ?? fallback;
+	dataValue !== undefined && typeof dataValue !== 'function'
+		? dataValue
+		: defaultValue ?? fallback;
 
 export const getInitialContentValues = (
 	fields: ContentTypeFieldSchema[],
