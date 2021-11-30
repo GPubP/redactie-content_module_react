@@ -113,7 +113,6 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		siteId: string,
 		data: ContentCreateSchema
 	): Promise<void | ContentSchema | null> {
-		const alertProps = getAlertMessages((data as unknown) as ContentSchema);
 		alertService.dismiss();
 		this.store.setIsCreating(true);
 
@@ -126,7 +125,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 						isCreating: false,
 					});
 					alertService.success(
-						alertProps.create.success,
+						getAlertMessages(response).create.success,
 						this.alertContainerProps.update
 					);
 				}
@@ -137,7 +136,10 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 					error,
 					isCreating: false,
 				});
-				alertService.danger(alertProps.create.error, this.alertContainerProps.create);
+				alertService.danger(
+					getAlertMessages((data as unknown) as ContentSchema).create.error,
+					this.alertContainerProps.create
+				);
 				throw error;
 			});
 	}
