@@ -39,8 +39,8 @@ export interface OverviewQueryParams {
 	direction: number | null | undefined;
 	search: string | null | undefined;
 	contentTypes: string[] | null | undefined;
-	publishedFrom: string | null | undefined;
-	publishedTo: string | null | undefined;
+	lastModifiedFrom: string | null | undefined;
+	lastModifiedTo: string | null | undefined;
 	status: ContentStatus | null | undefined;
 	published: PublishedStatuses | null | undefined;
 	creator: string | null | undefined;

@@ -5,8 +5,8 @@ export const MOCK_FILTER_FORM_STATE: FilterFormState = {
 	contentType: [],
 	creator: '',
 	published: '',
-	publishedFrom: '',
-	publishedTo: '',
+	lastModifiedFrom: '',
+	lastModifiedTo: '',
 	search: '',
 	status: '',
 };
