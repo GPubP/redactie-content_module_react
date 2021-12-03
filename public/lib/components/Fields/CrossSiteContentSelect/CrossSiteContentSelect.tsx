@@ -61,7 +61,9 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 		pagesize: -1,
 	});
 	const allowCrossSite = useMemo(() => config.sites.length !== 1, [config.sites.length]);
-	const [searchInCurrentSite, setSearchInCurrentSite] = useState<boolean>(false);
+	const [searchInCurrentSite, setSearchInCurrentSite] = useState<boolean>(
+		!field.value.isCrossSite || false
+	);
 
 	/**
 	 * METHODS
@@ -117,7 +119,7 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 			return fieldHelperProps.setValue({
 				siteId: item.siteId,
 				contentId: item.value,
-				isCrossSite: item.siteId !== siteId,
+				isCrossSite: !searchInCurrentSite,
 			});
 		}
 	};
