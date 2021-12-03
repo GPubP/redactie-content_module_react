@@ -101,7 +101,7 @@ const StatusForm: FC<CompartmentProps> = ({
 						<div className="col-xs-12 u-margin-bottom">
 							{/* Key prop is needed to handle state correctly when status is changed */}
 							<Field
-								label="U kan de status van dit item wijzigen volgens de rechten die u hebt."
+								label="Je kan de status van dit item wijzigen volgens de rechten die je hebt."
 								name="workflowState"
 								id="workflowState"
 								options={statusOptions}

@@ -65,7 +65,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	const contentTypeRights = useMyContentTypeRights(contentType?._id, mySecurityrights);
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
-			name: 'Content Overzicht',
+			name: 'Content overzicht',
 			target: generatePath(`${MODULE_PATHS.overview}`, { siteId }),
 		},
 	]);

@@ -39,7 +39,7 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 	const { navigate, generatePath } = useNavigate(SITES_ROOT);
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
-			name: 'Content Overzicht',
+			name: 'Content overzicht',
 			target: generatePath(`${MODULE_PATHS.overview}`, { siteId }),
 		},
 	]);
