@@ -63,6 +63,7 @@ const PlanningForm: FC<CompartmentProps> = ({
 												).includes(ContentSystemNames.PENDING_PUBLISH),
 											},
 											dataType: '',
+											semanticType: '',
 											label: 'Publicatie op',
 										}}
 									/>
@@ -91,6 +92,7 @@ const PlanningForm: FC<CompartmentProps> = ({
 												).includes(ContentSystemNames.UNPUBLISHED),
 											},
 											dataType: '',
+											semanticType: '',
 											label: 'Archivering op',
 										}}
 									/>

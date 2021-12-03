@@ -1,4 +1,4 @@
-import { useObservable } from '@mindspace-io/react';
+import { useObservable } from '@redactie/utils';
 
 import {
 	ContentActionModel,
@@ -18,7 +18,7 @@ const useContentActionFacade = (): [
 		actions: ContentActionModel[] | ContentActionModel,
 		options: { replace?: true }
 	): void => contentActionsFacade.register(actions, options);
-	const [actions] = useObservable(contentActionsFacade.all$, []);
+	const actions = useObservable(contentActionsFacade.all$, []);
 
 	return [{ actions }, register];
 };
