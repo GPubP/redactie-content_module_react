@@ -60,7 +60,8 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 						htmlType="submit"
 						type="success"
 					>
-						{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
+						{/* TODO: Add to translations */}
+						{disableSave ? 'Bewaard' : t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 					</Button>
 				</>
 			)}
