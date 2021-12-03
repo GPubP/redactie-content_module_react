@@ -60,7 +60,7 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 		page: 1,
 		pagesize: -1,
 	});
-	const allowCrossSite = useMemo(() => config.sites.length !== 1, [config.sites.length]);
+	const allowCrossSite = useMemo(() => config.sites?.length !== 1, [config.sites]);
 	const [searchInCurrentSite, setSearchInCurrentSite] = useState<boolean>(
 		!field.value?.isCrossSite || false
 	);
