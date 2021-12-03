@@ -97,14 +97,14 @@ const FilterForm: FC<FilterFormProps> = ({
 										<div className="col-xs-6 col-sm-3 u-margin-top">
 											<Field
 												as={Datepicker}
-												label="Laatst bewerkt van"
-												name="lastModifiedFrom"
-												id="lastModifiedFrom"
+												label="Publicatiedatum van"
+												name="publishedFrom"
+												id="publishedFrom"
 												format={DATE_FORMATS.date}
 												mask="99/99/9999"
-												activeDate={values.lastModifiedFrom}
+												activeDate={values.publishedFrom}
 												onChange={(value: any) =>
-													setFieldValue('lastModifiedFrom', value)
+													setFieldValue('publishedFrom', value)
 												}
 											/>
 										</div>
@@ -112,13 +112,13 @@ const FilterForm: FC<FilterFormProps> = ({
 											<Field
 												as={Datepicker}
 												label="Tot"
-												name="lastModifiedTo"
-												id="lastModifiedTo"
+												name="publishedTo"
+												id="publishedTo"
 												format={DATE_FORMATS.date}
 												mask="99/99/9999"
-												activeDate={values.lastModifiedTo}
+												activeDate={values.publishedTo}
 												onChange={(value: any) =>
-													setFieldValue('lastModifiedTo', value)
+													setFieldValue('publishedTo', value)
 												}
 											/>
 										</div>
