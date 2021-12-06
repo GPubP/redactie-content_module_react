@@ -4,16 +4,16 @@ export const CONTENT_UPDATE_TAB_MAP: {
 	[key in 'view' | 'edit']: Tab;
 } = {
 	view: {
-		name: 'Bekijk',
-		target: 'bekijk',
+		name: 'Overzicht',
+		target: 'overzicht',
 		active: true,
 		disabled: false,
 		type: TabTypes.INTERNAL,
 		containerId: ALERT_CONTAINER_IDS.contentEdit,
 	},
 	edit: {
-		name: 'Bewerk',
-		target: 'bewerk',
+		name: 'Bewerken',
+		target: 'bewerken',
 		active: false,
 		disabled: false,
 		type: TabTypes.INTERNAL,

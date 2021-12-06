@@ -7,11 +7,11 @@ export const getAlertMessages = (
 	create: {
 		success: {
 			title: 'Aangemaakt',
-			message: `U hebt een nieuw content item '${data.meta.label}' aangemaakt`,
+			message: `Je hebt een nieuw content item '${data.meta.label}' aangemaakt.`,
 		},
 		error: {
 			title: 'Aanmaken mislukt',
-			message: `Aanmaken voor '${data.meta.label}' mislukt`,
+			message: `Aanmaken voor '${data.meta.label}' mislukt.`,
 		},
 		errorSlug: {
 			title: 'Aanmaken mislukt',
@@ -21,11 +21,11 @@ export const getAlertMessages = (
 	update: {
 		success: {
 			title: 'Bewaard',
-			message: `U hebt een nieuwe revisie van ${data.meta.label} bewaard`,
+			message: `Je hebt een nieuwe revisie van ${data.meta.label} bewaard.`,
 		},
 		error: {
 			title: 'Bewaren mislukt',
-			message: `Bewaren nieuwe revisie van '${data.meta.label}' is mislukt`,
+			message: `Bewaren nieuwe revisie van '${data.meta.label}' is mislukt.`,
 		},
 		errorSlug: {
 			title: 'Bewaren mislukt',
@@ -35,21 +35,21 @@ export const getAlertMessages = (
 	publish: {
 		success: {
 			title: 'Status gewijzigd: gepubliceerd',
-			message: `U hebt een nieuwe revisie van '${data.meta.label}' gepubliceerd`,
+			message: `Je hebt een nieuwe revisie van '${data.meta.label}' gepubliceerd.`,
 		},
 		error: {
 			title: 'Status wijzigen naar gepubliceerd mislukt',
-			message: `Publiceren nieuwe revisie van '${data.meta.label}' is mislukt`,
+			message: `Publiceren nieuwe revisie van '${data.meta.label}' is mislukt.`,
 		},
 	},
 	remove: {
 		success: {
 			title: 'Content is verwijderd',
-			message: `U hebt '${data.meta.label}' verwijderd`,
+			message: `Je hebt '${data.meta.label}' verwijderd.`,
 		},
 		error: {
 			title: 'Content verwijderen mislukt',
-			message: `Verwijderen van '${data.meta.label}' is mislukt`,
+			message: `Verwijderen van '${data.meta.label}' is mislukt.`,
 		},
 	},
 });

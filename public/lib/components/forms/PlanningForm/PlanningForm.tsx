@@ -38,7 +38,8 @@ const PlanningForm: FC<CompartmentProps> = ({
 					<FormikOnChangeHandler onChange={values => onFormChange(values, submitForm)} />
 					<h2 className="h3 u-margin-bottom">Planning</h2>
 					<p className="u-margin-bottom">
-						Bepaal de publicatiedatum en de archiveringsdatum voor dit content item.
+						Vul deze data alleen in als je (wijzingingen aan) deze pagina in de toekomst
+						wil publiceren of archiveren.
 					</p>
 					<div className="row">
 						<div className="col-xs-12 u-margin-bottom u-margin-top">
@@ -53,7 +54,7 @@ const PlanningForm: FC<CompartmentProps> = ({
 											config: {
 												minDate: new Date(),
 												inputDescription:
-													'Geef een datum in. Deze datum moet in de toekomst liggen.',
+													'Vul een publicatiedatum in als je wilt dat de pagina later automatisch online verschijnt. Wil je de pagina meteen publiceren? Laat dan deze velden leeg.',
 												disabled: !Object.keys(
 													(machine as StateMachine<
 														StateMachineContext,
@@ -82,7 +83,7 @@ const PlanningForm: FC<CompartmentProps> = ({
 											config: {
 												minDate: new Date(),
 												inputDescription:
-													'Geef een datum in. Deze datum moet na de publicatiedatum liggen.',
+													'Geef een datum in waarop de pagina offline gezet wordt. Wil je de pagina niet automatisch archiveren? Laat dan deze velden leeg.',
 												disabled: !Object.keys(
 													(machine as StateMachine<
 														StateMachineContext,

@@ -69,7 +69,7 @@ const FilterForm: FC<FilterFormProps> = ({
 												label="Zoeken"
 												name="search"
 												id="search"
-												placeholder="Zoeken op woord, uuid, ..."
+												placeholder="Zoeken op titel, slug of uuid."
 												iconright="search"
 											/>
 										</div>

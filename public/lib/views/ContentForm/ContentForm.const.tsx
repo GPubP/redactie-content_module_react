@@ -192,7 +192,7 @@ export const CONTENT_ALERT_MAP = ({
 	},
 	invalidPublishTime: {
 		type: 'danger',
-		title: 'Opgelet, de publicatiedatum ligt in het verleden',
+		title: 'Opgelet: de publicatiedatum ligt in het verleden',
 		message: (
 			<>
 				De publicatiedatum van dit content item staat ingesteld op{' '}
@@ -209,7 +209,7 @@ export const CONTENT_ALERT_MAP = ({
 	},
 	invalidUnpublishTime: {
 		type: 'danger',
-		title: 'Opgelet, de archivatiedatum ligt in het verleden',
+		title: 'Opgelet: de archivatiedatum ligt in het verleden',
 		message: (
 			<>
 				De archiveringsdatum van dit content item staat ingesteld op{' '}
