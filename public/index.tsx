@@ -1,4 +1,4 @@
-// import { akitaDevtools } from '@datorama/akita';
+import { akitaDevtools } from '@datorama/akita';
 import { RenderChildRoutes, SiteContext, TenantContext } from '@redactie/utils';
 import React, { FC, useMemo } from 'react';
 
@@ -20,7 +20,7 @@ import {
 import { ContentDetailExternal } from './lib/views/ContentDetailExternal';
 import ContentForm from './lib/views/ContentForm/ContentForm';
 
-// akitaDevtools();
+akitaDevtools();
 
 const ContentComponent: FC<ContentRouteProps<{ siteId: string }>> = ({
 	route,
