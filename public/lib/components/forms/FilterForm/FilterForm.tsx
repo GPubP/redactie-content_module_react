@@ -49,8 +49,6 @@ const FilterForm: FC<FilterFormProps> = ({
 		return (
 			<Formik enableReinitialize initialValues={initialState} onSubmit={onSubmit}>
 				{({ submitForm, setFieldValue, values }) => {
-					console.log(values);
-
 					return (
 						<Form>
 							<Filter
