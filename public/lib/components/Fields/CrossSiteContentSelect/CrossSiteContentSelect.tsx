@@ -3,8 +3,6 @@ import { DataLoader, useNavigate, useSiteContext } from '@redactie/utils';
 import React, { ReactElement, useMemo, useState } from 'react';
 import { first } from 'rxjs/operators';
 
-import './CrossSiteContentSelect.scss';
-
 import { ContentSelectBase } from '../..';
 import sitesConnector from '../../../connectors/sites';
 import { MODULE_PATHS, SITES_ROOT } from '../../../content.const';
@@ -91,7 +89,6 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 					fieldSchema={fieldSchema}
 					fieldProps={fieldProps}
 					setValue={setValue}
-					items={items}
 					getItems={getItems}
 					currentItem={currentItem}
 					searchParams={{

@@ -17,7 +17,6 @@ export interface ContentSelectBaseProps
 	to: string;
 	getItems: (cb: (options: any[]) => void) => Promise<void>;
 	setValue: (uuid: string) => void;
-	items: ContentSelectItem[];
 	currentItem: ContentSelectItem | undefined;
 	searchParams: Record<string, string | number | boolean>;
 }

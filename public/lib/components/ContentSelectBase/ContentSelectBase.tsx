@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { getIn } from 'formik';
 import debounce from 'lodash.debounce';
 import { pathOr } from 'ramda';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import './ContentSelectBase.scss';
@@ -24,7 +24,6 @@ const ContentSelectBase: React.FC<ContentSelectBaseProps> = ({
 	fieldSchema,
 	fieldProps,
 	to,
-	items,
 	currentItem,
 	searchParams,
 	getItems,
@@ -66,7 +65,6 @@ const ContentSelectBase: React.FC<ContentSelectBaseProps> = ({
 		}, 500),
 		[searchParams]
 	);
-	const [currentQuery, setCurrentQuery] = useState('');
 
 	/**
 	 * METHODS
@@ -143,17 +141,11 @@ const ContentSelectBase: React.FC<ContentSelectBaseProps> = ({
 					loading={contentLoadingState === LoadingState.Loading}
 					onSelection={setContentValue}
 					asyncItems={(query: string, cb: (options: any[]) => void) => {
-						if (currentQuery === query) {
-							cb(items);
-							return;
-						}
-
 						if (!keyInteraction.current) {
 							query = pathOr(field.value, ['contentId'], field.value) as string;
 						}
 
 						debouncedGetItems(query, cb);
-						setCurrentQuery(query);
 					}}
 				/>
 			</div>

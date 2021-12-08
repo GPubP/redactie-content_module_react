@@ -3,8 +3,6 @@ import { useNavigate, useSiteContext } from '@redactie/utils';
 import React, { useMemo, useState } from 'react';
 import { first } from 'rxjs/operators';
 
-import './ContentSelect.scss';
-
 import { ContentSelectBase } from '../..';
 import { MODULE_PATHS, SITES_ROOT } from '../../../content.const';
 import { ccContentFacade } from '../../../store/ccContent';
@@ -79,7 +77,6 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 			<ContentSelectBase
 				fieldSchema={fieldSchema}
 				fieldProps={fieldProps}
-				items={items}
 				getItems={getItems}
 				currentItem={currentItem}
 				setValue={setValue}
