@@ -8,7 +8,7 @@ import { FilterKeys } from '../../views/ContentOverview/ContentOverview.types';
 export const generateActiveFilters = (
 	{
 		search,
-		contentType,
+		contentTypes,
 		lastModifiedFrom,
 		lastModifiedTo,
 		status,
@@ -17,7 +17,7 @@ export const generateActiveFilters = (
 	}: FilterFormState,
 	filterStatusOptions: SelectOption[],
 	publishedOptions: SelectOption[],
-	contentTypes: ContentTypeSchema[]
+	cts: ContentTypeSchema[]
 ): {
 	filters: OverviewFilterItem[];
 	contentTypeFilters: OverviewFilterItem[];
@@ -82,11 +82,11 @@ export const generateActiveFilters = (
 			: []),
 	];
 
-	const contentTypeFilters = contentType.map(ctId => ({
+	const contentTypeFilters = contentTypes.map(ctId => ({
 		valuePrefix: 'Content type',
 		formvalue: ctId,
 		filterKey: FilterKeys.CONTENT_TYPE,
-		value: contentTypes?.find(ct => ct._id === ctId)?.meta.label || ctId,
+		value: cts?.find(ct => ct._id === ctId)?.meta.label || ctId,
 	}));
 
 	return {

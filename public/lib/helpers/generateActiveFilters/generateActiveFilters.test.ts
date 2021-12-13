@@ -26,7 +26,7 @@ const MOCK_CONTENT_TYPE_FILTERS_RESULT = [
 	},
 ];
 const MOCK_FILTER_FORM_VALUES: Partial<FilterFormState> = {
-	contentType: [MOCK_CONTENT_TYPES[1]._id],
+	contentTypes: [MOCK_CONTENT_TYPES[1]._id],
 	lastModifiedFrom: '1/1/2021',
 	lastModifiedTo: '1/12/2021',
 	creator: 'John Doe',
@@ -119,7 +119,7 @@ describe('Helpers: generateActiveFilters', () => {
 	it('Should return a list of active content type filters', () => {
 		const { contentTypeFilters } = wrappedGenerateActiveFilters({
 			...MOCK_FILTER_FORM_STATE,
-			contentType: [MOCK_CONTENT_TYPES[0]._id, MOCK_CONTENT_TYPES[2]._id],
+			contentTypes: [MOCK_CONTENT_TYPES[0]._id, MOCK_CONTENT_TYPES[2]._id],
 		});
 
 		expect(contentTypeFilters).toHaveLength(MOCK_CONTENT_TYPE_FILTERS_RESULT.length);

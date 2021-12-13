@@ -17,7 +17,7 @@ export interface FilterFormProps {
 
 export interface FilterFormState {
 	search: string;
-	contentType: string[];
+	contentTypes: string[];
 	lastModifiedFrom: string;
 	lastModifiedTo: string;
 	status: string;

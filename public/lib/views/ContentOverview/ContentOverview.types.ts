@@ -21,5 +21,5 @@ export enum FilterKeys {
 	STATUS = 'latest-status',
 	PUBLISHED = 'published',
 	CREATOR = 'creator',
-	CONTENT_TYPE = 'contentType',
+	CONTENT_TYPE = 'contentTypes',
 }
