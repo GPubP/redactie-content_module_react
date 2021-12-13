@@ -61,12 +61,17 @@ const MetaForm: FC<CompartmentProps> = ({
 					<h2 className="h3 u-margin-bottom">Informatie</h2>
 					<div className="row">
 						{contentValue?.uuid && contentValue.uuid !== 'new' ? (
-							<CopyValue
-								label="UUID"
-								value={contentValue.uuid}
-								buttonText={t(CORE_TRANSLATIONS.GENERAL_COPY)}
-								className="col-xs-12 u-margin-bottom"
-							/>
+							<div className="col-xs-12">
+								<CopyValue
+									label="UUID"
+									value={contentValue.uuid}
+									buttonText={t(CORE_TRANSLATIONS.GENERAL_COPY)}
+								/>
+								<p className="u-text-light u-margin-top-xs u-margin-bottom">
+									Dit is het unieke identificatienummer van deze pagina. Dit kan
+									je niet bewerken.
+								</p>
+							</div>
 						) : null}
 					</div>
 					{contentType?.meta?.canBeFiltered ? (
