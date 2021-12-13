@@ -7,7 +7,7 @@ import { ContentExtraFilterStatus } from '../../services/content';
 
 export const getFilterStateFromParams = (query?: SearchParams): FilterFormState => {
 	return {
-		contentType: query?.contentTypes?.length ? query.contentTypes : [],
+		contentTypes: query?.contentTypes?.length ? query.contentTypes : [],
 		creator: query?.creator ?? '',
 		published: query?.published
 			? query?.published === 'true' || query?.published === 'false'

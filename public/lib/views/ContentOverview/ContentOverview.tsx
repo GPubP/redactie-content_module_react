@@ -169,7 +169,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		setQuery({
 			skip: 0,
 			search: newFormState.search || undefined,
-			contentTypes: newFormState.contentType.length ? newFormState.contentType : undefined,
+			contentTypes: newFormState.contentTypes.length ? newFormState.contentTypes : undefined,
 			published: newFormState.published
 				? newFormState.published === ContentExtraFilterStatus.ALL
 					? ContentExtraFilterStatus.ALL

@@ -2,7 +2,7 @@ import { ContentTypeSchema } from '../../api/api.types';
 import { FilterFormState } from '../../components';
 
 export const MOCK_FILTER_FORM_STATE: FilterFormState = {
-	contentType: [],
+	contentTypes: [],
 	creator: '',
 	published: '',
 	publishedFrom: '',
