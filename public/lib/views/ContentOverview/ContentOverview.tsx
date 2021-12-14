@@ -76,10 +76,15 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	const {
 		loading: statusesLoadingState,
 		pagination: statusesPagination,
-	} = workflowsConnector.hooks.usePaginatedWorkflowStatuses({
-		page: 1,
-		pagesize: -1,
-	});
+	} = workflowsConnector.hooks.usePaginatedWorkflowStatuses(
+		{
+			page: 1,
+			pagesize: -1,
+		},
+		{
+			siteId,
+		}
+	);
 	const mySecurityrightsKeys = useMemo(
 		() => mySecurityrights.map(right => right.attributes?.key),
 		[mySecurityrights]
