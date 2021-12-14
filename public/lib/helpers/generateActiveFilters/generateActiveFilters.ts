@@ -9,8 +9,8 @@ export const generateActiveFilters = (
 	{
 		search,
 		contentTypes,
-		publishedFrom,
-		publishedTo,
+		lastModifiedFrom,
+		lastModifiedTo,
 		status,
 		published,
 		creator,
@@ -35,12 +35,21 @@ export const generateActiveFilters = (
 					},
 			  ]
 			: []),
-		...(publishedFrom && publishedTo
+		...(lastModifiedFrom
 			? [
 					{
 						filterKey: FilterKeys.DATE,
-						valuePrefix: 'Gepubliceerd tussen',
-						value: `${publishedFrom} - ${publishedTo}`,
+						valuePrefix: 'Laatst bewerkt vanaf',
+						value: lastModifiedFrom,
+					},
+			  ]
+			: []),
+		...(lastModifiedTo
+			? [
+					{
+						filterKey: FilterKeys.DATE,
+						valuePrefix: 'Laatst bewerkt tot',
+						value: lastModifiedTo,
 					},
 			  ]
 			: []),

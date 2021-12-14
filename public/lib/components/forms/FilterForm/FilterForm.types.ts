@@ -18,8 +18,8 @@ export interface FilterFormProps {
 export interface FilterFormState {
 	search: string;
 	contentTypes: string[];
-	publishedFrom: string;
-	publishedTo: string;
+	lastModifiedFrom: string;
+	lastModifiedTo: string;
 	status: string;
 	published: string;
 	creator: string;

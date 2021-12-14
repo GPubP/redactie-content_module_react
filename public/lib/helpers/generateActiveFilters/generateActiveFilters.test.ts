@@ -27,8 +27,8 @@ const MOCK_CONTENT_TYPE_FILTERS_RESULT = [
 ];
 const MOCK_FILTER_FORM_VALUES: Partial<FilterFormState> = {
 	contentTypes: [MOCK_CONTENT_TYPES[1]._id],
-	publishedFrom: '1/1/2021',
-	publishedTo: '1/12/2021',
+	lastModifiedFrom: '1/1/2021',
+	lastModifiedTo: '1/12/2021',
 	creator: 'John Doe',
 	status: ContentStatus.DRAFT,
 };
@@ -40,9 +40,14 @@ const MOCK_FILTERS_RESULT: OverviewFilterItem[] = [
 		value: MOCK_CONTENT_TYPES[1].meta.label,
 	},
 	{
-		valuePrefix: 'Gepubliceerd tussen',
+		valuePrefix: 'Laatst bewerkt vanaf',
 		filterKey: FilterKeys.DATE,
-		value: `${MOCK_FILTER_FORM_VALUES.publishedFrom} - ${MOCK_FILTER_FORM_VALUES.publishedTo}`,
+		value: `${MOCK_FILTER_FORM_VALUES.lastModifiedFrom}`,
+	},
+	{
+		valuePrefix: 'Laatst bewerkt tot',
+		filterKey: FilterKeys.DATE,
+		value: `${MOCK_FILTER_FORM_VALUES.lastModifiedTo}`,
 	},
 	{
 		valuePrefix: 'Persoon',

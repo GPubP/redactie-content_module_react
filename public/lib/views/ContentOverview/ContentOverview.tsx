@@ -175,11 +175,11 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 					? ContentExtraFilterStatus.ALL
 					: `${newFormState.published === PublishedStatuses.ONLINE}`
 				: undefined,
-			publishedFrom: newFormState.publishedFrom
-				? moment(newFormState.publishedFrom, DATE_FORMATS.date).toISOString()
+			lastModifiedFrom: newFormState.lastModifiedFrom
+				? moment(newFormState.lastModifiedFrom, DATE_FORMATS.date).toISOString()
 				: undefined,
-			publishedTo: newFormState.publishedTo
-				? moment(newFormState.publishedTo, DATE_FORMATS.date).toISOString()
+			lastModifiedTo: newFormState.lastModifiedTo
+				? moment(newFormState.lastModifiedTo, DATE_FORMATS.date).toISOString()
 				: undefined,
 			['latest-status']: newFormState.status || undefined,
 			creator: newFormState.creator || undefined,
@@ -196,8 +196,8 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		switch (item.filterKey) {
 			case FilterKeys.DATE: {
 				updatedQuery = {
-					publishedFrom: undefined,
-					publishedTo: undefined,
+					lastModifiedFrom: undefined,
+					lastModifiedTo: undefined,
 				};
 				break;
 			}
