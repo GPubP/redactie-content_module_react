@@ -891,7 +891,10 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							(contentItem?.meta.workflowState === ContentSystemNames.PUBLISHED &&
 								contentItemDraft?.meta.workflowState ===
 									ContentSystemNames.PUBLISHED &&
-								!allowedTransitions.includes(`to-${ContentSystemNames.DRAFT}`))
+								!allowedTransitions.includes(`to-${ContentSystemNames.DRAFT}`)) ||
+							!allowedTransitions.includes(
+								`to-${contentItemDraft?.meta.workflowState}`
+							)
 						}
 						disableUpdatePublication={
 							!contentItemDraft?.meta.historySummary?.published ||
