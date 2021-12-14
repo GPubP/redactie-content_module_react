@@ -33,7 +33,7 @@ export const INTERNAL_COMPARTMENTS = (
 			const formattedDate = moment(contentItem?.meta.lastModified).format(
 				DATE_FORMATS.dateAndTime
 			);
-			return `Laatst bewerkt op ${formattedDate}`;
+			return `Laatst bijgewerkt op ${formattedDate}`;
 		},
 		name: 'meta',
 		slug: 'informatie',
