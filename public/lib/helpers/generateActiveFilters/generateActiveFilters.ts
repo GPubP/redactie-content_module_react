@@ -39,7 +39,7 @@ export const generateActiveFilters = (
 			? [
 					{
 						filterKey: FilterKeys.DATE,
-						valuePrefix: 'Laatst bewerkt vanaf',
+						valuePrefix: 'Laatst bijgewerkt vanaf',
 						value: lastModifiedFrom,
 					},
 			  ]
@@ -48,7 +48,7 @@ export const generateActiveFilters = (
 			? [
 					{
 						filterKey: FilterKeys.DATE,
-						valuePrefix: 'Laatst bewerkt tot',
+						valuePrefix: 'Laatst bijgewerkt tot',
 						value: lastModifiedTo,
 					},
 			  ]

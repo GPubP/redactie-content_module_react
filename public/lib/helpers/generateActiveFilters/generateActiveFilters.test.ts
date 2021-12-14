@@ -40,12 +40,12 @@ const MOCK_FILTERS_RESULT: OverviewFilterItem[] = [
 		value: MOCK_CONTENT_TYPES[1].meta.label,
 	},
 	{
-		valuePrefix: 'Laatst bewerkt vanaf',
+		valuePrefix: 'Laatst bijgewerkt vanaf',
 		filterKey: FilterKeys.DATE,
 		value: `${MOCK_FILTER_FORM_VALUES.lastModifiedFrom}`,
 	},
 	{
-		valuePrefix: 'Laatst bewerkt tot',
+		valuePrefix: 'Laatst bijgewerkt tot',
 		filterKey: FilterKeys.DATE,
 		value: `${MOCK_FILTER_FORM_VALUES.lastModifiedTo}`,
 	},

@@ -98,7 +98,7 @@ const FilterForm: FC<FilterFormProps> = ({
 										<div className="col-xs-6 col-sm-3 u-margin-top">
 											<Field
 												as={Datepicker}
-												label="Laatst bewerkt vanaf"
+												label="Laatst bijgewerkt vanaf"
 												name="lastModifiedFrom"
 												id="lastModifiedFrom"
 												format={DATE_FORMATS.date}

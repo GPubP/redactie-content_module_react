@@ -94,7 +94,7 @@ export const CONTENT_OVERVIEW_COLUMNS = (
 		format: (data: string) => moment(data).format(DATE_FORMATS.dateAndTime),
 	},
 	{
-		label: 'Laatst bewerkt door',
+		label: 'Laatst bijgewerkt door',
 		value: 'lastEditor',
 		disableSorting: true,
 		width: '15%',
