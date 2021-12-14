@@ -36,6 +36,9 @@ export class CcContentFacade extends BaseMultiEntityFacade<
 			})
 			.catch(error => {
 				this.store.setItemError(key, error);
+			})
+			.finally(() => {
+				this.store.setItemIsFetching(key, false);
 			});
 	}
 

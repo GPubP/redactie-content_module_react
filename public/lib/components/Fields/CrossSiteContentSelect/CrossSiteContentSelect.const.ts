@@ -1,2 +1,0 @@
-export const CONTENT_SELECT_TOOLTIP_DELAY = 700;
-export const CONTENT_SELECT_TOOLTIP_TYPE = 'primary';
