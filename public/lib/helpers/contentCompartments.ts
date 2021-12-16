@@ -23,7 +23,7 @@ import {
 	ModuleSettings,
 } from '../api/api.types';
 import { FieldsForm } from '../components';
-import { getCustomValidator, getValueSyncMap } from '../connectors/formRenderer';
+import formRendererConnector from '../connectors/formRenderer';
 import { WORKING_TITLE_KEY } from '../content.const';
 import { MapValueToContentItemPath } from '../services/contentTypes';
 import { ExternalCompartmentModel } from '../store/api/externalCompartments';
@@ -199,7 +199,7 @@ const validateCTCompartment = (contentType: ContentTypeSchema, settings: CtTypeS
 	values: ContentSchema
 ): boolean => {
 	const { validationSchema, errorMessages } = getCompartmentFormProps(contentType, settings);
-	const CustomValidator = getCustomValidator();
+	const CustomValidator = (formRendererConnector.api as any).CustomValidator;
 
 	if (validationSchema && CustomValidator) {
 		const validator = new CustomValidator(validationSchema, errorMessages, {
@@ -249,7 +249,7 @@ export const getContentTypeCompartments = (
 	const compartments = contentTypeHelpers.getCompartments(contentType);
 
 	const allFields = contentTypeHelpers.getFieldsByCompartments(contentType.fields, compartments);
-	const valueSyncMap = getValueSyncMap(allFields);
+	const valueSyncMap = formRendererConnector.api.getValueSyncMap(allFields);
 
 	return compartments.reduce((acc, compartment) => {
 		const compartmentFields = contentTypeHelpers.getFieldsByCompartment(

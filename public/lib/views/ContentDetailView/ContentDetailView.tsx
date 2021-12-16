@@ -21,7 +21,7 @@ import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { PublishedStatus } from '../../components';
-import { getView } from '../../connectors/formRenderer';
+import formRendererConnector from '../../connectors/formRenderer';
 import sitesConnector from '../../connectors/sites';
 import { CONTENT_MODAL_MAP, DATE_FORMATS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ALERT_CONTAINER_IDS } from '../../content.types';
@@ -45,7 +45,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 }) => {
 	const { meta } = contentItem;
 	const { siteId, contentId, contentTypeId } = match.params;
-	const View = getView();
+	const View = formRendererConnector.api.View;
 
 	/**
 	 * Hooks

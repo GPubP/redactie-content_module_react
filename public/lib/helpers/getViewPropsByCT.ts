@@ -1,7 +1,7 @@
 import { FormSchema } from '@redactie/form-renderer-module';
 import { FormikValues } from 'formik';
 
-import { parseFields } from '../connectors/formRenderer';
+import formRendererConnector from '../connectors/formRenderer';
 import { ContentTypeSchema } from '../services/contentTypes';
 
 import { contentTypeHelpers } from './contentType';
@@ -15,7 +15,7 @@ export const getViewPropsByCT = (
 	const fields = contentTypeHelpers.getFieldsByCompartments(contentType.fields, compartments);
 	return {
 		schema: {
-			fields: parseFields(fields),
+			fields: formRendererConnector.api.parseFields(fields),
 		},
 		values: getInitialContentValues(fields, values),
 	};

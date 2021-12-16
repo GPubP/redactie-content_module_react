@@ -1,4 +1,4 @@
-import { getViewRegistry } from '../../connectors/formRenderer';
+import formRendererConnector from '../../connectors/formRenderer';
 
 import { CCContentSelectView } from './ContentSelect';
 import { CCLinkView } from './Link';
@@ -6,7 +6,7 @@ import { CCTextBoxView } from './TextBox';
 import { CCTextLineView } from './TextLine';
 
 export const registerCCViews = (): void => {
-	const viewRegistry = getViewRegistry();
+	const viewRegistry = formRendererConnector.api.viewRegistry;
 
 	if (viewRegistry) {
 		viewRegistry.add([

@@ -4,11 +4,7 @@ import debounce from 'lodash.debounce';
 import { find, omit, propEq } from 'ramda';
 import React, { ChangeEvent, useCallback, useContext, useEffect, useState } from 'react';
 
-import {
-	ErrorMessage,
-	getFormRendererFieldTitle,
-	useFormContext,
-} from '../../../connectors/formRenderer';
+import formRendererConnector from '../../../connectors/formRenderer';
 import { ContentFormContext } from '../../../context';
 
 import { parseAnchorlinkOptions } from './Anchorlink.helpers';
@@ -22,9 +18,10 @@ const Anchorlink: React.FC<AnchorlinkFieldProps> = ({
 	const config = fieldSchema.config || {};
 	const { field } = fieldProps;
 	const { setValue } = fieldHelperProps;
-	const FormRendererFieldTitle = getFormRendererFieldTitle();
+	const FormRendererFieldTitle = formRendererConnector.api.FormRendererFieldTitle;
+	const ErrorMessage = formRendererConnector.api.ErrorMessage;
 
-	const { schema } = useFormContext();
+	const { schema } = formRendererConnector.api.useFormContext();
 	const { contentType } = useContext(ContentFormContext);
 	const { values } = useFormikContext<FormikValues>();
 	const [anchorlinkOptions, setAnchorlinkOptions] = useState<SelectOption[]>([]);

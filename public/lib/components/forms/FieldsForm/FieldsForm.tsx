@@ -1,7 +1,7 @@
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import { CompartmentProps } from '../../../api/api.types';
-import { getForm } from '../../../connectors/formRenderer';
+import formRendererConnector from '../../../connectors/formRenderer';
 import { ContentFormContext } from '../../../context';
 import { getCompartmentFormProps } from '../../../helpers/getCompartmentFormProps';
 import { CtTypeSettings } from '../../../views/ContentForm/ContentForm.types';
@@ -13,7 +13,7 @@ const FieldsForm: FC<CompartmentProps & { settings: CtTypeSettings }> = ({
 	formikRef,
 	settings,
 }): ReactElement | null => {
-	const Form = getForm();
+	const Form = formRendererConnector.api.Form;
 	const contentFormContext = useMemo(() => ({ contentType }), [contentType]);
 
 	/**

@@ -11,7 +11,7 @@ import {
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import { CompartmentProps } from '../../../api/api.types';
-import { ErrorMessage } from '../../../connectors/formRenderer';
+import formRendererConnector from '../../../connectors/formRenderer';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandler';
 
@@ -39,6 +39,7 @@ const MetaForm: FC<CompartmentProps> = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [contentValue?.uuid, siteId]);
 	const [t] = useCoreTranslation();
+	const ErrorMessage = formRendererConnector.api.ErrorMessage;
 
 	/**
 	 * RENDER
