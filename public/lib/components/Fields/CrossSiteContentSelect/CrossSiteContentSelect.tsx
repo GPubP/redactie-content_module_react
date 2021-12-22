@@ -33,7 +33,11 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 		page: 1,
 		pagesize: -1,
 	});
-	const allowCrossSite = useMemo(() => config.sites?.length !== 1, [config.sites]);
+
+	const renderSearchInCurrentSite = useMemo(
+		() => config.sites?.length !== 1 && config.sites.includes(siteId),
+		[config.sites, siteId]
+	);
 	const [searchInCurrentSite, setSearchInCurrentSite] = useState<boolean>(
 		(field.value && !field.value?.isCrossSite) || false
 	);
@@ -113,7 +117,7 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 							: '#'
 					}
 				/>
-				{allowCrossSite && (
+				{renderSearchInCurrentSite && (
 					<div className="u-margin-top">
 						<Checkbox
 							id="searchInCurrentSite"
