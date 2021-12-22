@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 
 import './ContentSelectBase.scss';
 
-import { ErrorMessage } from '../../connectors/formRenderer';
+import formRendererConnector from '../../connectors/formRenderer';
 import { useCcContent } from '../../hooks';
 import { ccContentFacade } from '../../store/ccContent';
 
@@ -65,6 +65,8 @@ const ContentSelectBase: React.FC<ContentSelectBaseProps> = ({
 		}, 500),
 		[searchParams]
 	);
+	const FormRendererFieldTitle = formRendererConnector.api.FormRendererFieldTitle;
+	const ErrorMessage = formRendererConnector.api.ErrorMessage;
 
 	/**
 	 * METHODS
@@ -129,9 +131,14 @@ const ContentSelectBase: React.FC<ContentSelectBaseProps> = ({
 				onMouseLeave={handleMouseLeave}
 				onKeyDown={handleKeyDown}
 			>
+				<FormRendererFieldTitle
+					isRequired={!!fieldSchema.config?.required}
+					className="u-margin-bottom"
+				>
+					{fieldSchema?.label}
+				</FormRendererFieldTitle>
 				<Autocomplete
 					ref={autoCompleteRef}
-					label={fieldSchema.label}
 					id={fieldSchema.name}
 					state={state}
 					multipleSelect={false}

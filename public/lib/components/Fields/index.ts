@@ -1,13 +1,13 @@
 import { FC } from 'react';
 
-import { getFieldRegistery } from '../../connectors/formRenderer';
+import formRendererConnector from '../../connectors/formRenderer';
 
 import { Anchorlink } from './Anchorlink';
 import { ContentSelect } from './ContentSelect';
 import { CrossSiteContentSelect } from './CrossSiteContentSelect';
 
 export const registerCCFields = (): void => {
-	const fieldRegistry = getFieldRegistery();
+	const fieldRegistry = formRendererConnector.api.fieldRegistry;
 
 	if (fieldRegistry) {
 		fieldRegistry.add([
