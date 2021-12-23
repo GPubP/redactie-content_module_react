@@ -169,30 +169,34 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		// This is to make sure the the alert is triggered only when all information is present
 		canCallTransitionAlert.current = true;
 
-		return machine.initialState.nextEvents.filter(nextEvent => {
-			return (
-				machine.transition(machine.initialState, nextEvent).changed ||
-				(`to-${machine.initialState.value}` === nextEvent &&
-					machine.options.guards.userHasRole(
-						machine.context,
-						nextEvent as any,
-						{
-							cond: path(
-								[
-									'machine',
-									'config',
-									'states',
-									machine.initialState.value.toString(),
-									'on',
-									nextEvent,
-									'cond',
-								],
-								machine
-							),
-						} as any
-					))
-			);
-		});
+		try {
+			return machine.initialState.nextEvents.filter(nextEvent => {
+				return (
+					machine.transition(machine.initialState, nextEvent).changed ||
+					(`to-${machine.initialState.value}` === nextEvent &&
+						machine.options.guards.userHasRole(
+							machine.context,
+							nextEvent as any,
+							{
+								cond: path(
+									[
+										'machine',
+										'config',
+										'states',
+										machine.initialState.value.toString(),
+										'on',
+										nextEvent,
+										'cond',
+									],
+									machine
+								),
+							} as any
+						))
+				);
+			});
+		} catch (e) {
+			return [];
+		}
 	}, [machine]);
 
 	const internalCompartments = useMemo(() => {
