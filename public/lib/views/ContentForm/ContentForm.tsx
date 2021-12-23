@@ -649,6 +649,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		if (!compartmentsAreValid || !activeCompartment) {
 			setContentLoading(false);
+			alertService.invalidForm({
+				containerId: isCreating
+					? ALERT_CONTAINER_IDS.contentCreate
+					: ALERT_CONTAINER_IDS.contentEdit,
+			});
 			return;
 		}
 
