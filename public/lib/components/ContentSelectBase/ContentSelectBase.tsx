@@ -37,9 +37,7 @@ const ContentSelectBase: React.FC<ContentSelectBaseProps> = ({
 
 	const state = !!error && !!touch ? 'error' : '';
 
-	const fieldClass = classNames('a-input', {
-		'is-required': config.required,
-	});
+	const fieldClass = classNames('a-input', 'a-content-select-input');
 
 	const { siteId } = useSiteContext();
 	const [contentLoadingState] = useCcContent(`search_${fieldSchema.name}`);
@@ -131,10 +129,7 @@ const ContentSelectBase: React.FC<ContentSelectBaseProps> = ({
 				onMouseLeave={handleMouseLeave}
 				onKeyDown={handleKeyDown}
 			>
-				<FormRendererFieldTitle
-					isRequired={!!fieldSchema.config?.required}
-					className="u-margin-bottom"
-				>
+				<FormRendererFieldTitle isRequired={!!fieldSchema.config?.required}>
 					{fieldSchema?.label}
 				</FormRendererFieldTitle>
 				<Autocomplete
