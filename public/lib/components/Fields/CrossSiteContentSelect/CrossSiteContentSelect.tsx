@@ -35,7 +35,7 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 	});
 
 	const renderSearchInCurrentSite = useMemo(
-		() => config.sites?.length !== 1 && config.sites.includes(siteId),
+		() => config.sites?.length !== 1 && config.sites?.includes(siteId),
 		[config.sites, siteId]
 	);
 	const [searchInCurrentSite, setSearchInCurrentSite] = useState<boolean>(
