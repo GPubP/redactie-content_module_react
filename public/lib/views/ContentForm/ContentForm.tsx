@@ -353,7 +353,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 	useEffect(() => {
 		if (compartments.length && (!compartment || compartment === 'default')) {
-			history.push(`./${compartments[0].slug || compartments[0].name}`);
+			history.replace(`./${compartments[0].slug || compartments[0].name}`);
 			return;
 		}
 
@@ -821,14 +821,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 		setShowConfirmModal(true);
 	};
-
-	if (!activeCompartment && compartment !== 'default') {
-		if (isCreating) {
-			navigate(`${MODULE_PATHS.create}/default`, { siteId, contentTypeId });
-		} else {
-			navigate(`${MODULE_PATHS.detailEdit}/default`, { siteId, contentTypeId, contentId });
-		}
-	}
 
 	if (!activeCompartment) {
 		return null;
