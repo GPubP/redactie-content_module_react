@@ -75,11 +75,7 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 		setQuery(
 			parseOrderByToObj({
 				...orderBy,
-<<<<<<< HEAD
 				key: ORDER_BY_KEYMAP[orderBy.key] || `meta.${orderBy.key}`,
-=======
-				key: `meta.${orderBy.key}`,
->>>>>>> parent of 0977810 (fix(content-aanmaken): sorteren op type)
 			})
 		);
 	};
