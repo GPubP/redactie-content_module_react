@@ -74,7 +74,7 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 		setQuery(
 			parseOrderByToObj({
 				...orderBy,
-				key: `meta.${orderBy.key}`,
+				key: `meta.canBeFiltered`,
 			})
 		);
 	};
