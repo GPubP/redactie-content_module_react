@@ -26,6 +26,7 @@ import { contentTypesFacade } from '../../store/contentTypes';
 import {
 	CONTENT_CREATE_OVERVIEW_COLUMNS,
 	CREATE_OVERVIEW_QUERY_PARAMS_CONFIG,
+	ORDER_BY_KEYMAP,
 } from './ContentCreateOverview.const';
 import { ContentCreateOverviewTableRow } from './ContentCreateOverview.types';
 
@@ -74,13 +75,29 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 		setQuery(
 			parseOrderByToObj({
 				...orderBy,
-				key: `meta.canBeFiltered`,
+<<<<<<< HEAD
+				key: ORDER_BY_KEYMAP[orderBy.key] || `meta.${orderBy.key}`,
+=======
+				key: `meta.${orderBy.key}`,
+>>>>>>> parent of 0977810 (fix(content-aanmaken): sorteren op type)
 			})
 		);
 	};
 
+	const getSortFromQuery = (sort: string | null | undefined): string => {
+		if (!sort) {
+			return '';
+		}
+
+		const findFromOrderByMap = Object.keys(ORDER_BY_KEYMAP).find(
+			key => ORDER_BY_KEYMAP[key] === sort
+		);
+
+		return findFromOrderByMap || sort.split('.')[1];
+	};
+
 	const activeSorting = parseObjToOrderBy({
-		sort: query.sort ? query.sort.split('.')[1] : '',
+		sort: getSortFromQuery(query.sort),
 		direction: query.direction ?? 1,
 	});
 

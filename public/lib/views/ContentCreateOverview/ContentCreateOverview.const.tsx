@@ -65,3 +65,8 @@ export const CONTENT_CREATE_OVERVIEW_COLUMNS = (
 		},
 	},
 ];
+
+export const ORDER_BY_KEYMAP: Record<string, string> = {
+	contentType: 'meta.contentType.meta.label',
+	type: 'meta.canBeFiltered',
+};
