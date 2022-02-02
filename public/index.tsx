@@ -73,7 +73,6 @@ if (rolesRightsConnector.api) {
 			context: 'site',
 			order: 0,
 			label: 'Content',
-
 			canShown: [
 				rolesRightsConnector.api.canShowns.securityRightsSiteCanShown(
 					urlSiteParam,
