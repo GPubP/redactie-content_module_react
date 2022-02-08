@@ -15,6 +15,7 @@ import formRendererConnector from '../../../connectors/formRenderer';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandler';
 
+import DateTimeField from '../../Fields/DateTimeField/DateTimeField';
 import { META_VALIDATION_SCHEMA } from './MetaForm.const';
 
 const MetaForm: FC<CompartmentProps> = ({
@@ -117,6 +118,29 @@ const MetaForm: FC<CompartmentProps> = ({
 							<div className="u-text-light u-margin-top-xs">
 								Geef dit item een korte beschrijving voor in het content overzicht.
 							</div>
+						</div>
+					</div>
+					<div className="row">
+						<div className="col-xs-12 u-margin-top">
+							<Field>
+								{({ form }: FieldProps) => (
+									<DateTimeField
+										form={form}
+										fieldSchema={{
+											name: 'issuedOn',
+											module: 'core',
+											type: 'string',
+											config: {
+												inputDescription: '',
+												disabled: false,
+											},
+											dataType: '',
+											semanticType: '',
+											label: 'Uitgifte op',
+										}}
+									/>
+								)}
+							</Field>
 						</div>
 					</div>
 				</CardBody>

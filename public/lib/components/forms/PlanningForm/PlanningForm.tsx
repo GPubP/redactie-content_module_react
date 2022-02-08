@@ -9,7 +9,7 @@ import { CompartmentProps } from '../../../api/api.types';
 import formRendererConnector from '../../../connectors/formRenderer';
 import { ContentSystemNames } from '../../../services/content';
 
-import DateTimeField from './DateTimeField/DateTimeField';
+import DateTimeField from '../../Fields/DateTimeField/DateTimeField';
 import { PLANNING_VALIDATION_SCHEMA } from './PlanningForm.const';
 
 const PlanningForm: FC<CompartmentProps> = ({
