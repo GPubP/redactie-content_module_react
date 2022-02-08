@@ -132,7 +132,7 @@ const MetaForm: FC<CompartmentProps> = ({
 											type: 'string',
 											config: {
 												inputDescription: '',
-												disabled: false,
+												disabled: !contentType.meta.issuedOnEditable,
 											},
 											dataType: '',
 											semanticType: '',
