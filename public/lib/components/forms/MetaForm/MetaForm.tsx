@@ -13,9 +13,9 @@ import React, { FC, ReactElement, useMemo } from 'react';
 import { CompartmentProps } from '../../../api/api.types';
 import formRendererConnector from '../../../connectors/formRenderer';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
+import DateTimeField from '../../Fields/DateTimeField/DateTimeField';
 import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandler';
 
-import DateTimeField from '../../Fields/DateTimeField/DateTimeField';
 import { META_VALIDATION_SCHEMA } from './MetaForm.const';
 
 const MetaForm: FC<CompartmentProps> = ({
@@ -133,6 +133,7 @@ const MetaForm: FC<CompartmentProps> = ({
 											config: {
 												inputDescription: '',
 												disabled: !contentType.meta.issuedOnEditable,
+												minuteStep: 1,
 											},
 											dataType: '',
 											semanticType: '',
