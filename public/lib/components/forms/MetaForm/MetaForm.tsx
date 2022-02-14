@@ -13,7 +13,7 @@ import React, { FC, ReactElement, useMemo } from 'react';
 import { CompartmentProps } from '../../../api/api.types';
 import formRendererConnector from '../../../connectors/formRenderer';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
-import { DateTimeField } from '../../Fields';
+import { DateTimeField } from '../../Fields/DateTimeField';
 import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandler';
 
 import { META_VALIDATION_SCHEMA } from './MetaForm.const';
