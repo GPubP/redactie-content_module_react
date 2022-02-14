@@ -1,4 +1,4 @@
-import { object, ObjectSchema, string } from 'yup';
+import { date, object, ObjectSchema, string } from 'yup';
 
 import { ContentCompartmentsValidateOptions } from '../../../store/ui/contentCompartments';
 
@@ -26,5 +26,6 @@ export const META_VALIDATION_SCHEMA = (
 							),
 						}),
 				}),
+				issuedOn: date().nullable(true),
 		  })
 		: object().shape({});

@@ -1,7 +1,7 @@
 import { useField } from 'formik';
 import React, { FC, ReactElement, useMemo } from 'react';
 
-import formRendererConnector from '../../../../connectors/formRenderer';
+import formRendererConnector from '../../../connectors/formRenderer';
 
 import { DateTimeFieldProps } from './DateTimeField.types';
 

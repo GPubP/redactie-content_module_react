@@ -104,6 +104,8 @@ export interface ContentTypeSchema {
 		urlPath?: {
 			pattern?: string;
 		};
+		issuedOnPrefill?: string;
+		issuedOnEditable?: boolean;
 	};
 	valueSyncMap: ValueSyncMap;
 	fields: ContentTypeFieldSchema[];
