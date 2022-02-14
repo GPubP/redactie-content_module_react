@@ -8,8 +8,8 @@ import { StateMachine } from 'xstate';
 import { CompartmentProps } from '../../../api/api.types';
 import formRendererConnector from '../../../connectors/formRenderer';
 import { ContentSystemNames } from '../../../services/content';
+import { DateTimeField } from '../../Fields';
 
-import DateTimeField from '../../Fields/DateTimeField/DateTimeField';
 import { PLANNING_VALIDATION_SCHEMA } from './PlanningForm.const';
 
 const PlanningForm: FC<CompartmentProps> = ({

@@ -6,6 +6,8 @@ import { Anchorlink } from './Anchorlink';
 import { ContentSelect } from './ContentSelect';
 import { CrossSiteContentSelect } from './CrossSiteContentSelect';
 
+export * from './DateTimeField';
+
 export const registerCCFields = (): void => {
 	const fieldRegistry = formRendererConnector.api.fieldRegistry;
 
