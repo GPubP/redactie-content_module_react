@@ -153,6 +153,7 @@ if (rolesRightsConnector.api) {
 				path: MODULE_PATHS.detail,
 				breadcrumb: false,
 				component: ContentDetail,
+				hideFooter: true,
 				redirect: MODULE_PATHS.detailView,
 				guardOptions: {
 					guards: [
