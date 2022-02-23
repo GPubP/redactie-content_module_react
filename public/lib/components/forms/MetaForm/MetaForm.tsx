@@ -56,6 +56,7 @@ const MetaForm: FC<CompartmentProps> = ({
 					.catch(err => yupToFormErrors(err))
 			}
 			initialValues={value}
+			enableReinitialize
 		>
 			{({ submitForm }) => (
 				<CardBody>
