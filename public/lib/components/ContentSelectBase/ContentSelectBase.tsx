@@ -55,6 +55,7 @@ const ContentSelectBase: React.FC<ContentSelectBaseProps> = ({
 				{
 					search: query,
 					...searchParams,
+					...(!keyInteraction.current && config.bySlug && { slug: query }),
 				},
 				true
 			);
