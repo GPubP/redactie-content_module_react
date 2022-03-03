@@ -40,7 +40,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					label: `${c.meta.label} [${c.meta.contentType?.meta?.label || ''}] - ID ${
 						c.uuid
 					}`,
-					value: c.uuid,
+					value: config.bySlug ? c.meta.slug.nl : c.uuid,
 					contentTypeId: c.meta.contentType.uuid,
 				}));
 
@@ -51,18 +51,20 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 			});
 	};
 
-	const setValue = (uuid: string): void => {
+	const setValue = (identifier: string): void => {
 		if (!config.returnByValue) {
-			return fieldHelperProps.setValue(uuid);
+			return fieldHelperProps.setValue(identifier);
 		}
 
-		const originalItem = originalItems.find(item => item.uuid === uuid);
+		const originalItem = originalItems.find(item =>
+			config.bySlug ? item.meta.slug.nl === identifier : item.uuid === identifier
+		);
 
 		if (originalItem) {
 			return fieldHelperProps.setValue(originalItem);
 		}
 
-		const item = items.find(item => item.value === uuid);
+		const item = items.find(item => item.value === identifier);
 
 		if (item) {
 			return fieldHelperProps.setValue(item);
