@@ -1,6 +1,6 @@
 {
   "name": "@redactie/content-module",
-  "version": "1.14.5-0",
+  "version": "1.14.4",
   "description": "redactie content module",
   "main": "dist/redactie-content-module.umd.js",
   "module": "dist/redactie-content-module.umd.js",
@@ -49,7 +49,7 @@
     "@redactie/roles-rights-module": "1.0.6",
     "@redactie/sites-module": "^1.0.2",
     "@redactie/translations-module": "^0.8.2",
-    "@redactie/utils": "^2.2.1",
+    "@redactie/utils": "^2.2.2-1",
     "@redactie/workflows-module": "1.0.2",
     "@testing-library/jest-dom": "5.0.2",
     "@testing-library/react": "9.4.0",
