@@ -7,6 +7,8 @@ import { ContentSelectBase } from '../..';
 import { MODULE_PATHS, SITES_ROOT } from '../../../content.const';
 import { ccContentFacade } from '../../../store/ccContent';
 import { ContentModel } from '../../../store/content';
+import { ContentInfoTooltip } from '../../../components/ContentInfoTooltip';
+import { ContentMeta } from '../../../services/content/content.service.types';
 
 const ContentSelect: React.FC<InputFieldProps> = ({
 	fieldProps,
@@ -19,7 +21,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	const { siteId } = useSiteContext();
 	const { generatePath } = useNavigate(SITES_ROOT);
 	const [items, setItems] = useState<
-		{ value: string | undefined; label: string; contentTypeId: string }[]
+		{ value: string | undefined; label: string; contentTypeId: string, meta: ContentMeta }[]
 	>([]);
 	const [originalItems, setOriginalItems] = useState<ContentModel[]>([]);
 	const currentItem = useMemo(() => {
@@ -42,6 +44,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					}`,
 					value: config.bySlug ? c.meta.slug.nl : c.uuid,
 					contentTypeId: c.meta.contentType.uuid,
+					meta: c.meta
 				}));
 
 				setOriginalItems((content as ContentModel[]) || []);
@@ -100,6 +103,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 						: '#'
 				}
 			/>
+			{currentItem && <ContentInfoTooltip icon="file-text-o" meta={currentItem?.meta} />}
 		</>
 	);
 };
