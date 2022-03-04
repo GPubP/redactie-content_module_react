@@ -19,7 +19,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	const { siteId } = useSiteContext();
 	const { generatePath } = useNavigate(SITES_ROOT);
 	const [items, setItems] = useState<
-		{ value: string | undefined; label: string; contentTypeId: string }[]
+		{ value: string | undefined; label: string; contentTypeId: string; uuid: string }[]
 	>([]);
 	const [originalItems, setOriginalItems] = useState<ContentModel[]>([]);
 	const currentItem = useMemo(() => {
@@ -42,6 +42,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					}`,
 					value: config.bySlug ? c.meta.slug.nl : c.uuid,
 					contentTypeId: c.meta.contentType.uuid,
+					uuid: c.uuid || '',
 				}));
 
 				setOriginalItems((content as ContentModel[]) || []);
@@ -93,7 +94,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 				to={
 					currentItem?.value
 						? generatePath(MODULE_PATHS.detailView, {
-								contentId: currentItem?.value,
+								contentId: currentItem?.uuid || currentItem?.value,
 								contentTypeId: currentItem?.contentTypeId,
 								siteId,
 						  })
