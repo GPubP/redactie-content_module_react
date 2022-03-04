@@ -20,11 +20,8 @@ export interface ContentHistorySummary {
 	latestStatus: string;
 }
 
-export interface ContentSchema {
-	_id?: string;
-	uuid?: string;
-	meta: {
-		label: string;
+export interface ContentMeta {
+	label: string;
 		slug: Record<string, string>;
 		site: string;
 		description?: string;
@@ -51,7 +48,12 @@ export interface ContentSchema {
 				pattern: string;
 			}
 		>;
-	};
+}
+
+export interface ContentSchema {
+	_id?: string;
+	uuid?: string;
+	meta: ContentMeta;
 	modulesData?: Record<string, ModuleValue>;
 	fields: Record<string, any>;
 }
