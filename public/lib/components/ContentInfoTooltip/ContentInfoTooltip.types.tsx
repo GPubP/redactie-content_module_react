@@ -1,22 +1,6 @@
 export interface ContentInfoTooltipProps {
+	contentId: string | undefined;
 	icon: string;
-	meta: {
-		label: string;
-		slug: Record<string, string>;
-		site: string;
-		description?: string;
-		historySummary?: {
-			published: boolean;
-		};
-		lastEditor?: {
-			firstname?: string;
-			lastname?: string;
-		};
-		status: string;
-		created?: string;
-		lastModified?: string;
-		firstPublished?: string;
-	};
 }
 
 export enum Status {
