@@ -4,11 +4,12 @@ import React, { useMemo, useState } from 'react';
 import { first } from 'rxjs/operators';
 
 import { ContentSelectBase } from '../..';
+import { ContentInfoTooltip } from '../../../components/ContentInfoTooltip';
 import { MODULE_PATHS, SITES_ROOT } from '../../../content.const';
+import { ContentMeta } from '../../../services/content/content.service.types';
 import { ccContentFacade } from '../../../store/ccContent';
 import { ContentModel } from '../../../store/content';
-import { ContentInfoTooltip } from '../../../components/ContentInfoTooltip';
-import { ContentMeta } from '../../../services/content/content.service.types';
+import './ContentSelect.scss';
 
 const ContentSelect: React.FC<InputFieldProps> = ({
 	fieldProps,
@@ -21,7 +22,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	const { siteId } = useSiteContext();
 	const { generatePath } = useNavigate(SITES_ROOT);
 	const [items, setItems] = useState<
-		{ value: string | undefined; label: string; contentTypeId: string, meta: ContentMeta }[]
+		{ value: string | undefined; label: string; contentTypeId: string; meta: ContentMeta }[]
 	>([]);
 	const [originalItems, setOriginalItems] = useState<ContentModel[]>([]);
 	const currentItem = useMemo(() => {
@@ -44,7 +45,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					}`,
 					value: config.bySlug ? c.meta.slug.nl : c.uuid,
 					contentTypeId: c.meta.contentType.uuid,
-					meta: c.meta
+					meta: c.meta,
 				}));
 
 				setOriginalItems((content as ContentModel[]) || []);
@@ -78,33 +79,38 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	 * RENDER
 	 */
 	return (
-		<>
-			<ContentSelectBase
-				fieldSchema={fieldSchema}
-				fieldProps={fieldProps}
-				getItems={getItems}
-				currentItem={currentItem}
-				setValue={setValue}
-				searchParams={{
-					skip: 0,
-					limit: 10,
-					sparse: true,
-					...(config.contentTypes?.length
-						? { contentTypes: config.contentTypes.join(',') }
-						: {}),
-				}}
-				to={
-					currentItem?.value
-						? generatePath(MODULE_PATHS.detailView, {
-								contentId: currentItem?.value,
-								contentTypeId: currentItem?.contentTypeId,
-								siteId,
-						  })
-						: '#'
-				}
-			/>
-			{currentItem && <ContentInfoTooltip icon="file-text-o" meta={currentItem?.meta} />}
-		</>
+		<div className="row">
+			<div className="col-xs-8 col-md-11">
+				<ContentSelectBase
+					fieldSchema={fieldSchema}
+					fieldProps={fieldProps}
+					getItems={getItems}
+					currentItem={currentItem}
+					setValue={setValue}
+					searchParams={{
+						skip: 0,
+						limit: 10,
+						sparse: true,
+						...(config.contentTypes?.length
+							? { contentTypes: config.contentTypes.join(',') }
+							: {}),
+					}}
+					to={
+						currentItem?.value
+							? generatePath(MODULE_PATHS.detailView, {
+									contentId: currentItem?.value,
+									contentTypeId: currentItem?.contentTypeId,
+									siteId,
+							  })
+							: '#'
+					}
+				/>
+			</div>
+
+			{currentItem && (
+				<ContentInfoTooltip icon="file-text-o" contentId={currentItem?.value} />
+			)}
+		</div>
 	);
 };
 
