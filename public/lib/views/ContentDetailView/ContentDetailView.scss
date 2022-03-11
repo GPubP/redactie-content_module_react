@@ -16,3 +16,11 @@
 	flex-direction: row;
 	padding-right: $spacer;
 }
+
+.url-link {
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: auto;
+}
