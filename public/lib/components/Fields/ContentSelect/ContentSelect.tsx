@@ -107,8 +107,6 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					}
 				/>
 			</div>
-			{console.info(itemId)}
-
 			{currentItem && <ContentInfoTooltip icon="file-text-o" contentId={itemId} />}
 		</div>
 	);
