@@ -3,10 +3,12 @@ import { TooltipTypeMap } from '@acpaas-ui/react-editorial-components';
 import { DataLoader, InfoTooltip, LoadingState, useSiteContext } from '@redactie/utils';
 import moment from 'moment';
 import React, { ReactElement, useEffect, useState } from 'react';
+
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { useContentItem } from '../../hooks';
 import { contentApiService } from '../../services/content/content.service';
 import { ContentMeta } from '../../services/content/content.service.types';
+
 import { STATUS_TRANSLATION_MAP } from './ContentInfoTooltip.const';
 import { ContentInfoTooltipProps, Status } from './ContentInfoTooltip.types';
 
@@ -39,7 +41,7 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 		if (!siteId || !contentId) {
 			return;
 		}
-		const fetchData = async () => {
+		const fetchData = async (): Promise<void> => {
 			const items = await contentApiService.getContentItem(siteId, contentId);
 			setItem(items?.meta);
 		};

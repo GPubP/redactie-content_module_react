@@ -2,8 +2,8 @@ import { FormSchema } from '@redactie/form-renderer-module';
 import { TenantContextValue } from '@redactie/utils';
 import { FormikValues } from 'formik';
 import { Context } from 'react';
-import ContentInfoTooltip from '../components/ContentInfoTooltip/ContentInfoTooltip';
 
+import ContentInfoTooltip from '../components/ContentInfoTooltip/ContentInfoTooltip';
 import { CONTENT_STATUS_API_MAP, ModuleValue } from '../services/content';
 import {
 	ContentTypeFieldSchema,
