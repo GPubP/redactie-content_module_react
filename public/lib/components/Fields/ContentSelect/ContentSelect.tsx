@@ -30,6 +30,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 
 		return item;
 	}, [field.value, items]);
+	const itemId = currentItem?.label?.substring(currentItem?.label?.indexOf('ID') + 3);
 
 	/**
 	 * METHODS
@@ -106,9 +107,10 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					}
 				/>
 			</div>
+			{console.info(itemId)}
 
 			{currentItem && (
-				<ContentInfoTooltip icon="file-text-o" contentId={currentItem?.value} />
+				<ContentInfoTooltip icon="file-text-o" contentId={itemId} />
 			)}
 		</div>
 	);
