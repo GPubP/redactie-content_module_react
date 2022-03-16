@@ -53,15 +53,11 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 		return (
 			<div className="col ref-relative">
 				<div
-					style={{
-						color: item?.published ? 'green' : 'red',
-						fontSize: '35px',
-						position: 'absolute',
-						bottom: '-2px',
-						right: '8px',
-						pointerEvents: 'none',
-						zIndex: 3,
-					}}
+					className={`status-indicator ${
+						item?.published
+							? 'status-indicator__published'
+							: 'status-indicator__unpublished'
+					}`}
 				>
 					•
 				</div>
