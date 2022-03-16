@@ -50,9 +50,8 @@ export interface ContentAPI {
 			facade: Pick<ContentFacade, 'getContentItem'>;
 		};
 	};
-	components: {
-		ContentInfoTooltip: any;
-	};
+
+	ContentInfoTooltip: typeof ContentInfoTooltip;
 	registerContentDetailCompartment: <M = ModuleValue>(
 		name: string,
 		options: ExternalCompartmentOptions<M>
