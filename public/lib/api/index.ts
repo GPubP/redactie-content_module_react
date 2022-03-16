@@ -8,7 +8,7 @@ import { registerContentDetailAction } from './registerContentDetailAction';
 import { registerContentDetailCompartment } from './registerContentDetailCompartment';
 import { registerContentDetailTab } from './registerContentDetailTab';
 import { store } from './store';
-import { components } from './components';
+import { ContentInfoTooltip } from '../components/ContentInfoTooltip';
 
 export const registerContentAPI = (): void => {
 	const api: ContentAPI = {
@@ -17,7 +17,7 @@ export const registerContentAPI = (): void => {
 		registerContentDetailTab,
 		getViewPropsByCT,
 		store,
-		components,
+		ContentInfoTooltip,
 		contentTenantContext: TenantContext,
 	};
 
