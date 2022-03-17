@@ -107,7 +107,6 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					}
 				/>
 			</div>
-			{console.info(fieldSchema)}
 			{currentItem && (
 				<ContentInfoTooltip
 					icon="file-text-o"
