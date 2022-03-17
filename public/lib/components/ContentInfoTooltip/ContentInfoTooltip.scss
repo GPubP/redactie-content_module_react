@@ -15,10 +15,14 @@
 		&__published {
 			color: green;
 		}
-		
+
 		&__unpublished {
 			color: red;
 		}
+	}
+
+	.m-description {
+		word-break: break-all;
 	}
 }
 

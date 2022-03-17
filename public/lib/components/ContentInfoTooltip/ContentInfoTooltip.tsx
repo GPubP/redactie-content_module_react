@@ -11,6 +11,8 @@ import { ContentMeta } from '../../services/content/content.service.types';
 
 import { STATUS_TRANSLATION_MAP } from './ContentInfoTooltip.const';
 import { ContentInfoTooltipProps, Status } from './ContentInfoTooltip.types';
+import './ContentInfoTooltip.scss';
+
 
 const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 	icon,
@@ -64,13 +66,12 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 				>
 					•
 				</div>
-
 					<InfoTooltip placement="bottom-end" type={TooltipTypeMap.WHITE} icon={icon}>
 						<CardTitle>{item?.label}</CardTitle>
 
 						<div className="u-margin-top">
 							{item?.description && (
-								<div className="u-margin-bottom u-text-light">
+								<div className="m-description u-margin-bottom u-text-light">
 									{item?.description}
 								</div>
 							)}
