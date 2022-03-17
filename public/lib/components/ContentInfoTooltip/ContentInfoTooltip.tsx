@@ -7,11 +7,10 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { useContentItem } from '../../hooks';
 import { contentApiService } from '../../services/content/content.service';
-import { ContentMeta } from '../../services/content/content.service.types';
 
-import { STATUS_TRANSLATION_MAP } from './ContentInfoTooltip.const';
-import { ContentInfoTooltipProps, Status } from './ContentInfoTooltip.types';
+import { ContentInfoTooltipProps } from './ContentInfoTooltip.types';
 import './ContentInfoTooltip.scss';
+import { CONTENT_STATUS_TRANSLATION_MAP, ContentMeta, ContentStatus } from '../../services/content';
 
 const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 	icon,
@@ -104,7 +103,7 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 								<b>Status</b>
 							</p>
 							<Label type="primary">
-								{STATUS_TRANSLATION_MAP[item?.status as Status]}
+								{CONTENT_STATUS_TRANSLATION_MAP[item?.status as ContentStatus]}
 							</Label>
 						</div>
 					</div>
