@@ -1,10 +1,10 @@
 @import '~@a-ui/core/src/styles/quarks';
 
-.tooltip {
+.m-tooltip-container {
 	position: relative;
 	margin-left: -10px;
 
-	.status-indicator {
+	.a-dot {
 		font-size: 2.3rem;
 		position: absolute;
 		bottom: -4px;
@@ -26,7 +26,7 @@
 	}
 }
 
-.dataloader {
+.m-dataloader-container {
 	align-self: center;
 
 	&__content-item {

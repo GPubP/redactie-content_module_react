@@ -56,12 +56,12 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 			return null;
 		}
 		return (
-			<div className="tooltip">
+			<div className="m-tooltip-container">
 				<div
-					className={`status-indicator ${
+					className={`a-dot ${
 						item?.published
-							? 'status-indicator__published'
-							: 'status-indicator__unpublished'
+							? 'a-dot__published'
+							: 'a-dot__unpublished'
 					}`}
 				>
 					•
@@ -117,7 +117,7 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 	};
 
 	return (
-		<div className={`dataloader ${className}`}>
+		<div className={`m-dataloader-container ${className}`}>
 			<DataLoader loadingState={initialLoading} render={renderView} notFoundMessage="" />
 		</div>
 	);

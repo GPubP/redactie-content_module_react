@@ -109,8 +109,8 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					icon="file-text-o"
 					className={
 						fieldSchema?.label === 'Link'
-							? 'dataloader__link'
-							: 'dataloader__content-item'
+							? 'm-dataloader-container__link'
+							: 'm-dataloader-container__content-item'
 					}
 					contentId={currentItem?.uuid}
 				/>
