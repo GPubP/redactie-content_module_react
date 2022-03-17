@@ -13,11 +13,10 @@ import { STATUS_TRANSLATION_MAP } from './ContentInfoTooltip.const';
 import { ContentInfoTooltipProps, Status } from './ContentInfoTooltip.types';
 import './ContentInfoTooltip.scss';
 
-
 const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 	icon,
 	contentId,
-	className
+	className,
 }: ContentInfoTooltipProps) => {
 	const { siteId } = useSiteContext();
 	const [fetchingState] = useContentItem();
@@ -45,8 +44,9 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 			return;
 		}
 		const fetchData = async (): Promise<void> => {
-			const items = await contentApiService.getContentItem(siteId, contentId);
-			setItem(items?.meta);
+			await contentApiService
+				.getContentItem(siteId, contentId)
+				.then(item => setItem(item?.meta));
 		};
 		fetchData();
 	}, [siteId, contentId]);
@@ -59,59 +59,56 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 			<div className="m-tooltip-container">
 				<div
 					className={`a-dot ${
-						item?.published
-							? 'a-dot__published'
-							: 'a-dot__unpublished'
+						item?.published ? 'a-dot__published' : 'a-dot__unpublished'
 					}`}
 				>
 					•
 				</div>
-					<InfoTooltip placement="bottom-end" type={TooltipTypeMap.WHITE} icon={icon}>
-						<CardTitle>{item?.label}</CardTitle>
+				<InfoTooltip placement="bottom-end" type={TooltipTypeMap.WHITE} icon={icon}>
+					<CardTitle>{item?.label}</CardTitle>
 
-						<div className="u-margin-top">
-							{item?.description && (
-								<div className="m-description u-margin-bottom u-text-light">
-									{item?.description}
-								</div>
-							)}
-							{item?.created && (
-								<div className="u-margin-bottom-xs">
-									<b>Aangemaakt op: </b>
-									<span>
-										{moment(item?.created).format('DD/MM/YYYY [-] HH[u]mm')}
-									</span>
-								</div>
-							)}
-							{item?.lastModified && (
-								<div className="u-margin-bottom-xs">
-									<b>Laatst aangepast op: </b>
-									{moment(item?.lastModified).format('DD/MM/YYYY [-] HH[u]mm')}
-								</div>
-							)}
-							{item?.historySummary?.published && item?.firstPublished && (
-								<div className="u-margin-bottom-xs">
-									<b>Gepubliceerd op: </b>
-									{moment(item?.firstPublished).format('DD/MM/YYYY [-] HH[u]mm')}
-								</div>
-							)}
-							{item?.lastEditor && (
-								<div className="u-margin-bottom-xs">
-									<b>Door: </b>
-									{`${item?.lastEditor?.firstname} ${item?.lastEditor?.lastname}`}
-								</div>
-							)}
-							<div className="u-margin-top">
-								<p>
-									<b>Status</b>
-								</p>
-								<Label type="primary">
-									{STATUS_TRANSLATION_MAP[item?.status as Status]}
-								</Label>
+					<div className="u-margin-top">
+						{item?.description && (
+							<div className="m-description u-margin-bottom u-text-light">
+								{item?.description}
 							</div>
+						)}
+						{item?.created && (
+							<div className="u-margin-bottom-xs">
+								<b>Aangemaakt op: </b>
+								<span>
+									{moment(item?.created).format('DD/MM/YYYY [-] HH[u]mm')}
+								</span>
+							</div>
+						)}
+						{item?.lastModified && (
+							<div className="u-margin-bottom-xs">
+								<b>Laatst aangepast op: </b>
+								{moment(item?.lastModified).format('DD/MM/YYYY [-] HH[u]mm')}
+							</div>
+						)}
+						{item?.historySummary?.published && item?.firstPublished && (
+							<div className="u-margin-bottom-xs">
+								<b>Gepubliceerd op: </b>
+								{moment(item?.firstPublished).format('DD/MM/YYYY [-] HH[u]mm')}
+							</div>
+						)}
+						{item?.lastEditor && (
+							<div className="u-margin-bottom-xs">
+								<b>Door: </b>
+								{`${item?.lastEditor?.firstname} ${item?.lastEditor?.lastname}`}
+							</div>
+						)}
+						<div className="u-margin-top">
+							<p>
+								<b>Status</b>
+							</p>
+							<Label type="primary">
+								{STATUS_TRANSLATION_MAP[item?.status as Status]}
+							</Label>
 						</div>
-					</InfoTooltip>
-
+					</div>
+				</InfoTooltip>
 			</div>
 		);
 	};
