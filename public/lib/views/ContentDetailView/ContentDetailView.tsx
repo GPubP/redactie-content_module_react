@@ -88,6 +88,8 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 	}>();
 
 	const [site] = sitesConnector.hooks.useSite(siteId);
+	const url = site?.data?.url;
+	const newSite = url?.slice(-1) === '/' ? url.slice(0, url.length - 1) : url;
 
 	useEffect(() => {
 		if (!contentType || !site) {
@@ -173,6 +175,21 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 										{meta.slug.nl}
 									</div>
 								)}
+
+								<div className="url-link">
+									<b>URL: </b>
+									{meta?.urlPath?.nl.value ? (
+										<a
+											target="_blank"
+											href={`${newSite}${meta?.urlPath?.nl.value}`}
+										>
+											{`${newSite}${meta?.urlPath?.nl.value}`}
+										</a>
+									) : (
+										'-'
+									)}
+								</div>
+
 								{meta.created && (
 									<div>
 										<b>Aangemaakt op: </b>
