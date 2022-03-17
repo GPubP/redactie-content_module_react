@@ -81,7 +81,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	 */
 	return (
 		<div className="row">
-			<div className="col-xs-8 col-md-11">
+			<div className="col-xs-10 col-md-11">
 				<ContentSelectBase
 					fieldSchema={fieldSchema}
 					fieldProps={fieldProps}
@@ -107,7 +107,18 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					}
 				/>
 			</div>
-			{currentItem && <ContentInfoTooltip icon="file-text-o" contentId={itemId} />}
+			{console.info(fieldSchema)}
+			{currentItem && (
+				<ContentInfoTooltip
+					icon="file-text-o"
+					className={
+						fieldSchema?.label === 'Link'
+							? 'dataloader__link'
+							: 'dataloader__content-item'
+					}
+					contentId={itemId}
+				/>
+			)}
 		</div>
 	);
 };

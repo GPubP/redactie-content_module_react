@@ -15,6 +15,7 @@ import { ContentInfoTooltipProps, Status } from './ContentInfoTooltip.types';
 const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 	icon,
 	contentId,
+	className
 }: ContentInfoTooltipProps) => {
 	const { siteId } = useSiteContext();
 	const [fetchingState] = useContentItem();
@@ -53,7 +54,7 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 			return null;
 		}
 		return (
-			<div className="col ref-relative">
+			<div className="tooltip">
 				<div
 					className={`status-indicator ${
 						item?.published
@@ -63,7 +64,7 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 				>
 					•
 				</div>
-				<div>
+
 					<InfoTooltip placement="bottom-end" type={TooltipTypeMap.WHITE} icon={icon}>
 						<CardTitle>{item?.label}</CardTitle>
 
@@ -109,13 +110,13 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 							</div>
 						</div>
 					</InfoTooltip>
-				</div>
+
 			</div>
 		);
 	};
 
 	return (
-		<div className="u-flex-align-self-center dataloader-container">
+		<div className={`dataloader ${className}`}>
 			<DataLoader loadingState={initialLoading} render={renderView} notFoundMessage="" />
 		</div>
 	);
