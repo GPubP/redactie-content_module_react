@@ -2,6 +2,8 @@ import { MOCK_FILTER_FORM_STATE } from '../__mocks__';
 
 import { getFilterStateFromParams } from './getFilterStateFromParams';
 
+jest.mock('../../components/forms', () => ({}));
+
 const MOCK_QUERY_PARAMS = {
 	search: 'search',
 	['latest-status']: 'active',
