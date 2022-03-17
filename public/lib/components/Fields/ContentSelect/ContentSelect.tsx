@@ -6,10 +6,8 @@ import { first } from 'rxjs/operators';
 import { ContentSelectBase } from '../..';
 import { ContentInfoTooltip } from '../../../components/ContentInfoTooltip';
 import { MODULE_PATHS, SITES_ROOT } from '../../../content.const';
-import { ContentMeta } from '../../../services/content/content.service.types';
 import { ccContentFacade } from '../../../store/ccContent';
 import { ContentModel } from '../../../store/content';
-import './ContentSelect.scss';
 
 const ContentSelect: React.FC<InputFieldProps> = ({
 	fieldProps,
@@ -22,7 +20,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	const { siteId } = useSiteContext();
 	const { generatePath } = useNavigate(SITES_ROOT);
 	const [items, setItems] = useState<
-		{ value: string | undefined; label: string; contentTypeId: string; meta: ContentMeta }[]
+		{ value: string | undefined; label: string; contentTypeId: string; uuid: string }[]
 	>([]);
 	const [originalItems, setOriginalItems] = useState<ContentModel[]>([]);
 	const currentItem = useMemo(() => {
@@ -30,7 +28,6 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 
 		return item;
 	}, [field.value, items]);
-	const itemId = currentItem?.label?.substring(currentItem?.label?.indexOf('ID') + 3);
 
 	/**
 	 * METHODS
@@ -46,7 +43,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					}`,
 					value: config.bySlug ? c.meta.slug.nl : c.uuid,
 					contentTypeId: c.meta.contentType.uuid,
-					meta: c.meta,
+					uuid: c.uuid || '',
 				}));
 
 				setOriginalItems((content as ContentModel[]) || []);
@@ -115,7 +112,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 							? 'dataloader__link'
 							: 'dataloader__content-item'
 					}
-					contentId={itemId}
+					contentId={currentItem?.uuid}
 				/>
 			)}
 		</div>
