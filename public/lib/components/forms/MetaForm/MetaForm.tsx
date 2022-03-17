@@ -12,6 +12,7 @@ import React, { FC, ReactElement, useMemo } from 'react';
 
 import { CompartmentProps } from '../../../api/api.types';
 import formRendererConnector from '../../../connectors/formRenderer';
+import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { DateTimeField } from '../../Fields/DateTimeField';
 import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandler';
@@ -41,6 +42,10 @@ const MetaForm: FC<CompartmentProps> = ({
 	}, [contentValue?.uuid, siteId]);
 	const [t] = useCoreTranslation();
 	const ErrorMessage = formRendererConnector.api.ErrorMessage;
+	const [site] = sitesConnector.hooks.useSite(siteId);
+	const url = site?.data?.url;
+
+	const newSite = url?.slice(-1) === '/' ? url.slice(0, url.length - 1) : url;
 
 	/**
 	 * RENDER
@@ -77,6 +82,23 @@ const MetaForm: FC<CompartmentProps> = ({
 							</div>
 						) : null}
 					</div>
+					<div className="row">
+						<div className="col-xs-12 col-md-6 u-margin-bottom">
+							URL
+							{contentValue?.meta.urlPath ? (
+								<a
+									target="_blank"
+									href={`${newSite}${contentValue?.meta?.urlPath?.nl.value}`}
+									className="u-margin-left-xs"
+								>
+									{`${newSite}${contentValue?.meta?.urlPath?.nl.value}`}
+								</a>
+							) : (
+								'-'
+							)}
+						</div>
+					</div>
+
 					{contentType?.meta?.canBeFiltered ? (
 						<div className="row">
 							<div className="col-xs-12 col-md-6 u-margin-bottom">

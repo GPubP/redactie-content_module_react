@@ -11,6 +11,8 @@ import { MOCK_CONTENT_TYPES, MOCK_FILTER_FORM_STATE } from '../__mocks__';
 
 import { generateActiveFilters } from './generateActiveFilters';
 
+jest.mock('../../components/forms/MetaForm', () => ({}));
+
 const MOCK_CONTENT_TYPE_FILTERS_RESULT = [
 	{
 		valuePrefix: 'Content type',
