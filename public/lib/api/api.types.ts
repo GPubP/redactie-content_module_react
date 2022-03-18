@@ -47,7 +47,7 @@ export {
 export interface ContentAPI {
 	store: {
 		content: {
-			facade: Pick<ContentFacade, 'getContentItem'>;
+			facade: Pick<ContentFacade, 'getContentItem' | 'getContentItemBySlug'>;
 		};
 	};
 	ContentInfoTooltip: typeof ContentInfoTooltip;
