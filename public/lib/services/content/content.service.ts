@@ -64,6 +64,10 @@ export class ContentApiService {
 			.json();
 	}
 
+	public getContentItemBySlug(siteId: string, uuid: string): Promise<ContentSchema | null> {
+		return api.get(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}`).json();
+	}
+
 	public validateSlug(siteId: string, payload: ValidateSlugPayload): Promise<void> {
 		return api
 			.post(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/slug/validate`, { json: payload })

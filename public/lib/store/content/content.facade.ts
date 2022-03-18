@@ -109,6 +109,41 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 			});
 	}
 
+	public getContentItemBySlug(siteId: string, uuid: string): void {
+		this.store.setIsFetchingOne(true);
+
+		this.service
+			.getContentItemBySlug(siteId, uuid)
+			.then(response => {
+				if (response) {
+					this.store.update({
+						error: null,
+						contentItem: {
+							...response,
+							meta: {
+								...response.meta,
+								workflowState: response.meta.workflowState
+									? response.meta.workflowState
+									: (ContentSystemNames as Record<string, string>)[
+											response.meta.status
+									  ],
+							},
+						},
+						isFetchingOne: false,
+					});
+				}
+			})
+			.catch(error => {
+				this.store.update({
+					error: {
+						...error,
+						actionType: 'fetchingOne',
+					},
+					isFetchingOne: false,
+				});
+			});
+	}
+
 	public createContentItem(
 		siteId: string,
 		data: ContentCreateSchema

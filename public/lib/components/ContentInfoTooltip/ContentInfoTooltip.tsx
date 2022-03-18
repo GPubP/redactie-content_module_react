@@ -44,7 +44,7 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 		}
 		const fetchData = async (): Promise<void> => {
 			await contentApiService
-				.getContentItem(siteId, contentId)
+				.getContentItemBySlug(siteId, contentId)
 				.then(item => setItem(item?.meta));
 		};
 		fetchData();
