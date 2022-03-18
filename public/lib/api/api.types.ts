@@ -2,6 +2,7 @@ import { FormSchema } from '@redactie/form-renderer-module';
 import { TenantContextValue } from '@redactie/utils';
 import { FormikValues } from 'formik';
 import { Context } from 'react';
+import { contentApiService } from '../services/content';
 
 import ContentInfoTooltip from '../components/ContentInfoTooltip/ContentInfoTooltip';
 import { CONTENT_STATUS_API_MAP, ModuleValue } from '../services/content';
@@ -43,13 +44,17 @@ export {
 	CONTENT_STATUS_API_MAP,
 	ExternalTabProps,
 	ExternalTabOptions,
+	contentApiService
 };
+
 export interface ContentAPI {
 	store: {
 		content: {
-			facade: Pick<ContentFacade, 'getContentItem' | 'getContentItemBySlug'>;
-		};
+			facade: Pick<ContentFacade, 'getContentItem' | 'getContentItemBySlug'>,
+			service: typeof contentApiService
+		},
 	};
+
 	ContentInfoTooltip: typeof ContentInfoTooltip;
 	registerContentDetailCompartment: <M = ModuleValue>(
 		name: string,
