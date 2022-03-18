@@ -96,7 +96,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					to={
 						currentItem?.value
 							? generatePath(MODULE_PATHS.detailView, {
-									contentId: currentItem?.value,
+									contentId: currentItem?.uuid,
 									contentTypeId: currentItem?.contentTypeId,
 									siteId,
 							  })
