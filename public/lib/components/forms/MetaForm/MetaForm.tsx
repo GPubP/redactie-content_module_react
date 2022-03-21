@@ -88,6 +88,7 @@ const MetaForm: FC<CompartmentProps> = ({
 							{contentValue?.meta.urlPath ? (
 								<a
 									target="_blank"
+									rel="noopener noreferrer"
 									href={`${newSite}${contentValue?.meta?.urlPath?.nl.value}`}
 									className="u-margin-left-xs"
 								>

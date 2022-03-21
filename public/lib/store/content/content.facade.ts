@@ -115,23 +115,24 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		this.service
 			.getContentItemBySlug(siteId, uuid)
 			.then(response => {
-				if (response) {
-					this.store.update({
-						error: null,
-						contentItem: {
-							...response,
-							meta: {
-								...response.meta,
-								workflowState: response.meta.workflowState
-									? response.meta.workflowState
-									: (ContentSystemNames as Record<string, string>)[
-											response.meta.status
-									  ],
-							},
-						},
-						isFetchingOne: false,
-					});
+				if (!response) {
+					return;
 				}
+				this.store.update({
+					error: null,
+					contentItem: {
+						...response,
+						meta: {
+							...response.meta,
+							workflowState: response.meta.workflowState
+								? response.meta.workflowState
+								: (ContentSystemNames as Record<string, string>)[
+										response.meta.status
+								  ],
+						},
+					},
+					isFetchingOne: false,
+				});
 			})
 			.catch(error => {
 				this.store.update({

@@ -5,17 +5,18 @@ import moment from 'moment';
 import React, { ReactElement, useEffect, useState } from 'react';
 
 import rolesRightsConnector from '../../connectors/rolesRights';
+import sitesConnector from '../../connectors/sites';
 import { useContentItem } from '../../hooks';
+import {
+	CONTENT_STATUS_TRANSLATION_MAP,
+	ContentSchema,
+	ContentStatus,
+} from '../../services/content';
 import { contentApiService } from '../../services/content/content.service';
 
 import { ContentInfoTooltipProps } from './ContentInfoTooltip.types';
+
 import './ContentInfoTooltip.scss';
-import {
-	CONTENT_STATUS_TRANSLATION_MAP,
-	ContentStatus,
-	ContentSchema,
-} from '../../services/content';
-import sitesConnector from '../../connectors/sites';
 
 const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 	icon,
@@ -53,8 +54,7 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 		const fetchData = async (): Promise<void> => {
 			await contentApiService
 				.getContentItemBySlug(siteId, contentId)
-				.then(item => setItem(item))
-				.catch(e => console.log(e));
+				.then(item => setItem(item));
 		};
 		fetchData();
 	}, [siteId, contentId, item]);
