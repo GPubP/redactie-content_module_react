@@ -64,7 +64,7 @@ export class ContentApiService {
 			.json();
 	}
 
-	public getContentItemBySlug(siteId: string, uuid: string): Promise<ContentSchema | null> {
+	public getContentItemBySlug(siteId: string, uuid: string): Promise<ContentSchema | undefined> {
 		return api.get(`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${uuid}`).json();
 	}
 
