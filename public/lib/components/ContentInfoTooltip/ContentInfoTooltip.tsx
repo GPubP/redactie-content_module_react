@@ -10,7 +10,12 @@ import { contentApiService } from '../../services/content/content.service';
 
 import { ContentInfoTooltipProps } from './ContentInfoTooltip.types';
 import './ContentInfoTooltip.scss';
-import { CONTENT_STATUS_TRANSLATION_MAP, ContentMeta, ContentStatus } from '../../services/content';
+import {
+	CONTENT_STATUS_TRANSLATION_MAP,
+	ContentStatus,
+	ContentSchema,
+} from '../../services/content';
+import sitesConnector from '../../connectors/sites';
 
 const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 	icon,
@@ -18,8 +23,11 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 	className,
 }: ContentInfoTooltipProps) => {
 	const { siteId } = useSiteContext();
+	const [site] = sitesConnector.hooks.useSite(siteId);
+	const url = site?.data?.url;
+	const newSite = url?.slice(-1) === '/' ? url.slice(0, url.length - 1) : url;
 	const [fetchingState] = useContentItem();
-	const [item, setItem] = useState<ContentMeta>();
+	const [item, setItem] = useState<ContentSchema>();
 	const [initialLoading, setInitialLoading] = useState(true);
 	const [mySecurityRightsLoading] = rolesRightsConnector.api.hooks.useMySecurityRightsForSite({
 		siteUuid: siteId,
@@ -45,10 +53,11 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 		const fetchData = async (): Promise<void> => {
 			await contentApiService
 				.getContentItemBySlug(siteId, contentId)
-				.then(item => setItem(item?.meta));
+				.then(item => setItem(item))
+				.catch(e => console.log(e));
 		};
 		fetchData();
-	}, [siteId, contentId]);
+	}, [siteId, contentId, item]);
 
 	const renderView = (): ReactElement | null => {
 		if (!item) {
@@ -58,53 +67,69 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 			<div className="m-tooltip-container">
 				<div
 					className={`a-dot ${
-						item?.published ? 'a-dot__published' : 'a-dot__unpublished'
+						item?.meta.published ? 'a-dot__published' : 'a-dot__unpublished'
 					}`}
 				>
 					•
 				</div>
 				<InfoTooltip placement="bottom-end" type={TooltipTypeMap.WHITE} icon={icon}>
-					<CardTitle>{item?.label}</CardTitle>
+					<CardTitle>{item?.meta.label && item?.meta.label}</CardTitle>
 
 					<div className="u-margin-top">
-						{item?.description && (
-							<div className="m-description u-margin-bottom u-text-light">
-								{item?.description}
+						{item?.meta.description && (
+							<div className="u-margin-bottom u-text-light a-description">
+								{item?.meta.description}
 							</div>
 						)}
-						{item?.created && (
+						{item?.meta.urlPath?.nl?.value && (
+							<div className="u-margin-bottom-xs a-url">
+								<b>URL: </b>
+								{`${newSite}${item?.meta.urlPath?.nl.value}`}
+							</div>
+						)}
+						{item?.meta.created && (
 							<div className="u-margin-bottom-xs">
 								<b>Aangemaakt op: </b>
 								<span>
-									{moment(item?.created).format('DD/MM/YYYY [-] HH[u]mm')}
+									{moment(item?.meta.created).format('DD/MM/YYYY [-] HH[u]mm')}
 								</span>
 							</div>
 						)}
-						{item?.lastModified && (
-							<div className="u-margin-bottom-xs">
-								<b>Laatst aangepast op: </b>
-								{moment(item?.lastModified).format('DD/MM/YYYY [-] HH[u]mm')}
-							</div>
-						)}
-						{item?.historySummary?.published && item?.firstPublished && (
-							<div className="u-margin-bottom-xs">
-								<b>Gepubliceerd op: </b>
-								{moment(item?.firstPublished).format('DD/MM/YYYY [-] HH[u]mm')}
-							</div>
-						)}
-						{item?.lastEditor && (
+						{item?.meta.lastEditor && (
 							<div className="u-margin-bottom-xs">
 								<b>Door: </b>
-								{`${item?.lastEditor?.firstname} ${item?.lastEditor?.lastname}`}
+								{`${item?.meta.lastEditor?.firstname} ${item?.meta.lastEditor?.lastname}`}
 							</div>
 						)}
 						<div className="u-margin-top">
 							<p>
 								<b>Status</b>
 							</p>
-							<Label type="primary">
-								{CONTENT_STATUS_TRANSLATION_MAP[item?.status as ContentStatus]}
-							</Label>
+							{item?.meta.status && (
+								<Label type="primary">
+									{
+										CONTENT_STATUS_TRANSLATION_MAP[
+											item?.meta.status as ContentStatus
+										]
+									}
+								</Label>
+							)}
+
+							{item?.meta.historySummary?.published ? (
+								<Label
+									className="u-margin-left-xs u-margin-top-xs u-margin-bottom-xs"
+									type="success"
+								>
+									Online
+								</Label>
+							) : (
+								<Label
+									className="u-margin-left-xs u-margin-top-xs u-margin-bottom-xs"
+									type="danger"
+								>
+									Offline
+								</Label>
+							)}
 						</div>
 					</div>
 				</InfoTooltip>
