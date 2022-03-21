@@ -3,7 +3,8 @@ import { TenantContextValue } from '@redactie/utils';
 import { FormikValues } from 'formik';
 import { Context } from 'react';
 
-import { CONTENT_STATUS_API_MAP, ModuleValue } from '../services/content';
+import { ContentInfoTooltip } from '../components/ContentInfoTooltip';
+import { CONTENT_STATUS_API_MAP, contentApiService, ModuleValue } from '../services/content';
 import {
 	ContentTypeFieldSchema,
 	ContentTypeSchema,
@@ -30,6 +31,7 @@ export { ContentSchema, ContentStatus } from '../services/content/content.servic
 
 export {
 	ContentModel,
+	ContentInfoTooltip,
 	ContentTypeModel,
 	ContentTypeSchema,
 	ContentTypeFieldSchema,
@@ -41,13 +43,18 @@ export {
 	CONTENT_STATUS_API_MAP,
 	ExternalTabProps,
 	ExternalTabOptions,
+	contentApiService,
 };
+
 export interface ContentAPI {
 	store: {
 		content: {
-			facade: Pick<ContentFacade, 'getContentItem'>;
+			facade: Pick<ContentFacade, 'getContentItem' | 'getContentItemBySlug'>;
+			service: typeof contentApiService;
 		};
 	};
+
+	ContentInfoTooltip: typeof ContentInfoTooltip;
 	registerContentDetailCompartment: <M = ModuleValue>(
 		name: string,
 		options: ExternalCompartmentOptions<M>

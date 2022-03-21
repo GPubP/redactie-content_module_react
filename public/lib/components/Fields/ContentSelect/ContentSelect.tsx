@@ -4,6 +4,7 @@ import React, { useMemo, useState } from 'react';
 import { first } from 'rxjs/operators';
 
 import { ContentSelectBase } from '../..';
+import { ContentInfoTooltip } from '../../../components/ContentInfoTooltip';
 import { MODULE_PATHS, SITES_ROOT } from '../../../content.const';
 import { ccContentFacade } from '../../../store/ccContent';
 import { ContentModel } from '../../../store/content';
@@ -76,32 +77,45 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	 * RENDER
 	 */
 	return (
-		<>
-			<ContentSelectBase
-				fieldSchema={fieldSchema}
-				fieldProps={fieldProps}
-				getItems={getItems}
-				currentItem={currentItem}
-				setValue={setValue}
-				searchParams={{
-					skip: 0,
-					limit: 10,
-					sparse: true,
-					...(config.contentTypes?.length
-						? { contentTypes: config.contentTypes.join(',') }
-						: {}),
-				}}
-				to={
-					currentItem?.value
-						? generatePath(MODULE_PATHS.detailView, {
-								contentId: currentItem?.uuid || currentItem?.value,
-								contentTypeId: currentItem?.contentTypeId,
-								siteId,
-						  })
-						: '#'
-				}
-			/>
-		</>
+		<div className="row">
+			<div className="col-xs-10 col-md-11">
+				<ContentSelectBase
+					fieldSchema={fieldSchema}
+					fieldProps={fieldProps}
+					getItems={getItems}
+					currentItem={currentItem}
+					setValue={setValue}
+					searchParams={{
+						skip: 0,
+						limit: 10,
+						sparse: true,
+						...(config.contentTypes?.length
+							? { contentTypes: config.contentTypes.join(',') }
+							: {}),
+					}}
+					to={
+						currentItem?.value
+							? generatePath(MODULE_PATHS.detailView, {
+									contentId: currentItem?.uuid,
+									contentTypeId: currentItem?.contentTypeId,
+									siteId,
+							  })
+							: '#'
+					}
+				/>
+			</div>
+			{currentItem && (
+				<ContentInfoTooltip
+					icon="file-text-o"
+					className={
+						fieldSchema?.label === 'Link'
+							? 'm-dataloader-container__link'
+							: 'm-dataloader-container__content-item'
+					}
+					contentId={currentItem?.uuid}
+				/>
+			)}
+		</div>
 	);
 };
 

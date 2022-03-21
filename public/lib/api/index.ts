@@ -1,6 +1,7 @@
 import Core from '@redactie/redactie-core';
 import { TenantContext } from '@redactie/utils';
 
+import { ContentInfoTooltip } from '../components/ContentInfoTooltip';
 import { getViewPropsByCT } from '../helpers/getViewPropsByCT';
 
 import { ContentAPI } from './api.types';
@@ -16,6 +17,7 @@ export const registerContentAPI = (): void => {
 		registerContentDetailTab,
 		getViewPropsByCT,
 		store,
+		ContentInfoTooltip,
 		contentTenantContext: TenantContext,
 	};
 

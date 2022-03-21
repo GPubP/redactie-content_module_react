@@ -1,0 +1,40 @@
+@import '~@a-ui/core/src/styles/quarks';
+
+.m-tooltip-container {
+	position: relative;
+	margin-left: -15px;
+
+	.a-dot {
+		font-size: 2.3rem;
+		position: absolute;
+		bottom: -4px;
+		right: 6px;
+		pointer-events: none;
+		z-index: 3;
+
+		&__published {
+			color: green;
+		}
+
+		&__unpublished {
+			color: red;
+		}
+	}
+
+	.a-description {
+		word-break: break-all;
+	}
+}
+
+.m-dataloader-container {
+	align-self: center;
+
+	&__content-item {
+		margin-left: 5px;
+		margin-top: -5px;
+	}
+
+	&__link {
+		margin-bottom: -1.5rem;
+	}
+}

@@ -20,38 +20,40 @@ export interface ContentHistorySummary {
 	latestStatus: string;
 }
 
+export interface ContentMeta {
+	label: string;
+	slug: Record<string, string>;
+	site: string;
+	description?: string;
+	contentType: ContentTypeSchema;
+	historySummary?: ContentHistorySummary;
+	theme?: string;
+	lastEditor?: {
+		firstname?: string;
+		lastname?: string;
+	};
+	status: string;
+	workflowState: string;
+	published?: boolean;
+	created?: string;
+	lastModified?: string;
+	activeLanguages: string[];
+	firstPublished?: string;
+	publishTime?: string | null;
+	unpublishTime?: string | null;
+	urlPath?: Record<
+		string,
+		{
+			value: string;
+			pattern: string;
+		}
+	>;
+}
+
 export interface ContentSchema {
 	_id?: string;
 	uuid?: string;
-	meta: {
-		label: string;
-		slug: Record<string, string>;
-		site: string;
-		description?: string;
-		contentType: ContentTypeSchema;
-		historySummary?: ContentHistorySummary;
-		theme?: string;
-		lastEditor?: {
-			firstname?: string;
-			lastname?: string;
-		};
-		status: string;
-		workflowState: string;
-		published?: boolean;
-		created?: string;
-		lastModified?: string;
-		activeLanguages: string[];
-		firstPublished?: string;
-		publishTime?: string | null;
-		unpublishTime?: string | null;
-		urlPath?: Record<
-			string,
-			{
-				value: string;
-				pattern: string;
-			}
-		>;
-	};
+	meta: ContentMeta;
 	modulesData?: Record<string, ModuleValue>;
 	fields: Record<string, any>;
 }
