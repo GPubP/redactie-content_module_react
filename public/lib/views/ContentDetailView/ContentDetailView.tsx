@@ -176,7 +176,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 									</div>
 								)}
 
-								<div className="url-link">
+								<div className="a-url">
 									<b>URL: </b>
 									{meta?.urlPath?.nl.value ? (
 										<a
