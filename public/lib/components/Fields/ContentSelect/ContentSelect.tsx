@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 
 import { ContentSelectBase } from '../..';
 import { ContentInfoTooltip } from '../../../components/ContentInfoTooltip';
+import sitesConnector from '../../../connectors/sites';
 import { MODULE_PATHS, SITES_ROOT } from '../../../content.const';
 import { ccContentFacade } from '../../../store/ccContent';
 import { ContentModel } from '../../../store/content';
@@ -18,6 +19,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	const { field } = fieldProps;
 
 	const { siteId } = useSiteContext();
+	const [site] = sitesConnector.hooks.useSite(siteId);
 	const { generatePath } = useNavigate(SITES_ROOT);
 	const [items, setItems] = useState<
 		{ value: string | undefined; label: string; contentTypeId: string; uuid: string }[]
@@ -113,6 +115,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 							: 'm-dataloader-container__content-item'
 					}
 					contentId={currentItem?.uuid}
+					site={site}
 				/>
 			)}
 		</div>

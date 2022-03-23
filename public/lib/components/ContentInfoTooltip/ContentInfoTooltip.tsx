@@ -5,7 +5,6 @@ import moment from 'moment';
 import React, { ReactElement, useEffect, useState } from 'react';
 
 import rolesRightsConnector from '../../connectors/rolesRights';
-import sitesConnector from '../../connectors/sites';
 import { useContentItem } from '../../hooks';
 import {
 	CONTENT_STATUS_TRANSLATION_MAP,
@@ -22,9 +21,9 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 	icon,
 	contentId,
 	className,
+	site,
 }: ContentInfoTooltipProps) => {
 	const { siteId } = useSiteContext();
-	const [site] = sitesConnector.hooks.useSite(siteId);
 	const url = site?.data?.url;
 	const newSite = url?.slice(-1) === '/' ? url.slice(0, url.length - 1) : url;
 	const [fetchingState] = useContentItem();
