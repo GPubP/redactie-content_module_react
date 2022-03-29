@@ -1,14 +1,15 @@
 import { InputFieldProps } from '@redactie/form-renderer-module';
 import { useNavigate, useSiteContext } from '@redactie/utils';
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { first } from 'rxjs/operators';
 
-import { ContentSelectBase } from '../..';
 import { ContentInfoTooltip } from '../../../components/ContentInfoTooltip';
+import formRendererConnector from '../../../connectors/formRenderer';
 import sitesConnector from '../../../connectors/sites';
 import { MODULE_PATHS, SITES_ROOT } from '../../../content.const';
 import { ccContentFacade } from '../../../store/ccContent';
 import { ContentModel } from '../../../store/content';
+import { ContentSelectBase } from '../../index';
 
 const ContentSelect: React.FC<InputFieldProps> = ({
 	fieldProps,
@@ -18,6 +19,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	const config = fieldSchema.config || {};
 	const { field } = fieldProps;
 
+	const { activeLanguage } = useContext(formRendererConnector.api.FormContext);
 	const { siteId } = useSiteContext();
 	const [site] = sitesConnector.hooks.useSite(siteId);
 	const { generatePath } = useNavigate(SITES_ROOT);
@@ -91,6 +93,11 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 						skip: 0,
 						limit: 10,
 						sparse: true,
+						...(config.allowDifferentLanguageReference !== 'true' && activeLanguage
+							? {
+									lang: activeLanguage,
+							  }
+							: {}),
 						...(config.contentTypes?.length
 							? { contentTypes: config.contentTypes.join(',') }
 							: {}),

@@ -854,6 +854,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							settings={getSettings(contentType, activeCompartment)}
 							onChange={values => handleChange(activeCompartment, values)}
 							workflow={workflow}
+							activeLanguage={contentItem?.meta?.lang}
 							value={getCompartmentValue(
 								contentItemDraft,
 								activeCompartment,

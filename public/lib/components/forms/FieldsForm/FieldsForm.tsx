@@ -11,6 +11,7 @@ const FieldsForm: FC<CompartmentProps & { settings: CtTypeSettings }> = ({
 	value,
 	onChange,
 	formikRef,
+	activeLanguage,
 	settings,
 }): ReactElement | null => {
 	const Form = formRendererConnector.api.Form;
@@ -38,6 +39,7 @@ const FieldsForm: FC<CompartmentProps & { settings: CtTypeSettings }> = ({
 					log={false}
 					initialValues={value}
 					onChange={onChange}
+					activeLanguage={activeLanguage}
 					useDividers={true}
 				/>
 			</ContentFormContext.Provider>
