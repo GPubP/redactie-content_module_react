@@ -75,6 +75,7 @@ export interface CompartmentProps<
 	workflow?: WorkflowDetailModel;
 	machine?: StateMachine<StateMachineContext, any, StateMachineEvent> | undefined;
 	allowedTransitions?: string[];
+	activeLanguage?: string;
 }
 
 export interface AlertState {

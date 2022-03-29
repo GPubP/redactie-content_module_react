@@ -24,6 +24,7 @@ export interface ContentMeta {
 	label: string;
 	slug: Record<string, string>;
 	site: string;
+	lang: string;
 	description?: string;
 	contentType: ContentTypeSchema;
 	historySummary?: ContentHistorySummary;

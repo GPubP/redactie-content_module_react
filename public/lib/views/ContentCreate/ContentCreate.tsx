@@ -129,6 +129,8 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 				slug: {
 					nl: '',
 				},
+				// TODO: actually implement this when working on content MT
+				lang: '',
 				contentType: contentType,
 				status: '',
 				workflowState: ContentSystemNames.NEW,
