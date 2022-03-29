@@ -30,7 +30,7 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 	const [item, setItem] = useState<ContentSchema>();
 	const [initialLoading, setInitialLoading] = useState(true);
 	const [mySecurityRightsLoading] = rolesRightsConnector.api.hooks.useMySecurityRightsForSite({
-		siteUuid: siteId,
+		siteUuid: site?.uuid || siteId,
 		onlyKeys: false,
 	});
 
@@ -47,16 +47,18 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 	}, [fetchingState, mySecurityRightsLoading, initialLoading, item, contentId]);
 
 	useEffect(() => {
-		if (!siteId || !contentId) {
+		if (!site?.uuid || !contentId) {
 			return;
 		}
+
 		const fetchData = async (): Promise<void> => {
 			await contentApiService
-				.getContentItemBySlug(siteId, contentId)
+				.getContentItemBySlug(site.uuid, contentId)
 				.then(item => setItem(item));
 		};
+
 		fetchData();
-	}, [siteId, contentId, item]);
+	}, [contentId, site]);
 
 	const renderView = (): ReactElement | null => {
 		if (!item) {
