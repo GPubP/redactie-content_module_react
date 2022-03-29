@@ -93,7 +93,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 						skip: 0,
 						limit: 10,
 						sparse: true,
-						...(config.allowDifferentLanguageReference !== 'true'
+						...(config.allowDifferentLanguageReference !== 'true' && activeLanguage
 							? {
 									lang: activeLanguage,
 							  }
