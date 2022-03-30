@@ -282,6 +282,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 	}
 
 	public updateContentItemDraft(data: ContentModel): void {
+		console.log('update in store', data);
 		this.store.update({
 			contentItemDraft: data,
 		});
