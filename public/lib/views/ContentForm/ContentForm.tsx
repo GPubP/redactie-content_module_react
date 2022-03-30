@@ -826,8 +826,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		return null;
 	}
 
-	console.log('a', contentItemDraft.meta.urlPath?.nl);
-
 	/**
 	 * RENDER
 	 */

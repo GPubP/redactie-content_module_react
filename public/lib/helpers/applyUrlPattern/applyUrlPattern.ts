@@ -25,5 +25,5 @@ export const applyUrlPattern = async (
 		},
 	};
 
-	return resolveUrl(pattern, resolver);
+	return resolveUrl(pattern, resolver).catch(() => pattern);
 };

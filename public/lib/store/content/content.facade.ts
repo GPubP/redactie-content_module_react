@@ -307,7 +307,14 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		data: Partial<ContentSchema['meta']>,
 		contentType?: ContentTypeSchema
 	): Promise<void> {
-		this.store.update(async state => ({
+		const urlPathValue = await applyUrlPattern(
+			data.urlPath![data.lang!].pattern || '',
+			this.store.getValue().contentItemDraft?.uuid || '',
+			data,
+			contentType!
+		);
+
+		this.store.update(state => ({
 			contentItemDraft: {
 				...state.contentItemDraft,
 				meta: {
@@ -318,15 +325,8 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 								urlPath: {
 									...state.contentItemDraft?.meta.urlPath,
 									[data.lang!]: {
-										value: data.urlPath
-											? await applyUrlPattern(
-													data.urlPath[data.lang!].pattern || '',
-													state.contentItemDraft?.uuid!,
-													data,
-													contentType!
-											  )
-											: null,
-										pattern: contentType.meta.urlPath?.pattern || '',
+										value: urlPathValue,
+										pattern: data.urlPath![data.lang!].pattern,
 									},
 								},
 						  }
