@@ -1,14 +1,29 @@
-import { PATTERN_REPLACE_TYPES, replacerRegex } from './applyUrlPattern.const';
-import { PatternValues } from './applyUrlPattern.types';
+import { resolveUrl } from '@wcm/pattern-resolver';
 
-export const applyUrlPattern = (pattern: string, patternValues: PatternValues): string => {
-	return pattern.replaceAll(replacerRegex, (match: string, captureGroup1) => {
-		const [type, prop] = captureGroup1.split(':');
+import { ContentSchema } from '../../services/content';
+import { ContentTypeSchema } from '../../services/contentTypes';
 
-		if (type.toLowerCase() === PATTERN_REPLACE_TYPES.ITEM) {
-			return `/${patternValues[prop]}`;
-		}
+export const applyUrlPattern = async (
+	pattern: string,
+	id: string,
+	contentItemMeta: Partial<ContentSchema['meta']>,
+	contentType: ContentTypeSchema
+): Promise<string> => {
+	const resolver = {
+		item: {
+			id,
+			label: contentItemMeta.label!,
+			lang: contentItemMeta.lang!,
+			slug: contentItemMeta.slug![contentItemMeta.lang!],
+			created: contentItemMeta.created!,
+		},
+		site: {
+			id: contentItemMeta.site!,
+		},
+		'content-type': {
+			label: contentType?.meta?.label,
+		},
+	};
 
-		return match;
-	});
+	return resolveUrl(pattern, resolver);
 };

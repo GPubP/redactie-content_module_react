@@ -1,5 +1,6 @@
 import { FormSchema } from '@redactie/form-renderer-module';
 import { StateMachineContext, StateMachineEvent } from '@redactie/redactie-workflows';
+import { SiteResponse } from '@redactie/sites-module';
 import { NavigateFn } from '@redactie/utils';
 import { WorkflowDetailModel } from '@redactie/workflows-module';
 import { WorkflowDetailResponse } from '@redactie/workflows-module/dist/lib/services/workflows';
@@ -73,6 +74,7 @@ export interface CompartmentProps<
 	onChange: (e: M) => void; // Boolean for validation result (maybe?)
 	updateContent: (e: ContentSchema) => void; // For edge cases where content item must be changed. Boolean for validation
 	updateContentMeta: (e: ContentSchema['meta']) => void; // For edge cases where meta must be changed. Boolean for validation
+	site?: SiteResponse;
 	workflow?: WorkflowDetailModel;
 	machine?: StateMachine<StateMachineContext, any, StateMachineEvent> | undefined;
 	allowedTransitions?: string[];

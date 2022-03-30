@@ -826,6 +826,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		return null;
 	}
 
+	console.log('a', contentItemDraft.meta.urlPath?.nl);
+
 	/**
 	 * RENDER
 	 */
@@ -851,6 +853,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							allowedTransitions={allowedTransitions}
 							isCreating={isCreating}
 							isValid
+							site={site}
 							settings={getSettings(contentType, activeCompartment)}
 							onChange={values => handleChange(activeCompartment, values)}
 							workflow={workflow}
@@ -864,7 +867,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 								contentFacade.updateContentItemDraft(content)
 							}
 							updateContentMeta={(meta: ContentSchema['meta']) =>
-								contentFacade.updateContentMetaDraft(meta)
+								contentFacade.updateContentMetaDraft(meta, contentType)
 							}
 						/>
 					</Card>
