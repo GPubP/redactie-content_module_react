@@ -13,6 +13,7 @@ import './ContentSelectBase.scss';
 import formRendererConnector from '../../connectors/formRenderer';
 import { useCcContent } from '../../hooks';
 import { ccContentFacade } from '../../store/ccContent';
+import { CrossSiteContentSelectValue } from '../Fields/CrossSiteContentSelect/CrossSiteContentSelect.types';
 
 import {
 	CONTENT_SELECT_TOOLTIP_DELAY,
@@ -143,9 +144,12 @@ const ContentSelectBase: React.FC<ContentSelectBaseProps> = ({
 					disabled={!!config.disabled}
 					loading={contentLoadingState === LoadingState.Loading}
 					onSelection={setContentValue}
-					asyncItems={(query: string, cb: (options: any[]) => void) => {
+					asyncItems={(
+						query: string | CrossSiteContentSelectValue,
+						cb: (options: any[]) => void
+					) => {
 						if (!keyInteraction.current) {
-							query = pathOr(field.value, ['contentId'], field.value) as string;
+							query = field.value;
 						}
 
 						debouncedGetItems(query, cb);

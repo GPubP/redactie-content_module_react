@@ -1,9 +1,10 @@
 import { Checkbox } from '@acpaas-ui/react-components';
 import { DataLoader, useNavigate, useSiteContext } from '@redactie/utils';
+import { FieldProps, FormikValues } from 'formik';
 import React, { ReactElement, useMemo, useState } from 'react';
 import { first } from 'rxjs/operators';
 
-import { ContentSelectBase } from '../..';
+import { ContentInfoTooltip, ContentSelectBase } from '../..';
 import sitesConnector from '../../../connectors/sites';
 import { MODULE_PATHS, SITES_ROOT } from '../../../content.const';
 import { ccContentFacade } from '../../../store/ccContent';
@@ -41,26 +42,17 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 	const [searchInCurrentSite, setSearchInCurrentSite] = useState<boolean>(
 		(field.value && !field.value?.isCrossSite) || false
 	);
+	const currentSite = useMemo(
+		() => (pagination?.data || []).find(site => site.uuid === currentItem?.siteId),
+		[currentItem, pagination]
+	);
 
 	/**
 	 * METHODS
 	 */
-
-	const setValue = (uuid: string): void => {
-		const item = items.find(item => item.value === uuid);
-
-		if (item) {
-			return fieldHelperProps.setValue({
-				siteId: item.siteId,
-				contentId: item.value,
-				isCrossSite: !searchInCurrentSite,
-			});
-		}
-	};
-
 	const getItems = async (cb: (options: any[]) => void): Promise<void> => {
 		ccContentFacade
-			.selectItemValue(`search_${fieldSchema.name}`)
+			.selectItemValue(`search_${fieldSchema.name}.contentId`)
 			.pipe(first())
 			.subscribe(content => {
 				const newItems = ((content as ContentModel[]) || []).map(c => ({
@@ -78,6 +70,18 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 			});
 	};
 
+	const setValue = (identifier: string): void => {
+		const item = items.find(item => item.value === identifier);
+
+		if (item) {
+			return fieldHelperProps.setValue({
+				siteId: item.siteId,
+				contentId: item.value,
+				isCrossSite: !searchInCurrentSite,
+			});
+		}
+	};
+
 	const searchInSite = (): void => {
 		setSearchInCurrentSite(!searchInCurrentSite);
 	};
@@ -85,38 +89,65 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 	/**
 	 * RENDER
 	 */
-
 	const renderSelect = (): ReactElement => {
 		return (
 			<>
-				<ContentSelectBase
-					fieldSchema={fieldSchema}
-					fieldProps={fieldProps}
-					setValue={setValue}
-					getItems={getItems}
-					currentItem={currentItem}
-					searchParams={{
-						skip: 0,
-						limit: 10,
-						sparse: true,
-						...(config.contentTypes?.length
-							? { contentTypes: config.contentTypes.join(',') }
-							: {}),
-						...(config.sites?.length
-							? { sites: config.sites.join(',') }
-							: { sites: 'all' }),
-						...(searchInCurrentSite ? { sites: siteId } : {}),
-					}}
-					to={
-						currentItem?.value
-							? generatePath(MODULE_PATHS.detailView, {
-									contentId: currentItem?.value,
-									contentTypeId: currentItem?.contentTypeId,
-									siteId: currentItem?.siteId,
-							  })
-							: '#'
-					}
-				/>
+				<div className="row">
+					<div className="col-xs-10 col-md-11">
+						<ContentSelectBase
+							fieldSchema={{
+								...fieldSchema,
+								name: `${fieldSchema.name}.contentId`,
+							}}
+							fieldProps={
+								({
+									...fieldProps,
+									field: {
+										...field,
+										value: field.value.contentId,
+									},
+									setValue: setValue,
+								} as unknown) as FieldProps<string, FormikValues>
+							}
+							getItems={getItems}
+							currentItem={currentItem}
+							setValue={setValue}
+							searchParams={{
+								skip: 0,
+								limit: 10,
+								sparse: true,
+								...(config.contentTypes?.length
+									? { contentTypes: config.contentTypes.join(',') }
+									: {}),
+								...(config.sites?.length
+									? { sites: config.sites.join(',') }
+									: { sites: 'all' }),
+								...(searchInCurrentSite ? { sites: siteId } : {}),
+							}}
+							to={
+								currentItem?.value
+									? generatePath(MODULE_PATHS.detailView, {
+											contentId: currentItem?.value,
+											contentTypeId: currentItem?.contentTypeId,
+											siteId: currentItem?.siteId,
+									  })
+									: '#'
+							}
+						/>
+					</div>
+					{currentItem && (
+						<ContentInfoTooltip
+							icon="file-text-o"
+							className={
+								fieldSchema?.label === 'Link'
+									? 'm-dataloader-container__link'
+									: 'm-dataloader-container__content-item'
+							}
+							contentId={currentItem?.value}
+							site={currentSite}
+						/>
+					)}
+				</div>
 				{renderSearchInCurrentSite && (
 					<div className="u-margin-top">
 						<Checkbox
