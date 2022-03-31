@@ -303,10 +303,17 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		}));
 	}
 
-	public updateContentMetaDraft(
+	public async updateContentMetaDraft(
 		data: Partial<ContentSchema['meta']>,
 		contentType?: ContentTypeSchema
-	): void {
+	): Promise<void> {
+		const urlPathValue = await applyUrlPattern(
+			data.urlPath![data.lang!].pattern || '',
+			this.store.getValue().contentItemDraft?.uuid || '',
+			data,
+			contentType!
+		);
+
 		this.store.update(state => ({
 			contentItemDraft: {
 				...state.contentItemDraft,
@@ -317,12 +324,9 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 						? {
 								urlPath: {
 									...state.contentItemDraft?.meta.urlPath,
-									nl: {
-										value: applyUrlPattern(
-											contentType.meta.urlPath?.pattern || '',
-											{ slug: data.slug?.nl || '' }
-										),
-										pattern: contentType.meta.urlPath?.pattern || '',
+									[data.lang!]: {
+										value: urlPathValue,
+										pattern: data.urlPath![data.lang!].pattern,
 									},
 								},
 						  }

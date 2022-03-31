@@ -851,6 +851,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							allowedTransitions={allowedTransitions}
 							isCreating={isCreating}
 							isValid
+							site={site}
 							settings={getSettings(contentType, activeCompartment)}
 							onChange={values => handleChange(activeCompartment, values)}
 							workflow={workflow}
@@ -862,6 +863,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 							)}
 							updateContent={(content: ContentSchema) =>
 								contentFacade.updateContentItemDraft(content)
+							}
+							updateContentMeta={(meta: ContentSchema['meta']) =>
+								contentFacade.updateContentMetaDraft(meta, contentType)
 							}
 						/>
 					</Card>

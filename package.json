@@ -1,6 +1,6 @@
 {
   "name": "@redactie/content-module",
-  "version": "1.15.2",
+  "version": "1.15.3-4",
   "description": "redactie content module",
   "main": "dist/redactie-content-module.umd.js",
   "module": "dist/redactie-content-module.umd.js",
@@ -102,6 +102,7 @@
   },
   "dependencies": {
     "@redactie/schema-to-yup": "^1.9.25",
+    "@wcm/pattern-resolver": "^1.0.0",
     "json-pointer": "^0.6.1",
     "lodash.debounce": "^4.0.8",
     "lodash.kebabcase": "^4.1.1",
