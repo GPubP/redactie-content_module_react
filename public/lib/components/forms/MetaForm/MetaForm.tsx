@@ -95,7 +95,7 @@ const MetaForm: FC<CompartmentProps> = ({
 									href={`${newSite}${pathOr('', [
 										'meta',
 										'urlPath',
-										contentValue.meta.lang,
+										contentValue?.meta?.lang,
 										'value',
 									])(contentValue)}`}
 									className="u-margin-left-xs"
@@ -103,7 +103,7 @@ const MetaForm: FC<CompartmentProps> = ({
 									{`${newSite}${pathOr('', [
 										'meta',
 										'urlPath',
-										contentValue.meta.lang,
+										contentValue?.meta?.lang,
 										'value',
 									])(contentValue)}`}
 								</a>
