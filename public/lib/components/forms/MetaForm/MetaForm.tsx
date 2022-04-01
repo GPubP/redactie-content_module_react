@@ -91,10 +91,11 @@ const MetaForm: FC<CompartmentProps> = ({
 								<a
 									target="_blank"
 									rel="noopener noreferrer"
-									href={`${newSite}${contentValue?.meta?.urlPath?.nl.value}`}
+									href={`${newSite}${contentValue?.meta?.urlPath?.nl?.value ||
+										''}`}
 									className="u-margin-left-xs"
 								>
-									{`${newSite}${contentValue?.meta?.urlPath?.nl.value}`}
+									{`${newSite}${contentValue?.meta?.urlPath?.nl?.value || ''}`}
 								</a>
 							) : (
 								'-'
