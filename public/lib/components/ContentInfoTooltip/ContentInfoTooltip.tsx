@@ -2,8 +2,9 @@ import { CardTitle, Label } from '@acpaas-ui/react-components';
 import { TooltipTypeMap } from '@acpaas-ui/react-editorial-components';
 import { DataLoader, InfoTooltip, LoadingState, useSiteContext } from '@redactie/utils';
 import moment from 'moment';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useContext, useEffect, useState } from 'react';
 
+import formRendererConnector from '../../connectors/formRenderer';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { useContentItem } from '../../hooks';
 import {
@@ -23,8 +24,12 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 	className,
 	site,
 }: ContentInfoTooltipProps) => {
+	const { activeLanguage } = useContext(formRendererConnector.api.FormContext);
 	const { siteId } = useSiteContext();
-	const url = site?.data?.url;
+	const url =
+		typeof site?.data?.url === 'object'
+			? site?.data?.url[activeLanguage || 'nl']
+			: site?.data?.url;
 	const newSite = url?.slice(-1) === '/' ? url.slice(0, url.length - 1) : url;
 	const [fetchingState] = useContentItem();
 	const [item, setItem] = useState<ContentSchema>();

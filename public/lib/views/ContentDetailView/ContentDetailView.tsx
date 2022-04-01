@@ -17,7 +17,7 @@ import {
 import { AlertContainer, useNavigate, useWorker } from '@redactie/utils';
 import moment from 'moment';
 import { isEmpty } from 'ramda';
-import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useContext, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { PublishedStatus } from '../../components';
@@ -50,6 +50,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 	/**
 	 * Hooks
 	 */
+	const { activeLanguage } = useContext(formRendererConnector.api.FormContext);
 	const { navigate, generatePath } = useNavigate(SITES_ROOT);
 	const [, , externalLock, userLock] = useLock(contentId);
 	const viewProps = useMemo(() => getViewPropsByCT(contentType, contentItem.fields), [
@@ -88,7 +89,10 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 	}>();
 
 	const [site] = sitesConnector.hooks.useSite(siteId);
-	const url = site?.data?.url;
+	const url =
+		typeof site?.data?.url === 'object'
+			? site?.data?.url[activeLanguage || 'nl']
+			: site?.data?.url;
 	const newSite = url?.slice(-1) === '/' ? url.slice(0, url.length - 1) : url;
 
 	useEffect(() => {
