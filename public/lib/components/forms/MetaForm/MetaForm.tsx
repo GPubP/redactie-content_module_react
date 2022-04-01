@@ -8,6 +8,7 @@ import {
 	validateYupSchema,
 	yupToFormErrors,
 } from 'formik';
+import { pathOr } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import { CompartmentProps } from '../../../api/api.types';
@@ -91,11 +92,20 @@ const MetaForm: FC<CompartmentProps> = ({
 								<a
 									target="_blank"
 									rel="noopener noreferrer"
-									href={`${newSite}${contentValue?.meta?.urlPath?.nl?.value ||
-										''}`}
+									href={`${newSite}${pathOr('', [
+										'meta',
+										'urlPath',
+										contentValue.meta.lang,
+										'value',
+									])(contentValue)}`}
 									className="u-margin-left-xs"
 								>
-									{`${newSite}${contentValue?.meta?.urlPath?.nl?.value || ''}`}
+									{`${newSite}${pathOr('', [
+										'meta',
+										'urlPath',
+										contentValue.meta.lang,
+										'value',
+									])(contentValue)}`}
 								</a>
 							) : (
 								'-'
