@@ -24,6 +24,7 @@ const MetaForm: FC<CompartmentProps> = ({
 	contentType,
 	value,
 	onChange = () => undefined,
+	activeLanguage,
 	formikRef,
 }): ReactElement | null => {
 	const onFormChange = (values: FormikValues, submitForm: () => Promise<void>): void => {
@@ -43,7 +44,8 @@ const MetaForm: FC<CompartmentProps> = ({
 	const [t] = useCoreTranslation();
 	const ErrorMessage = formRendererConnector.api.ErrorMessage;
 	const [site] = sitesConnector.hooks.useSite(siteId);
-	const url = site?.data?.url;
+	const url =
+		typeof site?.data?.url === 'object' ? site?.data?.url[activeLanguage!] : site?.data?.url;
 
 	const newSite = url?.slice(-1) === '/' ? url.slice(0, url.length - 1) : url;
 
