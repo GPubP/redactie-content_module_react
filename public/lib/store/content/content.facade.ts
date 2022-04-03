@@ -1,5 +1,5 @@
 import { alertService, BaseEntityFacade, SearchParams } from '@redactie/utils';
-import { omit, pick } from 'ramda';
+import { omit, path, pick } from 'ramda';
 
 import { ContentTypeSchema } from '../../..';
 import { WORKING_TITLE_KEY } from '../../content.const';
@@ -307,12 +307,14 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		data: Partial<ContentSchema['meta']>,
 		contentType?: ContentTypeSchema
 	): Promise<void> {
-		const urlPathValue = await applyUrlPattern(
-			data.urlPath![data.lang!].pattern || '',
-			this.store.getValue().contentItemDraft?.uuid || '',
-			data,
-			contentType!
-		);
+		const urlPathValue = path(['urlPath', data.lang!])(data)
+			? await applyUrlPattern(
+					data.urlPath![data.lang!].pattern || '',
+					this.store.getValue().contentItemDraft?.uuid || '',
+					data,
+					contentType!
+			  )
+			: '';
 
 		this.store.update(state => ({
 			contentItemDraft: {
@@ -326,7 +328,9 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 									...state.contentItemDraft?.meta.urlPath,
 									[data.lang!]: {
 										value: urlPathValue,
-										pattern: data.urlPath![data.lang!].pattern,
+										pattern: path(['urlPath', data.lang!])(data)
+											? data.urlPath![data.lang!].pattern
+											: '',
 									},
 								},
 						  }
