@@ -120,8 +120,12 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			return;
 		}
 
-		const navModulesConfig = (contentType.modulesConfig || []).find(
-			moduleConfig => moduleConfig.name === 'navigation'
+		const navTenantModulesConfig = (contentType.modulesConfig || []).find(
+			moduleConfig => moduleConfig.name === 'navigation' && !moduleConfig.site
+		);
+
+		const navSiteModulesConfig = (contentType.modulesConfig || []).find(
+			moduleConfig => moduleConfig.name === 'navigation' && !!moduleConfig.site
 		);
 
 		const defaultValue: ContentSchema = {
@@ -142,7 +146,8 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 				urlPath: {
 					nl: {
 						pattern:
-							navModulesConfig?.config?.url?.urlPattern?.nl ||
+							navSiteModulesConfig?.config?.url?.urlPattern?.nl ||
+							navTenantModulesConfig?.config?.url?.urlPattern?.nl ||
 							contentType.meta.urlPath?.pattern ||
 							'',
 						value: '',
