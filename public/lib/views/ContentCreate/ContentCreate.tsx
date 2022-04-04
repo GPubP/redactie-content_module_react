@@ -120,6 +120,10 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			return;
 		}
 
+		const navModulesConfig = (contentType.modulesConfig || []).find(
+			moduleConfig => moduleConfig.name === 'navigation'
+		);
+
 		const defaultValue: ContentSchema = {
 			fields: getInitialContentValues(contentType?.fields),
 			modulesData: {},
@@ -130,11 +134,20 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 					nl: '',
 				},
 				// TODO: actually implement this when working on content MT
-				lang: '',
+				lang: 'nl',
 				contentType: contentType,
 				status: '',
 				workflowState: ContentSystemNames.NEW,
 				site: siteId,
+				urlPath: {
+					nl: {
+						pattern:
+							navModulesConfig?.config?.url?.urlPattern?.nl ||
+							contentType.meta.urlPath?.pattern ||
+							'',
+						value: '',
+					},
+				},
 			},
 		};
 
