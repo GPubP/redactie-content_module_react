@@ -182,13 +182,13 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 
 								<div className="a-url">
 									<b>URL: </b>
-									{meta?.urlPath?.nl.value ? (
+									{meta?.urlPath?.nl?.value ? (
 										<a
 											target="_blank"
 											rel="noopener noreferrer"
-											href={`${newSite}${meta?.urlPath?.nl.value}`}
+											href={`${newSite}${meta?.urlPath?.nl?.value}`}
 										>
-											{`${newSite}${meta?.urlPath?.nl.value}`}
+											{`${newSite}${meta?.urlPath?.nl?.value}`}
 										</a>
 									) : (
 										'-'
