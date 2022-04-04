@@ -16,7 +16,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { AlertContainer, useNavigate, useWorker } from '@redactie/utils';
 import moment from 'moment';
-import { isEmpty } from 'ramda';
+import { isEmpty, path } from 'ramda';
 import React, { FC, ReactElement, useContext, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -176,19 +176,23 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 								{contentType?.meta?.canBeFiltered && meta.slug && (
 									<div>
 										<b>Slug: </b>
-										{meta.slug.nl}
+										{meta.slug[meta.lang || 'nl']}
 									</div>
 								)}
 
 								<div className="a-url">
 									<b>URL: </b>
-									{meta?.urlPath?.nl.value ? (
+									{path(['urlPath', meta.lang, 'value'])(meta) ? (
 										<a
 											target="_blank"
 											rel="noopener noreferrer"
-											href={`${newSite}${meta?.urlPath?.nl.value}`}
+											href={`${newSite}${
+												meta?.urlPath![meta.lang || 'nl']?.value
+											}`}
 										>
-											{`${newSite}${meta?.urlPath?.nl.value}`}
+											{`${newSite}${
+												meta?.urlPath![meta.lang || 'nl']?.value
+											}`}
 										</a>
 									) : (
 										'-'
