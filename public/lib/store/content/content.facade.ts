@@ -263,9 +263,32 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 	/**
 	 * Helpers
 	 */
-	public setContentItemDraft(data: ContentModel): void {
+	public async setContentItemDraft(data: ContentModel): Promise<void> {
+		const urlPathValue = path(['urlPath', data.meta.lang])(data.meta)
+			? await applyUrlPattern(
+					data.meta.urlPath![data.meta.lang].pattern || '',
+					this.store.getValue().contentItemDraft?.uuid || '',
+					data.meta,
+					data.meta.contentType!
+			  )
+			: '';
+
 		this.store.update({
-			contentItemDraft: data,
+			contentItemDraft: {
+				...data,
+				meta: {
+					...data.meta,
+					urlPath: {
+						...data.meta.urlPath,
+						[data.meta.lang]: {
+							value: urlPathValue,
+							pattern: path(['urlPath', data.meta.lang])(data.meta)
+								? data.meta.urlPath![data.meta.lang!].pattern
+								: '',
+						},
+					},
+				},
+			},
 		});
 	}
 
