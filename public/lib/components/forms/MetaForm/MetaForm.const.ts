@@ -1,4 +1,4 @@
-import { date, object, ObjectSchema, string } from 'yup';
+import { date, object, Schema, string } from 'yup';
 
 import { ContentCompartmentsValidateOptions } from '../../../store/ui/contentCompartments';
 
@@ -9,7 +9,7 @@ export const META_VALIDATION_SCHEMA = (
 	contentId?: string,
 	options: ContentCompartmentsValidateOptions = { async: true, allowedTransitions: [] },
 	isPage?: boolean
-): ObjectSchema<any> =>
+): Schema<unknown> =>
 	isPage
 		? object().shape({
 				slug: object({
