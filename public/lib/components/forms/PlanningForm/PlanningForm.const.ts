@@ -1,6 +1,6 @@
-import { date, object, ObjectSchema } from 'yup';
+import { date, object, Schema } from 'yup';
 
-export const PLANNING_VALIDATION_SCHEMA = (publishTime: string): ObjectSchema<any> =>
+export const PLANNING_VALIDATION_SCHEMA = (publishTime: string): Schema<unknown> =>
 	object().shape({
 		publishTime: date()
 			.min(new Date().toISOString(), 'Publicatiedatum moet in de toekomst liggen')

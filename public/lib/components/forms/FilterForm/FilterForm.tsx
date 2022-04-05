@@ -21,6 +21,7 @@ const FilterForm: FC<FilterFormProps> = ({
 	activeFilters,
 	deleteActiveFilter,
 	statusOptions,
+	languageOptions,
 }) => {
 	const [loadingState, contentTypes] = useContentTypes();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
@@ -144,6 +145,25 @@ const FilterForm: FC<FilterFormProps> = ({
 													...PUBLISHED_OPTIONS,
 												]}
 											/>
+										</div>
+										<div className="col-sm-12 u-margin-top">
+											<Field name="contentType">
+												{() => (
+													<div className="m-flyout--scrollable">
+														<Autocomplete
+															key={values.lang}
+															label="Taal"
+															id="lang"
+															defaultValue={values.lang}
+															items={languageOptions}
+															multipleSelect
+															onSelection={(selected: string[]) =>
+																setFieldValue('lang', selected)
+															}
+														/>
+													</div>
+												)}
+											</Field>
 										</div>
 									</div>
 								</FilterBody>

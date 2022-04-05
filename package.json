@@ -101,6 +101,7 @@
     "yup": "^0.28.3"
   },
   "dependencies": {
+    "@redactie/language-module": "0.0.4-0",
     "@redactie/schema-to-yup": "^1.9.25",
     "@wcm/pattern-resolver": "^1.0.0",
     "json-pointer": "^0.6.1",

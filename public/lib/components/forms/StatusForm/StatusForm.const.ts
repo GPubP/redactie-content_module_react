@@ -1,6 +1,6 @@
-import { object, ObjectSchema, string } from 'yup';
+import { object, Schema, string } from 'yup';
 
-export const STATUS_VALIDATION_SCHEMA = (allowedWorkflowStates: string[]): ObjectSchema =>
+export const STATUS_VALIDATION_SCHEMA = (allowedWorkflowStates: string[]): Schema<unknown> =>
 	object().shape({
 		status: string().required(),
 		workflowState: string()
