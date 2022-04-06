@@ -84,7 +84,6 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	workflow,
 }) => {
 	const { compartment, contentTypeId, siteId, contentId } = match.params;
-	console.log(match);
 
 	/**
 	 * Hooks

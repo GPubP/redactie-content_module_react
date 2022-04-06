@@ -44,7 +44,7 @@ import { ContentCompartmentModel } from '../../store/ui/contentCompartments';
 import { ContentCreateMatchProps } from './ContentCreate.types';
 
 const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, route }) => {
-	const { contentTypeId, siteId } = match.params;
+	const { contentTypeId, siteId, language } = match.params;
 
 	/**
 	 * Hooks
@@ -134,22 +134,21 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			fields: getInitialContentValues(contentType?.fields),
 			modulesData: {},
 			meta: {
-				activeLanguages: ['nl'],
+				activeLanguages: [language],
 				label: '',
 				slug: {
-					nl: '',
+					[language]: '',
 				},
-				// TODO: actually implement this when working on content MT
-				lang: 'nl',
+				lang: language,
 				contentType: contentType,
 				status: '',
 				workflowState: ContentSystemNames.NEW,
 				site: siteId,
 				urlPath: {
-					nl: {
+					[language]: {
 						pattern:
-							navSiteModulesConfig?.config?.url?.urlPattern?.nl ||
-							navTenantModulesConfig?.config?.url?.urlPattern?.nl ||
+							navSiteModulesConfig?.config?.url?.urlPattern[language] ||
+							navTenantModulesConfig?.config?.url?.urlPattern[language] ||
 							contentType.meta.urlPath?.pattern ||
 							'',
 						value: '',
@@ -186,7 +185,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		const request: ContentCreateSchema = {
 			meta: {
 				description: content.meta?.description,
-				activeLanguages: ['nl'],
+				activeLanguages: [language],
 				label: content.meta?.label,
 				slug: content.meta?.slug,
 				contentType: contentType._id,
