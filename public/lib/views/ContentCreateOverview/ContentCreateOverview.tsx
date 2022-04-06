@@ -1,7 +1,12 @@
+import { Button, RadioGroup } from '@acpaas-ui/react-components';
 import {
 	Container,
 	ContextHeader,
 	ContextHeaderTopSection,
+	ControlledModal,
+	ControlledModalBody,
+	ControlledModalFooter,
+	ControlledModalHeader,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import {
@@ -14,13 +19,18 @@ import {
 	useAPIQueryParams,
 	useNavigate,
 } from '@redactie/utils';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import { Field, Formik } from 'formik';
+import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
+import languagesConnector from '../../connectors/languages';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { useContentTypes, useRoutesBreadcrumbs } from '../../hooks';
-import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../services/contentTypes';
+import {
+	ContentTypeSchema,
+	DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
+} from '../../services/contentTypes';
 import { contentTypesFacade } from '../../store/contentTypes';
 
 import {
@@ -36,7 +46,9 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 	/**
 	 * Hooks
 	 */
-
+	const [, languages] = languagesConnector.hooks.useActiveLanguagesForSite(siteId);
+	const [showLanguageModal, setShowLanguageModal] = useState<boolean>(false);
+	const [selectedContentType, setSelectedContentType] = useState<ContentTypeSchema>();
 	const { navigate, generatePath } = useNavigate(SITES_ROOT);
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
@@ -97,6 +109,28 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 		direction: query.direction ?? 1,
 	});
 
+	const languageOptions = useMemo(
+		() =>
+			(languages || []).map(language => ({
+				label: `${language.name} (${language.key})`,
+				value: language.key,
+			})),
+		[languages]
+	);
+
+	const handleSelectContentType = (contentTypeId: string): void => {
+		setShowLanguageModal(true);
+		setSelectedContentType(contentTypes.find(ct => ct.uuid === contentTypeId));
+	};
+
+	const handleLanguageSelect = ({ language }: { language: string }): void => {
+		navigate(MODULE_PATHS.create, {
+			contentTypeId: selectedContentType?.uuid,
+			siteId,
+			language,
+		});
+	};
+
 	/**
 	 * Render
 	 */
@@ -110,7 +144,7 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 			label: contentType.meta.label,
 			description: contentType.meta.description,
 			type: contentType.meta.canBeFiltered ? 'Pagina' : 'Blok',
-			navigate: contentTypeId => navigate(MODULE_PATHS.create, { contentTypeId, siteId }),
+			onSelectContentType: handleSelectContentType,
 		}));
 
 		return (
@@ -150,6 +184,38 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 			<Container>
 				<DataLoader loadingState={initialLoading} render={renderOverview} />
 			</Container>
+			<Formik initialValues={{ language: '' }} onSubmit={handleLanguageSelect}>
+				{({ submitForm }) => (
+					<ControlledModal
+						show={showLanguageModal}
+						onClose={() => setShowLanguageModal(false)}
+						size="large"
+					>
+						<ControlledModalHeader>
+							<h4>{selectedContentType?.meta.label} aanmaken</h4>
+						</ControlledModalHeader>
+						<ControlledModalBody>
+							<Field
+								as={RadioGroup}
+								id="language"
+								name="language"
+								options={languageOptions}
+								label="Bepaal in welke taal je dit content item wil aanmaken."
+							/>
+						</ControlledModalBody>
+						<ControlledModalFooter>
+							<div className="u-flex u-flex-item u-flex-justify-end">
+								<Button onClick={() => setShowLanguageModal(false)} negative>
+									Annuleer
+								</Button>
+								<Button type="info" onClick={submitForm}>
+									Aanmaken
+								</Button>
+							</div>
+						</ControlledModalFooter>
+					</ControlledModal>
+				)}
+			</Formik>
 		</>
 	);
 };
