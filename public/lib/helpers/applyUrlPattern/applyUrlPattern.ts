@@ -27,5 +27,5 @@ export const applyUrlPattern = async (
 
 	return resolveUrl(pattern, resolver)
 		.catch(() => pattern)
-		.then(value => `/${value}`);
+		.then(value => `/${value.charAt(0) === '/' ? value.substring(1) : value}`);
 };

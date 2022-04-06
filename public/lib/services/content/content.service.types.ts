@@ -84,6 +84,7 @@ export interface ContentCreateSchema {
 		workflowState: string;
 		published: boolean;
 		site: string;
+		lang: string;
 		publishTime?: string | null;
 		unpublishTime?: string | null;
 		urlPath?: Record<
