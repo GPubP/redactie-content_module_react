@@ -121,7 +121,7 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 	const handleSelectContentType = (contentTypeId: string): void => {
 		if (languages?.length === 1) {
 			return navigate(MODULE_PATHS.create, {
-				contentTypeId: selectedContentType?.uuid,
+				contentTypeId,
 				siteId,
 				language: languages[0].key,
 			});
