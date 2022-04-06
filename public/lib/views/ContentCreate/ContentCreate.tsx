@@ -16,6 +16,7 @@ import {
 } from '@redactie/utils';
 import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 import rolesRightsConnector from '../../connectors/rolesRights';
 import sitesConnector from '../../connectors/sites';
@@ -129,6 +130,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		);
 
 		const defaultValue: ContentSchema = {
+			uuid: uuidv4(),
 			fields: getInitialContentValues(contentType?.fields),
 			modulesData: {},
 			meta: {

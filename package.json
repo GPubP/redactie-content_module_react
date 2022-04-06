@@ -106,7 +106,8 @@
     "json-pointer": "^0.6.1",
     "lodash.debounce": "^4.0.8",
     "lodash.kebabcase": "^4.1.1",
-    "query-string": "6.12.1"
+    "query-string": "6.12.1",
+    "uuid": "^8.3.2"
   },
   "author": "Glenn Verschooren",
   "license": "ISC"

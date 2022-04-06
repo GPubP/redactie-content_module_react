@@ -264,11 +264,15 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 	 * Helpers
 	 */
 	public async setContentItemDraft(data: ContentModel): Promise<void> {
-		const urlPathValue = path(['urlPath', data.meta.lang])(data.meta)
+		const currentMetaValue = this.store.getValue().contentItemDraft?.meta!;
+		const urlPathValue = path(['urlPath', currentMetaValue?.lang])(currentMetaValue)
 			? await applyUrlPattern(
-					data.meta.urlPath![data.meta.lang].pattern || '',
+					currentMetaValue.urlPath![currentMetaValue.lang].pattern || '',
 					this.store.getValue().contentItemDraft?.uuid || '',
-					data.meta,
+					{
+						...currentMetaValue,
+						...data.meta,
+					},
 					data.meta.contentType!
 			  )
 			: '';
@@ -284,7 +288,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 							value: urlPathValue,
 							pattern: path(['urlPath', data.meta.lang])(data.meta)
 								? data.meta.urlPath![data.meta.lang!].pattern
-								: '',
+								: currentMetaValue.urlPath![currentMetaValue.lang].pattern,
 						},
 					},
 				},
@@ -330,11 +334,15 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		data: Partial<ContentSchema['meta']>,
 		contentType?: ContentTypeSchema
 	): Promise<void> {
-		const urlPathValue = path(['urlPath', data.lang!])(data)
+		const currentMetaValue = this.store.getValue().contentItemDraft?.meta!;
+		const urlPathValue = path(['urlPath', currentMetaValue?.lang!])(currentMetaValue)
 			? await applyUrlPattern(
-					data.urlPath![data.lang!].pattern || '',
+					currentMetaValue.urlPath![currentMetaValue.lang].pattern || '',
 					this.store.getValue().contentItemDraft?.uuid || '',
-					data,
+					{
+						...currentMetaValue,
+						...data,
+					},
 					contentType!
 			  )
 			: '';
@@ -349,11 +357,12 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 						? {
 								urlPath: {
 									...state.contentItemDraft?.meta.urlPath,
-									[data.lang!]: {
+									[currentMetaValue.lang]: {
 										value: urlPathValue,
 										pattern: path(['urlPath', data.lang!])(data)
-											? data.urlPath![data.lang!].pattern
-											: '',
+											? data.urlPath![currentMetaValue.lang].pattern
+											: currentMetaValue.urlPath![currentMetaValue.lang]
+													.pattern,
 									},
 								},
 						  }
