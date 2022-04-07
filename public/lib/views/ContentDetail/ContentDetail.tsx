@@ -1,6 +1,7 @@
 import {
 	Container,
 	ContextHeader,
+	ContextHeaderLabelSection,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import {
@@ -214,6 +215,8 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	)}`;
 	const badges = generateDetailBadges(contentItem, contentType, currentWorkflowState?.data.name);
 
+	console.log(ContextHeaderLabelSection);
+
 	const render = (): ReactElement => {
 		return (
 			<>
@@ -233,6 +236,9 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 					badges={badges}
 				>
 					<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
+					<ContextHeaderLabelSection>
+						<b>{contentItem?.meta.lang}</b>
+					</ContextHeaderLabelSection>
 				</ContextHeader>
 				<Container>
 					<AlertContainer
