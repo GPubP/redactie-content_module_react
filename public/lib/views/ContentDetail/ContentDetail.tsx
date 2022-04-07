@@ -215,8 +215,6 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	)}`;
 	const badges = generateDetailBadges(contentItem, contentType, currentWorkflowState?.data.name);
 
-	console.log(ContextHeaderLabelSection);
-
 	const render = (): ReactElement => {
 		return (
 			<>
