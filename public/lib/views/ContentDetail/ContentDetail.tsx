@@ -235,7 +235,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 				>
 					<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 					<ContextHeaderLabelSection>
-						<b>{contentItem?.meta.lang}</b>
+						<b>{contentItem?.meta.lang.toUpperCase()}</b>
 					</ContextHeaderLabelSection>
 				</ContextHeader>
 				<Container>
