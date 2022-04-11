@@ -49,7 +49,7 @@ export {
 export interface ContentAPI {
 	store: {
 		content: {
-			facade: Pick<ContentFacade, 'getContentItem' | 'getContentItemBySlug'>;
+			facade: Pick<ContentFacade, 'getContentItem' | 'getContentItemBySlug' | 'getContent'>;
 			service: typeof contentApiService;
 		};
 	};

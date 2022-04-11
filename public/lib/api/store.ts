@@ -8,6 +8,7 @@ export const store: ContentAPI['store'] = {
 		facade: {
 			getContentItem: contentFacade.getContentItem.bind(contentFacade),
 			getContentItemBySlug: contentFacade.getContentItemBySlug.bind(contentFacade),
+			getContent: contentFacade.getContent.bind(contentFacade),
 		},
 		service: contentApiService,
 	},
