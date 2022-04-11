@@ -85,6 +85,7 @@ export interface ContentCreateSchema {
 		published: boolean;
 		site: string;
 		lang: string;
+		languageId: string;
 		publishTime?: string | null;
 		unpublishTime?: string | null;
 		urlPath?: Record<
