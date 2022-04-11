@@ -29,6 +29,7 @@ export interface ContentMeta {
 	contentType: ContentTypeSchema;
 	historySummary?: ContentHistorySummary;
 	theme?: string;
+	languageId: string;
 	lastEditor?: {
 		firstname?: string;
 		lastname?: string;
