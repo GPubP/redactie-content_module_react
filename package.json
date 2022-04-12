@@ -33,7 +33,7 @@
   ],
   "devDependencies": {
     "@acpaas-ui/react-components": "^4.5.0",
-    "@acpaas-ui/react-editorial-components": "1.1.0",
+    "@acpaas-ui/react-editorial-components": "^1.3.4",
     "@babel/core": "~7.8.3",
     "@babel/preset-env": "~7.8.3",
     "@babel/preset-react": "~7.8.3",
@@ -101,7 +101,7 @@
     "yup": "^0.28.3"
   },
   "dependencies": {
-    "@redactie/language-module": "0.0.4-0",
+    "@redactie/language-module": "^0.0.5",
     "@redactie/schema-to-yup": "^1.9.25",
     "@wcm/pattern-resolver": "^1.0.0",
     "json-pointer": "^0.6.1",

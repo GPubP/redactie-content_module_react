@@ -2,6 +2,7 @@ import { CardTitle, Label } from '@acpaas-ui/react-components';
 import { TooltipTypeMap } from '@acpaas-ui/react-editorial-components';
 import { DataLoader, InfoTooltip, LoadingState, useSiteContext } from '@redactie/utils';
 import moment from 'moment';
+import { path } from 'ramda';
 import React, { ReactElement, useContext, useEffect, useState } from 'react';
 
 import formRendererConnector from '../../connectors/formRenderer';
@@ -96,10 +97,10 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 								{item?.meta.description}
 							</div>
 						)}
-						{item?.meta.urlPath?.nl?.value && (
+						{path(['meta', 'urlPath', item?.meta.lang, 'value'])(item) && (
 							<div className="u-margin-bottom-xs a-url">
 								<b>URL: </b>
-								{`${newSite}${item?.meta.urlPath?.nl.value}`}
+								{`${newSite}${item?.meta.urlPath![item?.meta.lang]?.value}`}
 							</div>
 						)}
 						{item?.meta.created && (

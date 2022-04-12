@@ -36,6 +36,7 @@ const MetaForm: FC<CompartmentProps> = ({
 	const metaValidationSchema = useMemo(() => {
 		return META_VALIDATION_SCHEMA(
 			siteId,
+			contentValue?.meta?.lang,
 			contentValue?.uuid,
 			undefined,
 			contentType?.meta.canBeFiltered
@@ -116,7 +117,11 @@ const MetaForm: FC<CompartmentProps> = ({
 					{contentType?.meta?.canBeFiltered ? (
 						<div className="row">
 							<div className="col-xs-12 col-md-6 u-margin-bottom">
-								<Field type="text" name="slug.nl" required>
+								<Field
+									type="text"
+									name={`slug.${contentValue?.meta.lang}`}
+									required
+								>
 									{(fieldProps: FieldProps<any, {}>) => (
 										<>
 											<TextField
@@ -128,7 +133,9 @@ const MetaForm: FC<CompartmentProps> = ({
 												{...fieldProps.field}
 											/>
 											{!fieldProps.form.isValidating ? (
-												<ErrorMessage name="slug.nl" />
+												<ErrorMessage
+													name={`slug.${contentValue?.meta.lang}`}
+												/>
 											) : null}
 										</>
 									)}

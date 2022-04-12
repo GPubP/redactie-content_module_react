@@ -45,7 +45,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 					label: `${c.meta.label} [${c.meta.contentType?.meta?.label || ''}] - ID ${
 						c.uuid
 					}`,
-					value: config.bySlug ? c.meta.slug.nl : c.uuid,
+					value: config.bySlug ? c.meta.slug[c.meta.lang] : c.uuid,
 					contentTypeId: c.meta.contentType.uuid,
 					uuid: c.uuid || '',
 				}));
@@ -63,7 +63,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 		}
 
 		const originalItem = originalItems.find(item =>
-			config.bySlug ? item.meta.slug.nl === identifier : item.uuid === identifier
+			config.bySlug ? item.meta.slug[item.meta.lang] === identifier : item.uuid === identifier
 		);
 
 		if (originalItem) {

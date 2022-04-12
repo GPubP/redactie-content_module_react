@@ -43,6 +43,7 @@ export const INTERNAL_COMPARTMENTS = (
 		validate: (values, ac, options) =>
 			META_VALIDATION_SCHEMA(
 				siteId,
+				values.meta.lang,
 				values.uuid,
 				options,
 				contentType?.meta?.canBeFiltered

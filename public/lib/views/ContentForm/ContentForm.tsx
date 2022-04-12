@@ -538,7 +538,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 					contentFacade.updateContentMetaDraft(
 						{
-							slug: { nl: slug },
+							slug: { [contentItemDraft.meta.lang]: slug },
 						},
 						contentType
 					);
@@ -551,7 +551,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			case CompartmentType.INTERNAL: {
 				const metaValues = values as ContentSchema['meta'];
 
-				if (isCreating && !isEmpty(metaValues.slug?.nl)) {
+				if (isCreating && !isEmpty(metaValues.slug[metaValues.lang])) {
 					setSlugFieldTouched(true);
 				}
 

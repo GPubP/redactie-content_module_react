@@ -3,5 +3,5 @@ export interface ContentCreateOverviewTableRow {
 	label: string;
 	description: string;
 	type: string;
-	navigate: (contentTypeId: string) => void;
+	onSelectContentType: (contentTypeId: string) => void;
 }

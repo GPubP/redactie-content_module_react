@@ -56,9 +56,14 @@ export const CONTENT_CREATE_OVERVIEW_COLUMNS = (
 		classList: ['u-text-right'],
 		disableSorting: true,
 		width: '35%',
-		component(value, { navigate, uuid }) {
+		component(value, { onSelectContentType, uuid }) {
 			return (
-				<Button outline onClick={() => navigate(uuid)} type="primary" size="small">
+				<Button
+					outline
+					onClick={() => onSelectContentType(uuid)}
+					type="primary"
+					size="small"
+				>
 					{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
 				</Button>
 			);

@@ -6,6 +6,7 @@ import { default as MetaFormHelper } from './MetaForm.helpers';
 
 export const META_VALIDATION_SCHEMA = (
 	siteId: string,
+	activeLanguage?: string,
 	contentId?: string,
 	options: ContentCompartmentsValidateOptions = { async: true, allowedTransitions: [] },
 	isPage?: boolean
@@ -13,14 +14,14 @@ export const META_VALIDATION_SCHEMA = (
 	isPage
 		? object().shape({
 				slug: object({
-					nl: string()
+					[activeLanguage || 'nl']: string()
 						.required('Gelieve een slug in te vullen')
 						.test({
 							name: 'noDuplicateSlug',
 							message: 'Deze slug bestaat reeds',
 							test: MetaFormHelper.validatieSlugDebouncedWrapper(
 								siteId,
-								'nl',
+								activeLanguage || 'nl',
 								contentId,
 								options
 							),
