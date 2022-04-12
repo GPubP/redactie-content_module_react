@@ -19,7 +19,7 @@ import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { equals, isEmpty, lensPath, path, set } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { createMachine, StateMachine } from 'xstate';
 
 import { ContentSchema, ContentStatus } from '../../api/api.types';
@@ -84,6 +84,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	workflow,
 }) => {
 	const { compartment, contentTypeId, siteId, contentId } = match.params;
+	const location = useLocation();
 
 	/**
 	 * Hooks
@@ -353,12 +354,12 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 
 	useEffect(() => {
 		if (compartments.length && (!compartment || compartment === 'default')) {
-			history.replace(`./${compartments[0].slug || compartments[0].name}`);
+			history.replace(`./${compartments[0].slug || compartments[0].name}${location.search}`);
 			return;
 		}
 
 		activate(compartment);
-	}, [activate, compartment, compartments, history]);
+	}, [activate, compartment, compartments, history, location]);
 
 	useEffect(() => {
 		setNavlist(
@@ -368,11 +369,11 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 				description: compartment.getDescription
 					? compartment.getDescription(contentItem)
 					: '',
-				to: compartment.slug || compartment.name,
+				to: `${compartment.slug || compartment.name}${location.search}`,
 				hasError: hasSubmit && compartment.isValid === false,
 			}))
 		);
-	}, [compartments, contentItem, hasSubmit]);
+	}, [compartments, contentItem, hasSubmit, location]);
 
 	// Trigger errors on form when switching from compartments
 	useEffect(() => {
