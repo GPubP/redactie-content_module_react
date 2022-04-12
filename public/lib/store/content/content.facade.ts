@@ -288,7 +288,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 							value: urlPathValue,
 							pattern: path(['urlPath', data.meta.lang])(data.meta)
 								? data.meta.urlPath![data.meta.lang!].pattern
-								: currentMetaValue.urlPath![currentMetaValue.lang].pattern,
+								: currentMetaValue?.urlPath![currentMetaValue.lang].pattern || '',
 						},
 					},
 				},

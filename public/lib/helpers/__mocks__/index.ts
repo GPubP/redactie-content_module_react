@@ -9,6 +9,7 @@ export const MOCK_FILTER_FORM_STATE: FilterFormState = {
 	lastModifiedTo: '',
 	search: '',
 	status: '',
+	lang: [],
 };
 
 const generateMockContentTypes = (amount = 4): ContentTypeSchema[] => {

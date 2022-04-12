@@ -22,6 +22,7 @@ export const OVERVIEW_QUERY_PARAMS_CONFIG = {
 	direction: { defaultValue: DEFAULT_CONTENT_SEARCH_PARAMS.direction, type: 'number' },
 	search: { type: 'string' },
 	contentTypes: { type: 'array' },
+	lang: { type: 'array' },
 	lastModifiedFrom: { type: 'string' },
 	lastModifiedTo: { type: 'string' },
 	['latest-status']: { type: 'string' },
@@ -88,9 +89,19 @@ export const CONTENT_OVERVIEW_COLUMNS = (
 		},
 	},
 	{
+		label: 'Taal',
+		value: 'lang',
+		ellipsis: true,
+		width: '5%',
+		disableSorting: true,
+		component(language: string) {
+			return <>{language.toUpperCase()}</>;
+		},
+	},
+	{
 		label: t(CORE_TRANSLATIONS['TABLE_LAST-MODIFIED']),
 		value: 'lastEdit',
-		width: '18%',
+		width: '15%',
 		format: (data: string) => moment(data).format(DATE_FORMATS.dateAndTime),
 	},
 	{
@@ -116,6 +127,9 @@ export const CONTENT_OVERVIEW_COLUMNS = (
 		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 		value: 'status',
 		width: '10%',
+		component(value: string) {
+			return <EllipsisWithTooltip>{value}</EllipsisWithTooltip>;
+		},
 	},
 	{
 		label: 'Online',
