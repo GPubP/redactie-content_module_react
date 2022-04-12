@@ -18,7 +18,7 @@ import {
 	useAPIQueryParams,
 	useNavigate,
 } from '@redactie/utils';
-import moment from 'moment';
+import moment, { lang } from 'moment';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import {
@@ -27,6 +27,7 @@ import {
 	PUBLISHED_OPTIONS,
 	PublishedStatuses,
 } from '../../components';
+import languagesConnector from '../../connectors/languages';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import workflowsConnector from '../../connectors/workflows';
@@ -66,6 +67,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	 */
 
 	const [, contentTypes] = useContentTypes();
+	const [, languages] = languagesConnector.hooks.useActiveLanguagesForSite(siteId);
 	const [
 		mySecurityRightsLoadingState,
 		mySecurityrights,
@@ -175,6 +177,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			skip: 0,
 			search: newFormState.search || undefined,
 			contentTypes: newFormState.contentTypes.length ? newFormState.contentTypes : undefined,
+			lang: newFormState.lang.length ? newFormState.lang : undefined,
 			published: newFormState.published
 				? newFormState.published === ContentExtraFilterStatus.ALL
 					? ContentExtraFilterStatus.ALL
@@ -260,6 +263,11 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		direction: query.direction ?? 1,
 	});
 
+	const languageOptions = (languages || []).map(language => ({
+		value: language.key,
+		label: language.name,
+	}));
+
 	/**
 	 * Render
 	 */
@@ -273,6 +281,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			contentType: content.meta?.contentType?.meta?.label,
 			lastEdit: content.meta?.historySummary?.lastEdit || content.meta?.lastModified,
 			lastEditor: content.meta?.lastEditor,
+			lang: content.meta?.lang,
 			status:
 				workflowStatuses[content.meta?.historySummary?.workflowState as string]?.label ||
 				statusesPagination?.data.find(
@@ -316,6 +325,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 						deleteActiveFilter={deleteFilter}
 						activeFilters={activeFilters.filters}
 						statusOptions={Object.values(workflowStatuses)}
+						languageOptions={languageOptions}
 					/>
 				</div>
 				<PaginatedTable

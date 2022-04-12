@@ -1,3 +1,4 @@
+import { LanguageSchema } from '@redactie/language-module';
 import { SelectOption } from '@redactie/utils';
 import { FormikState } from 'formik';
 
@@ -13,6 +14,7 @@ export interface FilterFormProps {
 	deleteActiveFilter: (item: OverviewFilterItem) => void;
 	activeFilters: Array<object>;
 	statusOptions: SelectOption[];
+	languageOptions: SelectOption[];
 }
 
 export interface FilterFormState {
@@ -23,6 +25,7 @@ export interface FilterFormState {
 	status: string;
 	published: string;
 	creator: string;
+	lang: string[];
 }
 
 export enum PublishedStatuses {
