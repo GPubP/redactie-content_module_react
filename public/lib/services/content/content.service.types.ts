@@ -48,6 +48,7 @@ export interface ContentMeta {
 		{
 			value: string;
 			pattern: string;
+			calculated: string;
 		}
 	>;
 }

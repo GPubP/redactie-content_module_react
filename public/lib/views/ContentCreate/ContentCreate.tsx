@@ -155,6 +155,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 							contentType.meta.urlPath?.pattern ||
 							'',
 						value: '',
+						calculated: '',
 					},
 				},
 			},

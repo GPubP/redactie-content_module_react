@@ -277,6 +277,18 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 			  )
 			: '';
 
+		const calculatedPathValue = path(['urlPath', currentMetaValue?.lang])(currentMetaValue)
+			? await applyUrlPattern(
+					currentMetaValue.contentType.meta.urlPath?.pattern || '',
+					this.store.getValue().contentItemDraft?.uuid || '',
+					{
+						...currentMetaValue,
+						...data.meta,
+					},
+					data.meta.contentType!
+			  )
+			: '';
+
 		this.store.update({
 			contentItemDraft: {
 				...data,
@@ -289,6 +301,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 							pattern: path(['urlPath', data.meta.lang])(data.meta)
 								? data.meta.urlPath![data.meta.lang!].pattern
 								: currentMetaValue?.urlPath![currentMetaValue.lang].pattern || '',
+							calculated: calculatedPathValue,
 						},
 					},
 				},
@@ -346,6 +359,17 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 					contentType!
 			  )
 			: '';
+		const calculatedPathValue = path(['urlPath', currentMetaValue?.lang])(currentMetaValue)
+			? await applyUrlPattern(
+					currentMetaValue.contentType.meta.urlPath?.pattern || '',
+					this.store.getValue().contentItemDraft?.uuid || '',
+					{
+						...currentMetaValue,
+						...data,
+					},
+					data.contentType!
+			  )
+			: '';
 
 		this.store.update(state => ({
 			contentItemDraft: {
@@ -363,6 +387,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 											? data.urlPath![currentMetaValue.lang].pattern
 											: currentMetaValue.urlPath![currentMetaValue.lang]
 													.pattern,
+										calculated: calculatedPathValue,
 									},
 								},
 						  }
