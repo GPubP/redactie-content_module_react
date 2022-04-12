@@ -1,9 +1,10 @@
 import { FormSchema } from '@redactie/form-renderer-module';
-import { TenantContextValue } from '@redactie/utils';
+import { LoadingState, TenantContextValue } from '@redactie/utils';
 import { FormikValues } from 'formik';
 import { Context } from 'react';
 
 import { ContentInfoTooltip } from '../components/ContentInfoTooltip';
+import { PagingSchema } from '../content.types';
 import { CONTENT_STATUS_API_MAP, contentApiService, ModuleValue } from '../services/content';
 import {
 	ContentTypeFieldSchema,
@@ -49,9 +50,12 @@ export {
 export interface ContentAPI {
 	store: {
 		content: {
-			facade: Pick<ContentFacade, 'getContentItem' | 'getContentItemBySlug'>;
+			facade: Pick<ContentFacade, 'getContentItem' | 'getContentItemBySlug' | 'getContent'>;
 			service: typeof contentApiService;
 		};
+	};
+	hooks: {
+		useContent: () => [LoadingState, ContentModel[], PagingSchema | null | undefined];
 	};
 
 	ContentInfoTooltip: typeof ContentInfoTooltip;

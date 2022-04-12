@@ -12,6 +12,7 @@ import {
 	TenantContext,
 	useDetectValueChangesWorker,
 	useNavigate,
+	useQuery,
 	useWillUnmount,
 } from '@redactie/utils';
 import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
@@ -45,6 +46,7 @@ import { ContentCreateMatchProps } from './ContentCreate.types';
 
 const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, route }) => {
 	const { contentTypeId, siteId, language } = match.params;
+	const params = useQuery();
 
 	/**
 	 * Hooks
@@ -140,6 +142,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 					[language]: '',
 				},
 				lang: language,
+				translationId: params.translationId || uuidv4(),
 				contentType: contentType,
 				status: '',
 				workflowState: ContentSystemNames.NEW,
@@ -189,6 +192,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 				label: content.meta?.label,
 				slug: content.meta?.slug,
 				lang: content.meta?.lang,
+				translationId: content.meta?.translationId,
 				contentType: contentType._id,
 				status: content.meta.status as ContentStatus,
 				workflowState: content.meta.workflowState,

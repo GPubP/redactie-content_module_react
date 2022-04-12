@@ -5,6 +5,7 @@ import { ContentInfoTooltip } from '../components/ContentInfoTooltip';
 import { getViewPropsByCT } from '../helpers/getViewPropsByCT';
 
 import { ContentAPI } from './api.types';
+import { hooks } from './hooks';
 import { registerContentDetailAction } from './registerContentDetailAction';
 import { registerContentDetailCompartment } from './registerContentDetailCompartment';
 import { registerContentDetailTab } from './registerContentDetailTab';
@@ -17,6 +18,7 @@ export const registerContentAPI = (): void => {
 		registerContentDetailTab,
 		getViewPropsByCT,
 		store,
+		hooks,
 		ContentInfoTooltip,
 		contentTenantContext: TenantContext,
 	};
