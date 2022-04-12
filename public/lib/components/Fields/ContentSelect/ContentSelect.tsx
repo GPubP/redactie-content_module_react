@@ -9,6 +9,7 @@ import sitesConnector from '../../../connectors/sites';
 import { MODULE_PATHS, SITES_ROOT } from '../../../content.const';
 import { ccContentFacade } from '../../../store/ccContent';
 import { ContentModel } from '../../../store/content';
+import { ContentSelectItem } from '../../ContentSelectBase/ContentSelectBase.types';
 import { ContentSelectBase } from '../../index';
 
 const ContentSelect: React.FC<InputFieldProps> = ({
@@ -23,9 +24,7 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	const { siteId } = useSiteContext();
 	const [site] = sitesConnector.hooks.useSite(siteId);
 	const { generatePath } = useNavigate(SITES_ROOT);
-	const [items, setItems] = useState<
-		{ value: string | undefined; label: string; contentTypeId: string; uuid: string }[]
-	>([]);
+	const [items, setItems] = useState<ContentSelectItem[]>([]);
 	const [originalItems, setOriginalItems] = useState<ContentModel[]>([]);
 	const currentItem = useMemo(() => {
 		const item = items.find(i => i.value === field.value);

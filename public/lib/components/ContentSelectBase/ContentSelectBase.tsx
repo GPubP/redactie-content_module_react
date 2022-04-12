@@ -4,8 +4,7 @@ import { LoadingState, useSiteContext } from '@redactie/utils';
 import classNames from 'classnames';
 import { getIn } from 'formik';
 import debounce from 'lodash.debounce';
-import { pathOr } from 'ramda';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import './ContentSelectBase.scss';
@@ -13,7 +12,6 @@ import './ContentSelectBase.scss';
 import formRendererConnector from '../../connectors/formRenderer';
 import { useCcContent } from '../../hooks';
 import { ccContentFacade } from '../../store/ccContent';
-import { CrossSiteContentSelectValue } from '../Fields/CrossSiteContentSelect/CrossSiteContentSelect.types';
 
 import {
 	CONTENT_SELECT_TOOLTIP_DELAY,
@@ -44,6 +42,7 @@ const ContentSelectBase: React.FC<ContentSelectBaseProps> = ({
 	const [contentLoadingState] = useCcContent(`search_${fieldSchema.name}`);
 	const autoCompleteRef = useRef(null);
 	const [isVisible, setVisibility] = useState(false);
+	const [prevQuery, setPrevQuery] = useState('');
 	const [isHoveringTooltip, setHoveringTooltip] = useState(false);
 	const [delayShowLoop, setDelayShowLoop] = useState<NodeJS.Timeout>();
 	const [delayHideLoop, setDelayHideLoop] = useState<NodeJS.Timeout>();
@@ -67,6 +66,13 @@ const ContentSelectBase: React.FC<ContentSelectBaseProps> = ({
 	);
 	const FormRendererFieldTitle = formRendererConnector.api.FormRendererFieldTitle;
 	const ErrorMessage = formRendererConnector.api.ErrorMessage;
+
+	useEffect(() => {
+		if (currentItem && currentItem?.label !== prevQuery) {
+			setPrevQuery(currentItem?.label || '');
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentItem]);
 
 	/**
 	 * METHODS
@@ -144,14 +150,25 @@ const ContentSelectBase: React.FC<ContentSelectBaseProps> = ({
 					disabled={!!config.disabled}
 					loading={contentLoadingState === LoadingState.Loading}
 					onSelection={setContentValue}
-					asyncItems={(
-						query: string | CrossSiteContentSelectValue,
-						cb: (options: any[]) => void
-					) => {
+					asyncItems={(query: string, cb: (options: any[]) => void) => {
 						if (!keyInteraction.current) {
-							query = field.value;
+							query = field.value as string;
 						}
 
+						if (
+							currentItem &&
+							query !== currentItem?.label &&
+							query !== currentItem?.value
+						) {
+							setValue('');
+						}
+
+						if (currentItem && query === prevQuery) {
+							debouncedGetItems(currentItem.value, cb);
+							return;
+						}
+
+						setPrevQuery(query);
 						debouncedGetItems(query, cb);
 					}}
 				/>

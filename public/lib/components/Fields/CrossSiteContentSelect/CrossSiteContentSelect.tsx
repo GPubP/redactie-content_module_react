@@ -9,6 +9,7 @@ import sitesConnector from '../../../connectors/sites';
 import { MODULE_PATHS, SITES_ROOT } from '../../../content.const';
 import { ccContentFacade } from '../../../store/ccContent';
 import { ContentModel } from '../../../store/content';
+import { ContentSelectItem } from '../../ContentSelectBase/ContentSelectBase.types';
 
 import { CrossSiteContentSelectFieldProps } from './CrossSiteContentSelect.types';
 
@@ -22,9 +23,7 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 
 	const { siteId } = useSiteContext();
 	const { generatePath } = useNavigate(SITES_ROOT);
-	const [items, setItems] = useState<
-		{ value: string | undefined; label: string; contentTypeId: string; siteId: string }[]
-	>([]);
+	const [items, setItems] = useState<ContentSelectItem[]>([]);
 	const currentItem = useMemo(() => {
 		const item = items.find(i => i.value === field.value?.contentId);
 
