@@ -13,7 +13,7 @@ export interface GeneralConfig {
 	hidden: boolean;
 	max: number;
 	min: number;
-	multilanguage: boolean;
+	multiLanguage: boolean;
 	required: boolean;
 }
 
