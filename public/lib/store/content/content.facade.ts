@@ -265,27 +265,22 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 	 */
 	public async setContentItemDraft(data: ContentModel): Promise<void> {
 		const currentMetaValue = this.store.getValue().contentItemDraft?.meta!;
+		const sharedValues = [
+			this.store.getValue().contentItemDraft?.uuid || '',
+			{ ...currentMetaValue, ...data.meta },
+			data.meta.contentType!,
+		] as const;
 		const urlPathValue = path(['urlPath', currentMetaValue?.lang])(currentMetaValue)
 			? await applyUrlPattern(
 					currentMetaValue.urlPath![currentMetaValue.lang].pattern || '',
-					this.store.getValue().contentItemDraft?.uuid || '',
-					{
-						...currentMetaValue,
-						...data.meta,
-					},
-					data.meta.contentType!
+					...sharedValues
 			  )
 			: '';
 
 		const calculatedPathValue = path(['urlPath', currentMetaValue?.lang])(currentMetaValue)
 			? await applyUrlPattern(
 					currentMetaValue.contentType.meta.urlPath?.pattern || '',
-					this.store.getValue().contentItemDraft?.uuid || '',
-					{
-						...currentMetaValue,
-						...data.meta,
-					},
-					data.meta.contentType!
+					...sharedValues
 			  )
 			: '';
 
@@ -348,26 +343,21 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		contentType?: ContentTypeSchema
 	): Promise<void> {
 		const currentMetaValue = this.store.getValue().contentItemDraft?.meta!;
+		const sharedValues = [
+			this.store.getValue().contentItemDraft?.uuid || '',
+			{ ...currentMetaValue, ...data },
+			data.contentType!,
+		] as const;
 		const urlPathValue = path(['urlPath', currentMetaValue?.lang!])(currentMetaValue)
 			? await applyUrlPattern(
 					currentMetaValue.urlPath![currentMetaValue.lang].pattern || '',
-					this.store.getValue().contentItemDraft?.uuid || '',
-					{
-						...currentMetaValue,
-						...data,
-					},
-					contentType!
+					...sharedValues
 			  )
 			: '';
 		const calculatedPathValue = path(['urlPath', currentMetaValue?.lang])(currentMetaValue)
 			? await applyUrlPattern(
-					currentMetaValue.contentType.meta.urlPath?.pattern || '',
-					this.store.getValue().contentItemDraft?.uuid || '',
-					{
-						...currentMetaValue,
-						...data,
-					},
-					data.contentType!
+				currentMetaValue.contentType.meta.urlPath?.pattern || '',
+					...sharedValues
 			  )
 			: '';
 
