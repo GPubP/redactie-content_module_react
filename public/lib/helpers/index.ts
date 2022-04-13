@@ -11,3 +11,4 @@ export * from './getInitialContentValues';
 export * from './getMySecurityRightsByContentTypeId/getMySecurityRightsByContentTypeId';
 export * from './contentType';
 export * from './tabs';
+export * from './getCTUrlPattern';
