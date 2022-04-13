@@ -146,7 +146,7 @@ const FilterForm: FC<FilterFormProps> = ({
 												]}
 											/>
 										</div>
-										<div className="col-sm-12 u-margin-top">
+										<div className="col-sm-6 u-margin-top">
 											<Field name="contentType">
 												{() => (
 													<div className="m-flyout--scrollable">
