@@ -99,7 +99,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 			fields: getInitialContentValues(contentType?.fields, contentItem.fields),
 		};
 
-		contentFacade.setContentItemDraft(defaultValue);
+		contentFacade.setContentItemDraft(defaultValue, contentType);
 	}, [contentType]); // eslint-disable-line
 
 	useEffect(() => locksFacade.setLockValue(contentId, refreshedLock), [contentId, refreshedLock]);
@@ -120,7 +120,7 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	 * Methods
 	 */
 	const onCancel = (): void => {
-		contentFacade.setContentItemDraft(contentItem);
+		contentFacade.setContentItemDraft(contentItem, contentType);
 	};
 
 	const updateContentItem = async (

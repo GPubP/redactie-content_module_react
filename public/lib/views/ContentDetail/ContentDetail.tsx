@@ -178,8 +178,8 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	}, [siteId, contentId, contentTypeId]);
 
 	useEffect(() => {
-		if (contentItem) {
-			contentFacade.setContentItemDraft(contentItem);
+		if (contentItem && contentType) {
+			contentFacade.setContentItemDraft(contentItem, contentType);
 		}
 	}, [contentItem]);
 
@@ -237,6 +237,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 					<ContextHeaderLabelSection>
 						<b>{contentItem?.meta.lang.toUpperCase()}</b>
 					</ContextHeaderLabelSection>
+					{console.info(contentItemDraft)}
 				</ContextHeader>
 				<Container>
 					<AlertContainer
