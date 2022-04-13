@@ -155,13 +155,13 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 							contentType.meta.urlPath?.pattern ||
 							'',
 						value: '',
-						calculated: '',
+						calculated: '/[item:slug]',
 					},
 				},
 			},
 		};
 
-		contentFacade.setContentItemDraft(defaultValue);
+		contentFacade.setContentItemDraft(defaultValue, contentType);
 	}, [contentType]); // eslint-disable-line
 
 	useEffect(() => {
@@ -293,6 +293,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			<ContextHeader title={pageTitle} badges={badges}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
+			{console.info(contentType)}
 			<Container>
 				<AlertContainer
 					toastClassName="u-margin-bottom"
