@@ -52,6 +52,11 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 	);
 	const [site] = sitesConnector.hooks.useSite(siteId);
 
+	useEffect(() => {
+		resetDetectValueChanges();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [contentItem.uuid]);
+
 	const workerData = useMemo(
 		() =>
 			({
