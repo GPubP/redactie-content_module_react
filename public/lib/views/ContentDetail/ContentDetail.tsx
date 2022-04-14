@@ -181,7 +181,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		if (contentItem && contentType) {
 			contentFacade.setContentItemDraft(contentItem, contentType);
 		}
-	}, [contentItem]);
+	}, [contentItem, contentType]);
 
 	/**
 	 * Render
@@ -237,7 +237,6 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 					<ContextHeaderLabelSection>
 						<b>{contentItem?.meta.lang.toUpperCase()}</b>
 					</ContextHeaderLabelSection>
-					{console.info(contentItemDraft)}
 				</ContextHeader>
 				<Container>
 					<AlertContainer

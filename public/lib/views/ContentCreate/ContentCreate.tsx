@@ -297,7 +297,6 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 					<b>{contentItemDraft?.meta.lang.toUpperCase()}</b>
 				</ContextHeaderLabelSection>
 			</ContextHeader>
-			{console.info(contentType)}
 			<Container>
 				<AlertContainer
 					toastClassName="u-margin-bottom"

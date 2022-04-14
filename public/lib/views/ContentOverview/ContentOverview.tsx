@@ -18,7 +18,7 @@ import {
 	useAPIQueryParams,
 	useNavigate,
 } from '@redactie/utils';
-import moment, { lang } from 'moment';
+import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import {

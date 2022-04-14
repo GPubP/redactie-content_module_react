@@ -4,6 +4,7 @@ import { omit, path, pick } from 'ramda';
 import { ContentTypeSchema } from '../../..';
 import { WORKING_TITLE_KEY } from '../../content.const';
 import { ALERT_CONTAINER_IDS } from '../../content.types';
+import { getCTUrlPattern } from '../../helpers';
 import { applyUrlPattern } from '../../helpers/applyUrlPattern/applyUrlPattern';
 import {
 	ContentApiService,
@@ -267,13 +268,9 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		data: ContentModel,
 		contentType: ContentTypeSchema
 	): Promise<void> {
-		const navTenantModulesConfig = (contentType.modulesConfig || []).find(
-			moduleConfig => moduleConfig.name === 'navigation' && !moduleConfig.site
-		);
-		const navSiteModulesConfig = (contentType.modulesConfig || []).find(
-			moduleConfig => moduleConfig.name === 'navigation' && !!moduleConfig.site
-		);
 		const currentMetaValue = this.store.getValue().contentItemDraft?.meta!;
+		const url = getCTUrlPattern(contentType, currentMetaValue?.lang, 'navigation');
+
 		const sharedValues = [
 			this.store.getValue().contentItemDraft?.uuid || '',
 			{ ...currentMetaValue, ...data.meta },
@@ -287,13 +284,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 			: '';
 
 		const calculatedPathValue = path(['urlPath', currentMetaValue?.lang])(currentMetaValue)
-			? await applyUrlPattern(
-				navSiteModulesConfig?.config.url.urlPattern[currentMetaValue.lang] ||
-						navTenantModulesConfig?.config.url.urlPattern[currentMetaValue.lang] ||
-						currentMetaValue.urlPath![currentMetaValue.lang].calculated ||
-						'/[item:slug]',
-					...sharedValues
-			  )
+			? await applyUrlPattern(url || '/[item:slug]', ...sharedValues)
 			: '';
 
 		this.store.update({
@@ -354,13 +345,9 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		data: Partial<ContentSchema['meta']>,
 		contentType?: ContentTypeSchema
 	): Promise<void> {
-		const navTenantModulesConfig = (contentType?.modulesConfig || []).find(
-			moduleConfig => moduleConfig.name === 'navigation' && !moduleConfig.site
-		);
-		const navSiteModulesConfig = (contentType?.modulesConfig || []).find(
-			moduleConfig => moduleConfig.name === 'navigation' && !!moduleConfig.site
-		);
 		const currentMetaValue = this.store.getValue().contentItemDraft?.meta!;
+
+		const url = getCTUrlPattern(contentType!, currentMetaValue?.lang, 'navigation');
 		const sharedValues = [
 			this.store.getValue().contentItemDraft?.uuid || '',
 			{ ...currentMetaValue, ...data },
@@ -373,13 +360,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 			  )
 			: '';
 		const calculatedPathValue = path(['urlPath', currentMetaValue?.lang])(currentMetaValue)
-			? await applyUrlPattern(
-					navSiteModulesConfig?.config.url.urlPattern[currentMetaValue.lang] ||
-						navTenantModulesConfig?.config.url.urlPattern[currentMetaValue.lang] ||
-						currentMetaValue.urlPath![currentMetaValue.lang].calculated ||
-						'/[item:slug]',
-					...sharedValues
-			  )
+			? await applyUrlPattern(url || '/[item:slug]', ...sharedValues)
 			: '';
 
 		this.store.update(state => ({
