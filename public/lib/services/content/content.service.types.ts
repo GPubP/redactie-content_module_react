@@ -48,6 +48,7 @@ export interface ContentMeta {
 		{
 			value: string;
 			pattern: string;
+			calculated: string;
 		}
 	>;
 }
@@ -94,6 +95,7 @@ export interface ContentCreateSchema {
 			{
 				value: string;
 				pattern: string;
+				calculated: string;
 			}
 		>;
 	};

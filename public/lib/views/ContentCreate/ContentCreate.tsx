@@ -156,12 +156,13 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 							contentType.meta.urlPath?.pattern ||
 							'',
 						value: '',
+						calculated: '/[item:slug]',
 					},
 				},
 			},
 		};
 
-		contentFacade.setContentItemDraft(defaultValue);
+		contentFacade.setContentItemDraft(defaultValue, contentType);
 	}, [contentType]); // eslint-disable-line
 
 	useEffect(() => {

@@ -4,6 +4,7 @@ import { omit, path, pick } from 'ramda';
 import { ContentTypeSchema } from '../../..';
 import { WORKING_TITLE_KEY } from '../../content.const';
 import { ALERT_CONTAINER_IDS } from '../../content.types';
+import { getCTUrlPattern } from '../../helpers';
 import { applyUrlPattern } from '../../helpers/applyUrlPattern/applyUrlPattern';
 import {
 	ContentApiService,
@@ -263,18 +264,27 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 	/**
 	 * Helpers
 	 */
-	public async setContentItemDraft(data: ContentModel): Promise<void> {
+	public async setContentItemDraft(
+		data: ContentModel,
+		contentType: ContentTypeSchema
+	): Promise<void> {
 		const currentMetaValue = this.store.getValue().contentItemDraft?.meta!;
+		const url = getCTUrlPattern(contentType, currentMetaValue?.lang, 'navigation');
+
+		const sharedValues = [
+			this.store.getValue().contentItemDraft?.uuid || '',
+			{ ...currentMetaValue, ...data.meta },
+			data.meta.contentType!,
+		] as const;
 		const urlPathValue = path(['urlPath', currentMetaValue?.lang])(currentMetaValue)
 			? await applyUrlPattern(
 					currentMetaValue.urlPath![currentMetaValue.lang].pattern || '',
-					this.store.getValue().contentItemDraft?.uuid || '',
-					{
-						...currentMetaValue,
-						...data.meta,
-					},
-					data.meta.contentType!
+					...sharedValues
 			  )
+			: '';
+
+		const calculatedPathValue = path(['urlPath', currentMetaValue?.lang])(currentMetaValue)
+			? await applyUrlPattern(url || '/[item:slug]', ...sharedValues)
 			: '';
 
 		this.store.update({
@@ -289,6 +299,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 							pattern: path(['urlPath', data.meta.lang])(data.meta)
 								? data.meta.urlPath![data.meta.lang!].pattern
 								: currentMetaValue?.urlPath![currentMetaValue.lang].pattern || '',
+							calculated: calculatedPathValue,
 						},
 					},
 				},
@@ -335,16 +346,21 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		contentType?: ContentTypeSchema
 	): Promise<void> {
 		const currentMetaValue = this.store.getValue().contentItemDraft?.meta!;
+
+		const url = getCTUrlPattern(contentType!, currentMetaValue?.lang, 'navigation');
+		const sharedValues = [
+			this.store.getValue().contentItemDraft?.uuid || '',
+			{ ...currentMetaValue, ...data },
+			data.contentType!,
+		] as const;
 		const urlPathValue = path(['urlPath', currentMetaValue?.lang!])(currentMetaValue)
 			? await applyUrlPattern(
 					currentMetaValue.urlPath![currentMetaValue.lang].pattern || '',
-					this.store.getValue().contentItemDraft?.uuid || '',
-					{
-						...currentMetaValue,
-						...data,
-					},
-					contentType!
+					...sharedValues
 			  )
+			: '';
+		const calculatedPathValue = path(['urlPath', currentMetaValue?.lang])(currentMetaValue)
+			? await applyUrlPattern(url || '/[item:slug]', ...sharedValues)
 			: '';
 
 		this.store.update(state => ({
@@ -363,6 +379,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 											? data.urlPath![currentMetaValue.lang].pattern
 											: currentMetaValue.urlPath![currentMetaValue.lang]
 													.pattern,
+										calculated: calculatedPathValue,
 									},
 								},
 						  }

@@ -178,10 +178,10 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	}, [siteId, contentId, contentTypeId]);
 
 	useEffect(() => {
-		if (contentItem) {
-			contentFacade.setContentItemDraft(contentItem);
+		if (contentItem && contentType) {
+			contentFacade.setContentItemDraft(contentItem, contentType);
 		}
-	}, [contentItem]);
+	}, [contentItem, contentType]);
 
 	/**
 	 * Render
