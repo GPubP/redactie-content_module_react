@@ -3,10 +3,12 @@ import { FieldProps, FormikValues } from 'formik';
 
 import { CrossSiteContentSelectValue } from '../Fields/CrossSiteContentSelect/CrossSiteContentSelect.types';
 
-interface ContentSelectItem {
+export interface ContentSelectItem {
 	value: string | undefined;
 	label: string;
 	contentTypeId: string;
+	uuid?: string;
+	siteId?: string;
 }
 
 export interface ContentSelectBaseProps
