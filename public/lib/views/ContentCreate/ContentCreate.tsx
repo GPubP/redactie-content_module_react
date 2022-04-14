@@ -1,6 +1,7 @@
 import {
 	Container,
 	ContextHeader,
+	ContextHeaderLabelSection,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import {
@@ -292,6 +293,9 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 		<>
 			<ContextHeader title={pageTitle} badges={badges}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
+				<ContextHeaderLabelSection>
+					<b>{contentItemDraft?.meta.lang.toUpperCase()}</b>
+				</ContextHeaderLabelSection>
 			</ContextHeader>
 			{console.info(contentType)}
 			<Container>

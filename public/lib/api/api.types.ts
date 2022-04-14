@@ -1,4 +1,5 @@
 import { FormSchema } from '@redactie/form-renderer-module';
+import { SiteResponse } from '@redactie/sites-module';
 import { LoadingState, TenantContextValue } from '@redactie/utils';
 import { FormikValues } from 'formik';
 import { Context } from 'react';
@@ -70,6 +71,12 @@ export interface ContentAPI {
 		schema: FormSchema;
 		values: FormikValues;
 	};
+	getCTUrlPattern: (
+		contentType: ContentTypeSchema,
+		activeLanguage: string,
+		moduleConfigName: string,
+		site?: SiteResponse
+	) => string;
 	registerContentDetailAction: (name: string, options: ExternalActionOptions) => void;
 	registerContentDetailTab: typeof registerContentDetailTab;
 	contentTenantContext: Context<TenantContextValue>;

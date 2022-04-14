@@ -53,7 +53,7 @@ export interface DataType {
 	uuid: string;
 }
 
-interface ModuleSettings {
+export interface ModuleSettings {
 	uuid: string;
 	label: string;
 	name: string;

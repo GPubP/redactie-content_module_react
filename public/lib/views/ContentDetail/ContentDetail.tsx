@@ -189,7 +189,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
 			contentType,
-			contentItem: contentItem,
+			contentItem,
 			contentItemDraft,
 			tenantId,
 			canUpdate,
