@@ -122,9 +122,10 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 				filterFormState,
 				Object.values(workflowStatuses),
 				PUBLISHED_OPTIONS,
-				contentTypes
+				contentTypes,
+				languages || []
 			),
-		[contentTypes, filterFormState, workflowStatuses]
+		[contentTypes, filterFormState, languages, workflowStatuses]
 	);
 	const [t] = useCoreTranslation();
 

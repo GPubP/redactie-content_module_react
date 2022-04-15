@@ -22,4 +22,5 @@ export enum FilterKeys {
 	PUBLISHED = 'published',
 	CREATOR = 'creator',
 	CONTENT_TYPE = 'contentTypes',
+	LANGUAGE = 'lang',
 }
