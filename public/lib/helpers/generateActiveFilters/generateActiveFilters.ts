@@ -1,3 +1,4 @@
+import { LanguageSchema } from '@redactie/language-module';
 import { SelectOption } from '@redactie/utils';
 
 import { ContentTypeSchema } from '../../api/api.types';
@@ -14,10 +15,12 @@ export const generateActiveFilters = (
 		status,
 		published,
 		creator,
+		lang,
 	}: FilterFormState,
 	filterStatusOptions: SelectOption[],
 	publishedOptions: SelectOption[],
-	cts: ContentTypeSchema[]
+	cts: ContentTypeSchema[],
+	languages: LanguageSchema[]
 ): {
 	filters: OverviewFilterItem[];
 	contentTypeFilters: OverviewFilterItem[];
@@ -89,8 +92,15 @@ export const generateActiveFilters = (
 		value: cts?.find(ct => ct._id === ctId)?.meta.label || ctId,
 	}));
 
+	const langFilters = lang.map(languageKey => ({
+		valuePrefix: 'Taal',
+		formvalue: languageKey,
+		filterKey: FilterKeys.LANGUAGE,
+		value: languages.find(language => language.key === languageKey)?.name || languageKey,
+	}));
+
 	return {
-		filters: filters.concat(contentTypeFilters).filter(item => !!item.value),
+		filters: [...filters, ...contentTypeFilters, ...langFilters].filter(item => !!item.value),
 		contentTypeFilters,
 	};
 };

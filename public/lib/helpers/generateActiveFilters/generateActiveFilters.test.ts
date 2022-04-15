@@ -7,7 +7,7 @@ import {
 	ContentExtraFilterStatus,
 } from '../../services/content';
 import { FilterKeys } from '../../views/ContentOverview/ContentOverview.types';
-import { MOCK_CONTENT_TYPES, MOCK_FILTER_FORM_STATE } from '../__mocks__';
+import { MOCK_CONTENT_TYPES, MOCK_FILTER_FORM_STATE, MOCK_LANGUAGES } from '../__mocks__';
 
 import { generateActiveFilters } from './generateActiveFilters';
 
@@ -99,7 +99,8 @@ const wrappedGenerateActiveFilters = (
 			},
 		],
 		PUBLISHED_OPTIONS,
-		MOCK_CONTENT_TYPES
+		MOCK_CONTENT_TYPES,
+		MOCK_LANGUAGES
 	);
 
 describe('Helpers: generateActiveFilters', () => {
