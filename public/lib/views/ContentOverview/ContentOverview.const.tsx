@@ -95,7 +95,7 @@ export const CONTENT_OVERVIEW_COLUMNS = (
 		width: '5%',
 		disableSorting: true,
 		component(language: string) {
-			return <>{language.toUpperCase()}</>;
+			return <>{language?.toUpperCase()}</>;
 		},
 	},
 	{

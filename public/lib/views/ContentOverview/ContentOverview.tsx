@@ -178,7 +178,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			skip: 0,
 			search: newFormState.search || undefined,
 			contentTypes: newFormState.contentTypes.length ? newFormState.contentTypes : undefined,
-			lang: newFormState.lang.length ? newFormState.lang : undefined,
+			lang: newFormState.lang?.length ? newFormState.lang : undefined,
 			published: newFormState.published
 				? newFormState.published === ContentExtraFilterStatus.ALL
 					? ContentExtraFilterStatus.ALL
