@@ -103,7 +103,7 @@
   "dependencies": {
     "@redactie/language-module": "^0.0.5",
     "@redactie/schema-to-yup": "^1.9.25",
-    "@wcm/pattern-resolver": "^1.0.0",
+    "@wcm/pattern-resolver": "^1.0.1",
     "json-pointer": "^0.6.1",
     "lodash.debounce": "^4.0.8",
     "lodash.kebabcase": "^4.1.1",
