@@ -11,6 +11,7 @@ export interface ExternalActionOptions {
 	component: FC<ExternalActionProps>;
 	show?: (contentType: ContentTypeModel, site: SiteDetailModel, content: ContentModel) => boolean;
 	replace?: boolean; // only replace existing if this is true (safety)
+	activeLanguage?: string;
 }
 
 export interface ExternalActionModel extends Omit<ExternalActionOptions, 'replace'> {

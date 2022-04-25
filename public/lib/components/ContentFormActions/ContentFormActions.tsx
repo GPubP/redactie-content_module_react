@@ -90,7 +90,11 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 			)}
 			{actions?.map((action, index) => (
 				<div className="u-margin-left-xs" key={index}>
-					<action.component site={site} contentItem={contentItem} />
+					<action.component
+						site={site}
+						contentItem={contentItem}
+						activeLanguage={contentItem?.meta.lang}
+					/>
 				</div>
 			))}
 			{showDeleteButton && (
