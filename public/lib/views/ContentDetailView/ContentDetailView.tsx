@@ -275,7 +275,11 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 						{canUpdate && <Button onClick={goToDetailEdit}>Bewerken</Button>}
 						{actions.map((action, index) => (
 							<div className="u-margin-left-xs" key={index}>
-								<action.component site={site} contentItem={contentItem} />
+								<action.component
+									site={site}
+									contentItem={contentItem}
+									activeLanguage={activeLanguage}
+								/>
 							</div>
 						))}
 						{canDelete && (
