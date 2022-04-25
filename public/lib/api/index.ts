@@ -11,18 +11,20 @@ import { registerContentDetailCompartment } from './registerContentDetailCompart
 import { registerContentDetailTab } from './registerContentDetailTab';
 import { store } from './store';
 
-export const registerContentAPI = (): void => {
-	const api: ContentAPI = {
-		registerContentDetailCompartment,
-		registerContentDetailAction,
-		registerContentDetailTab,
-		getViewPropsByCT,
-		getCTUrlPattern,
-		store,
-		hooks,
-		ContentInfoTooltip,
-		contentTenantContext: TenantContext,
-	};
-
-	Core.modules.exposeModuleApi('content-module', api);
+const API: ContentAPI = {
+	registerContentDetailCompartment,
+	registerContentDetailAction,
+	registerContentDetailTab,
+	getViewPropsByCT,
+	getCTUrlPattern,
+	store,
+	hooks,
+	ContentInfoTooltip,
+	contentTenantContext: TenantContext,
 };
+
+export const registerContentAPI = (): void => {
+	Core.modules.exposeModuleApi('content-module', API);
+};
+
+export { API };
