@@ -276,6 +276,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 			{ ...currentMetaValue, ...data.meta },
 			data.meta.contentType!,
 		] as const;
+
 		const urlPathValue = path(['urlPath', currentMetaValue?.lang])(currentMetaValue)
 			? await applyUrlPattern(
 					currentMetaValue.urlPath![currentMetaValue.lang].pattern || '',
@@ -353,6 +354,7 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 			{ ...currentMetaValue, ...data },
 			data.contentType!,
 		] as const;
+
 		const urlPathValue = path(['urlPath', currentMetaValue?.lang!])(currentMetaValue)
 			? await applyUrlPattern(
 					currentMetaValue.urlPath![currentMetaValue.lang].pattern || '',
