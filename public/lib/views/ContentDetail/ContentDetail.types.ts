@@ -24,4 +24,5 @@ export interface ExternalActionProps {
 	site: SiteDetailModel;
 	contentItem: ContentModel;
 	isLoading: boolean;
+	activeLanguage?: string;
 }
