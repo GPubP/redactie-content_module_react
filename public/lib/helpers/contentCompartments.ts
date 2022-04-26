@@ -116,7 +116,8 @@ export const filterExternalCompartments = (
 	content: ContentSchema | undefined,
 	contentType: ContentTypeSchema,
 	externalCompartments: ExternalCompartmentModel[],
-	isCreating: boolean
+	isCreating: boolean,
+	site: SiteDetailModel
 ): ContentCompartmentModel[] => {
 	const context = {
 		isCreating,
@@ -133,7 +134,8 @@ export const filterExternalCompartments = (
 					getSettings(contentType, contentCompartment, content) as ModuleSettings,
 					getCompartmentValue(content, contentCompartment, contentType),
 					content,
-					contentType
+					contentType,
+					site
 				)
 			) {
 				return acc;
