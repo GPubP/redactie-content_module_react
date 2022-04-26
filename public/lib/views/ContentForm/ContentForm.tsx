@@ -327,7 +327,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 	}, [contentType, externalActions]); // eslint-disable-line
 
 	useEffect(() => {
-		if (!contentType) {
+		if (!contentType || !site) {
 			return;
 		}
 
@@ -344,7 +344,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 						contentItemDraft,
 						contentType,
 						externalCompartments,
-						isCreating
+						isCreating,
+						site
 					)
 				),
 			],

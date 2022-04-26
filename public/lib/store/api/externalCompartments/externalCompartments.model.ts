@@ -1,4 +1,5 @@
 import { EntityState } from '@datorama/akita';
+import { SiteDetailModel } from '@redactie/sites-module';
 import { FC } from 'react';
 
 import { ContentSchema, ContentTypeSchema } from '../../../api/api.types';
@@ -45,7 +46,8 @@ export interface ExternalCompartmentOptions<M = ModuleValue> {
 		settings: ModuleSettings,
 		value: M,
 		content: ContentSchema,
-		contentType: ContentTypeSchema
+		contentType: ContentTypeSchema,
+		site: SiteDetailModel
 	) => boolean | boolean;
 	replace?: boolean; // only replace existing if this is true (safety)
 }
