@@ -151,6 +151,10 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	useEffect(() => {
 		const getContentQuery = { ...query };
 
+		if (!query.lang) {
+			getContentQuery.lang = languages?.map(lang => lang.key);
+		}
+
 		if (query['latest-status'] === ContentExtraFilterStatus.ALL) {
 			getContentQuery['latest-status'] = undefined;
 		}
@@ -160,6 +164,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		}
 
 		contentFacade.getContent(siteId, getContentQuery as SearchParams);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [siteId, query]);
 
 	/**
