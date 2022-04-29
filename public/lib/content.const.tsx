@@ -13,6 +13,7 @@ export const BREADCRUMB_OPTIONS = {
 		`${TENANT_ROOT}/sites/:siteId/content/content-types`,
 		`${TENANT_ROOT}/sites/:siteId/content/content-types/:contentTypeId([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})/content`,
 		`${TENANT_ROOT}/sites/:siteId/content/content-types/:contentTypeId([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})`,
+		`${TENANT_ROOT}/sites/:siteId/content/content-types/:contentTypeId([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})/aanmaken`,
 	],
 };
 
