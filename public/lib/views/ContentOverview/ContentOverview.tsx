@@ -97,6 +97,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 	const [loadingState, contents, contentsPaging] = useContent();
 	const contentTypesSecurityRightsMap = useMyContentTypesRights(contents, mySecurityrights);
 	const [initialLoading, setInitialLoading] = useState<LoadingState>(LoadingState.Loading);
+	const [defaultLanguages, setDefaultLanguages] = useState<string[]>([]);
 	const filterFormState = useMemo(() => getFilterStateFromParams(query as SearchParams), [query]);
 	const workflowStatuses = useMemo<Record<string, SelectOption>>(() => {
 		if (!statusesPagination?.data) {
@@ -147,12 +148,20 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		}
 	}, [siteId]);
 
+	useEffect(() => {
+		if (!defaultLanguages.length && languages?.length) {
+			setDefaultLanguages((languages || []).map(lang => lang.key));
+		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [languages]);
+
 	// Fetch content based on query params
 	useEffect(() => {
 		const getContentQuery = { ...query };
 
 		if (!query.lang) {
-			getContentQuery.lang = languages?.map(lang => lang.key);
+			getContentQuery.lang = defaultLanguages;
 		}
 
 		if (query['latest-status'] === ContentExtraFilterStatus.ALL) {
@@ -164,8 +173,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 		}
 
 		contentFacade.getContent(siteId, getContentQuery as SearchParams);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [siteId, query]);
+	}, [siteId, query, defaultLanguages]);
 
 	/**
 	 * Methods
