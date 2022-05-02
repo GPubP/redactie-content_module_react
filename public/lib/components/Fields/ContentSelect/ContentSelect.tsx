@@ -1,4 +1,3 @@
-import { InputFieldProps } from '@redactie/form-renderer-module';
 import { useNavigate, useSiteContext } from '@redactie/utils';
 import React, { useContext, useMemo, useState } from 'react';
 import { first } from 'rxjs/operators';
@@ -12,11 +11,13 @@ import { ContentModel } from '../../../store/content';
 import { ContentSelectItem } from '../../ContentSelectBase/ContentSelectBase.types';
 import { ContentSelectBase } from '../../index';
 
-const ContentSelect: React.FC<InputFieldProps> = ({
+import { ContentSelectProps } from './ContentSelect.types';
+
+const ContentSelect: React.FC<ContentSelectProps> = ({
 	fieldProps,
 	fieldSchema,
 	fieldHelperProps,
-}: InputFieldProps) => {
+}: ContentSelectProps) => {
 	const config = fieldSchema.config || {};
 	const { field } = fieldProps;
 
@@ -26,11 +27,19 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	const { generatePath } = useNavigate(SITES_ROOT);
 	const [items, setItems] = useState<ContentSelectItem[]>([]);
 	const [originalItems, setOriginalItems] = useState<ContentModel[]>([]);
+	const [valueSetted, setValueSetted] = useState<boolean>(false);
 	const currentItem = useMemo(() => {
 		const item = items.find(i => i.value === field.value);
 
+		if (item && !valueSetted && !!fieldHelperProps.setInitialValue) {
+			fieldHelperProps.setInitialValue(
+				originalItems.find(originalItem => originalItem.uuid === item.uuid) as ContentModel
+			);
+			setValueSetted(true);
+		}
+
 		return item;
-	}, [field.value, items]);
+	}, [field.value, fieldHelperProps, items, originalItems, valueSetted]);
 
 	/**
 	 * METHODS
@@ -57,6 +66,8 @@ const ContentSelect: React.FC<InputFieldProps> = ({
 	};
 
 	const setValue = (identifier: string): void => {
+		setValueSetted(true);
+
 		if (!config.returnByValue) {
 			return fieldHelperProps.setValue(identifier);
 		}
