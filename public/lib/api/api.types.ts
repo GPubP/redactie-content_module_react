@@ -5,6 +5,7 @@ import { FormikValues } from 'formik';
 import { Context } from 'react';
 
 import { ContentInfoTooltip } from '../components/ContentInfoTooltip';
+import { ContentSelectProps } from '../components/Fields/ContentSelect/ContentSelect.types';
 import { PagingSchema } from '../content.types';
 import { CONTENT_STATUS_API_MAP, contentApiService, ModuleValue } from '../services/content';
 import {
@@ -46,6 +47,7 @@ export {
 	ExternalTabProps,
 	ExternalTabOptions,
 	contentApiService,
+	ContentSelectProps,
 };
 
 export interface ContentAPI {
