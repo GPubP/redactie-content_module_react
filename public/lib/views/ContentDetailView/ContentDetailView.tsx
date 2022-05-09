@@ -90,7 +90,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 	const [site] = sitesConnector.hooks.useSite(siteId);
 	const url =
 		typeof site?.data?.url === 'object'
-			? site?.data?.url[contentItem.meta.lang || 'nl']
+			? site?.data?.url[contentItem?.meta.lang || 'nl']
 			: site?.data?.url;
 	const newSite = url?.slice(-1) === '/' ? url.slice(0, url.length - 1) : url;
 
@@ -277,7 +277,7 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 								<action.component
 									site={site}
 									contentItem={contentItem}
-									activeLanguage={contentItem.meta.lang}
+									activeLanguage={contentItem?.meta.lang}
 								/>
 							</div>
 						))}
