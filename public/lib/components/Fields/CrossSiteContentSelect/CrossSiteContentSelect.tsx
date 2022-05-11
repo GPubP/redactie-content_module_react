@@ -91,7 +91,7 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 	const renderSelect = (): ReactElement => {
 		return (
 			<>
-				<div className="row">
+				<div className="u-flex-no-wrap row">
 					<div className="col-xs-10 col-md-11">
 						<ContentSelectBase
 							fieldSchema={{
@@ -103,7 +103,7 @@ const CrossSiteContentSelect: React.FC<CrossSiteContentSelectFieldProps> = ({
 									...fieldProps,
 									field: {
 										...field,
-										value: field.value.contentId,
+										value: field?.value?.contentId,
 									},
 									setValue: setValue,
 								} as unknown) as FieldProps<string, FormikValues>
