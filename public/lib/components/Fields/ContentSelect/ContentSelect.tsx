@@ -91,7 +91,7 @@ const ContentSelect: React.FC<ContentSelectProps> = ({
 	 * RENDER
 	 */
 	return (
-		<div className="row">
+		<div className="u-flex-no-wrap row">
 			<div className="col-xs-10 col-md-11">
 				<ContentSelectBase
 					fieldSchema={fieldSchema}
