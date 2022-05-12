@@ -137,7 +137,10 @@ const ContentSelectBase: React.FC<ContentSelectBaseProps> = ({
 				onMouseLeave={handleMouseLeave}
 				onKeyDown={handleKeyDown}
 			>
-				<FormRendererFieldTitle isRequired={!!fieldSchema.config?.required}>
+				<FormRendererFieldTitle
+					isRequired={!!fieldSchema.config?.required}
+					isSynced={config.synced}
+				>
 					{fieldSchema?.label}
 				</FormRendererFieldTitle>
 				<Autocomplete
