@@ -33,13 +33,19 @@ const MetaForm: FC<CompartmentProps> = ({
 		onChange(values);
 	};
 	const { siteId } = useSiteContext();
+
+	const modulesConfig = contentType?.modulesConfig?.find(module => {
+		return module.site === siteId && module.name === 'navigation';
+	});
+
 	const metaValidationSchema = useMemo(() => {
 		return META_VALIDATION_SCHEMA(
 			siteId,
 			contentValue?.meta?.lang,
 			contentValue?.uuid,
 			undefined,
-			contentType?.meta.canBeFiltered
+			contentType?.meta.canBeFiltered,
+			modulesConfig,
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [contentValue?.uuid, siteId]);
@@ -50,10 +56,6 @@ const MetaForm: FC<CompartmentProps> = ({
 		typeof site?.data?.url === 'object' ? site?.data?.url[activeLanguage!] : site?.data?.url;
 
 	const newSite = url?.slice(-1) === '/' ? url.slice(0, url.length - 1) : url;
-
-	const modulesConfig = contentType?.modulesConfig?.find(module => {
-		return module.site === siteId && module.name === 'navigation';
-	});
 
 	/**
 	 * RENDER
@@ -117,7 +119,7 @@ const MetaForm: FC<CompartmentProps> = ({
 							)}
 						</div>
 					</div>
-					{contentType?.meta?.canBeFiltered && !modulesConfig? (
+					{contentType?.meta?.canBeFiltered && !modulesConfig ? (
 						<div className="row">
 							<div className="col-xs-12 col-md-6 u-margin-bottom">
 								<Field

@@ -200,12 +200,17 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		}
 	}, [machine]);
 
+		const modulesConfig = contentType?.modulesConfig?.find(module => {
+		return module.site === siteId && module.name === 'navigation';
+	});
+
 	const internalCompartments = useMemo(() => {
 		return INTERNAL_COMPARTMENTS(
 			siteId,
 			contentType,
 			workflow,
-			(allowedTransitions || []).map(transition => transition.replace('to-', ''))
+			(allowedTransitions || []).map(transition => transition.replace('to-', '')),
+			modulesConfig
 		);
 	}, [allowedTransitions, contentType, siteId, workflow]);
 
