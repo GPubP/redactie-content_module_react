@@ -7,6 +7,8 @@ export type ContentModel = ContentSchema;
 
 export interface ContentState extends BaseEntityState<ContentModel, string> {
 	meta?: PagingSchema;
+	baseContentItem?: ContentModel;
+	baseContentItemFetching?: boolean;
 	contentItem?: ContentModel;
 	contentItemDraft?: ContentModel;
 	isPublishing: boolean;

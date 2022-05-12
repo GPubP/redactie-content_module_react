@@ -53,6 +53,9 @@ export class CcContentFacade extends BaseMultiEntityFacade<
 			? this.store.setItemIsFetching(uuid, true)
 			: this.store.addItem(uuid, {
 					isFetching: true,
+					isCreating: false,
+					isRemoving: false,
+					isUpdating: false,
 					error: null,
 					id: uuid,
 					value: null,

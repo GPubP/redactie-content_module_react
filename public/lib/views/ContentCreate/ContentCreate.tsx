@@ -16,6 +16,7 @@ import {
 	useQuery,
 	useWillUnmount,
 } from '@redactie/utils';
+import { Field, getSyncedTranslationValue, getTranslationSyncMappers } from '@wcm/content-mappers';
 import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -33,6 +34,7 @@ import {
 	useMyContentTypeRights,
 	useRoutesBreadcrumbs,
 } from '../../hooks';
+import useBaseContentItem from '../../hooks/useBaseContentItem/useBaseContentItem';
 import {
 	ContentCreateSchema,
 	ContentSchema,
@@ -58,6 +60,10 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 	const { push } = useHistory();
 	const [t] = useCoreTranslation();
 	const [, , contentItemDraft] = useContentItem();
+	const [baseContentItemFetching, baseContentItem] = useBaseContentItem(
+		siteId,
+		params.baseContentItemId || ''
+	);
 	const [
 		mySecurityRightsLoadingState,
 		mySecurityrights,
@@ -97,11 +103,19 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 	useEffect(() => {
 		if (
 			contentTypeLoading !== LoadingState.Loading &&
-			mySecurityRightsLoadingState !== LoadingState.Loading
+			mySecurityRightsLoadingState !== LoadingState.Loading &&
+			(baseContentItemFetching !== LoadingState.Loading || !params.baseContentItemId)
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [mySecurityRightsLoadingState, contentTypeLoading, contentType, mySecurityrights]);
+	}, [
+		mySecurityRightsLoadingState,
+		contentTypeLoading,
+		contentType,
+		mySecurityrights,
+		baseContentItemFetching,
+		params.baseContentItemId,
+	]);
 
 	useWillUnmount(() => {
 		contentTypesFacade.clearContentType();
@@ -120,7 +134,10 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 	}, [contentTypeRights, generatePath, push, siteId, tenantId]);
 
 	useEffect(() => {
-		if (!contentType) {
+		if (
+			!contentType ||
+			(params.baseContentItemId && baseContentItemFetching !== LoadingState.Loaded)
+		) {
 			return;
 		}
 
@@ -162,8 +179,24 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			},
 		};
 
-		contentFacade.setContentItemDraft(defaultValue, contentType);
-	}, [contentType]); // eslint-disable-line
+		if (!baseContentItem) {
+			contentFacade.setContentItemDraft(defaultValue, contentType);
+			return;
+		}
+
+		const mappers = getTranslationSyncMappers((contentType.fields as unknown) as Field[], {
+			includeOptional: true,
+		});
+
+		// TODO: fix types
+		const syncedDefaultValue = getSyncedTranslationValue(
+			mappers,
+			baseContentItem as any,
+			defaultValue as any
+		);
+
+		contentFacade.setContentItemDraft(syncedDefaultValue as any, contentType);
+	}, [contentType, baseContentItemFetching, baseContentItem]); // eslint-disable-line
 
 	useEffect(() => {
 		if (siteId && contentTypeId) {

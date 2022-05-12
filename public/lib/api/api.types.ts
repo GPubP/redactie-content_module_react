@@ -53,7 +53,10 @@ export {
 export interface ContentAPI {
 	store: {
 		content: {
-			facade: Pick<ContentFacade, 'getContentItem' | 'getContentItemBySlug' | 'getContent'>;
+			facade: Pick<
+				ContentFacade,
+				'getContentItem' | 'getContentItemBySlug' | 'getContent' | 'setBaseContentItem'
+			>;
 			service: typeof contentApiService;
 		};
 	};
