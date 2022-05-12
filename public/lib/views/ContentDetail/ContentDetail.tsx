@@ -140,6 +140,12 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		contentTypeRights,
 	]);
 
+	useEffect(() => {
+		if (contentItemLoading) {
+			setInitialLoading(true);
+		}
+	}, [contentItemLoading])
+
 	const pageTabs = useMemo(() => {
 		// filter tabs based on user security rights
 		return activeTabs.filter(tab => {
