@@ -101,6 +101,7 @@ export interface ContentCreateSchema {
 	};
 	modulesData?: Record<string, ModuleValue>;
 	fields: Record<string, any>;
+	uuid?: string;
 }
 
 export enum ContentStatus {

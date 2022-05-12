@@ -239,6 +239,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 			},
 			modulesData: content.modulesData,
 			fields: content.fields,
+			uuid: content.uuid,
 		};
 
 		contentFacade
