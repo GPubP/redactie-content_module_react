@@ -10,6 +10,13 @@ export class ContentQuery extends BaseEntityQuery<ContentState> {
 		filter(meta => !isNil(meta), distinctUntilChanged())
 	);
 	public content$ = this.selectAll();
+	public baseContentItem$ = this.select(state => state.baseContentItem).pipe(
+		filter(contentItem => !isNil(contentItem), distinctUntilChanged())
+	);
+	public baseContentItemFetching$ = this.select(state => state.baseContentItemFetching).pipe(
+		map(fetching => this.convertBoolToLoadingState(fetching || false)),
+		distinctUntilChanged()
+	);
 	public contentItem$ = this.select(state => state.contentItem).pipe(
 		filter(contentItem => !isNil(contentItem), distinctUntilChanged())
 	);

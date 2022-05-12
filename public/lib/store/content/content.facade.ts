@@ -34,6 +34,8 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 
 	public readonly meta$ = this.query.meta$;
 	public readonly content$ = this.query.content$;
+	public readonly baseContentItem$ = this.query.baseContentItem$;
+	public readonly baseContentItemFetching$ = this.query.baseContentItemFetching$;
 	public readonly contentItem$ = this.query.contentItem$;
 	public readonly contentItemDraft$ = this.query.contentItemDraft$;
 	public readonly isPublishing$ = this.query.isPublishing$;
@@ -106,6 +108,43 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 						actionType: 'fetchingOne',
 					},
 					isFetchingOne: false,
+				});
+			});
+	}
+
+	public getBaseContentItem(siteId: string, uuid: string): void {
+		this.store.update({
+			baseContentItemFetching: true,
+		});
+
+		this.service
+			.getContentItem(siteId, uuid)
+			.then(response => {
+				if (response) {
+					this.store.update({
+						error: null,
+						baseContentItem: {
+							...response,
+							meta: {
+								...response.meta,
+								workflowState: response.meta.workflowState
+									? response.meta.workflowState
+									: (ContentSystemNames as Record<string, string>)[
+											response.meta.status
+									  ],
+							},
+						},
+						baseContentItemFetching: false,
+					});
+				}
+			})
+			.catch(error => {
+				this.store.update({
+					error: {
+						...error,
+						actionType: 'baseContentItemFetching',
+					},
+					baseContentItemFetching: false,
 				});
 			});
 	}
@@ -407,6 +446,16 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		this.store.update({
 			error: null,
 		});
+	}
+
+	public setBaseContentItem(baseContentItem: ContentModel): void {
+		this.store.update({
+			baseContentItem,
+		});
+	}
+
+	public hasBaseContentItem(baseContentItemId: string): boolean {
+		return this.store.getValue().baseContentItem?.uuid === baseContentItemId;
 	}
 }
 
