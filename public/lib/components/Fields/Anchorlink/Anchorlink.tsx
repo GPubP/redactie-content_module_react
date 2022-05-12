@@ -54,7 +54,11 @@ const Anchorlink: React.FC<AnchorlinkFieldProps> = ({
 	return (
 		<>
 			{config?.max && config.max === 1 && (
-				<FormRendererFieldTitle isRequired={!!config.required} className="u-margin-bottom">
+				<FormRendererFieldTitle
+					isRequired={!!config.required}
+					isSynced={config.synced}
+					className="u-margin-bottom"
+				>
 					{fieldSchema.label}
 				</FormRendererFieldTitle>
 			)}
