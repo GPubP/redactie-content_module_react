@@ -1,7 +1,9 @@
 import { parseSearchParams, SearchParams } from '@redactie/utils';
 
 import { api } from '../api';
-import { SITE_REQUEST_PREFIX_URL } from '../api/api.service.const';
+import {
+	SITE_REQUEST_PREFIX_URL,
+} from '../api/api.service.const';
 
 import { CONTENT_STATUS_API_MAP } from './content.service.const';
 import {

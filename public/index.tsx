@@ -40,7 +40,7 @@ const ContentComponent: FC<ContentRouteProps<{ siteId: string }>> = ({
 			routes: route.routes,
 			tenantId,
 		}),
-		[tenantId, route.routes]
+		[route.routes, tenantId]
 	);
 
 	return (
