@@ -51,6 +51,10 @@ const MetaForm: FC<CompartmentProps> = ({
 
 	const newSite = url?.slice(-1) === '/' ? url.slice(0, url.length - 1) : url;
 
+	const modulesConfig = contentType?.modulesConfig?.find(module => {
+		return module.site === siteId && module.name === 'navigation';
+	});
+
 	/**
 	 * RENDER
 	 */
@@ -113,8 +117,7 @@ const MetaForm: FC<CompartmentProps> = ({
 							)}
 						</div>
 					</div>
-
-					{contentType?.meta?.canBeFiltered ? (
+					{contentType?.meta?.canBeFiltered && !modulesConfig? (
 						<div className="row">
 							<div className="col-xs-12 col-md-6 u-margin-bottom">
 								<Field
