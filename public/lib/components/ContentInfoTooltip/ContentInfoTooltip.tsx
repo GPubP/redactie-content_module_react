@@ -1,9 +1,16 @@
 import { CardTitle, Label } from '@acpaas-ui/react-components';
 import { TooltipTypeMap } from '@acpaas-ui/react-editorial-components';
-import { DataLoader, InfoTooltip, LoadingState, useSiteContext } from '@redactie/utils';
+import {
+	DataLoader,
+	InfoTooltip,
+	LoadingState,
+	useNavigate,
+	useSiteContext,
+} from '@redactie/utils';
 import moment from 'moment';
 import { path } from 'ramda';
 import React, { ReactElement, useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import formRendererConnector from '../../connectors/formRenderer';
 import rolesRightsConnector from '../../connectors/rolesRights';
@@ -27,6 +34,8 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 }: ContentInfoTooltipProps) => {
 	const { activeLanguage } = useContext(formRendererConnector.api.FormContext);
 	const { siteId } = useSiteContext();
+	const { generatePath } = useNavigate('sites');
+
 	const url =
 		typeof site?.data?.url === 'object'
 			? site?.data?.url[activeLanguage || 'nl']
@@ -51,6 +60,15 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 			setInitialLoading(false);
 		}
 	}, [fetchingState, mySecurityRightsLoading, initialLoading, item, contentId]);
+
+	const contentItemPath = item ? generatePath(
+		'/:siteId/content/content-types/:contentTypeId/content/:contentId',
+		{
+			siteId: siteId || '',
+			contentTypeId: item?.meta.contentType.uuid,
+			contentId: item?.uuid,
+		}
+	): '';
 
 	useEffect(() => {
 		if (!site?.uuid || !contentId) {
@@ -89,7 +107,11 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 					icon={icon}
 					onVisibilityChange={handleVisibilityChange}
 				>
-					<CardTitle>{item?.meta.label && item?.meta.label}</CardTitle>
+					<CardTitle>
+						<Link className="m-tooltip__title" to={contentItemPath}>
+							{item?.meta.label && item?.meta.label}
+						</Link>
+					</CardTitle>
 
 					<div className="u-margin-top">
 						{item?.meta.description && (
