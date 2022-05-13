@@ -5,9 +5,9 @@ import navigationConnector from '../../connectors/navigation';
 import { ContentSchema } from '../../services/content';
 import { ContentTypeSchema } from '../../services/contentTypes';
 
-function getPathByNavigationBreadcrumbs(path = '', navigationItem: NavItem): string {
+function getPathByNavigationBreadcrumbs(path = '', navigationItem: NavItem | undefined): string {
 	const parentPath: string =
-		['primary', 'internal'].includes(navigationItem.properties?.type || '') &&
+		['primary', 'internal'].includes(navigationItem?.properties?.type || '') &&
 		navigationItem?.externalUrl
 			? (navigationItem.externalUrl.replace(/^http(s)?:\/\/(.*?)(\/|$)/, '') ||
 					navigationItem.slug) ??
@@ -19,7 +19,7 @@ function getPathByNavigationBreadcrumbs(path = '', navigationItem: NavItem): str
 
 	const newPath = `${path}${prefixedParentPath}`;
 
-	if (!Array.isArray(navigationItem?.items) || !navigationItem.items[0]) {
+	if (!Array.isArray(navigationItem?.items) || !navigationItem?.items[0]) {
 		return newPath;
 	}
 
