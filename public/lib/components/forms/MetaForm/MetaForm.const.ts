@@ -1,3 +1,4 @@
+import { ModuleSettings } from '@redactie/sites-module';
 import { date, object, Schema, string } from 'yup';
 
 import { ContentCompartmentsValidateOptions } from '../../../store/ui/contentCompartments';
@@ -9,9 +10,10 @@ export const META_VALIDATION_SCHEMA = (
 	activeLanguage?: string,
 	contentId?: string,
 	options: ContentCompartmentsValidateOptions = { async: true, allowedTransitions: [] },
-	isPage?: boolean
+	isPage?: boolean,
+	modulesConfig?: ModuleSettings
 ): Schema<unknown> =>
-	isPage
+	isPage && !modulesConfig
 		? object().shape({
 				slug: object({
 					[activeLanguage || 'nl']: string()

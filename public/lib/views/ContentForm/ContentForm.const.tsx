@@ -1,4 +1,5 @@
 import { Button } from '@acpaas-ui/react-components';
+import { ModuleSettings } from '@redactie/sites-module';
 import { WorkflowDetailModel, WorkflowPopulatedTransition } from '@redactie/workflows-module';
 import moment from 'moment';
 import React from 'react';
@@ -22,7 +23,8 @@ export const INTERNAL_COMPARTMENTS = (
 	siteId: string,
 	contentType?: ContentTypeSchema,
 	workflow?: WorkflowDetailModel,
-	allowedWorkflowStates?: string[]
+	allowedWorkflowStates?: string[],
+	modulesConfig?: ModuleSettings
 ): ContentCompartmentModel[] => [
 	{
 		label: 'Info',
@@ -46,7 +48,8 @@ export const INTERNAL_COMPARTMENTS = (
 				values.meta.lang,
 				values.uuid,
 				options,
-				contentType?.meta?.canBeFiltered
+				contentType?.meta?.canBeFiltered,
+				modulesConfig
 			).isValid(values.meta),
 		afterSubmit: MetaFormHelper.afterSubmitMeta,
 	},
