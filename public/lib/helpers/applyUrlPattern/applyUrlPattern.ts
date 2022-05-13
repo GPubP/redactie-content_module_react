@@ -1,12 +1,13 @@
 import { ResolverType, resolveUrl } from '@wcm/pattern-resolver';
+import { NavItem } from '@redactie/navigation-module'
 import navigationConnector from '../../connectors/navigation';
 
 import { ContentSchema } from '../../services/content';
 import { ContentTypeSchema } from '../../services/contentTypes';
 
-function getPathByNavigationBreadcrumbs(path = '', navigationItem: any): any {
+function getPathByNavigationBreadcrumbs(path = '', navigationItem: NavItem | undefined): string {
 	const parentPath: string =
-		['primary', 'internal'].includes(navigationItem?.properties?.type) &&
+		['primary', 'internal'].includes(navigationItem?.properties?.type || '') &&
 		navigationItem?.externalUrl
 			? (navigationItem.externalUrl.replace(/^http(s)?:\/\/(.*?)(\/|$)/, '') ||
 					navigationItem.slug) ??
@@ -18,7 +19,7 @@ function getPathByNavigationBreadcrumbs(path = '', navigationItem: any): any {
 
 	const newPath = `${path}${prefixedParentPath}`;
 
-	if (!Array.isArray(navigationItem?.items) || !navigationItem.items[0]) {
+	if (!Array.isArray(navigationItem?.items) || !navigationItem?.items[0]) {
 		return newPath;
 	}
 

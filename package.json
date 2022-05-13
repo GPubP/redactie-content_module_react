@@ -52,6 +52,7 @@
     "@redactie/roles-rights-module": "1.2.2",
     "@redactie/sites-module": "^1.0.2",
     "@redactie/translations-module": "^0.8.2",
+    "@redactie/navigation-module": "^2.6.2",
     "@redactie/utils": "^2.4.1",
     "@redactie/workflows-module": "1.0.2",
     "@testing-library/jest-dom": "5.0.2",
