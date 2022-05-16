@@ -3,6 +3,7 @@ import React, { ReactElement } from 'react';
 
 export const TENANT_ROOT = '/:tenantId';
 export const SITES_ROOT = 'sites';
+export const SITE_ROOT = `/:siteId`;
 
 export const BREADCRUMB_OPTIONS = {
 	excludePaths: [
@@ -110,6 +111,9 @@ export const CONTENT_MODAL_MAP = (
 
 export const MODULE_PATHS = {
 	root,
+	site: {
+		contentDetail: `${SITE_ROOT}/content/content-types/:contentTypeId/content/:contentId`,
+	},
 	siteRoot,
 	overview,
 	createOverview,

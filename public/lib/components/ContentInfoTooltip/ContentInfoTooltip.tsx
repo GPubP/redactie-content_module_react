@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 
 import formRendererConnector from '../../connectors/formRenderer';
 import rolesRightsConnector from '../../connectors/rolesRights';
+import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { useContentItem } from '../../hooks';
 import {
 	CONTENT_STATUS_TRANSLATION_MAP,
@@ -34,7 +35,7 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 }: ContentInfoTooltipProps) => {
 	const { activeLanguage } = useContext(formRendererConnector.api.FormContext);
 	const { siteId } = useSiteContext();
-	const { generatePath } = useNavigate('sites');
+	const { generatePath } = useNavigate(SITES_ROOT);
 
 	const url =
 		typeof site?.data?.url === 'object'
@@ -61,14 +62,13 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 		}
 	}, [fetchingState, mySecurityRightsLoading, initialLoading, item, contentId]);
 
-	const contentItemPath = item ? generatePath(
-		'/:siteId/content/content-types/:contentTypeId/content/:contentId',
-		{
-			siteId: siteId || '',
-			contentTypeId: item?.meta.contentType.uuid,
-			contentId: item?.uuid,
-		}
-	): '';
+	const contentItemPath = item
+		? generatePath(MODULE_PATHS.site.contentDetail, {
+				siteId: siteId || '',
+				contentTypeId: item?.meta.contentType.uuid,
+				contentId: item?.uuid,
+		  })
+		: '';
 
 	useEffect(() => {
 		if (!site?.uuid || !contentId) {
