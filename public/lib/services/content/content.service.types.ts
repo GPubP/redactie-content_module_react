@@ -48,7 +48,8 @@ export interface ContentMeta {
 		{
 			value: string;
 			pattern: string;
-			calculated: string;
+			standardPattern: string;
+			standardValue: string;
 		}
 	>;
 }
@@ -95,7 +96,8 @@ export interface ContentCreateSchema {
 			{
 				value: string;
 				pattern: string;
-				calculated: string;
+				standardPattern: string;
+				standardValue: string;
 			}
 		>;
 	};
