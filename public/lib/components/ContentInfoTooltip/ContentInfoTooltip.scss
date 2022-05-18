@@ -12,12 +12,16 @@
 		pointer-events: none;
 		z-index: 3;
 
+		&__unknown {
+			color: $state-disabled;
+		}
+
 		&__published {
-			color: green;
+			color: $state-success;
 		}
 
 		&__unpublished {
-			color: red;
+			color: $state-danger;
 		}
 	}
 
