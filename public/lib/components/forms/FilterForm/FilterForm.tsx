@@ -146,25 +146,27 @@ const FilterForm: FC<FilterFormProps> = ({
 												]}
 											/>
 										</div>
-										<div className="col-sm-6 u-margin-top">
-											<Field name="contentType">
-												{() => (
-													<div className="m-flyout--scrollable">
-														<Autocomplete
-															key={values.lang}
-															label="Taal"
-															id="lang"
-															defaultValue={values.lang}
-															items={languageOptions}
-															multipleSelect
-															onSelection={(selected: string[]) =>
-																setFieldValue('lang', selected)
-															}
-														/>
-													</div>
-												)}
-											</Field>
-										</div>
+										{languageOptions.length > 1 && (
+											<div className="col-sm-6 u-margin-top">
+												<Field name="contentType">
+													{() => (
+														<div className="m-flyout--scrollable">
+															<Autocomplete
+																key={values.lang}
+																label="Taal"
+																id="lang"
+																defaultValue={values.lang}
+																items={languageOptions}
+																multipleSelect
+																onSelection={(selected: string[]) =>
+																	setFieldValue('lang', selected)
+																}
+															/>
+														</div>
+													)}
+												</Field>
+											</div>
+										)}
 									</div>
 								</FilterBody>
 							</Filter>
