@@ -5,15 +5,19 @@ import { addWorkingTitleField, getFormPropsByCT } from './getFormPropsByCT';
 
 export const getCompartmentFormProps = (
 	contentType: ContentTypeSchema,
-	settings: CtTypeSettings
+	settings: CtTypeSettings,
+	activeLanguageKey?: string
 ): FormRendererProps => {
-	const formProps = getFormPropsByCT({
-		...contentType,
-		valueSyncMap: settings.valueSyncMap,
-		fields: settings.fields,
-		validateSchema: settings.validateSchema,
-		errorMessages: settings.errorMessages,
-	});
+	const formProps = getFormPropsByCT(
+		{
+			...contentType,
+			valueSyncMap: settings.valueSyncMap,
+			fields: settings.fields,
+			validateSchema: settings.validateSchema,
+			errorMessages: settings.errorMessages,
+		},
+		activeLanguageKey
+	);
 
 	return settings.includeWorkingTitle ? addWorkingTitleField(formProps) : formProps;
 };

@@ -52,10 +52,10 @@ const ContentDetailView: FC<ContentDetailChildRouteProps> = ({
 	 */
 	const { navigate, generatePath } = useNavigate(SITES_ROOT);
 	const [, , externalLock, userLock] = useLock(contentId);
-	const viewProps = useMemo(() => getViewPropsByCT(contentType, contentItem.fields), [
-		contentType,
-		contentItem.fields,
-	]);
+	const viewProps = useMemo(
+		() => getViewPropsByCT(contentType, contentItem.fields, contentItem.meta.lang),
+		[contentType, contentItem.fields, contentItem.meta.lang]
+	);
 	const contentItemIsEmpty = useMemo(() => isEmpty(contentItem.fields || {}), [
 		contentItem.fields,
 	]);

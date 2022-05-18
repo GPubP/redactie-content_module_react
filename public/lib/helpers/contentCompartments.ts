@@ -200,7 +200,11 @@ const getCTCompartmentValidationSchema = (
 const validateCTCompartment = (contentType: ContentTypeSchema, settings: CtTypeSettings) => (
 	values: ContentSchema
 ): boolean => {
-	const { validationSchema, errorMessages } = getCompartmentFormProps(contentType, settings);
+	const { validationSchema, errorMessages } = getCompartmentFormProps(
+		contentType,
+		settings,
+		values.meta.lang
+	);
 	const CustomValidator = (formRendererConnector.api as any).CustomValidator;
 
 	if (validationSchema && CustomValidator) {
