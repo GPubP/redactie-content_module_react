@@ -111,6 +111,7 @@ const ContentSelect: React.FC<ContentSelectProps> = ({
 						...(config.contentTypes?.length
 							? { contentTypes: config.contentTypes.join(',') }
 							: {}),
+						...(config.ctType ? { ctType: config.ctType } : {}),
 					}}
 					to={
 						currentItem?.value
