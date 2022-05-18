@@ -66,10 +66,6 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 		fetchData();
 	}, [contentId, site]);
 
-	const handleVisibilityChange = (isVisible: boolean): void => {
-		console.log(isVisible);
-	};
-
 	const renderView = (): ReactElement | null => {
 		if (!item) {
 			return null;
@@ -83,12 +79,7 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 				>
 					•
 				</div>
-				<InfoTooltip
-					placement="bottom-end"
-					type={TooltipTypeMap.WHITE}
-					icon={icon}
-					onVisibilityChange={handleVisibilityChange}
-				>
+				<InfoTooltip placement="bottom-end" type={TooltipTypeMap.WHITE} icon={icon}>
 					<CardTitle>{item?.meta.label && item?.meta.label}</CardTitle>
 
 					<div className="u-margin-top">
