@@ -23,7 +23,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import rolesRightsConnector from '../../connectors/rolesRights';
 import sitesConnector from '../../connectors/sites';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import translationsConnector, { CORE_TRANSLATIONS } from '../../connectors/translations';
 import workflowsConnector from '../../connectors/workflows';
 import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ALERT_CONTAINER_IDS, ContentRouteProps } from '../../content.types';
@@ -58,7 +58,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 	const { generatePath, navigate } = useNavigate(SITES_ROOT);
 	const [contentTypeLoading, contentType] = useContentType();
 	const { push } = useHistory();
-	const [t] = useCoreTranslation();
+	const [t] = translationsConnector.useCoreTranslation();
 	const [, , contentItemDraft] = useContentItem();
 	const [baseContentItemFetching, baseContentItem] = useBaseContentItem(
 		siteId,

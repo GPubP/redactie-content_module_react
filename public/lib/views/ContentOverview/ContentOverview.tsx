@@ -29,7 +29,7 @@ import {
 } from '../../components';
 import languagesConnector from '../../connectors/languages';
 import rolesRightsConnector from '../../connectors/rolesRights';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import translationsConnector, { CORE_TRANSLATIONS } from '../../connectors/translations';
 import workflowsConnector from '../../connectors/workflows';
 import { DATE_FORMATS, DEFAULT_CRUD_RIGHTS, MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ALERT_CONTAINER_IDS, ContentRouteProps, OverviewFilterItem } from '../../content.types';
@@ -128,7 +128,7 @@ const ContentOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ match }) =
 			),
 		[contentTypes, filterFormState, languages, workflowStatuses]
 	);
-	const [t] = useCoreTranslation();
+	const [t] = translationsConnector.useCoreTranslation();
 
 	// Set initial loading state
 	useEffect(() => {

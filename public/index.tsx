@@ -9,6 +9,7 @@ import rolesRightsConnector from './lib/connectors/rolesRights';
 import sitesConnector from './lib/connectors/sites';
 import { MODULE_PATHS, urlSiteParam } from './lib/content.const';
 import { ContentRouteProps } from './lib/content.types';
+import { registerTranslations } from './lib/i18next';
 import {
 	ContentCreate,
 	ContentCreateOverview,
@@ -21,6 +22,7 @@ import { ContentDetailExternal } from './lib/views/ContentDetailExternal';
 import ContentForm from './lib/views/ContentForm/ContentForm';
 
 // akitaDevtools();
+registerTranslations();
 
 const ContentComponent: FC<ContentRouteProps<{ siteId: string }>> = ({
 	route,
