@@ -72,7 +72,7 @@
     "@types/yup": "^0.26.33",
     "@typescript-eslint/eslint-plugin": "5.21.0",
     "@typescript-eslint/parser": "5.21.0",
-    "@wcm/content-mappers": "0.1.1",
+    "@wcm/content-mappers": "0.1.2-1",
     "@xstate/react": "^1.6.1",
     "ajv": "^6.12.5",
     "babel-jest": "^25.1.0",
