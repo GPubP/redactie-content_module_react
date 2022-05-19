@@ -62,6 +62,7 @@ const MetaForm: FC<CompartmentProps> = ({
 	/**
 	 * RENDER
 	 */
+	console.log(contentType.meta.issuedOnPrefill);
 	return (
 		<Formik
 			innerRef={instance => formikRef && formikRef(instance)}
@@ -186,8 +187,13 @@ const MetaForm: FC<CompartmentProps> = ({
 													? tModule(
 															MODULE_TRANSLATIONS.ISSUED_ON_HINT_ENABLED
 													  )
+													: contentType.meta.issuedOnPrefill ===
+													  'firstPublication'
+													? tModule(
+															MODULE_TRANSLATIONS.ISSUED_ON_HINT_DISABLED_FIRST_PUBLISH
+													  )
 													: tModule(
-															MODULE_TRANSLATIONS.ISSUED_ON_HINT_DISABLED
+															MODULE_TRANSLATIONS.ISSUED_ON_HINT_DISABLED_LAST_PUBLISH
 													  ),
 												disabled: !contentType.meta.issuedOnEditable,
 												minuteStep: 1,
