@@ -173,7 +173,11 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 							contentType.meta.urlPath?.pattern ||
 							'',
 						value: '',
-						calculated: '/[item:slug]',
+						standardPattern:
+							navSiteModulesConfig?.config?.url?.urlPattern[language] ||
+							navTenantModulesConfig?.config?.url?.urlPattern[language] ||
+							'/[item:slug]',
+						standardValue: '',
 					},
 				},
 			},
