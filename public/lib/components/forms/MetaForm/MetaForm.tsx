@@ -62,8 +62,6 @@ const MetaForm: FC<CompartmentProps> = ({
 	/**
 	 * RENDER
 	 */
-
-	console.log(MODULE_TRANSLATIONS.ISSUED_ON_HINT_ENABLED, MODULE_TRANSLATIONS);
 	return (
 		<Formik
 			innerRef={instance => formikRef && formikRef(instance)}
