@@ -4,7 +4,6 @@ import { omit, path, pick } from 'ramda';
 import { ContentTypeSchema } from '../../..';
 import { WORKING_TITLE_KEY } from '../../content.const';
 import { ALERT_CONTAINER_IDS } from '../../content.types';
-import { getCTUrlPattern } from '../../helpers';
 import { applyUrlPattern } from '../../helpers/applyUrlPattern/applyUrlPattern';
 import {
 	ContentApiService,
@@ -308,7 +307,6 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 		contentType: ContentTypeSchema
 	): Promise<void> {
 		const currentMetaValue = this.store.getValue().contentItemDraft?.meta!;
-		const url = getCTUrlPattern(contentType, currentMetaValue?.lang, 'navigation');
 
 		const sharedValues = [
 			this.store.getValue().contentItemDraft?.uuid || '',
@@ -323,8 +321,21 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 			  )
 			: '';
 
+		const navTenantModulesConfig = (contentType.modulesConfig || []).find(
+			moduleConfig => moduleConfig.name === 'navigation' && !moduleConfig.site
+		);
+
+		const navSiteModulesConfig = (contentType.modulesConfig || []).find(
+			moduleConfig => moduleConfig.name === 'navigation' && !!moduleConfig.site
+		);
+
 		const calculatedPathValue = path(['urlPath', currentMetaValue?.lang])(currentMetaValue)
-			? await applyUrlPattern(url || '/[item:slug]', ...sharedValues)
+			? await applyUrlPattern(
+					navSiteModulesConfig?.config?.url?.urlPattern[currentMetaValue?.lang] ||
+						navTenantModulesConfig?.config?.url?.urlPattern[currentMetaValue?.lang] ||
+						'/[item:slug]',
+					...sharedValues
+			  )
 			: '';
 
 		this.store.update({
@@ -339,7 +350,15 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 							pattern: path(['urlPath', data.meta.lang])(data.meta)
 								? data.meta.urlPath![data.meta.lang!].pattern
 								: currentMetaValue?.urlPath![currentMetaValue.lang].pattern || '',
-							calculated: calculatedPathValue,
+							standardPattern:
+								navSiteModulesConfig?.config?.url?.urlPattern[
+									currentMetaValue?.lang
+								] ||
+								navTenantModulesConfig?.config?.url?.urlPattern[
+									currentMetaValue?.lang
+								] ||
+								'/[item:slug]',
+							standardValue: calculatedPathValue,
 						},
 					},
 				},
@@ -387,7 +406,6 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 	): Promise<void> {
 		const currentMetaValue = this.store.getValue().contentItemDraft?.meta!;
 
-		const url = getCTUrlPattern(contentType!, currentMetaValue?.lang, 'navigation');
 		const sharedValues = [
 			this.store.getValue().contentItemDraft?.uuid || '',
 			{ ...currentMetaValue, ...data },
@@ -400,8 +418,24 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 					...sharedValues
 			  )
 			: '';
+		const navTenantModulesConfig =
+			contentType &&
+			(contentType.modulesConfig || []).find(
+				moduleConfig => moduleConfig.name === 'navigation' && !moduleConfig.site
+			);
+
+		const navSiteModulesConfig =
+			contentType &&
+			(contentType.modulesConfig || []).find(
+				moduleConfig => moduleConfig.name === 'navigation' && !!moduleConfig.site
+			);
 		const calculatedPathValue = path(['urlPath', currentMetaValue?.lang])(currentMetaValue)
-			? await applyUrlPattern(url || '/[item:slug]', ...sharedValues)
+			? await applyUrlPattern(
+					navSiteModulesConfig?.config?.url?.urlPattern[currentMetaValue?.lang] ||
+						navTenantModulesConfig?.config?.url?.urlPattern[currentMetaValue?.lang] ||
+						'/[item:slug]',
+					...sharedValues
+			  )
 			: '';
 
 		this.store.update(state => ({
@@ -420,7 +454,15 @@ export class ContentFacade extends BaseEntityFacade<ContentStore, ContentApiServ
 											? data.urlPath![currentMetaValue.lang].pattern
 											: currentMetaValue.urlPath![currentMetaValue.lang]
 													.pattern,
-										calculated: calculatedPathValue,
+										standardPattern:
+											navSiteModulesConfig?.config?.url?.urlPattern[
+												currentMetaValue?.lang
+											] ||
+											navTenantModulesConfig?.config?.url?.urlPattern[
+												currentMetaValue?.lang
+											] ||
+											'/[item:slug]',
+										standardValue: calculatedPathValue,
 									},
 								},
 						  }
