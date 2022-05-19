@@ -16,7 +16,12 @@ import {
 	useQuery,
 	useWillUnmount,
 } from '@redactie/utils';
-import { Field, getSyncedTranslationValue, getTranslationSyncMappers } from '@wcm/content-mappers';
+import {
+	Field,
+	getSyncedTranslationValue,
+	getTranslationSyncMappers,
+	MapperContext,
+} from '@wcm/content-mappers';
 import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -190,6 +195,8 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 
 		const mappers = getTranslationSyncMappers((contentType.fields as unknown) as Field[], {
 			includeOptional: true,
+			includeMultiple: true,
+			context: MapperContext.CREATE,
 		});
 
 		// TODO: fix types
