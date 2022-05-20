@@ -9,15 +9,15 @@ class TranslationsConnector {
 	private api: TranslationsAPI;
 
 	public get core(): TranslationsAPI['core'] {
-		return this.api.core;
+		return this.api?.core;
 	}
 
 	public get modules(): TranslationsAPI['modules'] {
-		return this.api.modules;
+		return this.api?.modules;
 	}
 
 	public get CORE_TRANSLATIONS(): TranslationsAPI['core']['CORE_TRANSLATIONS'] {
-		return this.core.CORE_TRANSLATIONS;
+		return this.core?.CORE_TRANSLATIONS;
 	}
 
 	constructor() {

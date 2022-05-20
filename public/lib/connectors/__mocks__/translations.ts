@@ -10,3 +10,10 @@ export const CORE_TRANSLATIONS = {
 	BUTTON_CANCEL: 'cancel',
 	BUTTON_SAVE: 'save',
 };
+
+export default {
+	api: {
+		core: {},
+	},
+	useCoreTranslation,
+};
