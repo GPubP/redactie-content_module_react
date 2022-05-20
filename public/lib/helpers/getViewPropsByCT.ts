@@ -18,6 +18,6 @@ export const getViewPropsByCT = (
 		schema: {
 			fields: formRendererConnector.api.parseFields(fields, { activeLanguageKey } as any),
 		},
-		values: getInitialContentValues(fields, values),
+		values: getInitialContentValues(fields, values, activeLanguageKey),
 	};
 };

@@ -1,7 +1,7 @@
+import { NavItem } from '@redactie/navigation-module';
 import { ResolverType, resolveUrl } from '@wcm/pattern-resolver';
-import { NavItem } from '@redactie/navigation-module'
-import navigationConnector from '../../connectors/navigation';
 
+import navigationConnector from '../../connectors/navigation';
 import { ContentSchema } from '../../services/content';
 import { ContentTypeSchema } from '../../services/contentTypes';
 
@@ -45,8 +45,10 @@ export const applyUrlPattern = async (
 						await navigationConnector.api.store.sitestructureBreadcrumbsFacade.getBreadcrumbs(
 							contentItemMeta.site || '',
 							id || 'new'
-						)
-						const breadcrumb = navigationConnector.api.store.sitestructureBreadcrumbsFacade.getItemValue(id);
+						);
+						const breadcrumb = navigationConnector.api.store.sitestructureBreadcrumbsFacade.getItemValue(
+							id
+						);
 						const parentPath = getPathByNavigationBreadcrumbs('', breadcrumb);
 
 						return parentPath;
