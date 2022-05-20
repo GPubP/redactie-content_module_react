@@ -80,10 +80,7 @@ const handlePreset = (field: FieldSchemaForAnchorlink, values: FormikValues): Se
 		if (value?.text && !!subField.config?.isAnchorlink) {
 			return [
 				...acc,
-				generateAnchorlinkOption(
-					[...parseFieldNameToPath(field), `${value.text}`],
-					value.text
-				),
+				generateAnchorlinkOption([...parseFieldNameToPath(field), `${key}`], value.text),
 			];
 		}
 
@@ -139,7 +136,11 @@ const handleParagraph = (field: FieldSchemaForAnchorlink, values: FormikValues):
 				...handlePreset(
 					{
 						...subField,
-						_jsonPointerName: [...parseFieldNameToPath(field), subField.name],
+						_jsonPointerName: [
+							...parseFieldNameToPath(field),
+							value.uuid,
+							subField.name,
+						],
 					},
 					value.value
 				),
