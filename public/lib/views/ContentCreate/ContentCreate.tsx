@@ -151,7 +151,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 
 		const defaultValue: ContentSchema = {
 			uuid: uuidv4(),
-			fields: getInitialContentValues(contentType?.fields),
+			fields: getInitialContentValues(contentType?.fields, {}, language),
 			modulesData: {},
 			meta: {
 				activeLanguages: [language],

@@ -89,7 +89,11 @@ export const getCompartmentValue = (
 		case CompartmentType.CT:
 			return {
 				[WORKING_TITLE_KEY]: content.meta.label,
-				...getInitialContentValues(contentType?.fields, content?.fields),
+				...getInitialContentValues(
+					contentType?.fields,
+					content?.fields,
+					content?.meta.lang
+				),
 			};
 		case CompartmentType.INTERNAL:
 			return content?.meta;
