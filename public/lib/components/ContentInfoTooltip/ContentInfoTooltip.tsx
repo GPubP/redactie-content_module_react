@@ -1,4 +1,4 @@
-import { CardTitle, Label } from '@acpaas-ui/react-components';
+import { CardTitle, Icon, Label } from '@acpaas-ui/react-components';
 import { TooltipTypeMap } from '@acpaas-ui/react-editorial-components';
 import { DataLoader, InfoTooltip, LoadingState, useSiteContext } from '@redactie/utils';
 import moment from 'moment';
@@ -76,7 +76,9 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 			return (
 				<div className="m-tooltip-container">
 					<div className="a-dot a-dot__unknown">•</div>
-					<InfoTooltip placement="bottom-end" type={TooltipTypeMap.WHITE} icon={icon} />
+					<button className="a-button a-button-transparent has-icon">
+						<Icon name={icon} />
+					</button>
 				</div>
 			);
 		}
