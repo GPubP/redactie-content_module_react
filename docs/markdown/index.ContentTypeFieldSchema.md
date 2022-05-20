@@ -6,20 +6,20 @@
 
 ### Properties
 
-- [compartment](../wiki/index.ContentTypeFieldSchema#compartment-1)
-- [config](../wiki/index.ContentTypeFieldSchema#config-1)
-- [dataType](../wiki/index.ContentTypeFieldSchema#datatype-1)
-- [defaultValue](../wiki/index.ContentTypeFieldSchema#defaultvalue-1)
-- [fieldType](../wiki/index.ContentTypeFieldSchema#fieldtype-1)
-- [generalConfig](../wiki/index.ContentTypeFieldSchema#generalconfig-1)
-- [label](../wiki/index.ContentTypeFieldSchema#label-1)
-- [module](../wiki/index.ContentTypeFieldSchema#module-1)
-- [name](../wiki/index.ContentTypeFieldSchema#name-1)
-- [operators](../wiki/index.ContentTypeFieldSchema#operators-1)
-- [preset](../wiki/index.ContentTypeFieldSchema#preset-1)
-- [uuid](../wiki/index.ContentTypeFieldSchema#uuid-1)
-- [validation](../wiki/index.ContentTypeFieldSchema#validation-1)
-- [validators](../wiki/index.ContentTypeFieldSchema#validators-1)
+- [compartment](../wiki/index.ContentTypeFieldSchema#compartment)
+- [config](../wiki/index.ContentTypeFieldSchema#config)
+- [dataType](../wiki/index.ContentTypeFieldSchema#datatype)
+- [defaultValue](../wiki/index.ContentTypeFieldSchema#defaultvalue)
+- [fieldType](../wiki/index.ContentTypeFieldSchema#fieldtype)
+- [generalConfig](../wiki/index.ContentTypeFieldSchema#generalconfig)
+- [label](../wiki/index.ContentTypeFieldSchema#label)
+- [module](../wiki/index.ContentTypeFieldSchema#module)
+- [name](../wiki/index.ContentTypeFieldSchema#name)
+- [operators](../wiki/index.ContentTypeFieldSchema#operators)
+- [preset](../wiki/index.ContentTypeFieldSchema#preset)
+- [uuid](../wiki/index.ContentTypeFieldSchema#uuid)
+- [validation](../wiki/index.ContentTypeFieldSchema#validation)
+- [validators](../wiki/index.ContentTypeFieldSchema#validators)
 
 ## Properties
 

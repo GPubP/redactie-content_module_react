@@ -6,12 +6,12 @@
 
 ### Properties
 
-- [config](../wiki/index.ModuleSettings#config-1)
-- [label](../wiki/index.ModuleSettings#label-1)
-- [module](../wiki/index.ModuleSettings#module-1)
-- [name](../wiki/index.ModuleSettings#name-1)
-- [uuid](../wiki/index.ModuleSettings#uuid-1)
-- [validationSchema](../wiki/index.ModuleSettings#validationschema-1)
+- [config](../wiki/index.ModuleSettings#config)
+- [label](../wiki/index.ModuleSettings#label)
+- [module](../wiki/index.ModuleSettings#module)
+- [name](../wiki/index.ModuleSettings#name)
+- [uuid](../wiki/index.ModuleSettings#uuid)
+- [validationSchema](../wiki/index.ModuleSettings#validationschema)
 
 ## Properties
 
@@ -25,7 +25,7 @@
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:19
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:20
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:16
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:17
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:18
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:19
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:17
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:18
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:15
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:16
 
 ___
 
@@ -79,4 +79,4 @@ ___
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:22
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:23

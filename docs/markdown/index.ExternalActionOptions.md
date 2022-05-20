@@ -6,15 +6,26 @@
 
 ### Properties
 
-- [component](../wiki/index.ExternalActionOptions#component-1)
-- [module](../wiki/index.ExternalActionOptions#module-1)
-- [replace](../wiki/index.ExternalActionOptions#replace-1)
+- [activeLanguage](../wiki/index.ExternalActionOptions#activelanguage)
+- [component](../wiki/index.ExternalActionOptions#component)
+- [module](../wiki/index.ExternalActionOptions#module)
+- [replace](../wiki/index.ExternalActionOptions#replace)
 
 ### Methods
 
-- [show](../wiki/index.ExternalActionOptions#show-1)
+- [show](../wiki/index.ExternalActionOptions#show)
 
 ## Properties
+
+### activeLanguage
+
+• `Optional` **activeLanguage**: `string`
+
+#### Defined in
+
+public/lib/store/api/externalActions/externalActions.model.ts:14
+
+___
 
 ### component
 

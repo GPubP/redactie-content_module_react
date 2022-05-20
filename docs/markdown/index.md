@@ -22,17 +22,18 @@
 
 ### Type aliases
 
-- [ContentModel](../wiki/index#contentmodel-1)
-- [ContentTypeModel](../wiki/index#contenttypemodel-1)
-- [ExternalCompartmentAfterSubmitFn](../wiki/index#externalcompartmentaftersubmitfn-1)
-- [ExternalCompartmentBeforeSubmitFn](../wiki/index#externalcompartmentbeforesubmitfn-1)
-- [ModuleValue](../wiki/index#modulevalue-1)
+- [ContentModel](../wiki/index#contentmodel)
+- [ContentSelectProps](../wiki/index#contentselectprops)
+- [ContentTypeModel](../wiki/index#contenttypemodel)
+- [ExternalCompartmentAfterSubmitFn](../wiki/index#externalcompartmentaftersubmitfn)
+- [ExternalCompartmentBeforeSubmitFn](../wiki/index#externalcompartmentbeforesubmitfn)
+- [ModuleValue](../wiki/index#modulevalue)
 
 ### Variables
 
-- [CONTENT\_STATUS\_API\_MAP](../wiki/index#content_status_api_map-1)
-- [ContentInfoTooltip](../wiki/index#contentinfotooltip-1)
-- [contentApiService](../wiki/index#contentapiservice-1)
+- [CONTENT\_STATUS\_API\_MAP](../wiki/index#content_status_api_map)
+- [ContentInfoTooltip](../wiki/index#contentinfotooltip)
+- [contentApiService](../wiki/index#contentapiservice)
 
 ## Type aliases
 
@@ -43,6 +44,16 @@
 #### Defined in
 
 public/lib/store/content/content.model.ts:6
+
+___
+
+### ContentSelectProps
+
+Ƭ **ContentSelectProps**: `InputFieldProps` & { `fieldHelperProps`: `FieldHelperProps`<`any`\> & { `setInitialValue?`: (`value`: [`ContentSchema`](../wiki/index.ContentSchema)) => `void`  }  }
+
+#### Defined in
+
+public/lib/components/Fields/ContentSelect/ContentSelect.types.ts:6
 
 ___
 
@@ -64,11 +75,11 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `M` | [`ModuleValue`](../wiki/index#modulevalue-1) |
+| `M` | [`ModuleValue`](../wiki/index#modulevalue) |
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:30
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:31
 
 ___
 
@@ -80,11 +91,11 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `M` | [`ModuleValue`](../wiki/index#modulevalue-1) |
+| `M` | [`ModuleValue`](../wiki/index#modulevalue) |
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:27
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:28
 
 ___
 
@@ -94,7 +105,7 @@ ___
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:12
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:13
 
 ## Variables
 
@@ -136,4 +147,4 @@ ___
 
 #### Defined in
 
-public/lib/services/content/content.service.ts:78
+public/lib/services/content/content.service.ts:80

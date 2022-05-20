@@ -6,11 +6,22 @@
 
 ### Properties
 
-- [contentItem](../wiki/index.ExternalActionProps#contentitem-1)
-- [isLoading](../wiki/index.ExternalActionProps#isloading-1)
-- [site](../wiki/index.ExternalActionProps#site-1)
+- [activeLanguage](../wiki/index.ExternalActionProps#activelanguage)
+- [contentItem](../wiki/index.ExternalActionProps#contentitem)
+- [isLoading](../wiki/index.ExternalActionProps#isloading)
+- [site](../wiki/index.ExternalActionProps#site)
 
 ## Properties
+
+### activeLanguage
+
+• `Optional` **activeLanguage**: `string`
+
+#### Defined in
+
+public/lib/views/ContentDetail/ContentDetail.types.ts:27
+
+___
 
 ### contentItem
 

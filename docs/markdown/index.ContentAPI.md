@@ -6,18 +6,18 @@
 
 ### Properties
 
-- [ContentInfoTooltip](../wiki/index.ContentAPI#contentinfotooltip-1)
-- [contentTenantContext](../wiki/index.ContentAPI#contenttenantcontext-1)
-- [hooks](../wiki/index.ContentAPI#hooks-1)
-- [registerContentDetailTab](../wiki/index.ContentAPI#registercontentdetailtab-1)
-- [store](../wiki/index.ContentAPI#store-1)
+- [ContentInfoTooltip](../wiki/index.ContentAPI#contentinfotooltip)
+- [contentTenantContext](../wiki/index.ContentAPI#contenttenantcontext)
+- [hooks](../wiki/index.ContentAPI#hooks)
+- [registerContentDetailTab](../wiki/index.ContentAPI#registercontentdetailtab)
+- [store](../wiki/index.ContentAPI#store)
 
 ### Methods
 
-- [getCTUrlPattern](../wiki/index.ContentAPI#getcturlpattern-1)
-- [getViewPropsByCT](../wiki/index.ContentAPI#getviewpropsbyct-1)
-- [registerContentDetailAction](../wiki/index.ContentAPI#registercontentdetailaction-1)
-- [registerContentDetailCompartment](../wiki/index.ContentAPI#registercontentdetailcompartment-1)
+- [getCTUrlPattern](../wiki/index.ContentAPI#getcturlpattern)
+- [getViewPropsByCT](../wiki/index.ContentAPI#getviewpropsbyct)
+- [registerContentDetailAction](../wiki/index.ContentAPI#registercontentdetailaction)
+- [registerContentDetailCompartment](../wiki/index.ContentAPI#registercontentdetailcompartment)
 
 ## Properties
 
@@ -27,7 +27,7 @@
 
 #### Defined in
 
-public/lib/api/api.types.ts:62
+public/lib/api/api.types.ts:67
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 #### Defined in
 
-public/lib/api/api.types.ts:82
+public/lib/api/api.types.ts:87
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-public/lib/api/api.types.ts:58
+public/lib/api/api.types.ts:63
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-public/lib/api/api.types.ts:81
+public/lib/api/api.types.ts:86
 
 ___
 
@@ -90,13 +90,13 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `content` | { `facade`: `Pick`<`ContentFacade`, ``"getContentItem"`` \| ``"getContentItemBySlug"`` \| ``"getContent"``\> ; `service`: `ContentApiService`  } |
-| `content.facade` | `Pick`<`ContentFacade`, ``"getContentItem"`` \| ``"getContentItemBySlug"`` \| ``"getContent"``\> |
+| `content` | { `facade`: `Pick`<`ContentFacade`, ``"getContentItem"`` \| ``"getContentItemBySlug"`` \| ``"getContent"`` \| ``"setBaseContentItem"``\> ; `service`: `ContentApiService`  } |
+| `content.facade` | `Pick`<`ContentFacade`, ``"getContentItem"`` \| ``"getContentItemBySlug"`` \| ``"getContent"`` \| ``"setBaseContentItem"``\> |
 | `content.service` | `ContentApiService` |
 
 #### Defined in
 
-public/lib/api/api.types.ts:52
+public/lib/api/api.types.ts:54
 
 ## Methods
 
@@ -119,7 +119,7 @@ public/lib/api/api.types.ts:52
 
 #### Defined in
 
-public/lib/api/api.types.ts:74
+public/lib/api/api.types.ts:79
 
 ___
 
@@ -145,7 +145,7 @@ ___
 
 #### Defined in
 
-public/lib/api/api.types.ts:67
+public/lib/api/api.types.ts:72
 
 ___
 
@@ -166,7 +166,7 @@ ___
 
 #### Defined in
 
-public/lib/api/api.types.ts:80
+public/lib/api/api.types.ts:85
 
 ___
 
@@ -193,4 +193,4 @@ ___
 
 #### Defined in
 
-public/lib/api/api.types.ts:63
+public/lib/api/api.types.ts:68

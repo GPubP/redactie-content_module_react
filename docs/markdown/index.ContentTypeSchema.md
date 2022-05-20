@@ -6,15 +6,15 @@
 
 ### Properties
 
-- [\_id](../wiki/index.ContentTypeSchema#_id-1)
-- [compartments](../wiki/index.ContentTypeSchema#compartments-1)
-- [errorMessages](../wiki/index.ContentTypeSchema#errormessages-1)
-- [fields](../wiki/index.ContentTypeSchema#fields-1)
-- [meta](../wiki/index.ContentTypeSchema#meta-1)
-- [modulesConfig](../wiki/index.ContentTypeSchema#modulesconfig-1)
-- [uuid](../wiki/index.ContentTypeSchema#uuid-1)
-- [validateSchema](../wiki/index.ContentTypeSchema#validateschema-1)
-- [valueSyncMap](../wiki/index.ContentTypeSchema#valuesyncmap-1)
+- [\_id](../wiki/index.ContentTypeSchema#_id)
+- [compartments](../wiki/index.ContentTypeSchema#compartments)
+- [errorMessages](../wiki/index.ContentTypeSchema#errormessages)
+- [fields](../wiki/index.ContentTypeSchema#fields)
+- [meta](../wiki/index.ContentTypeSchema#meta)
+- [modulesConfig](../wiki/index.ContentTypeSchema#modulesconfig)
+- [uuid](../wiki/index.ContentTypeSchema#uuid)
+- [validateSchema](../wiki/index.ContentTypeSchema#validateschema)
+- [valueSyncMap](../wiki/index.ContentTypeSchema#valuesyncmap)
 
 ## Properties
 
