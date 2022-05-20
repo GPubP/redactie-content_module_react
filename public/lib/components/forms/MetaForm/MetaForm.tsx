@@ -62,7 +62,6 @@ const MetaForm: FC<CompartmentProps> = ({
 	/**
 	 * RENDER
 	 */
-	console.log(contentType.meta.issuedOnPrefill);
 	return (
 		<Formik
 			innerRef={instance => formikRef && formikRef(instance)}
