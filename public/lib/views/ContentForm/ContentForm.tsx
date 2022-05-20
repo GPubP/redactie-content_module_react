@@ -212,7 +212,8 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			(allowedTransitions || []).map(transition => transition.replace('to-', '')),
 			modulesConfig
 		);
-	}, [allowedTransitions, contentType, modulesConfig, siteId, workflow]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [allowedTransitions, contentType, siteId, workflow]);
 
 	const navigateToPlanning = (): void => {
 		navigate(`${MODULE_PATHS.detailEdit}/planning`, {
