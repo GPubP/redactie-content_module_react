@@ -104,81 +104,92 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 		}
 
 		return (
-			<div className="m-tooltip-container">
-				<div
-					className={`a-dot ${
-						item?.meta.published ? 'a-dot__published' : 'a-dot__unpublished'
-					}`}
-				>
-					•
-				</div>
-				<InfoTooltip placement="bottom-end" type={TooltipTypeMap.WHITE} icon={icon}>
-					<CardTitle>
-						<CardTitle>
-							<Link className="m-tooltip__title" to={contentItemPath}>
-								{item?.meta.label && item?.meta.label}
-							</Link>
-						</CardTitle>
-					</CardTitle>
-
-					<div className="u-margin-top">
-						{item?.meta.description && (
-							<div className="u-margin-bottom u-text-light a-description">
-								{item?.meta.description}
-							</div>
-						)}
-						{path(['meta', 'urlPath', item?.meta.lang as string, 'value'])(item) && (
-							<div className="u-margin-bottom-xs a-url">
-								<b>URL: </b>
-								{`${newSite}${item?.meta.urlPath![item?.meta.lang]?.value}`}
-							</div>
-						)}
-						{item?.meta.created && (
-							<div className="u-margin-bottom-xs">
-								<b>Aangemaakt op: </b>
-								<span>
-									{moment(item?.meta.created).format('DD/MM/YYYY [-] HH[u]mm')}
-								</span>
-							</div>
-						)}
-						{item?.meta.lastEditor && (
-							<div className="u-margin-bottom-xs">
-								<b>Door: </b>
-								{`${item?.meta.lastEditor?.firstname} ${item?.meta.lastEditor?.lastname}`}
-							</div>
-						)}
-						<div className="u-margin-top">
-							<p>
-								<b>Status</b>
-							</p>
-							{item?.meta.status && (
-								<Label type="primary">
-									{
-										CONTENT_STATUS_TRANSLATION_MAP[
-											item?.meta.status as ContentStatus
-										]
-									}
-								</Label>
-							)}
-
-							{item?.meta.historySummary?.published ? (
-								<Label
-									className="u-margin-left-xs u-margin-top-xs u-margin-bottom-xs"
-									type="success"
-								>
-									Online
-								</Label>
-							) : (
-								<Label
-									className="u-margin-left-xs u-margin-top-xs u-margin-bottom-xs"
-									type="danger"
-								>
-									Offline
-								</Label>
-							)}
-						</div>
+			<div className="m-dataloader-container">
+				<div className="m-tooltip-container">
+					<div
+						className={`a-dot ${
+							item?.meta.published ? 'a-dot__published' : 'a-dot__unpublished'
+						}`}
+					>
+						•
 					</div>
-				</InfoTooltip>
+					<InfoTooltip
+						placement="bottom-end"
+						tooltipClassName="m-tooltip__flyout"
+						type={TooltipTypeMap.WHITE}
+						icon={icon}
+					>
+						<CardTitle>
+							<CardTitle>
+								<Link className="m-tooltip__title" to={contentItemPath}>
+									{item?.meta.label && item?.meta.label}
+								</Link>
+							</CardTitle>
+						</CardTitle>
+
+						<div className="u-margin-top">
+							{item?.meta.description && (
+								<div className="u-margin-bottom u-text-light a-description">
+									{item?.meta.description}
+								</div>
+							)}
+							{path(['meta', 'urlPath', item?.meta.lang as string, 'value'])(
+								item
+							) && (
+								<div className="u-margin-bottom-xs a-url">
+									<b>URL: </b>
+									{`${newSite}${item?.meta.urlPath![item?.meta.lang]?.value}`}
+								</div>
+							)}
+							{item?.meta.created && (
+								<div className="u-margin-bottom-xs">
+									<b>Aangemaakt op: </b>
+									<span>
+										{moment(item?.meta.created).format(
+											'DD/MM/YYYY [-] HH[u]mm'
+										)}
+									</span>
+								</div>
+							)}
+							{item?.meta.lastEditor && (
+								<div className="u-margin-bottom-xs">
+									<b>Door: </b>
+									{`${item?.meta.lastEditor?.firstname} ${item?.meta.lastEditor?.lastname}`}
+								</div>
+							)}
+							<div className="u-margin-top">
+								<p>
+									<b>Status</b>
+								</p>
+								{item?.meta.status && (
+									<Label type="primary">
+										{
+											CONTENT_STATUS_TRANSLATION_MAP[
+												item?.meta.status as ContentStatus
+											]
+										}
+									</Label>
+								)}
+
+								{item?.meta.historySummary?.published ? (
+									<Label
+										className="u-margin-left-xs u-margin-top-xs u-margin-bottom-xs"
+										type="success"
+									>
+										Online
+									</Label>
+								) : (
+									<Label
+										className="u-margin-left-xs u-margin-top-xs u-margin-bottom-xs"
+										type="danger"
+									>
+										Offline
+									</Label>
+								)}
+							</div>
+						</div>
+					</InfoTooltip>
+				</div>
 			</div>
 		);
 	};
