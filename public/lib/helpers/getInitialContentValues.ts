@@ -21,8 +21,6 @@ export const getInitialContentValues = (
 	return fields.reduce((values, field) => {
 		const defaultValue = getLanguageValue(field.defaultValue, language);
 
-		console.log(field.name, defaultValue);
-
 		if (
 			field?.preset &&
 			field.config?.fields?.length &&
