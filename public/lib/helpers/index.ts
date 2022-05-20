@@ -12,3 +12,4 @@ export * from './getMySecurityRightsByContentTypeId/getMySecurityRightsByContent
 export * from './contentType';
 export * from './tabs';
 export * from './getCTUrlPattern';
+export * from './getLanguageValue';

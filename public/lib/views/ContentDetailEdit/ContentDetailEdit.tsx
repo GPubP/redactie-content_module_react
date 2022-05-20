@@ -101,7 +101,11 @@ const ContentDetailEdit: FC<ContentDetailChildRouteProps<ContentDetailEditMatchP
 
 		const defaultValue: ContentSchema = {
 			...contentItem,
-			fields: getInitialContentValues(contentType?.fields, contentItem.fields),
+			fields: getInitialContentValues(
+				contentType?.fields,
+				contentItem.fields,
+				contentItem.meta.lang
+			),
 		};
 
 		contentFacade.setContentItemDraft(defaultValue, contentType);

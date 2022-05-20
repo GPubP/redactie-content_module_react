@@ -7,6 +7,8 @@ import { Context } from 'react';
 import { ContentInfoTooltip } from '../components/ContentInfoTooltip';
 import { ContentSelectProps } from '../components/Fields/ContentSelect/ContentSelect.types';
 import { PagingSchema } from '../content.types';
+import { getViewPropsByCT } from '../helpers';
+import { getCTUrlPattern } from '../helpers/getCTUrlPattern';
 import { CONTENT_STATUS_API_MAP, contentApiService, ModuleValue } from '../services/content';
 import {
 	ContentTypeFieldSchema,
@@ -24,6 +26,7 @@ import { ContentTypeModel } from '../store/contentTypes';
 import { ExternalActionProps } from '../views/ContentDetail/ContentDetail.types';
 import { ExternalTabProps } from '../views/ContentDetailExternal/ContentDetailExternal.types';
 
+import { registerContentDetailCompartment } from './registerContentDetailCompartment';
 import { registerContentDetailTab } from './registerContentDetailTab';
 export { CompartmentProps } from '../views/ContentForm/ContentForm.types';
 export {
@@ -63,25 +66,10 @@ export interface ContentAPI {
 	hooks: {
 		useContent: () => [LoadingState, ContentModel[], PagingSchema | null | undefined];
 	};
-
 	ContentInfoTooltip: typeof ContentInfoTooltip;
-	registerContentDetailCompartment: <M = ModuleValue>(
-		name: string,
-		options: ExternalCompartmentOptions<M>
-	) => void;
-	getViewPropsByCT: (
-		contentType: ContentTypeSchema,
-		values: FormikValues
-	) => {
-		schema: FormSchema;
-		values: FormikValues;
-	};
-	getCTUrlPattern: (
-		contentType: ContentTypeSchema,
-		activeLanguage: string,
-		moduleConfigName: string,
-		site?: SiteResponse
-	) => string;
+	registerContentDetailCompartment: typeof registerContentDetailCompartment;
+	getViewPropsByCT: typeof getViewPropsByCT;
+	getCTUrlPattern: typeof getCTUrlPattern;
 	registerContentDetailAction: (name: string, options: ExternalActionOptions) => void;
 	registerContentDetailTab: typeof registerContentDetailTab;
 	contentTenantContext: Context<TenantContextValue>;

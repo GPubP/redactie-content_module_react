@@ -200,7 +200,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 		}
 	}, [machine]);
 
-		const modulesConfig = contentType?.modulesConfig?.find(module => {
+	const modulesConfig = contentType?.modulesConfig?.find(module => {
 		return module.site === siteId && module.name === 'navigation';
 	});
 
@@ -212,6 +212,7 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			(allowedTransitions || []).map(transition => transition.replace('to-', '')),
 			modulesConfig
 		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [allowedTransitions, contentType, siteId, workflow]);
 
 	const navigateToPlanning = (): void => {
@@ -790,7 +791,9 @@ const ContentForm: FC<ContentFormRouteProps<ContentFormMatchProps>> = ({
 			(contentItemDraft?.meta.status !== ContentStatus.PUBLISHED &&
 				contentItemDraft?.meta.status !== ContentStatus.UNPUBLISHED) ||
 			(contentItemDraft?.meta.status === ContentStatus.PUBLISHED &&
-				contentItem?.meta.status === ContentStatus.PUBLISHED)
+				contentItem?.meta.status === ContentStatus.PUBLISHED) ||
+			(contentItemDraft?.meta.status === ContentStatus.UNPUBLISHED &&
+				contentItem?.meta.status === ContentStatus.UNPUBLISHED)
 		) {
 			// Save item as DRAFT when the latest version of the content item is already set to publish
 			const item =

@@ -3,12 +3,16 @@ import { WORKING_TITLE_KEY } from '../content.const';
 import { ContentTypeSchema, ValidateSchema } from '../services/contentTypes';
 import { FormRendererProps } from '../views/ContentForm/ContentForm.types';
 
-export const getFormPropsByCT = (contentType: ContentTypeSchema): FormRendererProps => {
+export const getFormPropsByCT = (
+	contentType: ContentTypeSchema,
+	activeLanguageKey?: string
+): FormRendererProps => {
 	return {
 		schema: {
 			fields: formRendererConnector.api.parseFields(contentType.fields, {
 				valueSyncMap: contentType.valueSyncMap,
-			}),
+				activeLanguageKey,
+			} as any),
 		},
 		validationSchema: contentType.validateSchema,
 		errorMessages: contentType.errorMessages || {},
