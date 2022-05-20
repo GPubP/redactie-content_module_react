@@ -17,7 +17,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { LockMessage } from '../../components';
 import rolesRightsConnector from '../../connectors/rolesRights';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import translationsConnector, { CORE_TRANSLATIONS } from '../../connectors/translations';
 import workflowsConnector from '../../connectors/workflows';
 import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ALERT_CONTAINER_IDS, ContentRouteProps } from '../../content.types';
@@ -52,7 +52,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 	 * Hooks
 	 */
 	const { generatePath } = useNavigate(SITES_ROOT);
-	const [t] = useCoreTranslation();
+	const [t] = translationsConnector.useCoreTranslation();
 	const { push } = useHistory();
 	const [contentItemLoading, contentItem, contentItemDraft, contentItemError] = useContentItem();
 	const [contentTypeLoading, contentType] = useContentType();
@@ -144,7 +144,7 @@ const ContentDetail: FC<ContentRouteProps<ContentDetailMatchProps>> = ({
 		if (contentItemLoading) {
 			setInitialLoading(true);
 		}
-	}, [contentItemLoading])
+	}, [contentItemLoading]);
 
 	const pageTabs = useMemo(() => {
 		// filter tabs based on user security rights

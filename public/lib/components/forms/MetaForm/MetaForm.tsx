@@ -14,7 +14,8 @@ import React, { FC, ReactElement, useMemo } from 'react';
 import { CompartmentProps } from '../../../api/api.types';
 import formRendererConnector from '../../../connectors/formRenderer';
 import sitesConnector from '../../../connectors/sites';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
+import translationsConnector, { CORE_TRANSLATIONS } from '../../../connectors/translations';
+import { MODULE_TRANSLATIONS } from '../../../i18next/translations.const';
 import { DateTimeField } from '../../Fields/DateTimeField';
 import FormikOnChangeHandler from '../FormikOnChangeHandler/FormikOnChangeHandler';
 
@@ -45,11 +46,12 @@ const MetaForm: FC<CompartmentProps> = ({
 			contentValue?.uuid,
 			undefined,
 			contentType?.meta.canBeFiltered,
-			modulesConfig,
+			modulesConfig
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [contentValue?.uuid, siteId]);
-	const [t] = useCoreTranslation();
+	const [t] = translationsConnector.useCoreTranslation();
+	const [tModule] = translationsConnector.useModuleTranslation();
 	const ErrorMessage = formRendererConnector.api.ErrorMessage;
 	const [site] = sitesConnector.hooks.useSite(siteId);
 	const url =
@@ -180,7 +182,18 @@ const MetaForm: FC<CompartmentProps> = ({
 											module: 'core',
 											type: 'string',
 											config: {
-												inputDescription: '',
+												inputDescription: contentType.meta.issuedOnEditable
+													? tModule(
+															MODULE_TRANSLATIONS.ISSUED_ON_HINT_ENABLED
+													  )
+													: contentType.meta.issuedOnPrefill ===
+													  'firstPublication'
+													? tModule(
+															MODULE_TRANSLATIONS.ISSUED_ON_HINT_DISABLED_FIRST_PUBLISH
+													  )
+													: tModule(
+															MODULE_TRANSLATIONS.ISSUED_ON_HINT_DISABLED_LAST_PUBLISH
+													  ),
 												disabled: !contentType.meta.issuedOnEditable,
 												minuteStep: 1,
 											},

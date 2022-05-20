@@ -138,3 +138,8 @@ export const CONTENT_TYPE_CRUD_RIGHT_KEYS = {
 	update: 'content_update',
 	delete: 'content_delete',
 };
+
+export const CONFIG: Readonly<{ name: string; module: string }> = Object.freeze({
+	name: 'content',
+	module: 'content-module',
+});
