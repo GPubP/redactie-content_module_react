@@ -24,7 +24,7 @@ const FieldsForm: FC<CompartmentProps & { settings: CtTypeSettings }> = ({
 		return null;
 	}
 
-	const formProps = getCompartmentFormProps(contentType, settings);
+	const formProps = getCompartmentFormProps(contentType, settings, activeLanguage);
 
 	return (
 		<>

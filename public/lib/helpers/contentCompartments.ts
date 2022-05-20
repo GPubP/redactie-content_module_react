@@ -89,7 +89,11 @@ export const getCompartmentValue = (
 		case CompartmentType.CT:
 			return {
 				[WORKING_TITLE_KEY]: content.meta.label,
-				...getInitialContentValues(contentType?.fields, content?.fields),
+				...getInitialContentValues(
+					contentType?.fields,
+					content?.fields,
+					content?.meta.lang
+				),
 			};
 		case CompartmentType.INTERNAL:
 			return content?.meta;
@@ -200,7 +204,11 @@ const getCTCompartmentValidationSchema = (
 const validateCTCompartment = (contentType: ContentTypeSchema, settings: CtTypeSettings) => (
 	values: ContentSchema
 ): boolean => {
-	const { validationSchema, errorMessages } = getCompartmentFormProps(contentType, settings);
+	const { validationSchema, errorMessages } = getCompartmentFormProps(
+		contentType,
+		settings,
+		values.meta.lang
+	);
 	const CustomValidator = (formRendererConnector.api as any).CustomValidator;
 
 	if (validationSchema && CustomValidator) {
