@@ -136,7 +136,11 @@ const handleParagraph = (field: FieldSchemaForAnchorlink, values: FormikValues):
 				...handlePreset(
 					{
 						...subField,
-						_jsonPointerName: [...parseFieldNameToPath(field), subField.name],
+						_jsonPointerName: [
+							...parseFieldNameToPath(field),
+							value.uuid,
+							subField.name,
+						],
 					},
 					value.value
 				),

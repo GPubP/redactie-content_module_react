@@ -23,7 +23,7 @@ import { Field, Formik } from 'formik';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import languagesConnector from '../../connectors/languages';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import translationsConnector, { CORE_TRANSLATIONS } from '../../connectors/translations';
 import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ContentRouteProps } from '../../content.types';
 import { useContentTypes, useRoutesBreadcrumbs } from '../../hooks';
@@ -59,7 +59,7 @@ const ContentCreateOverview: FC<ContentRouteProps<{ siteId: string }>> = ({ matc
 	const [query, setQuery] = useAPIQueryParams(CREATE_OVERVIEW_QUERY_PARAMS_CONFIG, false);
 	const [loadingState, contentTypes, meta] = useContentTypes();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const [t] = useCoreTranslation();
+	const [t] = translationsConnector.useCoreTranslation();
 
 	useEffect(() => {
 		if (loadingState === LoadingState.Loaded || loadingState === LoadingState.Error) {

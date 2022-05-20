@@ -44,6 +44,7 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 	const newSite = url?.slice(-1) === '/' ? url.slice(0, url.length - 1) : url;
 	const [fetchingState] = useContentItem();
 	const [item, setItem] = useState<ContentSchema>();
+	const [hasError, setHasError] = useState<boolean>(false);
 	const [initialLoading, setInitialLoading] = useState(true);
 	const [mySecurityRightsLoading] = rolesRightsConnector.api.hooks.useMySecurityRightsForSite({
 		siteUuid: site?.uuid || siteId,
@@ -78,20 +79,30 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 		const fetchData = async (): Promise<void> => {
 			await contentApiService
 				.getContentItemBySlug(site.uuid, contentId)
-				.then(item => setItem(item));
+				.then(item => setItem(item))
+				.catch(() => {
+					setHasError(true);
+					setInitialLoading(false);
+				});
 		};
 
 		fetchData();
 	}, [contentId, site]);
 
-	const handleVisibilityChange = (isVisible: boolean): void => {
-		console.log(isVisible);
-	};
-
 	const renderView = (): ReactElement | null => {
+		if (hasError) {
+			return (
+				<div className="m-tooltip-container">
+					<div className="a-dot a-dot__unknown">•</div>
+					<InfoTooltip placement="bottom-end" type={TooltipTypeMap.WHITE} icon={icon} />
+				</div>
+			);
+		}
+
 		if (!item) {
 			return null;
 		}
+
 		return (
 			<div className="m-tooltip-container">
 				<div
@@ -101,16 +112,13 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 				>
 					•
 				</div>
-				<InfoTooltip
-					placement="bottom-end"
-					type={TooltipTypeMap.WHITE}
-					icon={icon}
-					onVisibilityChange={handleVisibilityChange}
-				>
+				<InfoTooltip placement="bottom-end" type={TooltipTypeMap.WHITE} icon={icon}>
 					<CardTitle>
-						<Link className="m-tooltip__title" to={contentItemPath}>
-							{item?.meta.label && item?.meta.label}
-						</Link>
+						<CardTitle>
+							<Link className="m-tooltip__title" to={contentItemPath}>
+								{item?.meta.label && item?.meta.label}
+							</Link>
+						</CardTitle>
 					</CardTitle>
 
 					<div className="u-margin-top">
@@ -119,7 +127,7 @@ const ContentInfoTooltip: React.FC<ContentInfoTooltipProps> = ({
 								{item?.meta.description}
 							</div>
 						)}
-						{path(['meta', 'urlPath', item?.meta.lang, 'value'])(item) && (
+						{path(['meta', 'urlPath', item?.meta.lang as string, 'value'])(item) && (
 							<div className="u-margin-bottom-xs a-url">
 								<b>URL: </b>
 								{`${newSite}${item?.meta.urlPath![item?.meta.lang]?.value}`}

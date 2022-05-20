@@ -193,11 +193,13 @@ const ContentSelectBase: React.FC<ContentSelectBaseProps> = ({
 				</Link>
 			</Tooltip>
 			{config.description ? (
-				<div className="a-input a-input__wrapper">
-					<small>{config.description}</small>
-				</div>
+				<>
+					<div className="a-input a-input__wrapper">
+						<small>{config.description}</small>
+					</div>
+					<ErrorMessage name={field.name} />
+				</>
 			) : null}
-			<ErrorMessage name={field.name} />
 		</>
 	);
 };

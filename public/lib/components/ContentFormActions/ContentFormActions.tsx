@@ -1,7 +1,7 @@
 import { Button } from '@acpaas-ui/react-components';
 import React, { FC, useMemo } from 'react';
 
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import translationsConnector, { CORE_TRANSLATIONS } from '../../connectors/translations';
 import { CONTENT_STATUS_TRANSLATION_MAP, ContentStatus } from '../../services/content';
 import { PublishedStatus } from '../PublishedStatus';
 
@@ -29,7 +29,7 @@ const ContentFormActions: FC<ContentFormActionsProps> = ({
 	/**
 	 * Hooks
 	 */
-	const [t] = useCoreTranslation();
+	const [t] = translationsConnector.useCoreTranslation();
 	const statusButtonType = useMemo(
 		() => (status === ContentStatus.PUBLISHED ? 'success' : 'primary'),
 		[status]

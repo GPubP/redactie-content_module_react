@@ -16,14 +16,19 @@ import {
 	useQuery,
 	useWillUnmount,
 } from '@redactie/utils';
-import { Field, getSyncedTranslationValue, getTranslationSyncMappers } from '@wcm/content-mappers';
+import {
+	Field,
+	getSyncedTranslationValue,
+	getTranslationSyncMappers,
+	MapperContext,
+} from '@wcm/content-mappers';
 import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import rolesRightsConnector from '../../connectors/rolesRights';
 import sitesConnector from '../../connectors/sites';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import translationsConnector, { CORE_TRANSLATIONS } from '../../connectors/translations';
 import workflowsConnector from '../../connectors/workflows';
 import { MODULE_PATHS, SITES_ROOT } from '../../content.const';
 import { ALERT_CONTAINER_IDS, ContentRouteProps } from '../../content.types';
@@ -58,7 +63,7 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 	const { generatePath, navigate } = useNavigate(SITES_ROOT);
 	const [contentTypeLoading, contentType] = useContentType();
 	const { push } = useHistory();
-	const [t] = useCoreTranslation();
+	const [t] = translationsConnector.useCoreTranslation();
 	const [, , contentItemDraft] = useContentItem();
 	const [baseContentItemFetching, baseContentItem] = useBaseContentItem(
 		siteId,
@@ -173,7 +178,11 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 							contentType.meta.urlPath?.pattern ||
 							'',
 						value: '',
-						calculated: '/[item:slug]',
+						standardPattern:
+							navSiteModulesConfig?.config?.url?.urlPattern[language] ||
+							navTenantModulesConfig?.config?.url?.urlPattern[language] ||
+							'/[item:slug]',
+						standardValue: '',
 					},
 				},
 			},
@@ -186,6 +195,8 @@ const ContentCreate: FC<ContentRouteProps<ContentCreateMatchProps>> = ({ match, 
 
 		const mappers = getTranslationSyncMappers((contentType.fields as unknown) as Field[], {
 			includeOptional: true,
+			includeMultiple: true,
+			context: MapperContext.CREATE,
 		});
 
 		// TODO: fix types
