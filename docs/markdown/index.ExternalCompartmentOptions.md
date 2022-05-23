@@ -6,45 +6,45 @@
 
 | Name | Type |
 | :------ | :------ |
-| `M` | [`ModuleValue`](../wiki/index#modulevalue-1) |
+| `M` | [`ModuleValue`](../wiki/index#modulevalue) |
 
 ## Table of contents
 
 ### Properties
 
-- [afterSubmit](../wiki/index.ExternalCompartmentOptions#aftersubmit-1)
-- [beforeSubmit](../wiki/index.ExternalCompartmentOptions#beforesubmit-1)
-- [component](../wiki/index.ExternalCompartmentOptions#component-1)
-- [isValid](../wiki/index.ExternalCompartmentOptions#isvalid-1)
-- [label](../wiki/index.ExternalCompartmentOptions#label-1)
-- [module](../wiki/index.ExternalCompartmentOptions#module-1)
-- [replace](../wiki/index.ExternalCompartmentOptions#replace-1)
+- [afterSubmit](../wiki/index.ExternalCompartmentOptions#aftersubmit)
+- [beforeSubmit](../wiki/index.ExternalCompartmentOptions#beforesubmit)
+- [component](../wiki/index.ExternalCompartmentOptions#component)
+- [isValid](../wiki/index.ExternalCompartmentOptions#isvalid)
+- [label](../wiki/index.ExternalCompartmentOptions#label)
+- [module](../wiki/index.ExternalCompartmentOptions#module)
+- [replace](../wiki/index.ExternalCompartmentOptions#replace)
 
 ### Methods
 
-- [getDescription](../wiki/index.ExternalCompartmentOptions#getdescription-1)
-- [show](../wiki/index.ExternalCompartmentOptions#show-1)
-- [validate](../wiki/index.ExternalCompartmentOptions#validate-1)
+- [getDescription](../wiki/index.ExternalCompartmentOptions#getdescription)
+- [show](../wiki/index.ExternalCompartmentOptions#show)
+- [validate](../wiki/index.ExternalCompartmentOptions#validate)
 
 ## Properties
 
 ### afterSubmit
 
-• `Optional` **afterSubmit**: [`ExternalCompartmentAfterSubmitFn`](../wiki/index#externalcompartmentaftersubmitfn-1)<`M`\>
+• `Optional` **afterSubmit**: [`ExternalCompartmentAfterSubmitFn`](../wiki/index#externalcompartmentaftersubmitfn)<`M`\>
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:40
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:41
 
 ___
 
 ### beforeSubmit
 
-• `Optional` **beforeSubmit**: [`ExternalCompartmentBeforeSubmitFn`](../wiki/index#externalcompartmentbeforesubmitfn-1)<`M`\>
+• `Optional` **beforeSubmit**: [`ExternalCompartmentBeforeSubmitFn`](../wiki/index#externalcompartmentbeforesubmitfn)<`M`\>
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:39
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:40
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:36
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:37
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:37
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:38
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:33
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:34
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:35
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:36
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:50
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:52
 
 ## Methods
 
@@ -114,13 +114,13 @@ public/lib/store/api/externalCompartments/externalCompartments.model.ts:50
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:34
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:35
 
 ___
 
 ### show
 
-▸ `Optional` **show**(`context`, `settings`, `value`, `content`, `contentType`): `boolean`
+▸ `Optional` **show**(`context`, `settings`, `value`, `content`, `contentType`, `site`): `boolean`
 
 #### Parameters
 
@@ -132,6 +132,7 @@ ___
 | `value` | `M` |
 | `content` | [`ContentSchema`](../wiki/index.ContentSchema) |
 | `contentType` | [`ContentTypeSchema`](../wiki/index.ContentTypeSchema) |
+| `site` | `SiteResponse` |
 
 #### Returns
 
@@ -139,7 +140,7 @@ ___
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:41
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:42
 
 ___
 
@@ -160,4 +161,4 @@ ___
 
 #### Defined in
 
-public/lib/store/api/externalCompartments/externalCompartments.model.ts:38
+public/lib/store/api/externalCompartments/externalCompartments.model.ts:39

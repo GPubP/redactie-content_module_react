@@ -6,12 +6,12 @@
 
 ### Properties
 
-- [children](../wiki/index.ExternalTabOptions#children-1)
-- [component](../wiki/index.ExternalTabOptions#component-1)
-- [containerId](../wiki/index.ExternalTabOptions#containerid-1)
-- [label](../wiki/index.ExternalTabOptions#label-1)
-- [module](../wiki/index.ExternalTabOptions#module-1)
-- [replace](../wiki/index.ExternalTabOptions#replace-1)
+- [children](../wiki/index.ExternalTabOptions#children)
+- [component](../wiki/index.ExternalTabOptions#component)
+- [containerId](../wiki/index.ExternalTabOptions#containerid)
+- [label](../wiki/index.ExternalTabOptions#label)
+- [module](../wiki/index.ExternalTabOptions#module)
+- [replace](../wiki/index.ExternalTabOptions#replace)
 
 ## Properties
 

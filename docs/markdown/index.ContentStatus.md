@@ -6,13 +6,13 @@
 
 ### Enumeration members
 
-- [DRAFT](../wiki/index.ContentStatus#draft-1)
-- [NEW](../wiki/index.ContentStatus#new-1)
-- [PENDING\_PUBLISH](../wiki/index.ContentStatus#pending_publish-1)
-- [PENDING\_REVIEW](../wiki/index.ContentStatus#pending_review-1)
-- [PUBLISHED](../wiki/index.ContentStatus#published-1)
-- [SCHEDULED](../wiki/index.ContentStatus#scheduled-1)
-- [UNPUBLISHED](../wiki/index.ContentStatus#unpublished-1)
+- [DRAFT](../wiki/index.ContentStatus#draft)
+- [NEW](../wiki/index.ContentStatus#new)
+- [PENDING\_PUBLISH](../wiki/index.ContentStatus#pending_publish)
+- [PENDING\_REVIEW](../wiki/index.ContentStatus#pending_review)
+- [PUBLISHED](../wiki/index.ContentStatus#published)
+- [SCHEDULED](../wiki/index.ContentStatus#scheduled)
+- [UNPUBLISHED](../wiki/index.ContentStatus#unpublished)
 
 ## Enumeration members
 
@@ -22,7 +22,7 @@
 
 #### Defined in
 
-public/lib/services/content/content.service.types.ts:108
+public/lib/services/content/content.service.types.ts:111
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 #### Defined in
 
-public/lib/services/content/content.service.types.ts:107
+public/lib/services/content/content.service.types.ts:110
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-public/lib/services/content/content.service.types.ts:110
+public/lib/services/content/content.service.types.ts:113
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-public/lib/services/content/content.service.types.ts:109
+public/lib/services/content/content.service.types.ts:112
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-public/lib/services/content/content.service.types.ts:112
+public/lib/services/content/content.service.types.ts:115
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-public/lib/services/content/content.service.types.ts:111
+public/lib/services/content/content.service.types.ts:114
 
 ___
 
@@ -82,4 +82,4 @@ ___
 
 #### Defined in
 
-public/lib/services/content/content.service.types.ts:113
+public/lib/services/content/content.service.types.ts:116

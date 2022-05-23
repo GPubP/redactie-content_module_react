@@ -6,32 +6,32 @@
 
 | Name | Type |
 | :------ | :------ |
-| `M` | [`ModuleValue`](../wiki/index#modulevalue-1) |
+| `M` | [`ModuleValue`](../wiki/index#modulevalue) |
 | `S` | [`ModuleSettings`](../wiki/index.ModuleSettings) \| `CtTypeSettings` \| [`ContentTypeSchema`](../wiki/index.ContentTypeSchema) \| `undefined` |
 
 ## Table of contents
 
 ### Properties
 
-- [activeLanguage](../wiki/index.CompartmentProps#activelanguage-1)
-- [allowedTransitions](../wiki/index.CompartmentProps#allowedtransitions-1)
-- [contentItem](../wiki/index.CompartmentProps#contentitem-1)
-- [contentType](../wiki/index.CompartmentProps#contenttype-1)
-- [contentValue](../wiki/index.CompartmentProps#contentvalue-1)
-- [isCreating](../wiki/index.CompartmentProps#iscreating-1)
-- [isValid](../wiki/index.CompartmentProps#isvalid-1)
-- [machine](../wiki/index.CompartmentProps#machine-1)
-- [settings](../wiki/index.CompartmentProps#settings-1)
-- [site](../wiki/index.CompartmentProps#site-1)
-- [value](../wiki/index.CompartmentProps#value-1)
-- [workflow](../wiki/index.CompartmentProps#workflow-1)
+- [activeLanguage](../wiki/index.CompartmentProps#activelanguage)
+- [allowedTransitions](../wiki/index.CompartmentProps#allowedtransitions)
+- [contentItem](../wiki/index.CompartmentProps#contentitem)
+- [contentType](../wiki/index.CompartmentProps#contenttype)
+- [contentValue](../wiki/index.CompartmentProps#contentvalue)
+- [isCreating](../wiki/index.CompartmentProps#iscreating)
+- [isValid](../wiki/index.CompartmentProps#isvalid)
+- [machine](../wiki/index.CompartmentProps#machine)
+- [settings](../wiki/index.CompartmentProps#settings)
+- [site](../wiki/index.CompartmentProps#site)
+- [value](../wiki/index.CompartmentProps#value)
+- [workflow](../wiki/index.CompartmentProps#workflow)
 
 ### Methods
 
-- [formikRef](../wiki/index.CompartmentProps#formikref-1)
-- [onChange](../wiki/index.CompartmentProps#onchange-1)
-- [updateContent](../wiki/index.CompartmentProps#updatecontent-1)
-- [updateContentMeta](../wiki/index.CompartmentProps#updatecontentmeta-1)
+- [formikRef](../wiki/index.CompartmentProps#formikref)
+- [onChange](../wiki/index.CompartmentProps#onchange)
+- [updateContent](../wiki/index.CompartmentProps#updatecontent)
+- [updateContentMeta](../wiki/index.CompartmentProps#updatecontentmeta)
 
 ## Properties
 

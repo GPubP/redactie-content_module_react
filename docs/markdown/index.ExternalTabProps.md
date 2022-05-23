@@ -6,19 +6,19 @@
 
 ### Properties
 
-- [contentId](../wiki/index.ExternalTabProps#contentid-1)
-- [contentItem](../wiki/index.ExternalTabProps#contentitem-1)
-- [contentType](../wiki/index.ExternalTabProps#contenttype-1)
-- [isLoading](../wiki/index.ExternalTabProps#isloading-1)
-- [siteId](../wiki/index.ExternalTabProps#siteid-1)
-- [value](../wiki/index.ExternalTabProps#value-1)
-- [workflow](../wiki/index.ExternalTabProps#workflow-1)
+- [contentId](../wiki/index.ExternalTabProps#contentid)
+- [contentItem](../wiki/index.ExternalTabProps#contentitem)
+- [contentType](../wiki/index.ExternalTabProps#contenttype)
+- [isLoading](../wiki/index.ExternalTabProps#isloading)
+- [siteId](../wiki/index.ExternalTabProps#siteid)
+- [value](../wiki/index.ExternalTabProps#value)
+- [workflow](../wiki/index.ExternalTabProps#workflow)
 
 ### Methods
 
-- [onCancel](../wiki/index.ExternalTabProps#oncancel-1)
-- [onSubmit](../wiki/index.ExternalTabProps#onsubmit-1)
-- [updateContentItem](../wiki/index.ExternalTabProps#updatecontentitem-1)
+- [onCancel](../wiki/index.ExternalTabProps#oncancel)
+- [onSubmit](../wiki/index.ExternalTabProps#onsubmit)
+- [updateContentItem](../wiki/index.ExternalTabProps#updatecontentitem)
 
 ## Properties
 
