@@ -36,7 +36,7 @@ ___
 
 ### meta
 
-• **meta**: `ContentMeta`
+• **meta**: [`ContentMeta`](../wiki/index.%3Cinternal%3E.ContentMeta)
 
 #### Defined in
 
@@ -46,7 +46,7 @@ ___
 
 ### modulesData
 
-• `Optional` **modulesData**: `Record`<`string`, `ModuleValue`\>
+• `Optional` **modulesData**: `Record`<`string`, [`ModuleValue`](../wiki/index.%3Cinternal%3E#modulevalue)\>
 
 #### Defined in
 

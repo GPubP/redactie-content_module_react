@@ -37,7 +37,7 @@ ___
 
 ### containerId
 
-• **containerId**: `ALERT_CONTAINER_IDS`
+• **containerId**: [`ALERT_CONTAINER_IDS`](../wiki/index.%3Cinternal%3E.ALERT_CONTAINER_IDS)
 
 #### Defined in
 

@@ -8,26 +8,26 @@
 
 - [ContentInfoTooltip](../wiki/index.ContentAPI#contentinfotooltip)
 - [contentTenantContext](../wiki/index.ContentAPI#contenttenantcontext)
+- [getCTUrlPattern](../wiki/index.ContentAPI#getcturlpattern)
+- [getViewPropsByCT](../wiki/index.ContentAPI#getviewpropsbyct)
 - [hooks](../wiki/index.ContentAPI#hooks)
+- [registerContentDetailCompartment](../wiki/index.ContentAPI#registercontentdetailcompartment)
 - [registerContentDetailTab](../wiki/index.ContentAPI#registercontentdetailtab)
 - [store](../wiki/index.ContentAPI#store)
 
 ### Methods
 
-- [getCTUrlPattern](../wiki/index.ContentAPI#getcturlpattern)
-- [getViewPropsByCT](../wiki/index.ContentAPI#getviewpropsbyct)
 - [registerContentDetailAction](../wiki/index.ContentAPI#registercontentdetailaction)
-- [registerContentDetailCompartment](../wiki/index.ContentAPI#registercontentdetailcompartment)
 
 ## Properties
 
 ### ContentInfoTooltip
 
-• **ContentInfoTooltip**: `FC`<`ContentInfoTooltipProps`\>
+• **ContentInfoTooltip**: `FC`<[`ContentInfoTooltipProps`](../wiki/index.%3Cinternal%3E.ContentInfoTooltipProps)\>
 
 #### Defined in
 
-public/lib/api/api.types.ts:67
+public/lib/api/api.types.ts:69
 
 ___
 
@@ -37,7 +37,65 @@ ___
 
 #### Defined in
 
-public/lib/api/api.types.ts:87
+public/lib/api/api.types.ts:75
+
+___
+
+### getCTUrlPattern
+
+• **getCTUrlPattern**: (`contentType`: [`ContentTypeSchema`](../wiki/index.ContentTypeSchema), `activeLanguage`: `string`, `moduleConfigName`: `string`, `site?`: `SiteResponse`) => `string`
+
+#### Type declaration
+
+▸ (`contentType`, `activeLanguage`, `moduleConfigName`, `site?`): `string`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `contentType` | [`ContentTypeSchema`](../wiki/index.ContentTypeSchema) |
+| `activeLanguage` | `string` |
+| `moduleConfigName` | `string` |
+| `site?` | `SiteResponse` |
+
+##### Returns
+
+`string`
+
+#### Defined in
+
+public/lib/api/api.types.ts:72
+
+___
+
+### getViewPropsByCT
+
+• **getViewPropsByCT**: (`contentType`: [`ContentTypeSchema`](../wiki/index.ContentTypeSchema), `values`: `FormikValues`, `activeLanguageKey?`: `string`) => { `schema`: `FormSchema` ; `values`: `FormikValues`  }
+
+#### Type declaration
+
+▸ (`contentType`, `values`, `activeLanguageKey?`): `Object`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `contentType` | [`ContentTypeSchema`](../wiki/index.ContentTypeSchema) |
+| `values` | `FormikValues` |
+| `activeLanguageKey?` | `string` |
+
+##### Returns
+
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `schema` | `FormSchema` |
+| `values` | `FormikValues` |
+
+#### Defined in
+
+public/lib/api/api.types.ts:71
 
 ___
 
@@ -49,11 +107,42 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `useContent` | () => [`LoadingState`, [`ContentSchema`](../wiki/index.ContentSchema)[], `undefined` \| ``null`` \| `PagingSchema`] |
+| `useContent` | () => [`LoadingState`, [`ContentSchema`](../wiki/index.ContentSchema)[], `undefined` \| ``null`` \| [`PagingSchema`](../wiki/index.%3Cinternal%3E.PagingSchema)] |
 
 #### Defined in
 
-public/lib/api/api.types.ts:63
+public/lib/api/api.types.ts:66
+
+___
+
+### registerContentDetailCompartment
+
+• **registerContentDetailCompartment**: <M\>(`name`: `string`, `options`: [`ExternalCompartmentOptions`](../wiki/index.ExternalCompartmentOptions)<`M`\>) => `void`
+
+#### Type declaration
+
+▸ <`M`\>(`name`, `options`): `void`
+
+##### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `M` | [`ModuleValue`](../wiki/index.%3Cinternal%3E#modulevalue) |
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `name` | `string` |
+| `options` | [`ExternalCompartmentOptions`](../wiki/index.ExternalCompartmentOptions)<`M`\> |
+
+##### Returns
+
+`void`
+
+#### Defined in
+
+public/lib/api/api.types.ts:70
 
 ___
 
@@ -78,7 +167,7 @@ ___
 
 #### Defined in
 
-public/lib/api/api.types.ts:86
+public/lib/api/api.types.ts:74
 
 ___
 
@@ -90,64 +179,15 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `content` | { `facade`: `Pick`<`ContentFacade`, ``"getContentItem"`` \| ``"getContentItemBySlug"`` \| ``"getContent"`` \| ``"setBaseContentItem"``\> ; `service`: `ContentApiService`  } |
-| `content.facade` | `Pick`<`ContentFacade`, ``"getContentItem"`` \| ``"getContentItemBySlug"`` \| ``"getContent"`` \| ``"setBaseContentItem"``\> |
-| `content.service` | `ContentApiService` |
+| `content` | { `facade`: `Pick`<[`ContentFacade`](../wiki/index.%3Cinternal%3E.ContentFacade), ``"getContentItem"`` \| ``"getContentItemBySlug"`` \| ``"getContent"`` \| ``"setBaseContentItem"``\> ; `service`: [`ContentApiService`](../wiki/index.%3Cinternal%3E.ContentApiService)  } |
+| `content.facade` | `Pick`<[`ContentFacade`](../wiki/index.%3Cinternal%3E.ContentFacade), ``"getContentItem"`` \| ``"getContentItemBySlug"`` \| ``"getContent"`` \| ``"setBaseContentItem"``\> |
+| `content.service` | [`ContentApiService`](../wiki/index.%3Cinternal%3E.ContentApiService) |
 
 #### Defined in
 
-public/lib/api/api.types.ts:54
+public/lib/api/api.types.ts:57
 
 ## Methods
-
-### getCTUrlPattern
-
-▸ **getCTUrlPattern**(`contentType`, `activeLanguage`, `moduleConfigName`, `site?`): `string`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `contentType` | [`ContentTypeSchema`](../wiki/index.ContentTypeSchema) |
-| `activeLanguage` | `string` |
-| `moduleConfigName` | `string` |
-| `site?` | `SiteResponse` |
-
-#### Returns
-
-`string`
-
-#### Defined in
-
-public/lib/api/api.types.ts:79
-
-___
-
-### getViewPropsByCT
-
-▸ **getViewPropsByCT**(`contentType`, `values`): `Object`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `contentType` | [`ContentTypeSchema`](../wiki/index.ContentTypeSchema) |
-| `values` | `FormikValues` |
-
-#### Returns
-
-`Object`
-
-| Name | Type |
-| :------ | :------ |
-| `schema` | `FormSchema` |
-| `values` | `FormikValues` |
-
-#### Defined in
-
-public/lib/api/api.types.ts:72
-
-___
 
 ### registerContentDetailAction
 
@@ -166,31 +206,4 @@ ___
 
 #### Defined in
 
-public/lib/api/api.types.ts:85
-
-___
-
-### registerContentDetailCompartment
-
-▸ **registerContentDetailCompartment**<`M`\>(`name`, `options`): `void`
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `M` | `ModuleValue` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `name` | `string` |
-| `options` | [`ExternalCompartmentOptions`](../wiki/index.ExternalCompartmentOptions)<`M`\> |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-public/lib/api/api.types.ts:68
+public/lib/api/api.types.ts:73

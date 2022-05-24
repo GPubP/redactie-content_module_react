@@ -7,7 +7,7 @@
 | Name | Type |
 | :------ | :------ |
 | `M` | [`ModuleValue`](../wiki/index#modulevalue) |
-| `S` | [`ModuleSettings`](../wiki/index.ModuleSettings) \| `CtTypeSettings` \| [`ContentTypeSchema`](../wiki/index.ContentTypeSchema) \| `undefined` |
+| `S` | [`ModuleSettings`](../wiki/index.ModuleSettings) \| [`CtTypeSettings`](../wiki/index.%3Cinternal%3E#cttypesettings) \| [`ContentTypeSchema`](../wiki/index.ContentTypeSchema) \| `undefined` |
 
 ## Table of contents
 
@@ -107,7 +107,7 @@ ___
 
 ### machine
 
-• `Optional` **machine**: `StateMachine`<`StateMachineContext`, `any`, `StateMachineEvent`, { `context`: `StateMachineContext` ; `value`: `any`  }, `ActionObject`<`StateMachineContext`, `StateMachineEvent`\>\>
+• `Optional` **machine**: `StateMachine`<`StateMachineContext`, `any`, `StateMachineEvent`, {}, `ActionObject`<`StateMachineContext`, `StateMachineEvent`\>\>
 
 #### Defined in
 
@@ -223,7 +223,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `e` | `ContentMeta` |
+| `e` | [`ContentMeta`](../wiki/index.%3Cinternal%3E.ContentMeta) |
 
 #### Returns
 

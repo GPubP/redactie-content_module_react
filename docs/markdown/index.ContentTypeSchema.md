@@ -30,7 +30,7 @@ ___
 
 ### compartments
 
-• **compartments**: `ContentTypeCompartment`[]
+• **compartments**: [`ContentTypeCompartment`](../wiki/index.%3Cinternal%3E.ContentTypeCompartment)[]
 
 #### Defined in
 
@@ -40,7 +40,7 @@ ___
 
 ### errorMessages
 
-• **errorMessages**: `ErrorMessagesSchema`
+• **errorMessages**: [`ErrorMessagesSchema`](../wiki/index.%3Cinternal%3E.ErrorMessagesSchema)
 
 #### Defined in
 
@@ -83,7 +83,7 @@ ___
 
 ### modulesConfig
 
-• `Optional` **modulesConfig**: `ModuleSettings`[]
+• `Optional` **modulesConfig**: [`ModuleSettings`](../wiki/index.%3Cinternal%3E.ModuleSettings)[]
 
 #### Defined in
 
@@ -103,7 +103,7 @@ ___
 
 ### validateSchema
 
-• **validateSchema**: `ValidateSchema`
+• **validateSchema**: [`ValidateSchema`](../wiki/index.%3Cinternal%3E.ValidateSchema)
 
 #### Defined in
 

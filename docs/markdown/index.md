@@ -2,6 +2,10 @@
 
 ## Table of contents
 
+### Namespaces
+
+- [&lt;internal\&gt;](../wiki/index.%3Cinternal%3E)
+
 ### Enumerations
 
 - [ContentStatus](../wiki/index.ContentStatus)
@@ -69,7 +73,7 @@ ___
 
 ### ExternalCompartmentAfterSubmitFn
 
-Ƭ **ExternalCompartmentAfterSubmitFn**<`M`\>: `ContentCompartmentAfterSubmitFn`<`M`\>
+Ƭ **ExternalCompartmentAfterSubmitFn**<`M`\>: [`ContentCompartmentAfterSubmitFn`](../wiki/index.%3Cinternal%3E#contentcompartmentaftersubmitfn)<`M`\>
 
 #### Type parameters
 
@@ -85,7 +89,7 @@ ___
 
 ### ExternalCompartmentBeforeSubmitFn
 
-Ƭ **ExternalCompartmentBeforeSubmitFn**<`M`\>: `ContentCompartmentBeforeSubmitFn`<`M`\>
+Ƭ **ExternalCompartmentBeforeSubmitFn**<`M`\>: [`ContentCompartmentBeforeSubmitFn`](../wiki/index.%3Cinternal%3E#contentcompartmentbeforesubmitfn)<`M`\>
 
 #### Type parameters
 
@@ -133,17 +137,17 @@ ___
 
 ### ContentInfoTooltip
 
-• `Const` **ContentInfoTooltip**: `React.FC`<`ContentInfoTooltipProps`\>
+• `Const` **ContentInfoTooltip**: `React.FC`<[`ContentInfoTooltipProps`](../wiki/index.%3Cinternal%3E.ContentInfoTooltipProps)\>
 
 #### Defined in
 
-public/lib/components/ContentInfoTooltip/ContentInfoTooltip.tsx:22
+public/lib/components/ContentInfoTooltip/ContentInfoTooltip.tsx:30
 
 ___
 
 ### contentApiService
 
-• `Const` **contentApiService**: `ContentApiService`
+• `Const` **contentApiService**: [`ContentApiService`](../wiki/index.%3Cinternal%3E.ContentApiService)
 
 #### Defined in
 

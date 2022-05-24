@@ -50,7 +50,7 @@ ___
 
 ### component
 
-• **component**: `FC`<[`CompartmentProps`](../wiki/index.CompartmentProps)<`M`, `undefined` \| [`ContentTypeSchema`](../wiki/index.ContentTypeSchema) \| [`ModuleSettings`](../wiki/index.ModuleSettings) \| `CtTypeSettings`\>\>
+• **component**: `FC`<[`CompartmentProps`](../wiki/index.CompartmentProps)<`M`, `undefined` \| [`ContentTypeSchema`](../wiki/index.ContentTypeSchema) \| [`ModuleSettings`](../wiki/index.ModuleSettings) \| [`CtTypeSettings`](../wiki/index.%3Cinternal%3E#cttypesettings)\>\>
 
 #### Defined in
 
@@ -153,7 +153,7 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `values` | [`ContentSchema`](../wiki/index.ContentSchema) |
-| `activeCompartment` | `ContentCompartmentModel`<`any`, `undefined` \| [`ContentTypeSchema`](../wiki/index.ContentTypeSchema) \| [`ModuleSettings`](../wiki/index.ModuleSettings) \| `CtTypeSettings`\> |
+| `activeCompartment` | [`ContentCompartmentModel`](../wiki/index.%3Cinternal%3E.ContentCompartmentModel)<`any`, `undefined` \| [`ContentTypeSchema`](../wiki/index.ContentTypeSchema) \| [`ModuleSettings`](../wiki/index.ModuleSettings) \| [`CtTypeSettings`](../wiki/index.%3Cinternal%3E#cttypesettings)\> |
 
 #### Returns
 
