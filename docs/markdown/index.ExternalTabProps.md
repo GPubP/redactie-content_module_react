@@ -74,7 +74,7 @@ ___
 
 ### value
 
-• **value**: `ExternalStandaloneTabValue` \| `ExternalTabValue`
+• **value**: [`ExternalStandaloneTabValue`](../wiki/index.%3Cinternal%3E#externalstandalonetabvalue) \| [`ExternalTabValue`](../wiki/index.%3Cinternal%3E.ExternalTabValue)
 
 #### Defined in
 
@@ -114,7 +114,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `value` | `ExternalTabValue` |
+| `value` | [`ExternalTabValue`](../wiki/index.%3Cinternal%3E.ExternalTabValue) |
 
 #### Returns
 

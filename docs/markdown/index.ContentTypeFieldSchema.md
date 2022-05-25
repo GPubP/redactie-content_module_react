@@ -25,7 +25,7 @@
 
 ### compartment
 
-• **compartment**: `ContentTypeFieldCompartmentRef`
+• **compartment**: [`ContentTypeFieldCompartmentRef`](../wiki/index.%3Cinternal%3E.ContentTypeFieldCompartmentRef)
 
 #### Defined in
 
@@ -49,7 +49,7 @@ ___
 
 ### dataType
 
-• **dataType**: `DataType`
+• **dataType**: [`DataType`](../wiki/index.%3Cinternal%3E.DataType)
 
 #### Defined in
 
@@ -69,7 +69,7 @@ ___
 
 ### fieldType
 
-• **fieldType**: `FieldType`
+• **fieldType**: [`FieldType`](../wiki/index.%3Cinternal%3E.FieldType)
 
 #### Defined in
 
@@ -79,7 +79,7 @@ ___
 
 ### generalConfig
 
-• **generalConfig**: `GeneralConfig`
+• **generalConfig**: [`GeneralConfig`](../wiki/index.%3Cinternal%3E.GeneralConfig)
 
 #### Defined in
 

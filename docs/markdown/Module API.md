@@ -8,7 +8,6 @@
 
 ### Variables
 
-- [contentTenantContext](../wiki/Module%20API#contenttenantcontext)
 - [hooks](../wiki/Module%20API#hooks)
 - [store](../wiki/Module%20API#store)
 
@@ -28,16 +27,6 @@ Re-exports [ContentInfoTooltip](../wiki/index#contentinfotooltip)
 
 ## Variables
 
-### contentTenantContext
-
-• `Const` **contentTenantContext**: `Context`
-
-#### Defined in
-
-node_modules/@redactie/utils/dist/context/TenantContext/TenantContext.d.ts:3
-
-___
-
 ### hooks
 
 • `Const` **hooks**: `Object`
@@ -46,7 +35,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `useContent` | () => [`LoadingState`, [`ContentSchema`](../wiki/index.ContentSchema)[], `undefined` \| ``null`` \| `PagingSchema`] |
+| `useContent` | () => [`LoadingState`, [`ContentSchema`](../wiki/index.ContentSchema)[], `undefined` \| ``null`` \| [`PagingSchema`](../wiki/index.%3Cinternal%3E.PagingSchema)] |
 
 #### Defined in
 
@@ -89,7 +78,7 @@ ___
 
 ### getViewPropsByCT
 
-▸ **getViewPropsByCT**(`contentType`, `values`): `Object`
+▸ **getViewPropsByCT**(`contentType`, `values`, `activeLanguageKey?`): `Object`
 
 #### Parameters
 
@@ -97,6 +86,7 @@ ___
 | :------ | :------ |
 | `contentType` | [`ContentTypeSchema`](../wiki/index.ContentTypeSchema) |
 | `values` | `FormikValues` |
+| `activeLanguageKey?` | `string` |
 
 #### Returns
 
@@ -142,7 +132,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `M` | `ModuleValue` |
+| `M` | [`ModuleValue`](../wiki/index.%3Cinternal%3E#modulevalue) |
 
 #### Parameters
 
